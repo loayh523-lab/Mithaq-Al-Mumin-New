@@ -21,6 +21,8 @@ jobs:
         with:
           channel: stable
           cache: true
+      - name: Generate Android project files
+        run: flutter create --platforms=android --project-name=mithaq_al_mumin .
       - name: Install dependencies
         run: flutter pub get
       - name: Analyze

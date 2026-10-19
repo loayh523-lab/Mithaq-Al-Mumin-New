@@ -246,3 +246,123 @@ class _MainShellState extends State<MainShell> {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   }
 }
+
+class _DuaLibrary extends StatefulWidget {
+  const _DuaLibrary({required this.onNotice});
+  final ValueChanged<String> onNotice;
+
+  @override
+  State<_DuaLibrary> createState() => _DuaLibraryState();
+}
+
+class _DuaLibraryState extends State<_DuaLibrary> {
+  final _search = TextEditingController();
+  String _filter = 'الكل';
+  static const _filters = ['الكل', 'الاستغفار', 'الصلاة على محمد وآل محمد', 'التسبيح'];
+
+  @override
+  void dispose() {
+    _search.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final query = _search.text.trim();
+    final items = dailyDhikr.where((item) {
+      final matchesQuery = query.isEmpty || item.title.contains(query) || item.text.contains(query);
+      final matchesFilter = _filter == 'الكل' || item.title == _filter;
+      return matchesQuery && matchesFilter;
+    }).toList();
+    return ListView(
+      padding: const EdgeInsets.all(18),
+      children: [
+        const Text('الأدعية والأذكار', style: TextStyle(fontSize: 25, fontWeight: FontWeight.w800)),
+        const SizedBox(height: 6),
+        const Text('مكتبة أولية للأذكار العامة مع توضيح طبيعة النصوص', style: TextStyle(color: _muted)),
+        const SizedBox(height: 16),
+        TextField(
+          controller: _search,
+          onChanged: (_) => setState(() {}),
+          decoration: InputDecoration(
+            hintText: 'ابحث عن ذكر...',
+            prefixIcon: const Icon(Icons.search_rounded),
+            filled: true,
+            fillColor: _panel,
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
+          ),
+        ),
+        const SizedBox(height: 12),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: _filters.map((filter) => ChoiceChip(
+            label: Text(filter),
+            selected: _filter == filter,
+            onSelected: (_) => setState(() => _filter = filter),
+          )).toList(),
+        ),
+        const SizedBox(height: 16),
+        if (items.isEmpty)
+          const Padding(padding: EdgeInsets.all(24), child: Center(child: Text('ماكو نتائج مطابقة', style: TextStyle(color: _muted))))
+        else
+          ...items.map((item) => Card(
+            color: _panel,
+            margin: const EdgeInsets.only(bottom: 12),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(16),
+              onTap: () => showDialog<void>(
+                context: context,
+                builder: (context) => AlertDialog(
+                  backgroundColor: _panel,
+                  title: Text(item.title),
+                  content: SingleChildScrollView(child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(item.text, style: const TextStyle(fontSize: 20, height: 1.8)),
+                      const SizedBox(height: 16),
+                      const Text('المصدر / التوضيح', style: TextStyle(color: _gold, fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 6),
+                      Text(item.source, style: const TextStyle(color: _muted)),
+                      if (item.note != null) ...[
+                        const SizedBox(height: 8),
+                        Text(item.note!, style: const TextStyle(color: _muted, height: 1.5)),
+                      ],
+                    ],
+                  )),
+                  actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('إغلاق'))],
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(children: [Expanded(child: Text(item.title, style: const TextStyle(color: _gold, fontWeight: FontWeight.bold))), const Icon(Icons.open_in_new_rounded, size: 17, color: _muted)]),
+                    const SizedBox(height: 10),
+                    Text(item.text, style: const TextStyle(fontSize: 18, height: 1.7)),
+                    const SizedBox(height: 8),
+                    Text(item.source, style: const TextStyle(fontSize: 12, color: _muted)),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: IconButton(
+                        tooltip: 'نسخ الذكر',
+                        onPressed: () {
+                          // Clipboard support is added when platform integration is enabled.
+                          widget.onNotice('الذكر: ${item.text}');
+                        },
+                        icon: const Icon(Icons.content_copy_rounded, size: 19),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          )),
+        const SizedBox(height: 8),
+        const Text('تنبيه: هذه نسخة تأسيسية؛ النصوص المنسوبة إلى روايات أو كتب ستضاف بعد مراجعة المصدر والموضع بدقة.', style: TextStyle(color: _muted, fontSize: 12, height: 1.6)),
+      ],
+    );
+  }
+}

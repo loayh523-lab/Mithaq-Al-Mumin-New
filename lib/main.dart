@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'data/religious_content.dart';
 
 void main() => runApp(const MithaqApp());
@@ -349,8 +350,8 @@ class _DuaLibraryState extends State<_DuaLibrary> {
                       child: IconButton(
                         tooltip: 'نسخ الذكر',
                         onPressed: () {
-                          // Clipboard support is added when platform integration is enabled.
-                          widget.onNotice('الذكر: ${item.text}');
+                          Clipboard.setData(ClipboardData(text: item.text));
+                          widget.onNotice('تم نسخ الذكر');
                         },
                         icon: const Icon(Icons.content_copy_rounded, size: 19),
                       ),

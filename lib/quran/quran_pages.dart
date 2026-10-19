@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
-const _ink = Color(0xFF071713);
 const _panel = Color(0xFF10251E);
 const _emerald = Color(0xFF1C8060);
 const _gold = Color(0xFFD9B66D);

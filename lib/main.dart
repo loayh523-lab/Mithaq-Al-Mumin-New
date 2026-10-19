@@ -189,7 +189,7 @@ class _MainShellState extends State<MainShell> {
   Widget _duaPage() => _DuaLibrary(onNotice: _notice);
 
   Widget _tasbeehPage() => Center(
-    child: Padding(
+    child: SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

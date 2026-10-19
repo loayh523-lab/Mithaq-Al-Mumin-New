@@ -175,7 +175,8 @@ class _MainShellState extends State<MainShell> {
           _featureCard(Icons.auto_awesome_rounded, 'الأدعية والزيارات', 'مكتبة المصادر', () => setState(() => _selected = 2)),
           _featureCard(Icons.fingerprint_rounded, 'التسبيح', 'عداد الذكر', () => setState(() => _selected = 3)),
           _featureCard(Icons.auto_stories_rounded, 'ختمة القرآن', 'حفظ تقدّم الختمة', () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: KhatmaPage())))),
-          _featureCard(Icons.explore_rounded, 'القبلة والصلاة', 'تُضاف بعد التحقق من الحسابات', () => _notice('ميزة الصلاة والقبلة قيد التطوير')),
+          _featureCard(Icons.checklist_rounded, 'متابعة الصلاة', 'سجلّ صلوات اليوم', () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: PrayerTrackerPage())))),
+          _featureCard(Icons.explore_rounded, 'القبلة والصلاة', 'المواقيت والقبلة قيد التطوير', () => _notice('ميزة المواقيت والقبلة قيد التطوير')),
         ],
       ),
       const SizedBox(height: 22),
@@ -576,6 +577,141 @@ class _KhatmaPageState extends State<KhatmaPage> {
             'هذا سجلّ للتقدّم فقط؛ لا يحدّد موضع القراءة داخل الجزء.',
             style: TextStyle(color: _muted, fontSize: 12, height: 1.6),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+
+class PrayerTrackerPage extends StatefulWidget {
+  const PrayerTrackerPage({super.key});
+
+  @override
+  State<PrayerTrackerPage> createState() => _PrayerTrackerPageState();
+}
+
+class _PrayerTrackerPageState extends State<PrayerTrackerPage> {
+  static const _prayers = ['الفجر', 'الظهر', 'العصر', 'المغرب', 'العشاء'];
+  final Set<String> _completed = <String>{};
+  bool _loaded = false;
+
+  String get _storageKey {
+    final now = DateTime.now();
+    final day = '${now.year.toString().padLeft(4, '0')}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+    return 'prayer_tracker_$day';
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      if (!mounted) return;
+      setState(() {
+        _completed
+          ..clear()
+          ..addAll(prefs.getStringList(_storageKey) ?? const <String>[]);
+        _loaded = true;
+      });
+    } catch (_) {
+      if (mounted) setState(() => _loaded = true);
+    }
+  }
+
+  Future<void> _toggle(String prayer, bool checked) async {
+    setState(() {
+      if (checked) {
+        _completed.add(prayer);
+      } else {
+        _completed.remove(prayer);
+      }
+    });
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setStringList(_storageKey, _completed.toList());
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('تعذّر حفظ السجل على الجهاز')),
+        );
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final progress = _completed.length / _prayers.length;
+    return Scaffold(
+      appBar: AppBar(title: const Text('متابعة الصلاة')),
+      body: ListView(
+        padding: const EdgeInsets.all(20),
+        children: [
+          Container(
+            padding: const EdgeInsets.all(22),
+            decoration: BoxDecoration(
+              color: _panel,
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(color: _gold.withValues(alpha: .3)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Icon(Icons.volunteer_activism_rounded, color: _gold, size: 34),
+                const SizedBox(height: 14),
+                const Text('صلوات اليوم', style: TextStyle(fontSize: 25, fontWeight: FontWeight.w800)),
+                const SizedBox(height: 6),
+                const Text('علّم الصلاة بعد أدائها. السجلّ يُحفظ لهذا اليوم على جهازك.', style: TextStyle(color: _muted, height: 1.7)),
+                const SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: LinearProgressIndicator(
+                          value: progress,
+                          minHeight: 9,
+                          color: _gold,
+                          backgroundColor: _ink,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Text('${_completed.length}/5', style: const TextStyle(color: _gold, fontWeight: FontWeight.bold)),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          if (!_loaded)
+            const Center(child: Padding(padding: EdgeInsets.all(24), child: CircularProgressIndicator()))
+          else
+            ..._prayers.map((prayer) => Card(
+              color: _panel,
+              margin: const EdgeInsets.only(bottom: 9),
+              child: CheckboxListTile(
+                value: _completed.contains(prayer),
+                onChanged: (checked) => _toggle(prayer, checked ?? false),
+                activeColor: _emerald,
+                checkColor: Colors.white,
+                secondary: Icon(
+                  _completed.contains(prayer) ? Icons.check_circle_rounded : Icons.radio_button_unchecked_rounded,
+                  color: _completed.contains(prayer) ? _gold : _muted,
+                ),
+                title: Text(prayer, style: const TextStyle(fontWeight: FontWeight.w700)),
+                subtitle: Text(
+                  _completed.contains(prayer) ? 'تم تسجيلها' : 'لم تُسجّل بعد',
+                  style: const TextStyle(color: _muted),
+                ),
+              ),
+            )),
+          const SizedBox(height: 8),
+          const Text('هذا سجلّ شخصي فقط وليس جدولاً لمواقيت الصلاة. ستُضاف المواقيت بعد اعتماد طريقة حساب جعفرية موثّقة.', style: TextStyle(color: _muted, fontSize: 12, height: 1.7)),
         ],
       ),
     );

@@ -17,6 +17,18 @@ void main() {
     expect(find.text('0'), findsOneWidget);
   });
 
+  testWidgets('prayer tracker records a checked prayer', (tester) async {
+    await tester.pumpWidget(const MithaqApp());
+    await tester.ensureVisible(find.text('متابعة الصلاة'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('متابعة الصلاة'));
+    await tester.pumpAndSettle();
+    expect(find.text('0/5'), findsOneWidget);
+    await tester.tap(find.text('الفجر'));
+    await tester.pumpAndSettle();
+    expect(find.text('1/5'), findsOneWidget);
+  });
+
   testWidgets('khatma tracker opens and records completed juz', (tester) async {
     await tester.pumpWidget(const MithaqApp());
     await tester.ensureVisible(find.text('ختمة القرآن'));

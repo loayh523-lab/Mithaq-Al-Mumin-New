@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'data/religious_content.dart';
 
 void main() => runApp(const MithaqApp());
 
@@ -87,7 +88,7 @@ class _MainShellState extends State<MainShell> {
           children: [
             _homePage(),
             _placeholderPage(Icons.menu_book_rounded, 'القرآن الكريم', 'قراءة القرآن الكريم وفهرس السور'),
-            _placeholderPage(Icons.auto_awesome_rounded, 'الأدعية والزيارات', 'مكتبة منظمة مع توثيق المصادر'),
+            _duaPage(),
             _tasbeehPage(),
             _placeholderPage(Icons.settings_rounded, 'الإعدادات', 'التفضيلات والمظهر ومصادر المحتوى'),
           ],
@@ -183,6 +184,8 @@ class _MainShellState extends State<MainShell> {
       ),
     ),
   );
+
+  Widget _duaPage() => _DuaLibrary(onNotice: _notice);
 
   Widget _tasbeehPage() => Center(
     child: Padding(

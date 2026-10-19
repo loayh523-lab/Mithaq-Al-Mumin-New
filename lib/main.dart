@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'data/religious_content.dart';
+import 'quran/quran_pages.dart';
 
 void main() => runApp(const MithaqApp());
 
@@ -115,7 +116,7 @@ class _MainShellState extends State<MainShell> {
           index: _selected,
           children: [
             _homePage(),
-            _placeholderPage(Icons.menu_book_rounded, 'القرآن الكريم', 'قراءة القرآن الكريم وفهرس السور'),
+            const QuranIndexPage(),
             _duaPage(),
             _tasbeehPage(),
             _placeholderPage(Icons.settings_rounded, 'الإعدادات', 'التفضيلات والمظهر ومصادر المحتوى'),

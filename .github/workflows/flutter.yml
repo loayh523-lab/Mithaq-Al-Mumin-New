@@ -23,6 +23,22 @@ jobs:
           cache: true
       - name: Generate Android project files
         run: flutter create --platforms=android --project-name=mithaq_al_mumin .
+      - name: Enable internet permission for Quran text
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          manifest = Path("android/app/src/main/AndroidManifest.xml")
+          content = manifest.read_text(encoding="utf-8")
+          permission = '    <uses-permission android:name="android.permission.INTERNET" />'
+          if "android.permission.INTERNET" not in content:
+              marker = "<application"
+              position = content.find(marker)
+              if position < 0:
+                  raise SystemExit("Android application tag was not found")
+              content = content[:position] + permission + "\\n    " + content[position:]
+              manifest.write_text(content, encoding="utf-8")
+          PY
       - name: Install dependencies
         run: flutter pub get
       - name: Analyze

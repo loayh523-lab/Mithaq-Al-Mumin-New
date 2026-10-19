@@ -17,6 +17,15 @@ void main() {
     expect(find.text('0'), findsOneWidget);
   });
 
+  testWidgets('Quran index loads the bundled 114-surah catalog', (tester) async {
+    await tester.pumpWidget(const MithaqApp());
+    await tester.tap(find.text('القرآن الكريم').last);
+    await tester.pumpAndSettle();
+    expect(find.text('فهرس السور'), findsOneWidget);
+    expect(find.text('114 سورة • 6236 آية'), findsOneWidget);
+    expect(find.text('الفاتحة'), findsOneWidget);
+  });
+
   testWidgets('prayer tracker records a checked prayer', (tester) async {
     await tester.pumpWidget(const MithaqApp());
     await tester.ensureVisible(find.text('متابعة الصلاة'));

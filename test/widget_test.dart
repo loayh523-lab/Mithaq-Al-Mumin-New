@@ -20,7 +20,11 @@ void main() {
   testWidgets('Quran index loads the bundled 114-surah catalog', (tester) async {
     await tester.pumpWidget(const MithaqApp());
     await tester.tap(find.text('القرآن الكريم').last);
-    await tester.pumpAndSettle();
+    await tester.pump();
+    for (var i = 0; i < 30 &&
+        find.text('جارٍ تجهيز فهرس القرآن الكريم...').evaluate().isNotEmpty; i++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
     expect(find.text('فهرس السور'), findsOneWidget);
     expect(find.text('114 سورة • 6236 آية'), findsOneWidget);
     expect(find.text('الفاتحة'), findsOneWidget);

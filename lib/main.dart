@@ -116,7 +116,7 @@ class _MainShellState extends State<MainShell> {
           index: _selected,
           children: [
             _homePage(),
-            const QuranIndexPage(),
+            _selected == 1 ? const QuranIndexPage() : const SizedBox.shrink(),
             _duaPage(),
             _tasbeehPage(),
             _placeholderPage(Icons.settings_rounded, 'الإعدادات', 'التفضيلات والمظهر ومصادر المحتوى'),

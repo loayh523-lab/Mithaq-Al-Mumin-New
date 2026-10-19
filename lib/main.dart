@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'data/religious_content.dart';
 
 void main() => runApp(const MithaqApp());
@@ -63,6 +64,32 @@ class _MainShellState extends State<MainShell> {
     Icons.fingerprint_rounded,
     Icons.settings_rounded,
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _restoreCounter();
+  }
+
+  Future<void> _restoreCounter() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      if (!mounted) return;
+      setState(() => _count = prefs.getInt('tasbeeh_count') ?? 0);
+    } catch (_) {
+      // Keep the counter usable even if local storage is unavailable.
+    }
+  }
+
+  Future<void> _saveCounter(int value) async {
+    setState(() => _count = value);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt('tasbeeh_count', value);
+    } catch (_) {
+      if (mounted) _notice('تعذّر حفظ العدّاد على الجهاز');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -147,6 +174,7 @@ class _MainShellState extends State<MainShell> {
           _featureCard(Icons.menu_book_rounded, 'القرآن الكريم', 'المصحف والفهرس', () => setState(() => _selected = 1)),
           _featureCard(Icons.auto_awesome_rounded, 'الأدعية والزيارات', 'مكتبة المصادر', () => setState(() => _selected = 2)),
           _featureCard(Icons.fingerprint_rounded, 'التسبيح', 'عداد الذكر', () => setState(() => _selected = 3)),
+          _featureCard(Icons.auto_stories_rounded, 'ختمة القرآن', 'حفظ تقدّم الختمة', () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: KhatmaPage())))),
           _featureCard(Icons.explore_rounded, 'القبلة والصلاة', 'تُضاف بعد التحقق من الحسابات', () => _notice('ميزة الصلاة والقبلة قيد التطوير')),
         ],
       ),
@@ -204,7 +232,7 @@ class _MainShellState extends State<MainShell> {
             button: true,
             label: 'زيادة عدّاد التسبيح',
             child: InkWell(
-              onTap: () => setState(() => _count++),
+              onTap: () => _saveCounter(_count + 1),
               customBorder: const CircleBorder(),
               child: Container(
                 width: 210,
@@ -216,7 +244,7 @@ class _MainShellState extends State<MainShell> {
           ),
           const SizedBox(height: 22),
           OutlinedButton.icon(
-            onPressed: () => setState(() => _count = 0),
+            onPressed: () => _saveCounter(0),
             icon: const Icon(Icons.refresh_rounded),
             label: const Text('تصفير العدّاد'),
           ),
@@ -364,6 +392,192 @@ class _DuaLibraryState extends State<_DuaLibrary> {
         const SizedBox(height: 8),
         const Text('تنبيه: هذه نسخة تأسيسية؛ النصوص المنسوبة إلى روايات أو كتب ستضاف بعد مراجعة المصدر والموضع بدقة.', style: TextStyle(color: _muted, fontSize: 12, height: 1.6)),
       ],
+    );
+  }
+}
+
+
+class KhatmaPage extends StatefulWidget {
+  const KhatmaPage({super.key});
+
+  @override
+  State<KhatmaPage> createState() => _KhatmaPageState();
+}
+
+class _KhatmaPageState extends State<KhatmaPage> {
+  int _completedJuz = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProgress();
+  }
+
+  Future<void> _loadProgress() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      if (!mounted) return;
+      setState(() {
+        _completedJuz = (prefs.getInt('khatma_completed_juz') ?? 0)
+            .clamp(0, 30)
+            .toInt();
+      });
+    } catch (_) {
+      // Progress can still be changed for this session.
+    }
+  }
+
+  Future<void> _setProgress(int value) async {
+    final next = value.clamp(0, 30).toInt();
+    setState(() => _completedJuz = next);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt('khatma_completed_juz', next);
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('تعذّر حفظ التقدّم على الجهاز')),
+        );
+      }
+    }
+  }
+
+  Future<void> _confirmReset() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('إعادة ضبط الختمة؟'),
+        content: const Text('سيُعاد تقدّم الختمة إلى صفر جزء.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('إلغاء'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('إعادة الضبط'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true && mounted) await _setProgress(0);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final percent = (_completedJuz / 30 * 100).round();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('ختمة القرآن'),
+        actions: [
+          IconButton(
+            tooltip: 'إعادة ضبط الختمة',
+            onPressed: _confirmReset,
+            icon: const Icon(Icons.restart_alt_rounded),
+          ),
+        ],
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(20),
+        children: [
+          Container(
+            padding: const EdgeInsets.all(22),
+            decoration: BoxDecoration(
+              color: _panel,
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(color: _gold.withValues(alpha: .35)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Icon(Icons.auto_stories_rounded, color: _gold, size: 34),
+                const SizedBox(height: 16),
+                const Text(
+                  'خطوة كل يوم',
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w800),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'سجّل الأجزاء التي أكملت قراءتها، وسيبقى تقدّمك محفوظاً على هذا الجهاز.',
+                  style: TextStyle(color: _muted, height: 1.7),
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      '$_completedJuz',
+                      style: const TextStyle(
+                        fontSize: 48,
+                        fontWeight: FontWeight.w800,
+                        color: _gold,
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(bottom: 10, right: 8),
+                      child: Text('/ 30 جزءاً', style: TextStyle(color: _muted)),
+                    ),
+                    const Spacer(),
+                    Text('$percent%', style: const TextStyle(color: _gold, fontWeight: FontWeight.bold)),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: LinearProgressIndicator(
+                    value: _completedJuz / 30,
+                    minHeight: 10,
+                    backgroundColor: _ink,
+                    color: _gold,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: _completedJuz > 0
+                            ? () => _setProgress(_completedJuz - 1)
+                            : null,
+                        icon: const Icon(Icons.remove_rounded),
+                        label: const Text('إنقاص جزء'),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: FilledButton.icon(
+                        onPressed: _completedJuz < 30
+                            ? () => _setProgress(_completedJuz + 1)
+                            : null,
+                        icon: const Icon(Icons.add_rounded),
+                        label: const Text('إكمال جزء'),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 18),
+          if (_completedJuz == 30)
+            const ListTile(
+              leading: Icon(Icons.check_circle_rounded, color: _gold),
+              title: Text('تقبّل الله طاعتكم'),
+              subtitle: Text('أكملت تسجيل الأجزاء الثلاثين في هذه الختمة.'),
+            )
+          else
+            ListTile(
+              leading: const Icon(Icons.bookmark_outline_rounded, color: _gold),
+              title: const Text('الخطوة التالية'),
+              subtitle: Text('بعد قراءة الجزء ' + (_completedJuz + 1).toString() + '، حدّث تقدّمك هنا.'),
+            ),
+          const SizedBox(height: 8),
+          const Text(
+            'هذا سجلّ للتقدّم فقط؛ لا يحدّد موضع القراءة داخل الجزء.',
+            style: TextStyle(color: _muted, fontSize: 12, height: 1.6),
+          ),
+        ],
+      ),
     );
   }
 }

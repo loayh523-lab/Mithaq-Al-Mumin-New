@@ -19,6 +19,8 @@ void main() {
 
   testWidgets('khatma tracker opens and records completed juz', (tester) async {
     await tester.pumpWidget(const MithaqApp());
+    await tester.ensureVisible(find.text('ختمة القرآن'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('ختمة القرآن'));
     await tester.pumpAndSettle();
     expect(find.text('/ 30 جزءاً'), findsOneWidget);

@@ -569,7 +569,7 @@ class _KhatmaPageState extends State<KhatmaPage> {
             ListTile(
               leading: const Icon(Icons.bookmark_outline_rounded, color: _gold),
               title: const Text('الخطوة التالية'),
-              subtitle: Text('بعد قراءة الجزء ' + (_completedJuz + 1).toString() + '، حدّث تقدّمك هنا.'),
+              subtitle: Text('بعد قراءة الجزء ${_completedJuz + 1}، حدّث تقدّمك هنا.'),
             ),
           const SizedBox(height: 8),
           const Text(

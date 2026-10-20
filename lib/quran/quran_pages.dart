@@ -140,17 +140,33 @@ class QuranSearchHit {
 }
 
 String _normalizeArabic(String value) {
-  // Strip Arabic vowel marks, tatweel, and Quranic annotation marks so
-  // search works with both fully-vowelled Uthmani text and plain Arabic.
-  final withoutMarks = value.toLowerCase().replaceAllMapped(
-    RegExp(r'[\u064B-\u065F\u0670\u0640\u06D6-\u06ED]'),
-    (_) => '',
-  );
-  return withoutMarks
-      .replaceAll(RegExp('[أإآٱ]'), 'ا')
-      .replaceAll('ى', 'ي')
-      .replaceAll('ؤ', 'و')
-      .replaceAll('ئ', 'ي');
+  // Normalize by Unicode code point: Dart's regex handling of Quranic
+  // annotation marks can vary, so remove these marks explicitly.
+  final out = StringBuffer();
+  for (final rune in value.toLowerCase().runes) {
+    if ((rune >= 0x064B && rune <= 0x065F) ||
+        rune == 0x0670 ||
+        rune == 0x0640 ||
+        (rune >= 0x06D6 && rune <= 0x06ED)) {
+      continue;
+    }
+    switch (rune) {
+      case 0x0623: // أ
+      case 0x0625: // إ
+      case 0x0622: // آ
+      case 0x0671: // ٱ
+        out.write('ا');
+      case 0x0649: // ى
+        out.write('ي');
+      case 0x0624: // ؤ
+        out.write('و');
+      case 0x0626: // ئ
+        out.write('ي');
+      default:
+        out.write(String.fromCharCode(rune));
+    }
+  }
+  return out.toString();
 }
 
 Future<List<SurahInfo>> _readSurahCatalog() async {

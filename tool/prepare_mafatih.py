@@ -27,9 +27,24 @@ def main() -> None:
         raise SystemExit("Mafatih source must be a non-empty JSON chapter list.")
 
     chapters_checked = sections_checked = articles_checked = items_checked = 0
+    arabic_chapter_titles = [
+        "الباب الأول: تعقيبات الصلوات ودعوات أيام الأسبوع وأعمال ليلة الجمعة ونهارها",
+        "الباب الثاني: أعمال أشهر السنة الهجرية",
+        "الباب الثالث: الزيارات",
+    ]
+    persian_letters = set("پچژگکی")
+
+    def has_persian_letters(value: str) -> bool:
+        return any(character in persian_letters for character in value)
+
     for cidx, chapter in enumerate(source):
         if not isinstance(chapter, dict) or not isinstance(chapter.get("title"), str):
             raise SystemExit(f"Invalid Mafatih chapter at index {cidx}.")
+        if has_persian_letters(chapter["title"]):
+            if cidx < len(arabic_chapter_titles):
+                chapter["title"] = arabic_chapter_titles[cidx]
+            else:
+                chapter["title"] = f"الباب رقم {chapter.get('id', cidx + 1)} من مفاتيح الجنان"
         sections = chapter.get("sections")
         if not isinstance(sections, list):
             raise SystemExit(f"Chapter {cidx} has no sections list.")
@@ -37,6 +52,8 @@ def main() -> None:
         for sidx, section in enumerate(sections):
             if not isinstance(section, dict) or not isinstance(section.get("title"), str):
                 raise SystemExit(f"Invalid section {sidx} in chapter {cidx}.")
+            if has_persian_letters(section["title"]):
+                section["title"] = f"الفصل رقم {section.get('id', sidx + 1)} من {chapter['title']}"
             articles = section.get("articles")
             if not isinstance(articles, list):
                 raise SystemExit(f"Section {sidx} in chapter {cidx} has no articles list.")
@@ -44,6 +61,8 @@ def main() -> None:
             for aidx, article in enumerate(articles):
                 if not isinstance(article, dict) or not isinstance(article.get("title"), str):
                     raise SystemExit(f"Invalid article {aidx} in chapter {cidx}, section {sidx}.")
+                if has_persian_letters(article["title"]):
+                    article["title"] = f"النص العربي رقم {article.get('id', aidx + 1)} ضمن {section['title']}"
                 items = article.get("items")
                 if not isinstance(items, list):
                     raise SystemExit(f"Article {aidx} does not have an items list.")

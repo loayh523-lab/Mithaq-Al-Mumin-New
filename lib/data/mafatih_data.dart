@@ -58,15 +58,24 @@ class MafatihItem {
 }
 
 class MafatihArticle {
-  const MafatihArticle({required this.id, required this.title, required this.items, this.href = ''});
+  const MafatihArticle({
+    required this.id,
+    required this.title,
+    required this.items,
+    this.href = '',
+    this.category = '',
+  });
   final int id;
   final String title;
   final String href;
   final List<MafatihItem> items;
+  /// Arabic destination category computed from source headings before translation.
+  final String category;
   factory MafatihArticle.fromJson(Map<String, dynamic> json) => MafatihArticle(
     id: json['id'] is int ? json['id'] as int : 0,
     title: _arabicOnlyTitle(json['title'], 'نص رقم ${json['id'] ?? 'غير مرقم'}'),
     href: json['href'] is String ? json['href'] as String : '',
+    category: json['category'] is String ? json['category'] as String : '',
     items: ((json['items'] as List<dynamic>?) ?? const <dynamic>[])
         .whereType<Map<String, dynamic>>().map(MafatihItem.fromJson).toList(),
   );

@@ -18,14 +18,19 @@ void main() {
       expect(mafatihCategoryFor('أعمال أشهر السنة الهجرية'), 'الأعمال الشهرية والمناسبات');
       expect(mafatihCategoryFor('دعاء كميل'), 'أدعية عامة');
     });
-  })
-  test('generated Arabic library has non-empty morning, evening, ziyara and deeds lists', () async {
+  });
+
+  test('generated Arabic library has morning, evening, visits and deeds', () async {
     final data = await MafatihData.load();
     final counts = <String, int>{};
 
     for (final chapter in data.chapters) {
+      expect(chapter.title, isNot(contains(RegExp(r'[A-Za-zپچژگ]'))));
       for (final section in chapter.sections) {
+        expect(section.title, isNot(contains(RegExp(r'[A-Za-zپچژگ]'))));
         for (final article in section.articles) {
+          expect(article.title, isNot(contains(RegExp(r'[A-Za-zپچژگ]'))));
+          expect(article.items, isNotEmpty);
           final contentHead = article.items
               .map((item) => plainMafatihText(item.content))
               .where((value) => value.isNotEmpty)
@@ -34,11 +39,6 @@ void main() {
           final searchable = '${chapter.title} ${section.title} ${article.title} $contentHead';
           final category = mafatihCategoryFor(searchable);
           counts[category] = (counts[category] ?? 0) + 1;
-
-          expect(article.title, isNot(contains(RegExp(r'[A-Za-zپچژگ]'))));
-          expect(section.title, isNot(contains(RegExp(r'[A-Za-zپچژگ]'))));
-          expect(chapter.title, isNot(contains(RegExp(r'[A-Za-zپچژگ]'))));
-          expect(article.items, isNotEmpty);
         }
       }
     }
@@ -48,5 +48,4 @@ void main() {
     expect(counts['الزيارات'] ?? 0, greaterThan(0));
     expect(counts['الأعمال اليومية والمناسبات'] ?? 0, greaterThan(0));
   });
-;
 }

@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
 
 const _panel = Color(0xFF10251E);
 const _emerald = Color(0xFF1C8060);
@@ -109,7 +108,7 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
       ),
       const Padding(
         padding: EdgeInsets.fromLTRB(18, 0, 18, 8),
-        child: Text('فهرس السور من Quran JSON / Tanzil. نص الآيات يحتاج الإنترنت.', textAlign: TextAlign.center, style: TextStyle(color: _muted, fontSize: 10)),
+        child: Text('فهرس السور محلي. نص الآيات العثماني مضمّن داخل نسخة التطبيق ويعمل دون إنترنت.', textAlign: TextAlign.center, style: TextStyle(color: _muted, fontSize: 10)),
       ),
     ]);
   }
@@ -132,6 +131,35 @@ class _QuranError extends StatelessWidget {
   ));
 }
 
+Future<Map<int, List<String>>>? _offlineQuranFuture;
+
+Future<Map<int, List<String>>> _readBundledQuran() async {
+  final raw = await rootBundle.loadString('assets/quran/uthmani_surahs.json');
+  final decoded = jsonDecode(raw) as Map<String, dynamic>;
+  final items = decoded['surahs'] as List<dynamic>;
+  if (items.length != 114) throw const FormatException('Expected 114 Quran surahs.');
+  final chapters = <int, List<String>>{};
+  var totalVerses = 0;
+  for (var i = 0; i < items.length; i++) {
+    final item = items[i] as Map<String, dynamic>;
+    final id = item['number'] as int;
+    if (id != i + 1) throw const FormatException('Quran surah order is invalid.');
+    final rawAyahs = item['ayahs'] as List<dynamic>;
+    final verses = <String>[];
+    for (var n = 0; n < rawAyahs.length; n++) {
+      final ayah = rawAyahs[n] as Map<String, dynamic>;
+      if (ayah['number'] != n + 1 || ayah['text'] is! String || (ayah['text'] as String).trim().isEmpty) {
+        throw FormatException('Invalid verse in surah $id.');
+      }
+      verses.add(ayah['text'] as String);
+    }
+    chapters[id] = verses;
+    totalVerses += verses.length;
+  }
+  if (totalVerses != 6236) throw const FormatException('Quran total ayah count is invalid.');
+  return chapters;
+}
+
 class SurahReaderPage extends StatefulWidget {
   const SurahReaderPage({super.key, required this.surah});
   final SurahInfo surah;
@@ -150,22 +178,19 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
   Future<void> _loadVerses() async {
     setState(() { _loading = true; _error = null; });
     try {
-      final uri = Uri.https('quran-json.risanb.com', '/text/uthmani/chapters/${widget.surah.id}.json');
-      final response = await http.get(uri).timeout(const Duration(seconds: 20));
-      if (response.statusCode != 200) throw FormatException('HTTP ${response.statusCode}');
-      final decoded = jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
-      final raw = decoded['verses'] as List<dynamic>;
-      final verses = raw.map((e) {
-        final text = (e as Map<String, dynamic>)['text'];
-        if (text is! String || text.trim().isEmpty) throw const FormatException('Missing verse text.');
-        return text;
-      }).toList();
-      if (verses.length != widget.surah.totalVerses) throw const FormatException('Verse count mismatch.');
+      final chapters = await (_offlineQuranFuture ??= _readBundledQuran());
+      final verses = chapters[widget.surah.id];
+      if (verses == null || verses.length != widget.surah.totalVerses) {
+        throw FormatException('Quran asset is missing surah ${widget.surah.id}.');
+      }
       if (!mounted) return;
       setState(() { _verses = verses; _loading = false; _error = null; });
     } catch (_) {
       if (!mounted) return;
-      setState(() { _loading = false; _error = 'ما قدرنا نحمّل نص السورة. تأكد من الإنترنت وحاول مرة ثانية.'; });
+      setState(() {
+        _loading = false;
+        _error = 'تعذّر فتح نص القرآن المرفق. أعد تشغيل التطبيق أو أعد تثبيت نسخة مكتملة البيانات.';
+      });
     }
   }
 
@@ -177,7 +202,7 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
         tooltip: 'مصدر النص',
         onPressed: () => showAboutDialog(
           context: context, applicationName: 'ميثاق المؤمن', applicationVersion: '0.1.0',
-          children: const [Text('نص القرآن العثماني محمّل من Quran JSON، الذي يذكر Tanzil مصدراً للنصوص العثمانية المنشورة.')],
+          children: const [Text('النص العثماني مضمّن داخل التطبيق من مشروع dotquran/corpus الذي ينسب النص إلى Tanzil. لا يغيّر التطبيق كلمات الآيات.')],
         ),
         icon: const Icon(Icons.info_outline_rounded),
       )],
@@ -226,7 +251,7 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
             )),
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 16),
-              child: Text('المصدر: Quran JSON — النص العثماني المنشور مع إحالة إلى Tanzil. قد لا تعمل القراءة دون الإنترنت.', textAlign: TextAlign.center, style: TextStyle(color: _muted, fontSize: 11, height: 1.6)),
+              child: Text('المصدر: Tanzil Project عبر dotquran/corpus. النص مضمّن في التطبيق للقراءة دون إنترنت؛ راجع التوثيق والترخيص في صفحة المشروع.', textAlign: TextAlign.center, style: TextStyle(color: _muted, fontSize: 11, height: 1.6)),
             ),
           ]),
   );

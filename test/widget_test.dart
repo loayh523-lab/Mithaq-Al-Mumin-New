@@ -420,12 +420,18 @@ void main() {
     ));
     await tester.pumpAndSettle();
     expect(find.text('الركعة 1 من 4'), findsOneWidget);
+    await tester.ensureVisible(find.text('تسجيل السجدة الأولى'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('تسجيل السجدة الأولى'));
     await tester.pumpAndSettle();
     expect(find.text('1 / 2'), findsOneWidget);
+    await tester.ensureVisible(find.text('تسجيل السجدة الثانية'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('تسجيل السجدة الثانية'));
     await tester.pumpAndSettle();
     expect(find.text('2 / 2'), findsOneWidget);
+    await tester.ensureVisible(find.text('الركعة التالية'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('الركعة التالية'));
     await tester.pumpAndSettle();
     expect(find.text('الركعة 2 من 4'), findsOneWidget);

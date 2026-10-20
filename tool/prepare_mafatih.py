@@ -65,16 +65,114 @@ def main() -> None:
             and not has_persian_language_markers(plain)
         )
 
+    def arabic_title(value: str, kind: str, index: int, parent: str = "") -> str:
+        """Translate common Persian/transliterated headings and never emit Persian/Latin labels."""
+        raw = normalize_arabic_script(value.strip())
+        if (not has_persian_letters(raw) and not has_latin_letters(raw)
+                and not has_persian_language_markers(raw)):
+            return raw
+
+        lower = raw.lower()
+        known_titles = [
+            (("ziyarat ashura", "ziyārat ʿāshūrā", "زیارت عاشورا"), "زيارة عاشوراء"),
+            (("ziyarat warith", "ziyārat wārith", "زیارت وارث"), "زيارة وارث"),
+            (("ziyarat arbaeen", "ziyarat arba'in", "زیارت اربعین"), "زيارة الأربعين"),
+            (("dua al-sabah", "du'a al-sabah", "دعای صباح", "دعای الصباح"), "دعاء الصباح"),
+            (("dua kumayl", "du'a kumayl", "دعای کمیل"), "دعاء كميل"),
+            (("dua al-iftitah", "du'a al-iftitah", "دعای افتتاح"), "دعاء الافتتاح"),
+            (("dua nudba", "du'a al-nudba", "دعای ندبه"), "دعاء الندبة"),
+            (("dua al-ahd", "du'a al-ahd", "دعای عهد"), "دعاء العهد"),
+            (("dua tawassul", "du'a tawassul", "دعای توسل"), "دعاء التوسل"),
+            (("ziyara jamia", "ziyarat jamia", "زیارت جامعه"), "الزيارة الجامعة"),
+            (("munajat", "مناجات"), "المناجاة"),
+            (("sahifa sajjadiya", "sahifa sajjadiyyah"), "الصحيفة السجادية"),
+        ]
+        for needles, arabic in known_titles:
+            if any(needle in lower for needle in needles):
+                return arabic
+
+        translated = raw
+        phrase_replacements = [
+            (r"دعای", "دعاء"),
+            (r"دعاهای", "أدعية"),
+            (r"زیارت", "زيارة"),
+            (r"مناجات", "مناجاة"),
+            (r"روزهای هفته", "أيام الأسبوع"),
+            (r"روز جمعه", "يوم الجمعة"),
+            (r"روز شنبه", "يوم السبت"),
+            (r"روز یکشنبه", "يوم الأحد"),
+            (r"روز دوشنبه", "يوم الاثنين"),
+            (r"روز سه.?شنبه", "يوم الثلاثاء"),
+            (r"روز چهارشنبه", "يوم الأربعاء"),
+            (r"روز پنجشنبه", "يوم الخميس"),
+            (r"روز", "يوم"),
+            (r"شب", "ليلة"),
+            (r"هفته", "الأسبوع"),
+            (r"اعمال", "أعمال"),
+            (r"سوره", "سورة"),
+            (r"امام حسین", "الإمام الحسين"),
+            (r"امام علی", "أمير المؤمنين"),
+            (r"امام رضا", "الإمام الرضا"),
+        ]
+        for pattern, replacement in phrase_replacements:
+            translated = re.sub(pattern, replacement, translated, flags=re.IGNORECASE)
+
+        latin_replacements = [
+            (r"\\bdu[aāe']+\\b", "دعاء"),
+            (r"\\bziyar(at|ah)\\b", "زيارة"),
+            (r"\\ba'amal|aamal|amal\\b", "أعمال"),
+            (r"\\bmunajat\\b", "مناجاة"),
+            (r"\\bsahifa\\b", "الصحيفة"),
+            (r"\\bkumayl\\b", "كميل"),
+            (r"\\bashura\\b", "عاشوراء"),
+            (r"\\barba(een|'een)\\b", "الأربعين"),
+            (r"\\biftitah\\b", "الافتتاح"),
+            (r"\\bnudba\\b", "الندبة"),
+            (r"\\btawassul\\b", "التوسل"),
+            (r"\\bahd\\b", "العهد"),
+            (r"\\bsabah\\b", "الصباح"),
+            (r"\\bmas(a|aa|e)\\b", "المساء"),
+            (r"\\bjum(a|'a|ah)\\b", "الجمعة"),
+            (r"\\bshab(an|aan)\\b", "شعبان"),
+            (r"\\bramadan\\b", "رمضان"),
+            (r"\\brajab\\b", "رجب"),
+            (r"\\bday\\b", "يوم"),
+            (r"\\bnight\\b", "ليلة"),
+            (r"\\bchapter\\b", "الباب"),
+            (r"\\bsection\\b", "الفصل"),
+        ]
+        for pattern, replacement in latin_replacements:
+            translated = re.sub(pattern, replacement, translated, flags=re.IGNORECASE)
+        translated = re.sub(r"[A-Za-z]+", " ", translated)
+        translated = re.sub(r"\\s+", " ", translated).strip(" -_:،")
+        translated = normalize_arabic_script(translated)
+        if (translated and not has_persian_letters(translated)
+                and not has_latin_letters(translated)
+                and not has_persian_language_markers(translated)):
+            return translated
+
+        # Fallbacks remain descriptive Arabic labels, never untranslated or blank titles.
+        if re.search(r"ziyar|زیارت|زيارة", lower):
+            return f"زيارة رقم {index} ضمن {parent or 'الزيارات'}"
+        if re.search(r"munajat|مناجات|مناجاة", lower):
+            return f"مناجاة رقم {index} ضمن {parent or 'المناجيات'}"
+        if re.search(r"amal|اعمال|أعمال|عمل", lower):
+            return f"عمل رقم {index} ضمن {parent or 'الأعمال'}"
+        if re.search(r"dua|دعای|دعا|دعاء", lower):
+            return f"دعاء رقم {index} ضمن {parent or 'الأدعية'}"
+        return {
+            "chapter": f"الباب رقم {index} من مفاتيح الجنان",
+            "section": f"قسم رقم {index} ضمن {parent or 'مفاتيح الجنان'}",
+            "article": f"نص رقم {index} ضمن {parent or 'مفاتيح الجنان'}",
+        }.get(kind, f"نص رقم {index} من مفاتيح الجنان")
+
     for cidx, chapter in enumerate(source):
         if not isinstance(chapter, dict) or not isinstance(chapter.get("title"), str):
             raise SystemExit(f"Invalid Mafatih chapter at index {cidx}.")
-        if (has_persian_letters(chapter["title"]) or has_latin_letters(chapter["title"])
-                or has_persian_language_markers(chapter["title"])):
-            if cidx < len(arabic_chapter_titles):
-                chapter["title"] = arabic_chapter_titles[cidx]
-            else:
-                chapter["title"] = f"الباب رقم {chapter.get('id', cidx + 1)} من مفاتيح الجنان"
-        chapter["title"] = normalize_arabic_script(chapter["title"])
+        chapter_title = arabic_title(chapter["title"], "chapter", cidx + 1)
+        if cidx < len(arabic_chapter_titles) and chapter_title.startswith("الباب رقم "):
+            chapter_title = arabic_chapter_titles[cidx]
+        chapter["title"] = chapter_title
         sections = chapter.get("sections")
         if not isinstance(sections, list):
             raise SystemExit(f"Chapter {cidx} has no sections list.")
@@ -82,10 +180,7 @@ def main() -> None:
         for sidx, section in enumerate(sections):
             if not isinstance(section, dict) or not isinstance(section.get("title"), str):
                 raise SystemExit(f"Invalid section {sidx} in chapter {cidx}.")
-            if (has_persian_letters(section["title"]) or has_latin_letters(section["title"])
-                    or has_persian_language_markers(section["title"])):
-                section["title"] = f"الفصل رقم {section.get('id', sidx + 1)} من {chapter['title']}"
-            section["title"] = normalize_arabic_script(section["title"])
+            section["title"] = arabic_title(section["title"], "section", sidx + 1, chapter["title"])
             articles = section.get("articles")
             if not isinstance(articles, list):
                 raise SystemExit(f"Section {sidx} in chapter {cidx} has no articles list.")
@@ -93,25 +188,19 @@ def main() -> None:
             for aidx, article in enumerate(articles):
                 if not isinstance(article, dict) or not isinstance(article.get("title"), str):
                     raise SystemExit(f"Invalid article {aidx} in chapter {cidx}, section {sidx}.")
-                if (has_persian_letters(article["title"]) or has_latin_letters(article["title"])
-                    or has_persian_language_markers(article["title"])):
-                    article["title"] = f"النص العربي رقم {article.get('id', aidx + 1)} ضمن {section['title']}"
-                article["title"] = normalize_arabic_script(article["title"])
+                article["title"] = arabic_title(article["title"], "article", aidx + 1, section["title"])
                 items = article.get("items")
                 if not isinstance(items, list):
                     raise SystemExit(f"Article {aidx} does not have an items list.")
                 articles_checked += 1
+                arabic_items = []
                 for item in items:
                     if not isinstance(item, dict):
                         raise SystemExit("Invalid Mafatih text item.")
                     if not isinstance(item.get("content", ""), str):
                         raise SystemExit("Mafatih item content is not text.")
                     items_checked += 1
-
-                # The upstream source includes Persian translations (Translate) and
-                # explanatory text. Keep only Arabic recitation items in the app bundle.
-                arabic_items = []
-                for item in items:
+                    # The source has Persian translations/explanations; keep Arabic recitation only.
                     if not (
                         isinstance(item.get("type"), str)
                         and item["type"].strip().lower()
@@ -119,13 +208,20 @@ def main() -> None:
                     ):
                         continue
                     item_content = normalize_arabic_script(item.get("content", ""))
-                    # Omit actual Persian-language lines but preserve Arabic text
-                    # that simply uses Persian-form kaf/yeh code points.
                     if not is_arabic_recitation(item_content):
                         continue
                     item["content"] = item_content
                     arabic_items.append(item)
                 article["items"] = arabic_items
+
+            # Do not ship article cards that contain no Arabic recitation; they would open blank.
+            section["articles"] = [article for article in articles if article.get("items")]
+        # Do not ship empty headings after filtering the Persian-only source items.
+        chapter["sections"] = [section for section in sections if section.get("articles")]
+
+    source[:] = [chapter for chapter in source if chapter.get("sections")]
+    if not source:
+        raise SystemExit("Mafatih Arabic filtering produced no readable chapters.")
 
     result = {
         "metadata": {

@@ -13,6 +13,7 @@ class ShiaTextLine {
   final String text;
   bool get isArabic => kind.toLowerCase() == 'arabic';
   bool get isTranslation => kind.toLowerCase() == 'translation';
+  bool get isPersian => RegExp(r'persian|farsi|\bfa\b|فارسي|فارسی', caseSensitive: false).hasMatch(kind);
   bool get isTransliteration => kind.toLowerCase() == 'transliteration';
   factory ShiaTextLine.fromJson(Map<String, dynamic> json) => ShiaTextLine(
     index: json['index'] is int ? json['index'] as int : 0,
@@ -206,7 +207,9 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
 
   List<ShiaTextLine> get _visibleLines => widget.entry.lines.where((line) {
     if (_display == 'العربي') return line.isArabic;
-    if (_display == 'العربي والترجمة') return line.isArabic || line.isTranslation;
+    if (_display == 'الفارسي') return line.isPersian;
+    if (_display == 'العربي والترجمة') return line.isArabic || (line.isTranslation && !line.isPersian);
+    if (_display == 'العربي والفارسي') return line.isArabic || line.isPersian;
     return true;
   }).toList();
 
@@ -229,14 +232,18 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
         Padding(
           padding: const EdgeInsets.fromLTRB(14, 4, 14, 4),
           child: Column(children: [
-            SegmentedButton<String>(
-              segments: const [
-                ButtonSegment(value: 'العربي', label: Text('العربي')),
-                ButtonSegment(value: 'العربي والترجمة', label: Text('العربي والترجمة')),
-                ButtonSegment(value: 'كل الأسطر', label: Text('كل الأسطر')),
-              ],
-              selected: {_display},
-              onSelectionChanged: (v) => setState(() => _display = v.first),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(children: [
+                'العربي', 'الفارسي', 'العربي والفارسي', 'العربي والترجمة', 'كل الأسطر'
+              ].map((choice) => Padding(
+                padding: const EdgeInsetsDirectional.only(end: 7),
+                child: ChoiceChip(
+                  label: Text(choice),
+                  selected: _display == choice,
+                  onSelected: (_) => setState(() => _display = choice),
+                ),
+              )).toList()),
             ),
             Row(children: [
               const Icon(Icons.text_fields_rounded, color: _shiaGold),
@@ -258,17 +265,19 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
                 ),
                 ...lines.map((line) {
                   final arabic = line.isArabic;
+                  final persian = line.isPersian;
+                  final rtl = arabic || persian;
                   final translation = line.isTranslation;
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 12),
                     child: SelectableText(
                       line.text,
-                      textDirection: arabic ? TextDirection.rtl : TextDirection.ltr,
-                      textAlign: arabic ? TextAlign.justify : TextAlign.start,
+                      textDirection: rtl ? TextDirection.rtl : TextDirection.ltr,
+                      textAlign: rtl ? TextAlign.justify : TextAlign.start,
                       style: TextStyle(
-                        fontSize: arabic ? _fontSize : _fontSize * .75,
-                        height: arabic ? 2.0 : 1.6,
-                        color: arabic ? Colors.white : (translation ? _shiaMuted : Colors.white70),
+                        fontSize: rtl ? _fontSize : _fontSize * .75,
+                        height: rtl ? 2.0 : 1.6,
+                        color: rtl ? Colors.white : (translation ? _shiaMuted : Colors.white70),
                       ),
                     ),
                   );

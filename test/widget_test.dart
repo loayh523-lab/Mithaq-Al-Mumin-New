@@ -6,6 +6,11 @@ import 'package:mithaq_al_mumin/quran/quran_pages.dart';
 import 'package:mithaq_al_mumin/features/prayer_calendar_page.dart';
 import 'package:mithaq_al_mumin/features/mafatih_library_page.dart';
 import 'package:mithaq_al_mumin/features/shia_text_library_page.dart';
+import 'package:mithaq_al_mumin/features/good_deeds_page.dart';
+import 'package:mithaq_al_mumin/features/names_of_allah_page.dart';
+import 'package:mithaq_al_mumin/features/qada_tracker_page.dart';
+import 'package:mithaq_al_mumin/features/dhikr_fortress_page.dart';
+import 'package:mithaq_al_mumin/features/smart_search_page.dart';
 
 void main() {
   setUp(() {
@@ -54,7 +59,11 @@ void main() {
     await tester.pumpWidget(const MithaqApp());
     await tester.tap(find.byIcon(Icons.menu));
     await tester.pumpAndSettle();
-    await tester.ensureVisible(find.text('متابعة الصلاة'));
+    await tester.scrollUntilVisible(
+      find.text('متابعة الصلاة'),
+      250,
+      scrollable: find.descendant(of: find.byType(Drawer), matching: find.byType(Scrollable)).first,
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.text('متابعة الصلاة'));
     await tester.pumpAndSettle();
@@ -68,7 +77,11 @@ void main() {
     await tester.pumpWidget(const MithaqApp());
     await tester.tap(find.byIcon(Icons.menu));
     await tester.pumpAndSettle();
-    await tester.ensureVisible(find.text('ختمة القرآن'));
+    await tester.scrollUntilVisible(
+      find.text('ختمة القرآن'),
+      250,
+      scrollable: find.descendant(of: find.byType(Drawer), matching: find.byType(Scrollable)).first,
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.text('ختمة القرآن'));
     await tester.pumpAndSettle();
@@ -173,7 +186,7 @@ void main() {
 
   testWidgets('Shia dua library opens its offline collection', (tester) async {
     await tester.pumpWidget(const MaterialApp(
-      home: Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage()),
+      home: Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'الزيارات')),
     ));
     await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 700)));
     await tester.pump();
@@ -191,4 +204,54 @@ void main() {
     );
     expect(find.text('زيارة عاشوراء'), findsWidgets);
   });
+  testWidgets('good deeds checklist saves checked items locally', (tester) async {
+    await tester.pumpWidget(const MaterialApp(
+      home: Directionality(textDirection: TextDirection.rtl, child: GoodDeedsPage()),
+    ));
+    await tester.pumpAndSettle();
+    expect(find.text('صالح الأعمال'), findsOneWidget);
+    await tester.tap(find.text('قراءة القرآن الكريم'));
+    await tester.pumpAndSettle();
+    expect(find.text('1 من 10 أعمال'), findsOneWidget);
+  });
+
+  testWidgets('Names of Allah opens its Arabic offline list', (tester) async {
+    await tester.pumpWidget(const MaterialApp(
+      home: Directionality(textDirection: TextDirection.rtl, child: NamesOfAllahPage()),
+    ));
+    expect(find.text('أسماء الله الحسنى'), findsOneWidget);
+    expect(find.text('الرحمن'), findsOneWidget);
+    expect(find.text('الصبور'), findsOneWidget);
+  });
+
+  testWidgets('qada tracker shows independent prayer and fasting counters', (tester) async {
+    await tester.pumpWidget(const MaterialApp(
+      home: Directionality(textDirection: TextDirection.rtl, child: QadaTrackerPage()),
+    ));
+    await tester.pumpAndSettle();
+    expect(find.text('سجل القضاء'), findsOneWidget);
+    expect(find.text('صلاة الصبح'), findsOneWidget);
+    expect(find.text('صيام القضاء'), findsOneWidget);
+  });
+
+  testWidgets('dhikr fortress switches between morning and evening counters', (tester) async {
+    await tester.pumpWidget(const MaterialApp(
+      home: Directionality(textDirection: TextDirection.rtl, child: DhikrFortressPage()),
+    ));
+    await tester.pumpAndSettle();
+    expect(find.text('حصن الأذكار'), findsOneWidget);
+    expect(find.text('أذكار الصباح'), findsOneWidget);
+    await tester.tap(find.text('أذكار المساء'));
+    await tester.pumpAndSettle();
+    expect(find.text('الصلاة على محمد وآل محمد'), findsOneWidget);
+  });
+
+  testWidgets('smart search screen offers cross-library offline search', (tester) async {
+    await tester.pumpWidget(const MaterialApp(
+      home: Directionality(textDirection: TextDirection.rtl, child: SmartSearchPage()),
+    ));
+    expect(find.text('الباحث الذكي'), findsOneWidget);
+    expect(find.textContaining('ابحث في القرآن والأدعية والزيارات'), findsOneWidget);
+  });
+
 }

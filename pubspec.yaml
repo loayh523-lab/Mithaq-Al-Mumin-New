@@ -18,6 +18,7 @@ dependencies:
   timezone: ^0.10.1
   geomag: ^0.3.0
   audioplayers: ^6.5.1
+  share_plus: ^13.3.1
   url_launcher: ^6.3.2
   wakelock_plus: 1.8.0
 

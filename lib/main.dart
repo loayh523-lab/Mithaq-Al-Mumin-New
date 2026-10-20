@@ -723,7 +723,10 @@ class _PrayerTrackerPageState extends State<PrayerTrackerPage> {
           else
             ..._prayers.map((prayer) => Card(
               color: _panel,
+              clipBehavior: Clip.antiAlias,
               margin: const EdgeInsets.only(bottom: 9),
+              child: Material(
+              color: Colors.transparent,
               child: CheckboxListTile(
                 value: _completed.contains(prayer),
                 onChanged: (checked) => _toggle(prayer, checked ?? false),

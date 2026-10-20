@@ -352,9 +352,18 @@ void main() {
     await tester.pumpWidget(const MaterialApp(
       home: Directionality(textDirection: TextDirection.rtl, child: FaithServicesPage()),
     ));
+    await tester.pumpAndSettle();
     expect(find.text('الخدمات الإيمانية'), findsOneWidget);
     expect(find.text('فقه المؤمن — المسائل الشرعية'), findsOneWidget);
     expect(find.text('تفسير القرآن الكريم'), findsOneWidget);
+    // The services list is longer than the test viewport; scroll the target tile
+    // into view instead of assuming every ListView child is mounted immediately.
+    await tester.scrollUntilVisible(
+      find.text('الاستخارة القرآنية — إرشاد شرعي'),
+      250,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
     expect(find.text('الاستخارة القرآنية — إرشاد شرعي'), findsOneWidget);
   });
 

@@ -59,7 +59,7 @@ class ShiaTextEntry {
       title.contains('مناجاة') ||
       alternateName.contains('مناجاة');
   bool get isOccasionDua {
-    final value = '${slug.toLowerCase()} ${title} ${alternateName}';
+    final value = '${slug.toLowerCase()} $title $alternateName';
     return RegExp(r'eid|ramadan|arafah|mubahala|mubahilah|laylat|مناسبة|العيد|رمضان|عرفة|مباهلة').hasMatch(value);
   }
   String get category {

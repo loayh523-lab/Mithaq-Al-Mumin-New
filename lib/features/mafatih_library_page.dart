@@ -235,8 +235,8 @@ String mafatihCategoryFor(String value) {
 
   // Texts explicitly prescribed for both periods live in their own catalogue.
   if (RegExp(r'الصباح.{0,18}المساء|المساء.{0,18}الصباح|صباحاً ومساءً|صباحا ومساء|صباحاً ومساء|صباحا ومساءً|صباحا ومساءا|morning.{0,18}evening|evening.{0,18}morning').hasMatch(text)) return 'أذكار مشتركة';
-  if (RegExp(r'أذكار الصباح|دعاء الصباح|الصباح|sabah|morning').hasMatch(text)) return 'أدعية الصباح';
-  if (RegExp(r'أذكار المساء|دعاء المساء|المساء|masa|evening').hasMatch(text)) return 'أدعية المساء';
+  if (RegExp(r'أذكار الصباح|دعاء الصباح|الصباح|الصبح|الفجر|sabah|morning').hasMatch(text)) return 'أدعية الصباح';
+  if (RegExp(r'أذكار المساء|دعاء المساء|المساء|عشية|الغروب|قبل غروب الشمس|عند غروب الشمس|masa|evening|sunset').hasMatch(text)) return 'أدعية المساء';
 
   if (RegExp(r'تعقيبات|تعقيب الصلاة|تعقيب الفجر|تعقيب الظهر|تعقيب العصر|تعقيب المغرب|تعقيب العشاء|taqibat').hasMatch(text)) return 'تعقيبات';
   if (RegExp(r'دعاء الأحد|دعاء الاثنين|دعاء الثلاثاء|دعاء الأربعاء|دعاء الخميس|دعاء الجمعة|دعاء السبت|دعوات أيام الأسبوع|sunday|monday|tuesday|wednesday|thursday|friday|saturday').hasMatch(text)) return 'أدعية الأيام';
@@ -282,7 +282,7 @@ class _MafatihCategoryPageState extends State<MafatihCategoryPage> {
           for (final section in chapter.sections) {
             for (final article in section.articles) {
               final contentHead = article.items
-                  .map((item) => _plainText(item.content))
+                  .map((item) => plainMafatihText(item.content))
                   .where((text) => text.isNotEmpty)
                   .take(3)
                   .join(' ');
@@ -392,7 +392,7 @@ class MafatihArticlesPage extends StatelessWidget {
       separatorBuilder: (_, __) => const SizedBox(height: 8),
       itemBuilder: (context, index) {
         final article = section.articles[index];
-        final preview = article.items.map((item) => _plainText(item.content)).where((s) => s.isNotEmpty).take(2).join(' ');
+        final preview = article.items.map((item) => plainMafatihText(item.content)).where((s) => s.isNotEmpty).take(2).join(' ');
         return Card(color: _mfPanel, child: ListTile(
           title: Text(_arabicOnlyTitle(article.title, 'نص عربي ${article.id}'), style: const TextStyle(fontWeight: FontWeight.bold)),
           subtitle: preview.isEmpty ? null : Text(preview, maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(color: _mfMuted)),
@@ -436,7 +436,7 @@ class _MafatihArticlePageState extends State<MafatihArticlePage> {
   @override Widget build(BuildContext context) {
     final chunks = widget.article.items
         .where((item) => _isArabicRecitationType(item.type))
-        .map((item) => (type: item.type, text: _plainText(item.content)))
+        .map((item) => (type: item.type, text: plainMafatihText(item.content)))
         .where((item) => item.text.trim().isNotEmpty && isArabicMafatihRecitation(item.text))
         .toList();
     final wholeText = chunks.map((item) => item.text).join('\n\n');
@@ -531,7 +531,7 @@ class _MafatihSearchPageState extends State<MafatihSearchPage> {
         for (final section in chapter.sections) {
           for (final article in section.articles) {
             final titleMatches = _normalizeTitle(article.title).contains(query) || _normalizeTitle(section.title).contains(query);
-            final textMatches = !titleMatches && article.items.any((item) => _normalizeTitle(_plainText(item.content)).contains(query));
+            final textMatches = !titleMatches && article.items.any((item) => _normalizeTitle(plainMafatihText(item.content)).contains(query));
             if (titleMatches || textMatches) {
               hits.add(_MafatihSearchHit(chapter: chapter, section: section, article: article));
               if (hits.length >= 100) break;
@@ -605,7 +605,7 @@ String _normalizeTitle(String value) => value
   .replaceAll('ے', 'ي')
   .replaceAll('ہ', 'ه');
 
-String _plainText(String value) => value
+String plainMafatihText(String value) => value
   .replaceAll(RegExp(r'<br\s*/?>', caseSensitive: false), '\n')
   .replaceAll(RegExp(r'</(p|div|li|h[1-6])\s*>', caseSensitive: false), '\n\n')
   .replaceAll(RegExp(r'<[^>]*>'), '')

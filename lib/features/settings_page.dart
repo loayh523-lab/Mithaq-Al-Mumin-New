@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/prayer_locations.dart';
+import '../services/prayer_notification_service.dart';
 
 const _settingsPanel = Color(0xFF10251E);
 const _settingsGold = Color(0xFFD9B66D);
@@ -15,6 +16,7 @@ class _SettingsPageState extends State<SettingsPage> {
   String _cityId = PrayerLocations.cities.first.id;
   double _fontSize = 24;
   bool _loaded = false;
+  bool _notificationsEnabled = false;
 
   @override void initState() { super.initState(); _load(); }
   Future<void> _load() async {
@@ -24,6 +26,7 @@ class _SettingsPageState extends State<SettingsPage> {
       setState(() {
         _cityId = PrayerLocations.byId(prefs.getString('prayer_city')).id;
         _fontSize = (prefs.getDouble('quran_font_size') ?? 24).clamp(16, 34).toDouble();
+        _notificationsEnabled = prefs.getBool('prayer_notifications_enabled') ?? false;
         _loaded = true;
       });
     } catch (_) {
@@ -36,10 +39,34 @@ class _SettingsPageState extends State<SettingsPage> {
     setState(() => _cityId = id);
     try {
       await PrayerLocations.save(id);
+      if (_notificationsEnabled) {
+        final ok = await PrayerNotificationService.configure(enabled: true, city: PrayerLocations.byId(id));
+        if (!ok && mounted) _message('تم حفظ المدينة لكن تعذّر تحديث التذكيرات. افتح إعدادات الإشعارات وتحقق من الإذن.');
+      }
       if (mounted) _message('تم حفظ المدينة للمواقيت والقبلة');
     } catch (_) {
       if (mounted) _message('تعذّر حفظ المدينة على الجهاز');
     }
+  }
+
+  Future<void> _toggleNotifications(bool enabled) async {
+    if (!enabled) {
+      await PrayerNotificationService.cancelAll();
+      if (mounted) {
+        setState(() => _notificationsEnabled = false);
+        _message('تم إيقاف تذكيرات الصلاة');
+      }
+      return;
+    }
+    final ok = await PrayerNotificationService.configure(
+      enabled: true,
+      city: PrayerLocations.byId(_cityId),
+    );
+    if (!mounted) return;
+    setState(() => _notificationsEnabled = ok);
+    _message(ok
+      ? 'تم تفعيل تذكيرات الصلاة للأيام القادمة'
+      : 'تعذّر التفعيل. تحقق من إذن الإشعارات في إعدادات الجهاز.');
   }
 
   Future<void> _saveFontSize(double value) async {
@@ -71,6 +98,21 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           const SizedBox(height: 8),
           Text('الإحداثيات التقريبية: ${city.latitude.toStringAsFixed(3)}, ${city.longitude.toStringAsFixed(3)}', style: const TextStyle(color: _settingsMuted, fontSize: 11)),
+        ],
+      ),
+      const SizedBox(height: 14),
+      _section(
+        icon: Icons.notifications_active_outlined,
+        title: 'تذكيرات الصلاة',
+        children: [
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            title: const Text('إشعارات الصلاة'),
+            subtitle: const Text('تنبيهات محلية للأيام الـ12 القادمة وفق الحساب الفلكي التقديري. لا يتضمن ذلك أذاناً صوتياً، وقد تتأخر الإشعارات بسبب إعدادات توفير الطاقة.', style: TextStyle(color: _settingsMuted, height: 1.5, fontSize: 12)),
+            value: _notificationsEnabled,
+            onChanged: _loaded ? _toggleNotifications : null,
+            activeThumbColor: _settingsGold,
+          ),
         ],
       ),
       const SizedBox(height: 14),

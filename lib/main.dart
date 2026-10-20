@@ -9,6 +9,8 @@ import 'features/qibla_page.dart';
 import 'features/settings_page.dart';
 import 'features/mafatih_library_page.dart';
 import 'features/shia_text_library_page.dart';
+import 'features/good_deeds_page.dart';
+import 'features/names_of_allah_page.dart';
 import 'services/prayer_locations.dart';
 import 'services/prayer_notification_service.dart';
 
@@ -19,6 +21,15 @@ const _panel = Color(0xFF10251E);
 const _emerald = Color(0xFF1C8060);
 const _gold = Color(0xFFD9B66D);
 const _muted = Color(0xFF9EB5A9);
+
+const _dailyInspirations = <({String text, String source})>[
+  (text: 'أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ', source: 'سورة الرعد، الآية 28'),
+  (text: 'وَقُلْ رَبِّ زِدْنِي عِلْمًا', source: 'سورة طه، الآية 114'),
+  (text: 'فَإِنَّ مَعَ الْعُسْرِ يُسْرًا', source: 'سورة الشرح، الآية 5'),
+  (text: 'إِنَّ اللَّهَ مَعَ الصَّابِرِينَ', source: 'سورة البقرة، الآية 153'),
+  (text: 'لَا تَقْنَطُوا مِنْ رَحْمَةِ اللَّهِ', source: 'سورة الزمر، الآية 53'),
+  (text: 'وَهُوَ مَعَكُمْ أَيْنَ مَا كُنْتُمْ', source: 'سورة الحديد، الآية 4'),
+];
 
 class MithaqApp extends StatelessWidget {
   const MithaqApp({super.key});
@@ -177,6 +188,13 @@ class _MainShellState extends State<MainShell> {
             Text('ميثاق المؤمن', style: TextStyle(fontWeight: FontWeight.w800)),
           ],
         ),
+        actions: [
+          IconButton(
+            tooltip: 'الباحث الذكي',
+            onPressed: () => _pushPage(const GoodDeedsPage()),
+            icon: const Icon(Icons.checklist_rounded, color: _gold),
+          ),
+        ],
       ),
       body: SafeArea(
         child: IndexedStack(
@@ -235,6 +253,8 @@ class _MainShellState extends State<MainShell> {
                 _drawerItem(Icons.auto_awesome_rounded, 'الأدعية والزيارات', () => _selectTab(2), selected: _selected == 2),
                 _drawerItem(Icons.fingerprint_rounded, 'التسبيح', () => _selectTab(3), selected: _selected == 3),
                 _drawerItem(Icons.settings_rounded, 'الإعدادات', () => _selectTab(4), selected: _selected == 4),
+                _drawerItem(Icons.checklist_rounded, 'صالح الأعمال', () => _openDrawerPage(const GoodDeedsPage())),
+                _drawerItem(Icons.auto_awesome_rounded, 'أسماء الله الحسنى', () => _openDrawerPage(const NamesOfAllahPage())),
                 const Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(14, 18, 14, 8),
                   child: Text('خدمات إضافية', style: TextStyle(color: _gold, fontWeight: FontWeight.w800, fontSize: 13)),
@@ -272,6 +292,12 @@ class _MainShellState extends State<MainShell> {
   void _selectTab(int index) {
     Navigator.of(context).pop();
     setState(() => _selected = index);
+  }
+
+  void _pushPage(Widget page) {
+    Navigator.of(context).push(MaterialPageRoute<void>(
+      builder: (_) => Directionality(textDirection: TextDirection.rtl, child: page),
+    ));
   }
 
   void _openDrawerPage(Widget page) {
@@ -350,6 +376,7 @@ class _MainShellState extends State<MainShell> {
     final dayOfYear = DateTime(_now.year, _now.month, _now.day)
         .difference(DateTime(_now.year, 1, 1)).inDays;
     final dailyTask = _dailyTasks[dayOfYear % _dailyTasks.length];
+    final inspiration = _dailyInspirations[dayOfYear % _dailyInspirations.length];
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
@@ -395,6 +422,26 @@ class _MainShellState extends State<MainShell> {
               ),
             ],
           ),
+        ),
+        const SizedBox(height: 12),
+        Container(
+          padding: const EdgeInsets.all(17),
+          decoration: BoxDecoration(
+            color: _panel,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: _gold.withValues(alpha: .3)),
+          ),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const Row(children: [
+              Icon(Icons.lightbulb_outline_rounded, color: _gold),
+              SizedBox(width: 8),
+              Text('قبس اليوم', style: TextStyle(color: _gold, fontWeight: FontWeight.w800, fontSize: 16)),
+            ]),
+            const SizedBox(height: 10),
+            Text(inspiration.text, textDirection: TextDirection.rtl, style: const TextStyle(fontSize: 20, height: 1.9, fontWeight: FontWeight.w700)),
+            const SizedBox(height: 5),
+            Text(inspiration.source, style: const TextStyle(color: _muted, fontSize: 12)),
+          ]),
         ),
         const SizedBox(height: 14),
         Container(
@@ -539,7 +586,15 @@ class _MainShellState extends State<MainShell> {
             ],
           ),
         ),
-        const SizedBox(height: 22),
+        Align(
+          alignment: AlignmentDirectional.centerStart,
+          child: TextButton.icon(
+            onPressed: () => _pushPage(const GoodDeedsPage()),
+            icon: const Icon(Icons.checklist_rounded),
+            label: const Text('عرض بقية صالح الأعمال'),
+          ),
+        ),
+        const SizedBox(height: 12),
         Material(
           color: Colors.transparent,
           child: InkWell(
@@ -647,6 +702,7 @@ class _TasbeehPageState extends State<TasbeehPage> {
   }
 
   void _increment() {
+    HapticFeedback.lightImpact();
     setState(() {
       if (!_zahraMode) {
         _generalCount++;
@@ -737,11 +793,12 @@ class _TasbeehPageState extends State<TasbeehPage> {
         ],
         Center(
           child: Column(children: [
-            Text(
-              _zahraMode ? (current >= (target ?? 0) && _step == 2 ? 'اكتمل تسبيح الزهراء' : step.phrase) : 'سبحان الله والحمد لله ولا إله إلا الله والله أكبر',
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 20, height: 1.8, color: _gold, fontWeight: FontWeight.w800),
-            ),
+            if (_zahraMode)
+              Text(
+                current >= (target ?? 0) && _step == 2 ? 'اكتمل تسبيح الزهراء' : step.phrase,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 20, height: 1.8, color: _gold, fontWeight: FontWeight.w800),
+              ),
             const SizedBox(height: 18),
             if (_zahraMode) ...[
               Text('$_count', style: const TextStyle(fontSize: 54, fontWeight: FontWeight.w800)),
@@ -965,6 +1022,7 @@ class KhatmaPage extends StatefulWidget {
 
 class _KhatmaPageState extends State<KhatmaPage> {
   int _completedJuz = 0;
+  final Set<int> _completedPages = <int>{};
 
   @override
   void initState() {
@@ -976,10 +1034,14 @@ class _KhatmaPageState extends State<KhatmaPage> {
     try {
       final prefs = await SharedPreferences.getInstance();
       if (!mounted) return;
+      final savedPages = prefs.getStringList('khatma_completed_pages') ?? const <String>[];
       setState(() {
         _completedJuz = (prefs.getInt('khatma_completed_juz') ?? 0)
             .clamp(0, 30)
             .toInt();
+        _completedPages
+          ..clear()
+          ..addAll(savedPages.map(int.tryParse).whereType<int>().where((page) => page >= 1 && page <= 604));
       });
     } catch (_) {
       // Progress can still be changed for this session.
@@ -998,6 +1060,27 @@ class _KhatmaPageState extends State<KhatmaPage> {
           const SnackBar(content: Text('تعذّر حفظ التقدّم على الجهاز')),
         );
       }
+    }
+  }
+
+  Future<void> _togglePage(int page) async {
+    setState(() {
+      if (_completedPages.contains(page)) {
+        _completedPages.remove(page);
+      } else {
+        _completedPages.add(page);
+      }
+    });
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setStringList(
+        'khatma_completed_pages',
+        (_completedPages.toList()..sort()).map((value) => value.toString()).toList(),
+      );
+    } catch (_) {
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('تعذّر حفظ صفحات الختمة')),
+      );
     }
   }
 
@@ -1130,11 +1213,54 @@ class _KhatmaPageState extends State<KhatmaPage> {
               title: const Text('الخطوة التالية'),
               subtitle: Text('بعد قراءة الجزء ${_completedJuz + 1}، حدّث تقدّمك هنا.'),
             ),
-          const SizedBox(height: 8),
-          const Text(
-            'هذا سجلّ للتقدّم فقط؛ لا يحدّد موضع القراءة داخل الجزء.',
-            style: TextStyle(color: _muted, fontSize: 12, height: 1.6),
+          const SizedBox(height: 18),
+          Container(
+            padding: const EdgeInsets.all(18),
+            decoration: BoxDecoration(color: _panel, borderRadius: BorderRadius.circular(20), border: Border.all(color: _gold.withValues(alpha: .25))),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              const Text('تتبّع الصفحات', style: TextStyle(color: _gold, fontSize: 20, fontWeight: FontWeight.w800)),
+              const SizedBox(height: 6),
+              const Text('سجّل كل صفحة بعد قراءتها في مصحف المدينة ذي 604 صفحات. هذا التتبّع مستقل عن عدّاد الأجزاء أعلاه.', style: TextStyle(color: _muted, height: 1.6, fontSize: 12)),
+              const SizedBox(height: 12),
+              Row(children: [
+                Expanded(child: Text('${_completedPages.length} / 604 صفحة', style: const TextStyle(color: _gold, fontWeight: FontWeight.bold))),
+                Text('${(_completedPages.length / 604 * 100).round()}%', style: const TextStyle(color: _gold, fontWeight: FontWeight.bold)),
+              ]),
+              const SizedBox(height: 8),
+              ClipRRect(borderRadius: BorderRadius.circular(20), child: LinearProgressIndicator(value: _completedPages.length / 604, minHeight: 8, backgroundColor: _ink, color: _gold)),
+              const SizedBox(height: 8),
+              ExpansionTile(
+                tilePadding: EdgeInsets.zero,
+                title: const Text('اختيار الصفحات المكتملة'),
+                subtitle: const Text('اضغط رقم الصفحة لتسجيلها أو إلغاء تسجيلها'),
+                children: [
+                  SizedBox(
+                    height: 360,
+                    child: GridView.builder(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 6, crossAxisSpacing: 6, mainAxisSpacing: 6),
+                      itemCount: 604,
+                      itemBuilder: (context, index) {
+                        final page = index + 1;
+                        final done = _completedPages.contains(page);
+                        return Material(
+                          color: done ? _emerald : _ink,
+                          borderRadius: BorderRadius.circular(9),
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(9),
+                            onTap: () => _togglePage(page),
+                            child: Center(child: Text('$page', style: TextStyle(color: done ? Colors.white : _muted, fontSize: 11, fontWeight: done ? FontWeight.bold : FontWeight.normal))),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ]),
           ),
+          const SizedBox(height: 8),
+          const Text('أرقام الصفحات تخص مصحف المدينة ذي 604 صفحات. إذا كنت تستخدم طبعة مختلفة، اعتمد ترقيمها أو تابع الأجزاء أعلاه.', style: TextStyle(color: _muted, fontSize: 12, height: 1.6)),
         ],
       ),
     );

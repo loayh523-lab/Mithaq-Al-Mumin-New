@@ -6,6 +6,7 @@ import 'quran/quran_pages.dart';
 import 'features/prayer_calendar_page.dart';
 import 'features/qibla_page.dart';
 import 'features/settings_page.dart';
+import 'features/mafatih_library_page.dart';
 import 'services/prayer_locations.dart';
 import 'services/prayer_notification_service.dart';
 
@@ -312,7 +313,20 @@ class _DuaLibraryState extends State<_DuaLibrary> {
       children: [
         const Text('الأدعية والأذكار', style: TextStyle(fontSize: 25, fontWeight: FontWeight.w800)),
         const SizedBox(height: 6),
-        const Text('مكتبة أولية للأذكار العامة مع توضيح طبيعة النصوص', style: TextStyle(color: _muted)),
+        const Text('الأدعية والأذكار والمكتبة الشيعية', style: TextStyle(color: _muted)),
+        const SizedBox(height: 14),
+        Card(
+          color: _panel,
+          child: ListTile(
+            leading: const CircleAvatar(backgroundColor: Color(0x223CB58B), child: Icon(Icons.auto_stories_rounded, color: _gold)),
+            title: const Text('مفاتيح الجنان', style: TextStyle(fontWeight: FontWeight.bold)),
+            subtitle: const Text('المكتبة الكاملة المتاحة دون إنترنت', style: TextStyle(color: _muted)),
+            trailing: const Icon(Icons.chevron_left_rounded, color: _gold),
+            onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+              builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihLibraryPage()),
+            )),
+          ),
+        ),
         const SizedBox(height: 16),
         TextField(
           controller: _search,

@@ -110,11 +110,23 @@ void main() {
     ));
     await tester.enterText(find.byType(TextField), 'الحمد');
     await tester.tap(find.byIcon(Icons.arrow_forward_rounded));
-    await tester.runAsync(() => Future<void>.delayed(const Duration(seconds: 12)));
+    // Let the asset bundle and JSON decoding finish in real async time, then
+    // pump the widget tree repeatedly so the completed search state is rendered.
     await tester.pump();
-    await tester.pump(const Duration(milliseconds: 100));
-    expect(find.textContaining('الفاتحة • الآية 2'), findsOneWidget);
+    await tester.runAsync(() async {
+      await Future<void>.delayed(const Duration(seconds: 2));
+    });
+    for (var i = 0; i < 10; i++) {
+      await tester.pump(const Duration(milliseconds: 100));
+      if (find.textContaining('النتائج الأولى').evaluate().isNotEmpty ||
+          find.textContaining('ما لقينا آيات مطابقة').evaluate().isNotEmpty ||
+          find.textContaining('تعذّر فتح ملف القرآن المحلي').evaluate().isNotEmpty) {
+        break;
+      }
+      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 200)));
+    }
     expect(find.textContaining('النتائج الأولى'), findsOneWidget);
+    expect(find.textContaining('الفاتحة • الآية 2'), findsOneWidget);
   });
 
   testWidgets('Mafatih library opens its bundled offline catalog', (tester) async {

@@ -298,7 +298,7 @@ String _nahjSearchKey(String value) => value
     .replaceAll('آ', 'ا')
     .replaceAll('ى', 'ي')
     .replaceAll('ة', 'ه')
-    .replaceAll(RegExp(r'[\\u064B-\\u065F\\u0670]'), '')
+    .replaceAll(RegExp(r'[\u064B-\u065F\u0670]'), '')
     .trim();
 
 class NahjAlBalaghaPage extends StatefulWidget {
@@ -483,7 +483,7 @@ class _NahjAlBalaghaPageState extends State<NahjAlBalaghaPage> {
                       separatorBuilder: (_, __) => const SizedBox(height: 8),
                       itemBuilder: (context, index) {
                         final entry = visible[index];
-                        final preview = entry.text.replaceAll(RegExp(r'\\s+'), ' ').trim();
+                        final preview = entry.text.replaceAll(RegExp(r'\s+'), ' ').trim();
                         final shortPreview = preview.length > 180 ? '${preview.substring(0, 180)}…' : preview;
                         return Card(
                           color: _libraryPanel,
@@ -587,7 +587,7 @@ class NahjEntryPage extends StatelessWidget {
 
   Future<void> _copy(BuildContext context) async {
     await Clipboard.setData(ClipboardData(
-      text: '${entry.title} — ${entry.categoryLabel} ${entry.number}\\n\\n${entry.text}',
+      text: '${entry.title} — ${entry.categoryLabel} ${entry.number}\n\n${entry.text}',
     ));
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(

@@ -296,7 +296,7 @@ class _MainShellState extends State<MainShell> {
                 _drawerItem(Icons.library_books_rounded, 'مكتبة الأدعية والزيارات', () => _openDrawerPage(const ShiaTextLibraryPage())),
                 _drawerItem(Icons.volunteer_activism_rounded, 'الخدمات الإيمانية', () => _openDrawerPage(const FaithServicesPage())),
                 _drawerItem(Icons.star_rounded, 'المفضلة المباركة', () => _openDrawerPage(const FavoritesPage())),
-                _drawerItem(Icons.exposure_plus_1_rounded, 'حاسبة الركعات', () => _openDrawerPage(const RakahCounterPage())),
+                _drawerItem(Icons.calculate_outlined, 'حاسبة الركعات', () => _openDrawerPage(const RakahCounterPage())),
               ],
             ),
           ),

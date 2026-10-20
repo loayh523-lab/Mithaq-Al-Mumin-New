@@ -71,8 +71,6 @@ class _SmartSearchPageState extends State<SmartSearchPage> {
 
   String _normalize(String value) => normalizeSmartSearchText(value);
 
-  String _plainText(String value) => stripSmartSearchMarkup(value);
-
   Future<void> _search() async {
     final query = _normalize(_controller.text.trim());
     if (query.length < 2) {

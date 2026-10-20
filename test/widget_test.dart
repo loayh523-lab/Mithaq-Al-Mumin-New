@@ -329,7 +329,10 @@ void main() {
   });
 
   testWidgets('dhikr fortress displays distinct Arabic morning and evening lists', (tester) async {
-    final library = await ShiaTextData.load();
+    // AssetBundle reads must run outside widget-test fake async time; otherwise
+    // awaiting the uncached JSON load can stall before the widget is even mounted.
+    final library = await tester.runAsync(() => ShiaTextData.load());
+    expect(library, isNotNull);
     final morningEntries = library.entries
         .where((entry) => entry.category == 'أدعية الصباح' && entry.arabicText.trim().isNotEmpty)
         .toList(growable: false);

@@ -165,8 +165,8 @@ def merge_mafatih_entries(base_entries: list[dict]) -> tuple[list[dict], int]:
                     "type": "mafatih",
                     "sourceUrl": "",
                     "sourceLabel": (
-                        f"مفاتيح الجنان، باب: {chapter_title}، "
-                        f"فصل: {section_title}، عنوان النص: {title}"
+                        f"مفاتيح الجنان، {chapter_title}، "
+                        f"القسم: {section_title}، عنوان النص: {title}"
                     ),
                     "categoryOverride": category,
                     "lines": lines,

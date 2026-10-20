@@ -5,7 +5,9 @@ Upstream project: https://github.com/aminpaydar/Mafatih
 The upstream repository declares Apache License 2.0. This script preserves
 chapter/section/article/item content, and adds separate provenance metadata.
 """
+import html
 import json
+import re
 import os
 import tempfile
 import urllib.request
@@ -43,10 +45,21 @@ def main() -> None:
     def has_persian_letters(value: str) -> bool:
         return any(character in persian_only_letters for character in value)
 
+    def has_latin_letters(value: str) -> bool:
+        return re.search(r"[A-Za-z]", value) is not None
+
+    def is_arabic_recitation(value: str) -> bool:
+        plain = html.unescape(re.sub(r"<[^>]*>", " ", value))
+        return (
+            bool(re.search(r"[\\u0600-\\u06FF]", plain))
+            and not has_latin_letters(plain)
+            and not has_persian_letters(plain)
+        )
+
     for cidx, chapter in enumerate(source):
         if not isinstance(chapter, dict) or not isinstance(chapter.get("title"), str):
             raise SystemExit(f"Invalid Mafatih chapter at index {cidx}.")
-        if has_persian_letters(chapter["title"]):
+        if has_persian_letters(chapter["title"]) or has_latin_letters(chapter["title"]):
             if cidx < len(arabic_chapter_titles):
                 chapter["title"] = arabic_chapter_titles[cidx]
             else:
@@ -59,7 +72,7 @@ def main() -> None:
         for sidx, section in enumerate(sections):
             if not isinstance(section, dict) or not isinstance(section.get("title"), str):
                 raise SystemExit(f"Invalid section {sidx} in chapter {cidx}.")
-            if has_persian_letters(section["title"]):
+            if has_persian_letters(section["title"]) or has_latin_letters(section["title"]):
                 section["title"] = f"الفصل رقم {section.get('id', sidx + 1)} من {chapter['title']}"
             section["title"] = normalize_arabic_script(section["title"])
             articles = section.get("articles")
@@ -69,7 +82,7 @@ def main() -> None:
             for aidx, article in enumerate(articles):
                 if not isinstance(article, dict) or not isinstance(article.get("title"), str):
                     raise SystemExit(f"Invalid article {aidx} in chapter {cidx}, section {sidx}.")
-                if has_persian_letters(article["title"]):
+                if has_persian_letters(article["title"]) or has_latin_letters(article["title"]):
                     article["title"] = f"النص العربي رقم {article.get('id', aidx + 1)} ضمن {section['title']}"
                 article["title"] = normalize_arabic_script(article["title"])
                 items = article.get("items")
@@ -96,7 +109,7 @@ def main() -> None:
                     item_content = normalize_arabic_script(item.get("content", ""))
                     # Omit actual Persian-language lines but preserve Arabic text
                     # that simply uses Persian-form kaf/yeh code points.
-                    if has_persian_letters(item_content):
+                    if not is_arabic_recitation(item_content):
                         continue
                     item["content"] = item_content
                     arabic_items.append(item)

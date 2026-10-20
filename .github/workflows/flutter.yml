@@ -36,7 +36,7 @@ jobs:
               position = content.find(marker)
               if position < 0:
                   raise SystemExit("Android application tag was not found")
-              content = content[:position] + permission + "\\n    " + content[position:]
+              content = content[:position] + permission + "\n    " + content[position:]
               manifest.write_text(content, encoding="utf-8")
           PY
       - name: Install dependencies

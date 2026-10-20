@@ -346,7 +346,7 @@ class _MainShellState extends State<MainShell> {
   }
 
   String _clockLabel(DateTime value) =>
-      '\${value.hour.toString().padLeft(2, '0')}:\${value.minute.toString().padLeft(2, '0')}';
+      '${value.hour.toString().padLeft(2, '0')}:${value.minute.toString().padLeft(2, '0')}';
 
   String _countdownLabel(DateTime target, DateTime current) {
     final minutes = target.difference(current).inMinutes.clamp(0, 999999);
@@ -361,7 +361,7 @@ class _MainShellState extends State<MainShell> {
       'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو',
       'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر',
     ];
-    return '\${date.day} \${months[date.month - 1]} \${date.year}';
+    return '${date.day} ${months[date.month - 1]} ${date.year}';
   }
 
   Widget _homePage() {
@@ -456,7 +456,7 @@ class _MainShellState extends State<MainShell> {
                     const SizedBox(height: 3),
                     Text(next.name, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: _gold)),
                     const SizedBox(height: 4),
-                    Text('موعدها \${_clockLabel(next.at)}', style: const TextStyle(color: Colors.white70, fontSize: 13)),
+                    Text('موعدها ${_clockLabel(next.at)}', style: const TextStyle(color: Colors.white70, fontSize: 13)),
                   ],
                 ),
               ),

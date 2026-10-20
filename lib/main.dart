@@ -809,7 +809,7 @@ class _TasbeehPageState extends State<TasbeehPage> {
               if (_zahraMode && _step > 0)
                 OutlinedButton.icon(
                   onPressed: _loading ? null : () {
-                    setState(() { _step--; _count = _steps[_step].target; });
+                    setState(() { _step--; _count = 0; });
                     _persist();
                   },
                   icon: const Icon(Icons.undo_rounded),

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'mafatih_library_page.dart';
 
 const _shiaPanel = Color(0xFF10251E);
@@ -119,14 +120,51 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
   late Future<ShiaTextData> _future;
   String _query = '';
   String _category = 'أدعية عامة';
-  static const _categories = ['أدعية عامة', 'تعقيبات', 'أدعية الأيام', 'أدعية المناسبات', 'الزيارات', 'الصحيفة السجادية', 'المناجيات الخمس عشرة'];
+  final Set<String> _favoriteSlugs = <String>{};
+  static const _favoriteKey = 'shia_favorite_slugs';
+  static const _categories = ['أدعية عامة', 'تعقيبات', 'أدعية الأيام', 'أدعية المناسبات', 'الزيارات', 'الصحيفة السجادية', 'المناجيات الخمس عشرة', 'المفضلة'];
 
   @override void initState() {
     super.initState();
     _category = widget.initialCategory ?? 'أدعية عامة';
     _future = ShiaTextData.load();
+    _loadFavorites();
   }
   @override void dispose() { _controller.dispose(); super.dispose(); }
+
+  Future<void> _loadFavorites() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      if (!mounted) return;
+      setState(() {
+        _favoriteSlugs
+          ..clear()
+          ..addAll(prefs.getStringList(_favoriteKey) ?? const <String>[]);
+      });
+    } catch (_) {
+      // The library remains usable if local preferences are unavailable.
+    }
+  }
+
+  Future<void> _toggleFavorite(String slug) async {
+    final wasFavorite = _favoriteSlugs.contains(slug);
+    setState(() {
+      if (wasFavorite) {
+        _favoriteSlugs.remove(slug);
+      } else {
+        _favoriteSlugs.add(slug);
+      }
+    });
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setStringList(_favoriteKey, _favoriteSlugs.toList()..sort());
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('تعذّر حفظ المفضلة على الجهاز')),
+      );
+    }
+  }
 
   void _submitSearch() => setState(() => _query = _normalize(_controller.text.trim()));
 
@@ -145,7 +183,11 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
         }
         final data = snapshot.data!;
         final filtered = data.entries.where((entry) {
-          if (entry.category != _category) return false;
+          if (_category == 'المفضلة') {
+            if (!_favoriteSlugs.contains(entry.slug)) return false;
+          } else if (entry.category != _category) {
+            return false;
+          }
           if (_query.isEmpty) return true;
           final header = _normalize('${entry.displayTitle} ${entry.title} ${entry.slug}');
           return header.contains(_query) ||
@@ -233,7 +275,26 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
                         ),
                         title: Text(entry.displayTitle, style: const TextStyle(fontWeight: FontWeight.bold)),
                         subtitle: Text('${entry.isSahifa ? 'الصحيفة السجادية' : 'دعاء / زيارة'} • $arabicLineCount أسطر عربية', style: const TextStyle(color: _shiaMuted)),
-                        trailing: const Icon(Icons.chevron_left_rounded, color: _shiaGold),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              tooltip: _favoriteSlugs.contains(entry.slug)
+                                  ? 'إزالة من المفضلة'
+                                  : 'إضافة للمفضلة',
+                              onPressed: () => _toggleFavorite(entry.slug),
+                              icon: Icon(
+                                _favoriteSlugs.contains(entry.slug)
+                                    ? Icons.favorite_rounded
+                                    : Icons.favorite_border_rounded,
+                                color: _favoriteSlugs.contains(entry.slug)
+                                    ? _shiaGold
+                                    : _shiaMuted,
+                              ),
+                            ),
+                            const Icon(Icons.chevron_left_rounded, color: _shiaGold),
+                          ],
+                        ),
                         onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
                           builder: (_) => Directionality(textDirection: TextDirection.rtl, child: ShiaTextReaderPage(entry: entry)),
                         )),

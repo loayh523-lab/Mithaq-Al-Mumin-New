@@ -193,9 +193,12 @@ def main() -> None:
             return "أدعية صاحب الزمان"
         if re.search(r"الصباح.{0,28}المساء|المساء.{0,28}الصباح|صبح.{0,24}شام|شام.{0,24}صبح|صباح.{0,24}مساء|مساء.{0,24}صباح|morning.{0,24}evening|evening.{0,24}morning", text):
             return "الأذكار المشتركة"
-        if re.search(r"أذكار الصباح|دعاء الصباح|الصباح|الصبح|طلوع الشمس|طلوع آفتاب|هنگام طلوع|صبحگاه|الفجر|sabah|asbah|morning|sunrise", text):
+        # The upstream catalogue mixes Arabic and Persian headings. Recognize common
+        # Persian morning/evening phrases as well as Arabic labels before falling
+        # through to broad sections such as post-prayer invocations.
+        if re.search(r"أذكار الصباح|دعاء الصباح|الصباح|الصبح|دعای.{0,12}(?:صبح|صباح)|دعاي.{0,12}(?:صبح|صباح)|دعاهاي.{0,12}(?:صبح|صباح)|صبحگاه|طلوع الشمس|طلوع آفتاب|هنگام طلوع|الفجر|sabah|asbah|morning|sunrise", text):
             return "أدعية الصباح"
-        if re.search(r"أذكار المساء|دعاء المساء|المساء|عشية|غروب الشمس|غروب آفتاب|هنگام غروب|شامگاه|قبل الغروب|عند الغروب|صلاة المغرب|تعقيب المغرب|masa|amsa|evening|sunset", text):
+        if re.search(r"أذكار المساء|دعاء المساء|المساء|عشية|دعای.{0,12}(?:شام|مساء)|دعاي.{0,12}(?:شام|مساء)|دعاهاي.{0,12}(?:شام|مساء)|شامگاه|غروب الشمس|غروب آفتاب|هنگام غروب|قبل الغروب|عند الغروب|صلاة المغرب|تعقيب المغرب|masa|amsa|evening|sunset", text):
             return "أدعية المساء"
         if re.search(r"أعمال.{0,30}(اليوم|ليلة|يوم|روز|شب)|اعمال.{0,30}(اليوم|ليلة|يوم|روز|شب)|الأعمال اليومية|الاعمال اليومية|عمل ليلة|عمل يوم|daily deeds|amal.?al.?yawm", text):
             return "الأعمال اليومية والمناسبات"

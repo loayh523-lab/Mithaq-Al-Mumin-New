@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_compass/flutter_compass.dart';
 import '../services/prayer_locations.dart';
+import '../services/qibla_calculation.dart';
 
 const _qiblaGold = Color(0xFFD9B66D);
 const _qiblaPanel = Color(0xFF10251E);
@@ -9,16 +10,16 @@ const _qiblaMuted = Color(0xFF9EB5A9);
 
 /// Live compass direction for the configured approximate Qal'at Sukar location.
 class QiblaPage extends StatefulWidget {
-  const QiblaPage({super.key});
+  const QiblaPage({super.key, this.onLocationChanged});
+  final Future<void> Function()? onLocationChanged;
   @override State<QiblaPage> createState() => _QiblaPageState();
 }
 
 class _QiblaPageState extends State<QiblaPage> {
-  static const double _kaabaLat = 21.4225;
-  static const double _kaabaLon = 39.8262;
   PrayerCity _city = PrayerLocations.cities.first;
   bool _gpsBusy = false;
   double? _gpsAccuracy;
+  double? _declinationDegrees;
   String? _locationMessage;
 
   @override void initState() { super.initState(); _loadCity(); }
@@ -27,7 +28,10 @@ class _QiblaPageState extends State<QiblaPage> {
     try {
       final selected = await PrayerLocations.load();
       if (!mounted) return;
-      setState(() => _city = selected);
+      setState(() {
+        _city = selected;
+        _declinationDegrees = _tryDeclination(selected);
+      });
       if (selected.id == 'current_location') {
         _gpsAccuracy = await PrayerLocations.currentLocationAccuracy();
         if (mounted) setState(() {});
@@ -47,19 +51,41 @@ class _QiblaPageState extends State<QiblaPage> {
       setState(() {
         _city = precise;
         _gpsAccuracy = accuracy;
+        _declinationDegrees = _tryDeclination(precise);
         _locationMessage = accuracy == null ? 'تم تحديث الموقع من GPS.' : 'دقة الموقع المعلنة من الجهاز نحو ${accuracy.round()} متر.';
       });
+      await widget.onLocationChanged?.call();
     }
     if (mounted) setState(() => _gpsBusy = false);
   }
 
-  double get _bearing {
-    const r = math.pi / 180;
-    final lat1 = _city.latitude * r, lat2 = _kaabaLat * r;
-    final dLon = (_kaabaLon - _city.longitude) * r;
-    final y = math.sin(dLon) * math.cos(lat2);
-    final x = math.cos(lat1) * math.sin(lat2) - math.sin(lat1) * math.cos(lat2) * math.cos(dLon);
-    return (math.atan2(y, x) / r + 360) % 360;
+  double? _tryDeclination(PrayerCity city) {
+    try {
+      final value = magneticDeclinationDegrees(
+        latitude: city.latitude,
+        longitude: city.longitude,
+      );
+      return value.isFinite ? value : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  double get _bearing => qiblaBearingDegrees(
+    latitude: _city.latitude,
+    longitude: _city.longitude,
+  );
+
+  double get _magneticBearing => magneticQiblaBearingDegrees(
+    trueBearing: _bearing,
+    declinationDegrees: _declinationDegrees ?? 0,
+  );
+
+  String get _declinationLabel {
+    final value = _declinationDegrees;
+    if (value == null) return 'تعذّر حساب تصحيح الشمال المغناطيسي';
+    final direction = value >= 0 ? 'شرقاً' : 'غرباً';
+    return 'تصحيح الشمال المغناطيسي: ${value.abs().toStringAsFixed(1)}° $direction';
   }
 
   @override
@@ -90,7 +116,9 @@ class _QiblaPageState extends State<QiblaPage> {
         return ListView(padding: const EdgeInsets.all(24), children: [
           Container(padding: const EdgeInsets.all(24), decoration: BoxDecoration(color: _qiblaPanel, borderRadius: BorderRadius.circular(28), border: Border.all(color: _qiblaGold.withValues(alpha: .3))), child: Column(children: [
             const Text('اتجاه الكعبة المشرفة', style: TextStyle(color: _qiblaMuted)), const SizedBox(height: 6),
-            Text('${_bearing.round()}° من الشمال', style: const TextStyle(color: _qiblaGold, fontSize: 25, fontWeight: FontWeight.bold)),
+            Text('${_bearing.round()}° من الشمال الجغرافي', style: const TextStyle(color: _qiblaGold, fontSize: 21, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 4),
+            Text(_declinationLabel, textAlign: TextAlign.center, style: const TextStyle(color: _qiblaMuted, fontSize: 12)),
             const SizedBox(height: 28),
             SizedBox(
               width: 250,
@@ -99,11 +127,11 @@ class _QiblaPageState extends State<QiblaPage> {
                 angle: -heading * math.pi / 180,
                 child: Stack(alignment: Alignment.center, children: [
                   Container(decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: _qiblaGold.withValues(alpha: .5), width: 2))),
-                  const Positioned(top: 12, child: Text('N', style: TextStyle(color: _qiblaMuted, fontWeight: FontWeight.bold))),
-                  const Positioned(bottom: 12, child: Text('S', style: TextStyle(color: _qiblaMuted))),
-                  const Positioned(left: 12, child: Text('W', style: TextStyle(color: _qiblaMuted))),
-                  const Positioned(right: 12, child: Text('E', style: TextStyle(color: _qiblaMuted))),
-                  Transform.rotate(angle: _bearing * math.pi / 180, child: const Icon(Icons.navigation_rounded, size: 120, color: _qiblaGold)),
+                  const Positioned(top: 12, child: Text('شمال', style: TextStyle(color: _qiblaMuted, fontSize: 11, fontWeight: FontWeight.bold))),
+                  const Positioned(bottom: 12, child: Text('جنوب', style: TextStyle(color: _qiblaMuted, fontSize: 11))),
+                  const Positioned(left: 8, child: Text('غرب', style: TextStyle(color: _qiblaMuted, fontSize: 11))),
+                  const Positioned(right: 8, child: Text('شرق', style: TextStyle(color: _qiblaMuted, fontSize: 11))),
+                  Transform.rotate(angle: _magneticBearing * math.pi / 180, child: const Icon(Icons.navigation_rounded, size: 120, color: _qiblaGold)),
                   Container(width: 16, height: 16, decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle)),
                 ]),
               ),
@@ -112,7 +140,7 @@ class _QiblaPageState extends State<QiblaPage> {
           ])),
           const SizedBox(height: 18),
           Text(
-            'الموقع المعتمد: ${_city.name} — ${_city.id == 'current_location' ? 'GPS من الجهاز' : 'إحداثيات مدينة تقريبية'}${_gpsAccuracy == null ? '' : ' (دقة GPS نحو ${_gpsAccuracy!.round()} م)'}. حرّك الهاتف بعيداً عن المعادن والمغناطيس وعاير الحساس. قد يختلف الشمال المغناطيسي عن الشمال الجغرافي ببضع درجات.',
+            'الموقع المعتمد: ${_city.name} — ${_city.id == 'current_location' ? 'GPS من الجهاز' : 'إحداثيات مدينة تقريبية'}${_gpsAccuracy == null ? '' : ' (دقة GPS نحو ${_gpsAccuracy!.round()} م)'}. يُصحّح اتجاه السهم بفرق الشمال المغناطيسي وفق نموذج WMM2025 المحلي. دقة القراءة تعتمد أيضاً على حساس الهاتف ومعايرته؛ ابتعد عن المغناطيس والمعادن وحرّك الهاتف بشكل رقم 8.',
             style: const TextStyle(color: _qiblaMuted, height: 1.6, fontSize: 12),
           ),
           if (_locationMessage != null)

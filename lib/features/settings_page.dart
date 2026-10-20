@@ -112,7 +112,7 @@ class _SettingsPageState extends State<SettingsPage> {
     if (!mounted) return;
     setState(() => _notificationsEnabled = ok);
     _message(ok
-      ? 'تم تفعيل تذكيرات الصلاة للأيام القادمة'
+      ? 'تمت جدولة تذكيرات الصلاة للأيام الثلاثين القادمة'
       : 'تعذّر التفعيل. تحقق من إذن الإشعارات في إعدادات الجهاز.');
   }
 
@@ -176,7 +176,7 @@ class _SettingsPageState extends State<SettingsPage> {
             child: SwitchListTile(
               contentPadding: EdgeInsets.zero,
               title: const Text('إشعارات الصلاة'),
-              subtitle: const Text('تذكيرات محلية للأيام الـ12 القادمة مع صوت الأذان. المواقيت الحسابية تقديرية، وقد تتأخر الإشعارات بسبب إعدادات توفير الطاقة.', style: TextStyle(color: _settingsMuted, height: 1.5, fontSize: 12)),
+              subtitle: const Text('تذكيرات محلية للأيام الثلاثين القادمة وفق حساب فلكي تقديري. التسجيل الصوتي المرفق فارسي بنمط ماهور، ولم نتحقق من مطابقته للصيغة الجعفرية. قد تتأخر التنبيهات بسبب توفير الطاقة.', style: TextStyle(color: _settingsMuted, height: 1.5, fontSize: 12)),
               value: _notificationsEnabled,
               onChanged: _loaded ? _toggleNotifications : null,
               activeThumbColor: _settingsGold,

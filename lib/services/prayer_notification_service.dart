@@ -11,7 +11,7 @@ class PrayerNotificationService {
   static final FlutterLocalNotificationsPlugin _plugin = FlutterLocalNotificationsPlugin();
   static bool _initialized = false;
   static const int _idStart = 4000;
-  static const int _daysToSchedule = 12;
+  static const int _daysToSchedule = 30;
 
   static Future<void> _initialize() async {
     if (_initialized) return;
@@ -31,7 +31,8 @@ class PrayerNotificationService {
       if (defaultTargetPlatform == TargetPlatform.android) {
         final android = _plugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
         final granted = await android?.requestNotificationsPermission();
-        if (granted == false) return false;
+        final notificationsEnabled = await android?.areNotificationsEnabled();
+        if (granted == false || notificationsEnabled == false) return false;
       }
       await _plugin.show(
         _idStart - 1,
@@ -54,8 +55,8 @@ class PrayerNotificationService {
     }
   }
 
-  /// Schedules local reminders with the bundled Persian adhan sound for the
-  /// next 12 days using the app's clearly-labelled approximate calculation.
+  /// Schedules local reminders for the next 30 days. Prayer times are estimates;
+  /// the bundled recording is Persian-style and is not verified as Ja'fari adhan.
   static Future<bool> configure({
     required bool enabled,
     required PrayerCity city,
@@ -67,8 +68,16 @@ class PrayerNotificationService {
       if (defaultTargetPlatform == TargetPlatform.android) {
         final android = _plugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
         final granted = await android?.requestNotificationsPermission();
-        if (enabled && granted == false) return false;
-        var canScheduleExact = await android?.canScheduleExactNotifications() ?? false;
+        final notificationsEnabled = await android?.areNotificationsEnabled();
+        if (enabled && (granted == false || notificationsEnabled == false)) {
+          return false;
+        }
+        var canScheduleExact = false;
+        try {
+          canScheduleExact = await android?.canScheduleExactNotifications() ?? false;
+        } catch (_) {
+          // Some Android builds do not expose exact-alarm status correctly.
+        }
         if (enabled && requestExactPermission && !canScheduleExact) {
           try {
             canScheduleExact = await android?.requestExactAlarmsPermission() ?? false;
@@ -76,7 +85,9 @@ class PrayerNotificationService {
             // Exact alarms are optional; retain the inexact fallback if unavailable.
           }
         }
-        if (canScheduleExact) scheduleMode = AndroidScheduleMode.exactAllowWhileIdle;
+        if (canScheduleExact) {
+          scheduleMode = AndroidScheduleMode.exactAllowWhileIdle;
+        }
       }
 
       final pending = await _plugin.pendingNotificationRequests();
@@ -130,7 +141,8 @@ class PrayerNotificationService {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('prayer_notifications_enabled', true);
       return true;
-    } catch (_) {
+    } catch (error, stackTrace) {
+      debugPrint('Prayer reminder scheduling failed: $error\\n$stackTrace');
       return false;
     }
   }

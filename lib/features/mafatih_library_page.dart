@@ -404,8 +404,6 @@ class _MafatihArticlePageState extends State<MafatihArticlePage> {
     super.dispose();
   }
 
-  bool _looksPersian(String text) => containsPersianOnlyLetters(text);
-
   bool _isArabicRecitationType(String type) {
     final normalized = type.trim().toLowerCase();
     return normalized == 'text' || normalized == 'arabic' || normalized == 'arabictext' || normalized == 'arabic_text';

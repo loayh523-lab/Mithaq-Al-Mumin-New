@@ -32,10 +32,16 @@ def main() -> None:
         "الباب الثاني: أعمال أشهر السنة الهجرية",
         "الباب الثالث: الزيارات",
     ]
-    persian_letters = set("پچژگکی")
+    # Kaf/yeh variants are not evidence that a title is Persian: many Arabic
+    # transcriptions use Persian Unicode forms for ك/ي. Normalize them first.
+    persian_only_letters = set("پچژگ")
+
+    def normalize_arabic_script(value: str) -> str:
+        return (value.replace("ک", "ك").replace("ی", "ي")
+                     .replace("ے", "ي").replace("ہ", "ه"))
 
     def has_persian_letters(value: str) -> bool:
-        return any(character in persian_letters for character in value)
+        return any(character in persian_only_letters for character in value)
 
     for cidx, chapter in enumerate(source):
         if not isinstance(chapter, dict) or not isinstance(chapter.get("title"), str):
@@ -45,6 +51,7 @@ def main() -> None:
                 chapter["title"] = arabic_chapter_titles[cidx]
             else:
                 chapter["title"] = f"الباب رقم {chapter.get('id', cidx + 1)} من مفاتيح الجنان"
+        chapter["title"] = normalize_arabic_script(chapter["title"])
         sections = chapter.get("sections")
         if not isinstance(sections, list):
             raise SystemExit(f"Chapter {cidx} has no sections list.")
@@ -54,6 +61,7 @@ def main() -> None:
                 raise SystemExit(f"Invalid section {sidx} in chapter {cidx}.")
             if has_persian_letters(section["title"]):
                 section["title"] = f"الفصل رقم {section.get('id', sidx + 1)} من {chapter['title']}"
+            section["title"] = normalize_arabic_script(section["title"])
             articles = section.get("articles")
             if not isinstance(articles, list):
                 raise SystemExit(f"Section {sidx} in chapter {cidx} has no articles list.")
@@ -63,6 +71,7 @@ def main() -> None:
                     raise SystemExit(f"Invalid article {aidx} in chapter {cidx}, section {sidx}.")
                 if has_persian_letters(article["title"]):
                     article["title"] = f"النص العربي رقم {article.get('id', aidx + 1)} ضمن {section['title']}"
+                article["title"] = normalize_arabic_script(article["title"])
                 items = article.get("items")
                 if not isinstance(items, list):
                     raise SystemExit(f"Article {aidx} does not have an items list.")
@@ -76,11 +85,22 @@ def main() -> None:
 
                 # The upstream source includes Persian translations (Translate) and
                 # explanatory text. Keep only Arabic recitation items in the app bundle.
-                article["items"] = [
-                    item for item in items
-                    if isinstance(item.get("type"), str)
-                    and item["type"].strip().lower() in {"text", "arabic", "arabictext", "arabic_text"}
-                ]
+                arabic_items = []
+                for item in items:
+                    if not (
+                        isinstance(item.get("type"), str)
+                        and item["type"].strip().lower()
+                        in {"text", "arabic", "arabictext", "arabic_text"}
+                    ):
+                        continue
+                    item_content = normalize_arabic_script(item.get("content", ""))
+                    # Omit actual Persian-language lines but preserve Arabic text
+                    # that simply uses Persian-form kaf/yeh code points.
+                    if has_persian_letters(item_content):
+                        continue
+                    item["content"] = item_content
+                    arabic_items.append(item)
+                article["items"] = arabic_items
 
     result = {
         "metadata": {
@@ -88,7 +108,7 @@ def main() -> None:
             "upstream_project": "aminpaydar/Mafatih",
             "source_url": SOURCE_URL,
             "license": "Apache-2.0 as declared by the upstream repository; see licenses/MAFATIH_APACHE_2.0.txt",
-            "note": "Chapter, section, article and item content is preserved from the upstream JSON.",
+            "note": "Arabic recitation items only; Persian kaf/yeh variants are normalized, Persian-only lines and translations are omitted. Compare religious wording with a trusted printed edition before treating it as a critical text.",
         },
         "chapters": source,
     }

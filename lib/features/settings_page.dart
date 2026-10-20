@@ -29,9 +29,7 @@ class _SettingsPageState extends State<SettingsPage> {
       if (!mounted) return;
       setState(() {
         _currentCity = savedCity;
-        _cityId = PrayerLocations.cities.any((c) => c.id == savedCity.id)
-            ? savedCity.id
-            : PrayerLocations.cities.first.id;
+        _cityId = savedCity.id;
         _fontSize = (prefs.getDouble('quran_font_size') ?? 24).clamp(16, 34).toDouble();
         _notificationsEnabled = prefs.getBool('prayer_notifications_enabled') ?? false;
         _loaded = true;
@@ -42,7 +40,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<void> _saveCity(String? id) async {
-    if (id == null) return;
+    if (id == null || id == 'current_location') return;
     setState(() { _cityId = id; _currentCity = PrayerLocations.byId(id); });
     try {
       await PrayerLocations.save(id);
@@ -106,7 +104,7 @@ class _SettingsPageState extends State<SettingsPage> {
     }
     final ok = await PrayerNotificationService.configure(
       enabled: true,
-      city: PrayerLocations.byId(_cityId),
+      city: _currentCity,
     );
     if (!mounted) return;
     setState(() => _notificationsEnabled = ok);
@@ -139,7 +137,10 @@ class _SettingsPageState extends State<SettingsPage> {
           DropdownButtonFormField<String>(
             initialValue: _cityId,
             decoration: const InputDecoration(labelText: 'مدينة الحساب', border: OutlineInputBorder()),
-            items: PrayerLocations.cities.map((c) => DropdownMenuItem(value: c.id, child: Text(c.name))).toList(),
+            items: [
+              const DropdownMenuItem(value: 'current_location', child: Text('موقعي الحالي')),
+              ...PrayerLocations.cities.map((c) => DropdownMenuItem(value: c.id, child: Text(c.name))),
+            ],
             onChanged: _loaded ? _saveCity : null,
           ),
           const SizedBox(height: 8),

@@ -135,6 +135,11 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
   Widget _time(IconData icon, String label, String time) => Card(color: _panel, child: ListTile(leading: Icon(icon, color: _gold), title: Text(label), trailing: Text(time, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold))));
 }
 
+String hijriDateLabel(DateTime date, {int correction = 0}) {
+  final hijri = _Hijri.fromGregorian(date.add(Duration(days: correction)));
+  return '${hijri.day} ${hijri.monthName} ${hijri.year} هـ';
+}
+
 String _dateLabel(DateTime d) => '${d.day.toString().padLeft(2, '0')}/${d.month.toString().padLeft(2, '0')}/${d.year}';
 
 class SolarPrayerTimes {

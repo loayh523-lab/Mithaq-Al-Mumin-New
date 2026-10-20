@@ -21,7 +21,7 @@ bool containsPersianOnlyLetters(String value) =>
 /// are not allowed into the Arabic-only reader.
 bool isArabicMafatihRecitation(String value) {
   final normalized = normalizeMafatihArabicText(value);
-  return RegExp(r'[\\u0600-\\u06FF]').hasMatch(normalized) &&
+  return normalized.runes.any((rune) => rune >= 0x0600 && rune <= 0x06FF) &&
       !RegExp(r'[A-Za-z]').hasMatch(normalized) &&
       !containsPersianOnlyLetters(normalized);
 }

@@ -179,6 +179,25 @@ class _MainShellState extends State<MainShell> {
     }
   }
 
+  Future<void> _handleLocationChanged() async {
+    await _loadDashboardData();
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      if (prefs.getBool('prayer_notifications_enabled') ?? false) {
+        final city = await PrayerLocations.load();
+        final ok = await PrayerNotificationService.configure(
+          enabled: true,
+          city: city,
+        );
+        if (!ok && mounted) {
+          _notice('تغيّر الموقع، لكن تعذّر تحديث تذكيرات الصلاة.');
+        }
+      }
+    } catch (_) {
+      if (mounted) _notice('تم تحديث الموقع، وتعذّر تحديث التذكيرات تلقائياً.');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -268,8 +287,8 @@ class _MainShellState extends State<MainShell> {
                 const Divider(color: Color(0x223CB58B)),
                 _drawerItem(Icons.auto_stories_rounded, 'ختمة القرآن', () => _openDrawerPage(const KhatmaPage())),
                 _drawerItem(Icons.checklist_rounded, 'متابعة الصلاة', () => _openDrawerPage(const PrayerTrackerPage())),
-                _drawerItem(Icons.calendar_month_rounded, 'مواقيت الصلاة والتقويم', () => _openDrawerPage(const PrayerCalendarPage())),
-                _drawerItem(Icons.explore_rounded, 'اتجاه القبلة', () => _openDrawerPage(const QiblaPage())),
+                _drawerItem(Icons.calendar_month_rounded, 'مواقيت الصلاة والتقويم', () => _openDrawerPage(PrayerCalendarPage(onLocationChanged: _handleLocationChanged, onHijriCorrectionChanged: _loadDashboardData))),
+                _drawerItem(Icons.explore_rounded, 'اتجاه القبلة', () => _openDrawerPage(QiblaPage(onLocationChanged: _handleLocationChanged)),
                 _drawerItem(Icons.menu_book_rounded, 'مفاتيح الجنان', () => _openDrawerPage(const MafatihLibraryPage())),
                 _drawerItem(Icons.library_books_rounded, 'مكتبة الأدعية والزيارات', () => _openDrawerPage(const ShiaTextLibraryPage())),
               ],

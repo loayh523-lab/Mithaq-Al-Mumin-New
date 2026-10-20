@@ -1,0 +1,9 @@
+Audio asset: AzaanMaahur.ogg (bundled as adhan_persian.ogg for Android raw-resource naming)
+Creator: Saeed Hatamzadeh-Varmazyar
+Source page: https://commons.wikimedia.org/wiki/File:AzaanMaahur.ogg
+Source description: Persian adhan performed in the Maahur mode.
+License: Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+License text: https://creativecommons.org/licenses/by-sa/4.0/
+
+The audio is downloaded at build time from Wikimedia Commons and is not modified. Its filename is changed only to satisfy Android's resource naming rules. Redistributors must retain this attribution and comply with CC BY-SA 4.0.
+Note: The Commons description identifies the recording as Persian adhan, but does not provide a transcript. Do not claim that the recording contains a specific spoken formula unless its audio has been checked.

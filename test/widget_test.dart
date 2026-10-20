@@ -26,7 +26,10 @@ void main() {
         child: Scaffold(body: QuranIndexPage()),
       ),
     ));
-    await tester.pumpAndSettle();
+    // Avoid pumpAndSettle while the page displays its animated loading indicator.
+    for (var i = 0; i < 10; i++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
     expect(find.text('فهرس السور'), findsOneWidget);
     expect(find.textContaining('114 سورة'), findsOneWidget);
     expect(find.text('الفاتحة'), findsOneWidget);

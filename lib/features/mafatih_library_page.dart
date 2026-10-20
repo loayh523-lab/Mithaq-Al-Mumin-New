@@ -183,7 +183,7 @@ class _MafatihLibraryPageState extends State<MafatihLibraryPage> {
   );
 }
 
-String _mafatihCategoryFor(String value) {
+String mafatihCategoryFor(String value) {
   final text = _normalizeTitle(value);
   if (RegExp(r'زيارة|زيارات|ziyarat|ziyarah').hasMatch(text)) return 'الزيارات';
   if (RegExp(r'الصحيفة السجادية|صحيفة سجادية|sahifa sajjadiya').hasMatch(text)) return 'الصحيفة السجادية';
@@ -243,8 +243,7 @@ class _MafatihCategoryPageState extends State<MafatihCategoryPage> {
             }
           }
         }
-        final orderedHits = hits.toList()
-          ..sort((a, b) => _normalizeTitle(a.article.title).compareTo(_normalizeTitle(b.article.title)));
+        final orderedHits = hits;
         return Column(children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
@@ -444,7 +443,7 @@ class _MafatihArticlePageState extends State<MafatihArticlePage> {
                     child: SelectableText(
                       chunk.text,
                       textDirection: TextDirection.rtl,
-                      textAlign: TextAlign.justify,
+                      textAlign: TextAlign.right,
                       style: TextStyle(fontSize: isHeading ? _fontSize + 2 : _fontSize, height: 2.0, fontWeight: isHeading ? FontWeight.bold : FontWeight.normal, color: isHeading ? _mfGold : Colors.white),
                     ),
                   );

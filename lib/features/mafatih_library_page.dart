@@ -160,7 +160,10 @@ class _MafatihLibraryPageState extends State<MafatihLibraryPage> {
             child: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text('مكتبة أدعية وزيارات', style: TextStyle(color: _mfGold, fontSize: 21, fontWeight: FontWeight.w800)),
               SizedBox(height: 6),
-              Text('نصوص مفاتيح الجنان مضمّنة في نسخة التطبيق؛ تقدر تتصفحها دون إنترنت.', style: TextStyle(color: _mfMuted, height: 1.6)),
+              Text(
+                'النصوص العربية المتاحة مضمّنة في التطبيق وتُقرأ دون إنترنت. تمّت معالجة عرض الحروف واستبعاد الترجمة غير العربية، لكن هذه المجموعة ليست نسخة كاملة محقّقة، ولم تُراجع جميع النصوص على طبعة ورقية محددة.',
+                style: TextStyle(color: _mfMuted, height: 1.6),
+              ),
             ]),
           ),
           Padding(

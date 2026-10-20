@@ -139,13 +139,19 @@ class QuranSearchHit {
   final String text;
 }
 
-String _normalizeArabic(String value) => value
-    .toLowerCase()
-    .replaceAll(RegExp(r'[\u064B-\u065F\u0670\u0640]'), '')
-    .replaceAll(RegExp('[أإآٱ]'), 'ا')
-    .replaceAll('ى', 'ي')
-    .replaceAll('ؤ', 'و')
-    .replaceAll('ئ', 'ي');
+String _normalizeArabic(String value) {
+  // Strip Arabic vowel marks, tatweel, and Quranic annotation marks so
+  // search works with both fully-vowelled Uthmani text and plain Arabic.
+  final withoutMarks = value.toLowerCase().replaceAllMapped(
+    RegExp(r'[\u064B-\u065F\u0670\u0640\u06D6-\u06ED]'),
+    (_) => '',
+  );
+  return withoutMarks
+      .replaceAll(RegExp('[أإآٱ]'), 'ا')
+      .replaceAll('ى', 'ي')
+      .replaceAll('ؤ', 'و')
+      .replaceAll('ئ', 'ي');
+}
 
 Future<List<SurahInfo>> _readSurahCatalog() async {
   final raw = await rootBundle.loadString('assets/quran/chapters.json');

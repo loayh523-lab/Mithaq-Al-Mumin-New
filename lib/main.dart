@@ -12,6 +12,8 @@ import 'features/mafatih_library_page.dart';
 import 'features/shia_text_library_page.dart';
 import 'features/good_deeds_page.dart';
 import 'features/names_of_allah_page.dart';
+import 'features/qada_tracker_page.dart';
+import 'features/dhikr_fortress_page.dart';
 import 'services/prayer_locations.dart';
 import 'services/prayer_notification_service.dart';
 
@@ -257,6 +259,8 @@ class _MainShellState extends State<MainShell> {
                 _drawerItem(Icons.search_rounded, 'الباحث الذكي', () => _openDrawerPage(const SmartSearchPage())),
                 _drawerItem(Icons.checklist_rounded, 'صالح الأعمال', () => _openDrawerPage(const GoodDeedsPage())),
                 _drawerItem(Icons.auto_awesome_rounded, 'أسماء الله الحسنى', () => _openDrawerPage(const NamesOfAllahPage())),
+                _drawerItem(Icons.calculate_outlined, 'سجل القضاء', () => _openDrawerPage(const QadaTrackerPage())),
+                _drawerItem(Icons.shield_moon_outlined, 'حصن الأذكار', () => _openDrawerPage(const DhikrFortressPage())),
                 const Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(14, 18, 14, 8),
                   child: Text('خدمات إضافية', style: TextStyle(color: _gold, fontWeight: FontWeight.w800, fontSize: 13)),

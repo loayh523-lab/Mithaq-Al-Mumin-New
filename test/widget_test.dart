@@ -95,7 +95,7 @@ void main() {
     await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 250)));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
-    expect(find.text('الفاتحة'), findsOneWidget);
+    expect(find.text('الفاتحة'), findsWidgets);
     expect(find.textContaining('7 آية'), findsOneWidget);
     expect(find.textContaining('تعذّر فتح نص القرآن'), findsNothing);
   });

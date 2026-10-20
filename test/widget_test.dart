@@ -73,9 +73,10 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('المواقيت والتقويم'), findsOneWidget);
     expect(find.text('الفجر (تقديري)'), findsOneWidget);
+    expect(find.textContaining('الصلاة القادمة:'), findsOneWidget);
     await tester.tap(find.text('إمساكية رمضان'));
     await tester.pumpAndSettle();
-    expect(find.text('إمساكية تقديرية لقلعة سكر / ذي قار'), findsOneWidget);
+    expect(find.text('إمساكية تقديرية — قلعة سكر / العراق'), findsOneWidget);
     expect(find.textContaining('الإمساك/الفجر:'), findsWidgets);
   });
 

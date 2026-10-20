@@ -158,6 +158,11 @@ def merge_mafatih_entries(base_entries: list[dict]) -> tuple[list[dict], int]:
                 chapter_id = chapter.get("id", 0)
                 section_id = section.get("id", 0)
                 article_id = article.get("id", len(base_entries) + added + 1)
+                chapter_reference = (
+                    chapter_title
+                    if chapter_title.startswith(("الباب", "باب "))
+                    else f"باب {chapter_title}"
+                )
                 base_entries.append({
                     "slug": f"mafatih-{chapter_id}-{section_id}-{article_id}",
                     "title": title,
@@ -165,7 +170,7 @@ def merge_mafatih_entries(base_entries: list[dict]) -> tuple[list[dict], int]:
                     "type": "mafatih",
                     "sourceUrl": "",
                     "sourceLabel": (
-                        f"مفاتيح الجنان، {chapter_title}، "
+                        f"مفاتيح الجنان، {chapter_reference}، "
                         f"القسم: {section_title}، عنوان النص: {title}"
                     ),
                     "categoryOverride": category,

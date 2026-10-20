@@ -12,11 +12,18 @@ void main() {
     SharedPreferences.setMockInitialValues({});
   });
 
-  testWidgets('home screen renders and navigation opens tasbeeh', (tester) async {
+  testWidgets('home screen shows the agreed dashboard and drawer navigation opens tasbeeh', (tester) async {
     await tester.pumpWidget(const MithaqApp());
     expect(find.text('ميثاق المؤمن'), findsOneWidget);
-    expect(find.text('الوصول السريع'), findsOneWidget);
-    await tester.tap(find.text('التسبيح').last);
+    expect(find.text('التاريخ الهجري'), findsOneWidget);
+    expect(find.text('الصلاة القادمة'), findsOneWidget);
+    expect(find.text('مواقيت الصلوات'), findsOneWidget);
+    expect(find.text('عمل اليوم'), findsOneWidget);
+    expect(find.text('القرآن الكريم'), findsOneWidget);
+
+    await tester.tap(find.byIcon(Icons.menu));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('التسبيح'));
     await tester.pumpAndSettle();
     expect(find.text('اضغط على الدائرة لزيادة العدّاد'), findsOneWidget);
     expect(find.text('0'), findsOneWidget);
@@ -38,8 +45,10 @@ void main() {
     expect(find.text('الفاتحة'), findsOneWidget);
   });
 
-  testWidgets('prayer tracker records a checked prayer', (tester) async {
+  testWidgets('prayer tracker records a checked prayer from the drawer', (tester) async {
     await tester.pumpWidget(const MithaqApp());
+    await tester.tap(find.byIcon(Icons.menu));
+    await tester.pumpAndSettle();
     await tester.ensureVisible(find.text('متابعة الصلاة'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('متابعة الصلاة'));
@@ -50,8 +59,10 @@ void main() {
     expect(find.text('1/5'), findsOneWidget);
   });
 
-  testWidgets('khatma tracker opens and records completed juz', (tester) async {
+  testWidgets('khatma tracker opens and records completed juz from the drawer', (tester) async {
     await tester.pumpWidget(const MithaqApp());
+    await tester.tap(find.byIcon(Icons.menu));
+    await tester.pumpAndSettle();
     await tester.ensureVisible(find.text('ختمة القرآن'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('ختمة القرآن'));

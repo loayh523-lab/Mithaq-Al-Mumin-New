@@ -8,10 +8,20 @@ void main() {
     final data = await ShiaTextData.load();
 
     expect(data.entries, isNotEmpty);
+    final mafatihEntries = data.entries
+        .where((entry) => entry.sourceLabel.startsWith('مفاتيح الجنان،'))
+        .toList(growable: false);
     expect(
-      data.entries.any((entry) => entry.sourceLabel.startsWith('مفاتيح الجنان،')),
-      isTrue,
+      mafatihEntries,
+      isNotEmpty,
       reason: 'Imported texts should retain a human-readable citation to the book and actual headings.',
+    );
+    expect(
+      mafatihEntries.every((entry) =>
+          entry.sourceLabel.contains('القسم:') &&
+          !entry.sourceLabel.contains('باب: الباب')),
+      isTrue,
+      reason: 'Mafatih citations should show the actual chapter heading without repeating the word باب.',
     );
     expect(
       data.entries.any((entry) => entry.category == 'الزيارات'),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'mafatih_library_page.dart';
+import 'shia_text_library_page.dart';
 
 const _dhikrPanel = Color(0xFF10251E);
 const _dhikrGold = Color(0xFFD9B66D);
@@ -24,7 +24,7 @@ class _DhikrItem {
 class DhikrFortressPage extends StatefulWidget {
   const DhikrFortressPage({super.key, this.initialPeriod = 0});
 
-  /// 0 opens morning-only entries; 1 opens evening-only entries.
+  /// 0 shows only morning entries; 1 shows only evening entries.
   final int initialPeriod;
 
   @override
@@ -45,7 +45,7 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
   String _key(String id) {
     final now = DateTime.now();
     final day = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
-    return 'fortress_v4_${_periodName}_${day}_$id';
+    return 'fortress_v5_${_periodName}_${day}_$id';
   }
 
   @override
@@ -64,40 +64,21 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
     });
 
     try {
-      final data = await MafatihData.load();
-      final items = <_DhikrItem>[];
-
-      for (final chapter in data.chapters) {
-        for (final section in chapter.sections) {
-          for (final article in section.articles) {
-            final contentHead = article.items
-                .map((item) => plainMafatihText(item.content))
-                .where((value) => value.isNotEmpty)
-                .take(3)
-                .join(' ');
-            final searchable = '${chapter.title} ${section.title} ${article.title} $contentHead';
-
-            // Morning-only and evening-only are separate categories. Entries marked
-            // by the source for both periods are kept in the dedicated shared section
-            // in the dua library, never duplicated into these two lists.
-            if (mafatihCategoryFor(searchable) != _sourceCategory) continue;
-
-            final text = article.items
-                .map((item) => plainMafatihText(item.content))
-                .where((value) => value.isNotEmpty)
-                .join('\n\n')
-                .trim();
-            if (text.isEmpty) continue;
-
-            items.add(_DhikrItem(
-              id: '${chapter.id}_${section.id}_${article.id}',
-              title: article.title.trim().isEmpty ? '$_periodTitle ${article.id}' : article.title,
-              text: text,
-              source: 'مفاتيح الجنان — ${chapter.title} — ${section.title}',
-            ));
-          }
-        }
-      }
+      // The app has one Arabic text library. The two periods are separate
+      // categories there; entries marked for both periods stay in shared adhkar.
+      final data = await ShiaTextData.load();
+      final entries = data.entries.where((entry) => entry.category == _sourceCategory);
+      final items = entries.map((entry) {
+        final source = entry.sourceLabel.isNotEmpty
+            ? entry.sourceLabel
+            : (entry.sourceUrl.isNotEmpty ? entry.sourceUrl : 'المكتبة العربية للأدعية');
+        return _DhikrItem(
+          id: entry.slug,
+          title: entry.displayTitle.trim().isEmpty ? _periodTitle : entry.displayTitle,
+          text: entry.arabicText.trim(),
+          source: source,
+        );
+      }).where((item) => item.text.isNotEmpty).toList(growable: false);
 
       final prefs = await SharedPreferences.getInstance();
       final counts = <String, int>{
@@ -110,14 +91,14 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
         _counts.addAll(counts);
         _loading = false;
         if (items.isEmpty) {
-          _error = 'ما لقينا نصوصاً مصنّفة لهذا الوقت في المصدر المحلي. افتح مكتبة مفاتيح الجنان للتحقق من الفهرس.';
+          _error = 'لا توجد نصوص عربية مصنّفة لهذا الوقت في البيانات المدمجة. لم ننسخ أذكار الوقت الآخر لملء القسم.';
         }
       });
     } catch (_) {
       if (!mounted) return;
       setState(() {
         _loading = false;
-        _error = 'تعذّر تحميل النصوص العربية. تحقق من اكتمال ملف مكتبة مفاتيح الجنان ثم أعد المحاولة.';
+        _error = 'تعذّر تحميل المكتبة العربية. تحقق من اكتمال ملفات المحتوى ثم أعد المحاولة.';
       });
     }
   }
@@ -180,7 +161,7 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
               ),
               const SizedBox(height: 6),
               const Text(
-                'النصوص مأخوذة من المكتبة العربية المرفقة. تُعرض أذكار الصباح والمساء في قائمتين منفصلتين؛ والعداد للمتابعة فقط ما لم يذكر المصدر عدداً صريحاً.',
+                'قائمة مستقلة لكل وقت، مأخوذة من مكتبة النصوص العربية. الأذكار المشتركة لها قسم منفصل، والمصدر يظهر تحت كل نص.',
                 style: TextStyle(color: _dhikrMuted, height: 1.65),
               ),
             ],
@@ -221,10 +202,10 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
                       onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
                         builder: (_) => Directionality(
                           textDirection: TextDirection.rtl,
-                          child: MafatihCategoryPage(initialCategory: _sourceCategory),
+                          child: ShiaTextLibraryPage(initialCategory: _sourceCategory),
                         ),
                       )),
-                      child: const Text('فتح الفهرس العربي'),
+                      child: const Text('فتح قسم الأدعية المرتبط'),
                     ),
                   ],
                 ),

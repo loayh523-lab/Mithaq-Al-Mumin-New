@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,8 +19,21 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
   static const zone = 3.0;
   PrayerCity city = PrayerLocations.cities.first;
   DateTime date = DateTime.now();
+  DateTime now = DateTime.now();
+  Timer? _clockTimer;
   int correction = 0, tab = 0;
-  @override void initState() { super.initState(); _loadCorrection(); _loadCity(); }
+  @override void initState() {
+    super.initState();
+    _loadCorrection();
+    _loadCity();
+    _clockTimer = Timer.periodic(const Duration(seconds: 30), (_) {
+      if (mounted) setState(() => now = DateTime.now());
+    });
+  }
+  @override void dispose() {
+    _clockTimer?.cancel();
+    super.dispose();
+  }
   Future<void> _loadCity() async {
     try { final selected = await PrayerLocations.load(); if (mounted) setState(() => city = selected); } catch (_) { /* Keep the default city. */ }
   }
@@ -49,16 +63,75 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
       const SizedBox(height: 12),
       if (tab == 0) ...[
         Row(children: [Expanded(child: Text('مواقيت ${_dateLabel(date)}', style: const TextStyle(fontWeight: FontWeight.bold))), IconButton(onPressed: () => setState(() => date = date.subtract(const Duration(days: 1))), icon: const Icon(Icons.chevron_right)), IconButton(onPressed: () => setState(() => date = date.add(const Duration(days: 1))), icon: const Icon(Icons.chevron_left)), IconButton(onPressed: () => setState(() => date = DateTime.now()), icon: const Icon(Icons.today))]),
+        if (_sameDay(date, now)) _nextPrayerCard(times, now),
         _time(Icons.wb_twilight, 'الفجر (تقديري)', times.fajr), _time(Icons.wb_sunny_outlined, 'الشروق', times.sunrise), _time(Icons.sunny, 'الظهر', times.noon), _time(Icons.wb_sunny_rounded, 'العصر (تقديري)', times.asr), _time(Icons.wb_twilight, 'الغروب', times.sunset), _time(Icons.nights_stay_outlined, 'المغرب (تقديري)', times.maghrib), _time(Icons.dark_mode_outlined, 'العشاء (تقديري)', times.isha),
         const Padding(padding: EdgeInsets.all(8), child: Text('الحساب الفلكي هنا تقديري: زاوية الفجر 16° والمغرب 4° بعد انخفاض الشمس. لا تعتمد عليه وحده للعبادة؛ قارن بمواقيت مكتب مرجعك في منطقتك. لا توجد حالياً تنبيهات أذان أو تحديد موقع تلقائي.', style: TextStyle(color: _muted, fontSize: 11, height: 1.6))),
       ] else ...[
-        const Text('إمساكية تقديرية لقلعة سكر / ذي قار', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17)), const SizedBox(height: 5),
+        Text('إمساكية تقديرية — ${city.name} / العراق', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17)), const SizedBox(height: 5),
         const Text('يعرض الجدول 30 يوماً من التاريخ المختار. الفجر والغروب محسوبان فلكياً ولا يمثلان إمساكية رسمية لشهر رمضان محدد.', style: TextStyle(color: _muted, fontSize: 11, height: 1.5)),
         ..._ramadanRows(date, city.latitude, city.longitude),
       ],
-      const Divider(), const Text('الموقع الحالي للحساب', style: TextStyle(fontWeight: FontWeight.bold)), const Text('قلعة سكر، ذي قار، العراق — إحداثيات تقريبية', style: TextStyle(color: _muted)),
+      const Divider(), const Text('الموقع الحالي للحساب', style: TextStyle(fontWeight: FontWeight.bold)), Text('${city.name}، العراق — إحداثيات تقريبية', style: const TextStyle(color: _muted)),
     ]));
   }
+  bool _sameDay(DateTime a, DateTime b) => a.year == b.year && a.month == b.month && a.day == b.day;
+
+  Widget _nextPrayerCard(SolarPrayerTimes times, DateTime clock) {
+    final prayers = <({String name, String time})>[
+      (name: 'الفجر', time: times.fajr),
+      (name: 'الظهر', time: times.noon),
+      (name: 'العصر', time: times.asr),
+      (name: 'المغرب', time: times.maghrib),
+      (name: 'العشاء', time: times.isha),
+    ];
+    DateTime? nextTime;
+    String nextName = '';
+    for (final prayer in prayers) {
+      final parts = prayer.time.split(':');
+      if (parts.length != 2) continue;
+      final candidate = DateTime(clock.year, clock.month, clock.day, int.parse(parts[0]), int.parse(parts[1]));
+      if (candidate.isAfter(clock)) {
+        nextTime = candidate;
+        nextName = prayer.name;
+        break;
+      }
+    }
+    if (nextTime == null) {
+      final tomorrow = DateTime(clock.year, clock.month, clock.day).add(const Duration(days: 1));
+      final tomorrowFajr = SolarPrayerTimes.forDate(tomorrow, city.latitude, city.longitude, zone).fajr.split(':');
+      if (tomorrowFajr.length == 2) {
+        nextTime = DateTime(tomorrow.year, tomorrow.month, tomorrow.day, int.parse(tomorrowFajr[0]), int.parse(tomorrowFajr[1]));
+        nextName = 'الفجر';
+      }
+    }
+    if (nextTime == null) return const SizedBox.shrink();
+    final remaining = nextTime.difference(clock);
+    final hours = remaining.inHours;
+    final minutes = remaining.inMinutes % 60;
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF16372B),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: _gold.withValues(alpha: .35)),
+      ),
+      child: Row(children: [
+        const Icon(Icons.hourglass_bottom_rounded, color: _gold, size: 28),
+        const SizedBox(width: 12),
+        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text('الصلاة القادمة: $nextName', style: const TextStyle(fontWeight: FontWeight.bold, color: _gold, fontSize: 16)),
+          const SizedBox(height: 4),
+          Text('الوقت المحسوب: ${nextTime.hour.toString().padLeft(2, '0')}:${nextTime.minute.toString().padLeft(2, '0')}', style: const TextStyle(color: _muted, fontSize: 12)),
+        ])),
+        Text(
+          hours > 0 ? '${hours}س ${minutes}د' : '${minutes} دقيقة',
+          style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 17),
+        ),
+      ]),
+    );
+  }
+
   Widget _time(IconData icon, String label, String time) => Card(color: _panel, child: ListTile(leading: Icon(icon, color: _gold), title: Text(label), trailing: Text(time, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold))));
 }
 

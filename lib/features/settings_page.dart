@@ -80,7 +80,7 @@ class _SettingsPageState extends State<SettingsPage> {
       );
       final city = await PrayerLocations.load();
       if (!mounted) return;
-      setState(() => _currentCity = city);
+      setState(() { _currentCity = city; _cityId = city.id; });
       if (_notificationsEnabled) {
         final ok = await PrayerNotificationService.configure(enabled: true, city: city);
         if (!ok && mounted) _message('حُفظ الموقع لكن تعذّر تحديث تذكيرات الصلاة');
@@ -135,6 +135,7 @@ class _SettingsPageState extends State<SettingsPage> {
           const Text('اختر أقرب مدينة إليك. الحسابات الفلكية المعروضة تقريبية ويجب مقارنتها بمواقيت مكتب مرجعك.', style: TextStyle(color: _settingsMuted, height: 1.6, fontSize: 12)),
           const SizedBox(height: 12),
           DropdownButtonFormField<String>(
+            key: ValueKey(_cityId),
             initialValue: _cityId,
             decoration: const InputDecoration(labelText: 'مدينة الحساب', border: OutlineInputBorder()),
             items: [

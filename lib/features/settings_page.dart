@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/prayer_locations.dart';
@@ -20,8 +22,41 @@ class _SettingsPageState extends State<SettingsPage> {
   bool _loaded = false;
   bool _notificationsEnabled = false;
   bool _gpsBusy = false;
+  AudioPlayer? _adhanPlayer;
+  StreamSubscription<void>? _adhanCompleteSubscription;
+  bool _isPlayingAdhan = false;
 
   @override void initState() { super.initState(); _load(); }
+
+  @override
+  void dispose() {
+    _adhanCompleteSubscription?.cancel();
+    final player = _adhanPlayer;
+    if (player != null) unawaited(player.dispose());
+    super.dispose();
+  }
+
+  Future<void> _toggleAdhanPlayback() async {
+    final existing = _adhanPlayer;
+    if (_isPlayingAdhan) {
+      try {
+        await existing?.stop();
+      } catch (_) { /* The local notification feature remains available. */ }
+      if (mounted) setState(() => _isPlayingAdhan = false);
+      return;
+    }
+    try {
+      final player = _adhanPlayer ??= AudioPlayer(playerId: 'mithaq-adhan-preview');
+      _adhanCompleteSubscription ??= player.onPlayerComplete.listen((_) {
+        if (mounted) setState(() => _isPlayingAdhan = false);
+      });
+      await player.stop();
+      await player.play(AssetSource('audio/adhan_persian.ogg'));
+      if (mounted) setState(() => _isPlayingAdhan = true);
+    } catch (error) {
+      if (mounted) _message('تعذّر تشغيل التسجيل الصوتي. جرّب إعادة فتح التطبيق أو تحقق من الملف المرفق.');
+    }
+  }
   Future<void> _load() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -186,11 +221,24 @@ class _SettingsPageState extends State<SettingsPage> {
           SizedBox(
             width: double.infinity,
             child: OutlinedButton.icon(
-              onPressed: _loaded ? _testNotification : null,
-              icon: const Icon(Icons.notifications_active_outlined),
-              label: const Text('تجربة الإشعار وصوت الأذان'),
+              onPressed: _loaded ? _toggleAdhanPlayback : null,
+              icon: Icon(_isPlayingAdhan ? Icons.stop_circle_outlined : Icons.play_circle_outline_rounded),
+              label: Text(_isPlayingAdhan ? 'إيقاف التسجيل الصوتي' : 'استماع إلى تسجيل الأذان'),
             ),
           ),
+          const SizedBox(height: 8),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: _loaded ? _testNotification : null,
+              icon: const Icon(Icons.notifications_active_outlined),
+              label: const Text('تجربة إشعار الأذان'),
+            ),
+          ),
+          const Text('التسجيل: Saeed Hatamzadeh-Varmazyar، أذان بنمط ماهور، ترخيص CC BY-SA 4.0. وصف الملف لا يؤكد ألفاظه الجعفرية؛ لذلك لا نعرضه كأذان جعفري موثّق.', style: TextStyle(color: _settingsMuted, fontSize: 11, height: 1.5)),
+          const SizedBox(height: 4),
+          const SelectableText('https://commons.wikimedia.org/wiki/File:AzaanMaahur.ogg', style: TextStyle(color: _settingsGold, fontSize: 11)),
+          const SizedBox(height: 4),
           const Text('يلزم السماح بإشعارات التطبيق من أندرويد. إذا وصل الإشعار بلا صوت، ارفع صوت التنبيهات وافحص إعداد قناة «أذان الصلاة».', style: TextStyle(color: _settingsMuted, fontSize: 11, height: 1.5)),
         ],
       ),

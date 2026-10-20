@@ -88,6 +88,8 @@ jobs:
         run: python3 tool/prepare_mafatih.py
       - name: Prepare offline Shia duas and ziyarat
         run: python3 tool/prepare_shia_duas.py
+      - name: Prepare offline Nahj al-Balagha
+        run: python3 tool/prepare_nahj.py
       - name: Install dependencies
         run: flutter pub get
       - name: Generate Arabic launcher icon

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'mafatih_library_page.dart';
 
 const _shiaPanel = Color(0xFF10251E);
@@ -296,6 +297,64 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
   String _display = 'العربي';
   double _fontSize = 23;
   bool _focusMode = false;
+  bool _isFavorite = false;
+  bool _favoriteLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFavorite();
+  }
+
+  Future<void> _loadFavorite() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final slugs = prefs.getStringList('favorite_shia_text_slugs') ??
+          const <String>[];
+      if (!mounted) return;
+      setState(() {
+        _isFavorite = slugs.contains(widget.entry.slug);
+        _favoriteLoaded = true;
+      });
+    } catch (_) {
+      if (mounted) setState(() => _favoriteLoaded = true);
+    }
+  }
+
+  Future<void> _toggleFavorite() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final slugs = (prefs.getStringList('favorite_shia_text_slugs') ??
+              const <String>[])
+          .toSet();
+      final removing = slugs.contains(widget.entry.slug);
+      if (removing) {
+        slugs.remove(widget.entry.slug);
+      } else {
+        slugs.add(widget.entry.slug);
+      }
+      await prefs.setStringList(
+        'favorite_shia_text_slugs',
+        slugs.toList()..sort(),
+      );
+      if (!mounted) return;
+      setState(() => _isFavorite = !removing);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(removing
+              ? 'أُزيل النص من المفضلة'
+              : 'أُضيف النص إلى المفضلة المباركة'),
+          duration: const Duration(seconds: 1),
+        ),
+      );
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('تعذّر حفظ المفضلة على الجهاز')),
+        );
+      }
+    }
+  }
 
   Future<void> _toggleFocusMode() async {
     final next = !_focusMode;
@@ -337,6 +396,14 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
       appBar: _focusMode ? null : AppBar(
         title: Text(widget.entry.displayTitle, maxLines: 2, overflow: TextOverflow.ellipsis),
         actions: [
+          IconButton(
+            tooltip: _isFavorite ? 'إزالة من المفضلة' : 'إضافة إلى المفضلة',
+            onPressed: _favoriteLoaded ? _toggleFavorite : null,
+            icon: Icon(
+              _isFavorite ? Icons.star_rounded : Icons.star_border_rounded,
+              color: _isFavorite ? _shiaGold : _shiaMuted,
+            ),
+          ),
           IconButton(
             tooltip: 'وضع القراءة الخاشعة',
             onPressed: _toggleFocusMode,

@@ -67,7 +67,7 @@ class PrayerNotificationService {
                 channelDescription: 'تنبيهات الصلاة بصوت الأذان الفارسي المضمّن',
                 importance: Importance.high,
                 priority: Priority.high,
-                sound: const RawResourceAndroidNotificationSound('adhan_persian'),
+                sound: RawResourceAndroidNotificationSound('adhan_persian'),
                 audioAttributesUsage: AudioAttributesUsage.alarm,
               ),
             ),

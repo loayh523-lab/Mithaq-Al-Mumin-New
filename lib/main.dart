@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'data/religious_content.dart';
 import 'quran/quran_pages.dart';
 import 'features/prayer_calendar_page.dart';
+import 'features/qibla_page.dart';
 
 void main() => runApp(const MithaqApp());
 
@@ -179,6 +180,7 @@ class _MainShellState extends State<MainShell> {
           _featureCard(Icons.auto_stories_rounded, 'ختمة القرآن', 'حفظ تقدّم الختمة', () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: KhatmaPage())))),
           _featureCard(Icons.checklist_rounded, 'متابعة الصلاة', 'سجلّ صلوات اليوم', () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: PrayerTrackerPage())))),
           _featureCard(Icons.explore_rounded, 'المواقيت والتقويم', 'الصلاة والتاريخ الهجري والإمساكية', () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: PrayerCalendarPage())))),
+          _featureCard(Icons.explore_rounded, 'اتجاه القبلة', 'بوصلة الجهاز الحية', () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: QiblaPage())))),
         ],
       ),
       const SizedBox(height: 22),

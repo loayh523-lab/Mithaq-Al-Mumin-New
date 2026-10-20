@@ -65,7 +65,23 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
       Padding(
         padding: const EdgeInsets.fromLTRB(18, 16, 18, 8),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          const Text('فهرس السور', style: TextStyle(fontSize: 25, fontWeight: FontWeight.w800)),
+          Row(children: [
+            const Expanded(child: Text('فهرس السور', style: TextStyle(fontSize: 25, fontWeight: FontWeight.w800))),
+            IconButton(
+              tooltip: 'البحث داخل الآيات',
+              onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
+                builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: QuranSearchPage()),
+              )),
+              icon: const Icon(Icons.manage_search_rounded, color: _gold),
+            ),
+            IconButton(
+              tooltip: 'الآيات المحفوظة',
+              onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
+                builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: QuranBookmarksPage()),
+              )),
+              icon: const Icon(Icons.bookmarks_outlined, color: _gold),
+            ),
+          ]),
           const SizedBox(height: 5),
           Text(_loading ? 'جارٍ تجهيز فهرس القرآن الكريم...' : '114 سورة • $verseCount آية', style: const TextStyle(color: _muted)),
           const SizedBox(height: 14),
@@ -114,6 +130,184 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
     ]);
   }
 }
+
+
+class QuranSearchHit {
+  const QuranSearchHit({required this.surah, required this.verseNumber, required this.text});
+  final SurahInfo surah;
+  final int verseNumber;
+  final String text;
+}
+
+String _normalizeArabic(String value) => value
+    .toLowerCase()
+    .replaceAll(RegExp('[\\u064B-\\u065F\\u0670\\u0640]'), '')
+    .replaceAll(RegExp('[أإآٱ]'), 'ا')
+    .replaceAll('ى', 'ي')
+    .replaceAll('ؤ', 'و')
+    .replaceAll('ئ', 'ي');
+
+Future<List<SurahInfo>> _readSurahCatalog() async {
+  final raw = await rootBundle.loadString('assets/quran/chapters.json');
+  final decoded = jsonDecode(raw) as Map<String, dynamic>;
+  final list = (decoded['chapters'] as List<dynamic>)
+      .map((e) => SurahInfo.fromJson(e as Map<String, dynamic>)).toList();
+  if (list.length != 114) throw const FormatException('Expected 114 surahs.');
+  return list;
+}
+
+class QuranSearchPage extends StatefulWidget {
+  const QuranSearchPage({super.key});
+  @override State<QuranSearchPage> createState() => _QuranSearchPageState();
+}
+
+class _QuranSearchPageState extends State<QuranSearchPage> {
+  final TextEditingController _query = TextEditingController();
+  bool _loading = false;
+  String? _message;
+  List<QuranSearchHit> _hits = const [];
+
+  @override void dispose() { _query.dispose(); super.dispose(); }
+
+  Future<void> _search() async {
+    final query = _normalizeArabic(_query.text.trim());
+    if (query.length < 2) {
+      setState(() { _hits = const []; _message = 'اكتب حرفين على الأقل للبحث.'; });
+      return;
+    }
+    setState(() { _loading = true; _message = null; _hits = const []; });
+    try {
+      final catalog = await _readSurahCatalog();
+      final byId = {for (final s in catalog) s.id: s};
+      final chapters = await (_offlineQuranFuture ??= _readBundledQuran());
+      final hits = <QuranSearchHit>[];
+      for (var surahId = 1; surahId <= 114; surahId++) {
+        final surah = byId[surahId]!;
+        final verses = chapters[surahId] ?? const <String>[];
+        for (var i = 0; i < verses.length; i++) {
+          if (_normalizeArabic(verses[i]).contains(query)) {
+            hits.add(QuranSearchHit(surah: surah, verseNumber: i + 1, text: verses[i]));
+            if (hits.length >= 100) break;
+          }
+        }
+        if (hits.length >= 100) break;
+      }
+      if (!mounted) return;
+      setState(() { _loading = false; _hits = hits; _message = hits.isEmpty ? 'ما لقينا آيات مطابقة.' : 'النتائج الأولى: ${hits.length}'; });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() { _loading = false; _message = 'تعذّر فتح ملف القرآن المحلي. أعد المحاولة.'; });
+    }
+  }
+
+  @override Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: const Text('البحث في القرآن')),
+    body: Column(children: [
+      Padding(padding: const EdgeInsets.all(16), child: TextField(
+        controller: _query, textInputAction: TextInputAction.search, onSubmitted: (_) => _search(),
+        decoration: InputDecoration(
+          hintText: 'ابحث بكلمة من الآية...',
+          prefixIcon: const Icon(Icons.search),
+          suffixIcon: IconButton(onPressed: _search, icon: const Icon(Icons.arrow_forward_rounded)),
+          filled: true, fillColor: _panel,
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
+        ),
+      )),
+      if (_message != null) Padding(padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4), child: Text(_message!, style: const TextStyle(color: _muted))),
+      Expanded(child: _loading
+        ? const Center(child: CircularProgressIndicator(color: _gold))
+        : _hits.isEmpty
+          ? const Center(child: Text('تظهر النتائج هنا', style: TextStyle(color: _muted)))
+          : ListView.separated(
+              padding: const EdgeInsets.all(16), itemCount: _hits.length,
+              separatorBuilder: (_, __) => const SizedBox(height: 8),
+              itemBuilder: (context, index) {
+                final hit = _hits[index];
+                return Card(color: _panel, child: ListTile(
+                  title: Text('${hit.surah.name} • الآية ${hit.verseNumber}', style: const TextStyle(color: _gold, fontWeight: FontWeight.bold)),
+                  subtitle: Text(hit.text, maxLines: 4, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 19, height: 1.8)),
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: SurahReaderPage(surah: hit.surah),
+                  ))),
+                ));
+              },
+            )),
+    ]),
+  );
+}
+
+class QuranBookmarksPage extends StatefulWidget {
+  const QuranBookmarksPage({super.key});
+  @override State<QuranBookmarksPage> createState() => _QuranBookmarksPageState();
+}
+
+class _QuranBookmarksPageState extends State<QuranBookmarksPage> {
+  bool _loading = true;
+  String? _error;
+  List<QuranSearchHit> _items = const [];
+
+  @override void initState() { super.initState(); _load(); }
+
+  Future<void> _load() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final refs = prefs.getStringList('quran_bookmarks') ?? const <String>[];
+      final catalog = await _readSurahCatalog();
+      final byId = {for (final s in catalog) s.id: s};
+      final chapters = await (_offlineQuranFuture ??= _readBundledQuran());
+      final entries = <QuranSearchHit>[];
+      for (final ref in refs) {
+        final parts = ref.split(':');
+        if (parts.length != 2) continue;
+        final id = int.tryParse(parts[0]), verse = int.tryParse(parts[1]);
+        if (id == null || verse == null || !byId.containsKey(id)) continue;
+        final verses = chapters[id] ?? const <String>[];
+        if (verse < 1 || verse > verses.length) continue;
+        entries.add(QuranSearchHit(surah: byId[id]!, verseNumber: verse, text: verses[verse - 1]));
+      }
+      if (!mounted) return;
+      setState(() { _items = entries.reversed.toList(); _loading = false; });
+    } catch (_) {
+      if (mounted) setState(() { _loading = false; _error = 'تعذّر تحميل الآيات المحفوظة.'; });
+    }
+  }
+
+  Future<void> _remove(QuranSearchHit hit) async {
+    final prefs = await SharedPreferences.getInstance();
+    final refs = prefs.getStringList('quran_bookmarks') ?? <String>[];
+    refs.remove('${hit.surah.id}:${hit.verseNumber}');
+    await prefs.setStringList('quran_bookmarks', refs);
+    if (mounted) setState(() => _items.removeWhere((e) => e.surah.id == hit.surah.id && e.verseNumber == hit.verseNumber));
+  }
+
+  @override Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: const Text('الآيات المحفوظة')),
+    body: _loading
+      ? const Center(child: CircularProgressIndicator(color: _gold))
+      : _error != null
+        ? _QuranError(message: _error!, onRetry: _load)
+        : _items.isEmpty
+          ? const Center(child: Padding(padding: EdgeInsets.all(24), child: Text('ما عندك آيات محفوظة حالياً. افتح سورة واضغط علامة الحفظ بجانب الآية.', textAlign: TextAlign.center, style: TextStyle(color: _muted, height: 1.6))))
+          : ListView.separated(
+              padding: const EdgeInsets.all(16), itemCount: _items.length,
+              separatorBuilder: (_, __) => const SizedBox(height: 8),
+              itemBuilder: (context, index) {
+                final item = _items[index];
+                return Card(color: _panel, child: ListTile(
+                  title: Text('${item.surah.name} • الآية ${item.verseNumber}', style: const TextStyle(color: _gold, fontWeight: FontWeight.bold)),
+                  subtitle: Text(item.text, maxLines: 3, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 18, height: 1.7)),
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: SurahReaderPage(surah: item.surah),
+                  ))),
+                  trailing: IconButton(tooltip: 'إزالة الحفظ', onPressed: () => _remove(item), icon: const Icon(Icons.bookmark_remove_outlined, color: _muted)),
+                ));
+              },
+            ),
+  );
+}
+
 
 class _QuranError extends StatelessWidget {
   const _QuranError({required this.message, required this.onRetry});
@@ -173,6 +367,7 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
   String? _error;
   List<String> _verses = const [];
   double _fontSize = 24;
+  Set<String> _bookmarks = <String>{};
 
   @override
   void initState() { super.initState(); _loadFontSize(); _loadVerses(); }
@@ -180,8 +375,32 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
   Future<void> _loadFontSize() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      if (mounted) setState(() => _fontSize = (prefs.getDouble('quran_font_size') ?? 24).clamp(16, 34).toDouble());
+      if (mounted) setState(() {
+        _fontSize = (prefs.getDouble('quran_font_size') ?? 24).clamp(16, 34).toDouble();
+        _bookmarks = (prefs.getStringList('quran_bookmarks') ?? const <String>[]).toSet();
+      });
     } catch (_) { /* Keep the default text size. */ }
+  }
+
+  String _bookmarkKey(int index) => '${widget.surah.id}:${index + 1}';
+
+  Future<void> _toggleBookmark(int index) async {
+    final key = _bookmarkKey(index);
+    final next = Set<String>.from(_bookmarks);
+    final removed = !next.add(key);
+    if (removed) next.remove(key);
+    setState(() => _bookmarks = next);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setStringList('quran_bookmarks', next.toList()..sort());
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(removed ? 'أُزيلت الآية من المحفوظات' : 'حُفظت الآية للرجوع إليها'),
+        duration: const Duration(seconds: 1),
+      ));
+    } catch (_) {
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('تعذّر حفظ الإشارة المرجعية')));
+    }
   }
 
   Future<void> _loadVerses() async {
@@ -247,6 +466,15 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
                 Row(children: [
                   CircleAvatar(radius: 16, backgroundColor: _emerald, child: Text('${i + 1}', style: const TextStyle(color: Colors.white, fontSize: 12))),
                   const Spacer(),
+                  IconButton(
+                    tooltip: _bookmarks.contains('${widget.surah.id}:${i + 1}') ? 'إزالة من المحفوظات' : 'حفظ الآية',
+                    onPressed: () => _toggleBookmark(i),
+                    icon: Icon(
+                      _bookmarks.contains('${widget.surah.id}:${i + 1}') ? Icons.bookmark_rounded : Icons.bookmark_add_outlined,
+                      color: _bookmarks.contains('${widget.surah.id}:${i + 1}') ? _gold : _muted,
+                      size: 20,
+                    ),
+                  ),
                   IconButton(
                     tooltip: 'نسخ الآية',
                     onPressed: () async {

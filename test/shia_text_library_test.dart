@@ -44,6 +44,11 @@ void main() {
 
     for (final entry in data.entries) {
       expect(
+        entry.lines.every((line) => line.kind.toLowerCase() == 'arabic'),
+        isTrue,
+        reason: 'Only Arabic recitation lines may be bundled: ${entry.slug}',
+      );
+      expect(
         RegExp(r'[A-Za-zپچژگ]').hasMatch(entry.displayTitle),
         isFalse,
         reason: 'Entry title is not Arabic-only: ${entry.slug}',

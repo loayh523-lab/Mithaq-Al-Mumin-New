@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -63,6 +64,21 @@ class MainShell extends StatefulWidget {
 class _MainShellState extends State<MainShell> {
   int _selected = 0;
   int _count = 0;
+  PrayerCity _prayerCity = PrayerLocations.cities.first;
+  DateTime _now = DateTime.now();
+  Timer? _dashboardClock;
+  int _hijriCorrection = 0;
+  bool _dailyTaskDone = false;
+  String _dailyTaskKey = '';
+
+  static const _dailyTasks = <String>[
+    'اقرأ صفحة من القرآن الكريم بتدبّر',
+    'استغفر الله 100 مرة',
+    'صلِّ على محمد وآل محمد 100 مرة',
+    'اقرأ سورة الإخلاص وتدبّر معناها',
+    'قدّم مساعدة لأحد من أهلك',
+    'راجع صلواتك الخمس واهتم بأدائها في وقتها',
+  ];
 
   static const _titles = ['الرئيسية', 'القرآن الكريم', 'الأدعية والزيارات', 'التسبيح', 'الإعدادات'];
   static const _icons = [
@@ -78,6 +94,74 @@ class _MainShellState extends State<MainShell> {
     super.initState();
     _restoreCounter();
     _refreshPrayerReminders();
+    _loadDashboardData();
+    _dashboardClock = Timer.periodic(const Duration(seconds: 30), (_) {
+      if (!mounted) return;
+      final current = DateTime.now();
+      setState(() => _now = current);
+      if (_dayKey(current) != _dailyTaskKey) {
+        _loadDailyTask(current);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _dashboardClock?.cancel();
+    super.dispose();
+  }
+
+  String _dayKey(DateTime date) =>
+      '${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+
+  Future<void> _loadDashboardData() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final city = await PrayerLocations.load();
+      final today = DateTime.now();
+      final key = _dayKey(today);
+      if (!mounted) return;
+      setState(() {
+        _prayerCity = city;
+        _hijriCorrection = prefs.getInt('hijri_correction') ?? 0;
+        _dailyTaskKey = key;
+        _dailyTaskDone = prefs.getBool('daily_task_done_$key') ?? false;
+      });
+    } catch (_) {
+      // The dashboard stays available with its default city if preferences fail.
+    }
+  }
+
+  Future<void> _loadDailyTask(DateTime date) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final key = _dayKey(date);
+      if (!mounted) return;
+      setState(() {
+        _dailyTaskKey = key;
+        _dailyTaskDone = prefs.getBool('daily_task_done_$key') ?? false;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _dailyTaskKey = _dayKey(date);
+        _dailyTaskDone = false;
+      });
+    }
+  }
+
+  Future<void> _toggleDailyTask(bool done) async {
+    final key = _dayKey(_now);
+    setState(() {
+      _dailyTaskKey = key;
+      _dailyTaskDone = done;
+    });
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('daily_task_done_$key', done);
+    } catch (_) {
+      if (mounted) _notice('تعذّر حفظ إنجاز عمل اليوم');
+    }
   }
 
   Future<void> _refreshPrayerReminders() async {
@@ -115,6 +199,7 @@ class _MainShellState extends State<MainShell> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: _navigationDrawer(),
       appBar: AppBar(
         title: const Row(
           children: [
@@ -123,13 +208,6 @@ class _MainShellState extends State<MainShell> {
             Text('ميثاق المؤمن', style: TextStyle(fontWeight: FontWeight.w800)),
           ],
         ),
-        actions: [
-          IconButton(
-            onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: PrayerCalendarPage()))),
-            tooltip: 'المواقيت والتقويم',
-            icon: const Icon(Icons.calendar_month_rounded),
-          ),
-        ],
       ),
       body: SafeArea(
         child: IndexedStack(
@@ -143,191 +221,394 @@ class _MainShellState extends State<MainShell> {
           ],
         ),
       ),
-      bottomNavigationBar: NavigationBar(
-        backgroundColor: _panel,
-        indicatorColor: _emerald.withValues(alpha: .35),
-        selectedIndex: _selected,
-        onDestinationSelected: (index) => setState(() => _selected = index),
-        destinations: List.generate(_titles.length, (i) => NavigationDestination(
-          icon: Icon(_icons[i]),
-          label: _titles[i],
-        )),
+    );
+  }
+
+  Widget _navigationDrawer() => Drawer(
+    backgroundColor: _ink,
+    child: SafeArea(
+      child: Column(
+        children: [
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.fromLTRB(20, 24, 20, 22),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                colors: [Color(0xFF1B5943), Color(0xFF0B211A)],
+              ),
+              border: Border(bottom: BorderSide(color: _gold.withValues(alpha: .3))),
+            ),
+            child: const Row(
+              children: [
+                Icon(Icons.mosque_rounded, color: _gold, size: 34),
+                SizedBox(width: 12),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('ميثاق المؤمن', style: TextStyle(fontSize: 19, fontWeight: FontWeight.w800)),
+                    SizedBox(height: 4),
+                    Text('درب العبادة والطمأنينة', style: TextStyle(color: _muted, fontSize: 12)),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              children: [
+                _drawerItem(Icons.home_rounded, 'الرئيسية', () => _selectTab(0), selected: _selected == 0),
+                _drawerItem(Icons.menu_book_rounded, 'القرآن الكريم', () => _selectTab(1), selected: _selected == 1),
+                _drawerItem(Icons.auto_awesome_rounded, 'الأدعية والزيارات', () => _selectTab(2), selected: _selected == 2),
+                _drawerItem(Icons.fingerprint_rounded, 'التسبيح', () => _selectTab(3), selected: _selected == 3),
+                _drawerItem(Icons.settings_rounded, 'الإعدادات', () => _selectTab(4), selected: _selected == 4),
+                const Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(14, 18, 14, 8),
+                  child: Text('خدمات إضافية', style: TextStyle(color: _gold, fontWeight: FontWeight.w800, fontSize: 13)),
+                ),
+                const Divider(color: Color(0x223CB58B)),
+                _drawerItem(Icons.auto_stories_rounded, 'ختمة القرآن', () => _openDrawerPage(const KhatmaPage())),
+                _drawerItem(Icons.checklist_rounded, 'متابعة الصلاة', () => _openDrawerPage(const PrayerTrackerPage())),
+                _drawerItem(Icons.calendar_month_rounded, 'مواقيت الصلاة والتقويم', () => _openDrawerPage(const PrayerCalendarPage())),
+                _drawerItem(Icons.explore_rounded, 'اتجاه القبلة', () => _openDrawerPage(const QiblaPage())),
+                _drawerItem(Icons.menu_book_rounded, 'مفاتيح الجنان', () => _openDrawerPage(const MafatihLibraryPage())),
+                _drawerItem(Icons.library_books_rounded, 'مكتبة الأدعية والزيارات', () => _openDrawerPage(const ShiaTextLibraryPage())),
+              ],
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.all(14),
+            child: Text('ميثاق المؤمن • نسخة قيد التطوير', style: TextStyle(color: _muted, fontSize: 11)),
+          ),
+        ],
+      ),
+    ),
+  );
+
+  Widget _drawerItem(IconData icon, String title, VoidCallback onTap, {bool selected = false}) =>
+      ListTile(
+        leading: Icon(icon, color: selected ? _gold : _muted),
+        title: Text(title, style: TextStyle(color: selected ? Colors.white : _muted, fontWeight: selected ? FontWeight.w800 : FontWeight.w500)),
+        selected: selected,
+        selectedTileColor: _emerald.withValues(alpha: .18),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        onTap: onTap,
+        dense: true,
+      );
+
+  void _selectTab(int index) {
+    Navigator.of(context).pop();
+    setState(() => _selected = index);
+  }
+
+  void _openDrawerPage(Widget page) {
+    final navigator = Navigator.of(context);
+    navigator.pop();
+    navigator.push(MaterialPageRoute<void>(
+      builder: (_) => Directionality(textDirection: TextDirection.rtl, child: page),
+    ));
+  }
+
+  ({String name, DateTime at}) _nextPrayer(SolarPrayerTimes times, DateTime clock) {
+    final prayers = <({String name, String value})>[
+      (name: 'الفجر', value: times.fajr),
+      (name: 'الظهر', value: times.noon),
+      (name: 'العصر', value: times.asr),
+      (name: 'المغرب', value: times.maghrib),
+      (name: 'العشاء', value: times.isha),
+    ];
+    for (final prayer in prayers) {
+      final parts = prayer.value.split(':');
+      if (parts.length != 2) continue;
+      final candidate = DateTime(
+        clock.year,
+        clock.month,
+        clock.day,
+        int.tryParse(parts[0]) ?? 0,
+        int.tryParse(parts[1]) ?? 0,
+      );
+      if (candidate.isAfter(clock)) return (name: prayer.name, at: candidate);
+    }
+
+    final tomorrow = DateTime(clock.year, clock.month, clock.day).add(const Duration(days: 1));
+    final parts = SolarPrayerTimes.forDate(
+      tomorrow, _prayerCity.latitude, _prayerCity.longitude, 3.0,
+    ).fajr.split(':');
+    return (
+      name: 'الفجر',
+      at: DateTime(
+        tomorrow.year, tomorrow.month, tomorrow.day,
+        int.tryParse(parts[0]) ?? 5, int.tryParse(parts[1]) ?? 0,
       ),
     );
   }
 
-  Widget _homePage() => ListView(
-    padding: const EdgeInsets.fromLTRB(18, 12, 18, 28),
-    children: [
-      Container(
-        padding: const EdgeInsets.all(22),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(28),
-          gradient: const LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            colors: [Color(0xFF1B5943), Color(0xFF103226), Color(0xFF0B211A)],
+  String _clockLabel(DateTime value) =>
+      '\${value.hour.toString().padLeft(2, '0')}:\${value.minute.toString().padLeft(2, '0')}';
+
+  String _countdownLabel(DateTime target, DateTime current) {
+    final minutes = target.difference(current).inMinutes.clamp(0, 999999);
+    final hours = minutes ~/ 60;
+    final remainder = minutes % 60;
+    if (hours > 0) return '$hours س $remainder د';
+    return '$remainder دقيقة';
+  }
+
+  String _gregorianLabel(DateTime date) {
+    const months = [
+      'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو',
+      'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر',
+    ];
+    return '\${date.day} \${months[date.month - 1]} \${date.year}';
+  }
+
+  Widget _homePage() {
+    final times = SolarPrayerTimes.forDate(
+      _now, _prayerCity.latitude, _prayerCity.longitude, 3.0,
+    );
+    final next = _nextPrayer(times, _now);
+    final prayers = <({String name, String time, IconData icon})>[
+      (name: 'الفجر', time: times.fajr, icon: Icons.nights_stay_outlined),
+      (name: 'الظهر', time: times.noon, icon: Icons.wb_sunny_outlined),
+      (name: 'العصر', time: times.asr, icon: Icons.wb_sunny_rounded),
+      (name: 'المغرب', time: times.maghrib, icon: Icons.wb_twilight_rounded),
+      (name: 'العشاء', time: times.isha, icon: Icons.dark_mode_outlined),
+    ];
+    final dayOfYear = DateTime(_now.year, _now.month, _now.day)
+        .difference(DateTime(_now.year, 1, 1)).inDays;
+    final dailyTask = _dailyTasks[dayOfYear % _dailyTasks.length];
+
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
+      children: [
+        Container(
+          padding: const EdgeInsets.all(19),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24),
+            gradient: const LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              colors: [Color(0xFF1B5943), Color(0xFF103226), Color(0xFF0B211A)],
+            ),
+            border: Border.all(color: _gold.withValues(alpha: .35)),
           ),
-          border: Border.all(color: _gold.withValues(alpha: .32)),
-          boxShadow: [
-            BoxShadow(
-              color: _emerald.withValues(alpha: .12),
-              blurRadius: 24,
-              offset: const Offset(0, 10),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  width: 46,
-                  height: 46,
-                  decoration: BoxDecoration(
-                    color: _gold.withValues(alpha: .12),
-                    borderRadius: BorderRadius.circular(15),
-                    border: Border.all(color: _gold.withValues(alpha: .35)),
-                  ),
-                  child: const Icon(Icons.mosque_rounded, color: _gold, size: 27),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: _gold.withValues(alpha: .13),
+                  borderRadius: BorderRadius.circular(16),
                 ),
-                const SizedBox(width: 12),
-                const Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('أهلاً بك', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
-                      SizedBox(height: 3),
-                      Text('رفيقك في العبادة اليومية', style: TextStyle(color: _muted, fontSize: 12)),
-                    ],
-                  ),
+                child: const Icon(Icons.calendar_month_rounded, color: _gold, size: 26),
+              ),
+              const SizedBox(width: 13),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('التاريخ الهجري', style: TextStyle(color: _muted, fontSize: 12)),
+                    const SizedBox(height: 5),
+                    Text(
+                      hijriDateLabel(_now, correction: _hijriCorrection),
+                      style: const TextStyle(color: _gold, fontSize: 21, fontWeight: FontWeight.w800, height: 1.5),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(_gregorianLabel(_now), style: const TextStyle(color: Color(0xFFD0DED6), fontSize: 12)),
+                  ],
                 ),
-                const Icon(Icons.auto_awesome_rounded, color: _gold, size: 20),
-              ],
-            ),
-            const SizedBox(height: 26),
-            const Text(
-              'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ',
-              style: TextStyle(color: _gold, fontSize: 16, height: 1.8),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'ميثاقٌ يتجدّد',
-              style: TextStyle(fontSize: 29, fontWeight: FontWeight.w800, height: 1.35),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'مساحة هادئة تجمع القرآن والذكر والدعاء في مكان واحد.',
-              style: TextStyle(color: Color(0xFFD0DED6), fontSize: 14, height: 1.8),
-            ),
-          ],
-        ),
-      ),
-      const SizedBox(height: 26),
-      const Row(
-        children: [
-          Expanded(
-            child: Text('الوصول السريع', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800)),
+              ),
+            ],
           ),
-          Text('اختر ما تحتاجه', style: TextStyle(color: _muted, fontSize: 12)),
-        ],
-      ),
-      const SizedBox(height: 14),
-      GridView.count(
-        crossAxisCount: 2,
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        mainAxisSpacing: 12,
-        crossAxisSpacing: 12,
-        childAspectRatio: 1.12,
-        children: [
-          _featureCard(Icons.menu_book_rounded, 'القرآن الكريم', 'المصحف وفهرس السور', () => setState(() => _selected = 1)),
-          _featureCard(Icons.auto_awesome_rounded, 'الأدعية والزيارات', 'مكتبة النصوص', () => setState(() => _selected = 2)),
-          _featureCard(Icons.fingerprint_rounded, 'التسبيح', 'عداد الذكر اليومي', () => setState(() => _selected = 3)),
-          _featureCard(Icons.auto_stories_rounded, 'ختمة القرآن', 'تابع تقدّمك', () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: KhatmaPage())))),
-          _featureCard(Icons.checklist_rounded, 'متابعة الصلاة', 'سجلّ صلوات اليوم', () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: PrayerTrackerPage())))),
-          _featureCard(Icons.calendar_month_rounded, 'المواقيت والتقويم', 'التاريخ والمناسبات', () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: PrayerCalendarPage())))),
-          _featureCard(Icons.explore_rounded, 'اتجاه القبلة', 'تحديد الاتجاه', () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: QiblaPage())))),
-        ],
-      ),
-      const SizedBox(height: 22),
-      Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: _panel,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.white.withValues(alpha: .06)),
         ),
-        child: const Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(Icons.verified_outlined, color: _gold, size: 23),
-            SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+        const SizedBox(height: 14),
+        Container(
+          padding: const EdgeInsets.all(18),
+          decoration: BoxDecoration(
+            color: _panel,
+            borderRadius: BorderRadius.circular(22),
+            border: Border.all(color: _gold.withValues(alpha: .38)),
+            boxShadow: [
+              BoxShadow(color: _emerald.withValues(alpha: .12), blurRadius: 18, offset: const Offset(0, 7)),
+            ],
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  color: _emerald.withValues(alpha: .2),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: const Icon(Icons.hourglass_bottom_rounded, color: _gold, size: 27),
+              ),
+              const SizedBox(width: 13),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('الصلاة القادمة', style: TextStyle(color: _muted, fontSize: 12)),
+                    const SizedBox(height: 3),
+                    Text(next.name, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: _gold)),
+                    const SizedBox(height: 4),
+                    Text('موعدها \${_clockLabel(next.at)}', style: const TextStyle(color: Colors.white70, fontSize: 13)),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text('الدقّة والأمانة', style: TextStyle(fontWeight: FontWeight.w800)),
-                  SizedBox(height: 5),
+                  const Text('المتبقي', style: TextStyle(color: _muted, fontSize: 11)),
+                  const SizedBox(height: 5),
                   Text(
-                    'نعمل على ترتيب النصوص مع مصادرها بوضوح، ونحرص على عدم عرض معلومات دينية غير متحقَّق منها.',
-                    style: TextStyle(color: _muted, height: 1.7, fontSize: 12),
+                    _countdownLabel(next.at, _now),
+                    style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15),
+                    textAlign: TextAlign.end,
                   ),
                 ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    ],
-  );
-
-  Widget _featureCard(IconData icon, String title, String subtitle, VoidCallback onTap) => Material(
-    color: Colors.transparent,
-    child: InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(22),
-      child: Ink(
-        padding: const EdgeInsets.all(15),
-        decoration: BoxDecoration(
-          color: _panel,
-          borderRadius: BorderRadius.circular(22),
-          border: Border.all(color: Colors.white.withValues(alpha: .07)),
+        const SizedBox(height: 23),
+        const Text('مواقيت الصلوات', style: TextStyle(fontSize: 19, fontWeight: FontWeight.w800)),
+        const SizedBox(height: 10),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          decoration: BoxDecoration(
+            color: _panel,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Colors.white.withValues(alpha: .06)),
+          ),
+          child: Column(
+            children: [
+              for (var i = 0; i < prayers.length; i++) ...[
+                Builder(builder: (context) {
+                  final prayer = prayers[i];
+                  final active = next.name == prayer.name;
+                  return Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 11),
+                    decoration: BoxDecoration(
+                      color: active ? _emerald.withValues(alpha: .2) : Colors.transparent,
+                      borderRadius: BorderRadius.circular(13),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(prayer.icon, color: active ? _gold : _muted, size: 21),
+                        const SizedBox(width: 11),
+                        Expanded(
+                          child: Text(
+                            prayer.name,
+                            style: TextStyle(fontWeight: active ? FontWeight.w800 : FontWeight.w500, color: active ? Colors.white : _muted),
+                          ),
+                        ),
+                        if (active) ...[
+                          const Text('القادمة', style: TextStyle(color: _gold, fontSize: 11)),
+                          const SizedBox(width: 9),
+                        ],
+                        Text(prayer.time, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: active ? _gold : Colors.white)),
+                      ],
+                    ),
+                  );
+                }),
+                if (i < prayers.length - 1)
+                  Divider(height: 1, indent: 42, color: Colors.white.withValues(alpha: .05)),
+              ],
+            ],
+          ),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 46,
-              height: 46,
-              decoration: BoxDecoration(
-                color: _emerald.withValues(alpha: .18),
-                borderRadius: BorderRadius.circular(15),
-                border: Border.all(color: _gold.withValues(alpha: .18)),
+        const Padding(
+          padding: EdgeInsetsDirectional.fromSTEB(4, 8, 4, 0),
+          child: Text(
+            'المواقيت هنا فلكية تقديرية، وقد تختلف عن جدول مكتب مرجعك؛ اعتمد الجدول الشرعي المعتمد في منطقتك.',
+            style: TextStyle(color: _muted, fontSize: 11, height: 1.6),
+          ),
+        ),
+        const SizedBox(height: 22),
+        const Text('عمل اليوم', style: TextStyle(fontSize: 19, fontWeight: FontWeight.w800)),
+        const SizedBox(height: 10),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 8),
+          decoration: BoxDecoration(
+            color: _panel,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Colors.white.withValues(alpha: .06)),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 43,
+                height: 43,
+                decoration: BoxDecoration(color: _gold.withValues(alpha: .12), borderRadius: BorderRadius.circular(14)),
+                child: const Icon(Icons.volunteer_activism_rounded, color: _gold),
               ),
-              child: Icon(icon, color: _gold, size: 24),
-            ),
-            const Spacer(),
-            Text(
-              title,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14, height: 1.4),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              subtitle,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(color: _muted, fontSize: 11, height: 1.45),
-            ),
-          ],
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  dailyTask,
+                  style: TextStyle(
+                    height: 1.6,
+                    color: _dailyTaskDone ? _muted : Colors.white,
+                    decoration: _dailyTaskDone ? TextDecoration.lineThrough : TextDecoration.none,
+                  ),
+                ),
+              ),
+              Checkbox(
+                value: _dailyTaskDone,
+                activeColor: _emerald,
+                checkColor: Colors.white,
+                onChanged: (value) => _toggleDailyTask(value ?? false),
+              ),
+            ],
+          ),
         ),
-      ),
-    ),
-  );
+        const SizedBox(height: 22),
+        Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(22),
+            onTap: () => setState(() => _selected = 1),
+            child: Ink(
+              padding: const EdgeInsets.all(17),
+              decoration: BoxDecoration(
+                color: _panel,
+                borderRadius: BorderRadius.circular(22),
+                border: Border.all(color: _gold.withValues(alpha: .2)),
+              ),
+              child: const Row(
+                children: [
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(color: Color(0x223CB58B), borderRadius: BorderRadius.all(Radius.circular(15))),
+                    child: Icon(Icons.menu_book_rounded, color: _gold, size: 26),
+                  ),
+                  SizedBox(width: 13),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('القرآن الكريم', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 17)),
+                        SizedBox(height: 4),
+                        Text('افتح المصحف وتابع قراءتك', style: TextStyle(color: _muted, fontSize: 12)),
+                      ],
+                    ),
+                  ),
+                  Icon(Icons.chevron_left_rounded, color: _gold, size: 25),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 
   Widget _duaPage() => _DuaLibrary(onNotice: _notice);
 

@@ -266,9 +266,14 @@ def main() -> None:
                     for item in items
                     if isinstance(item, dict) and isinstance(item.get("content", ""), str)
                 )
+                # Classify from the article and section first. The chapter title is
+                # only a fallback: broad chapter headings such as "أعمال أشهر السنة"
+                # must not force every specific dua or ziyara into one category.
                 article["category"] = classify_mafatih_category(
-                    f"{raw_chapter_title} {raw_section_title} {raw_article_title} {source_text}"
+                    f"{raw_article_title} {raw_section_title}"
                 )
+                if article["category"] == "أدعية عامة":
+                    article["category"] = classify_mafatih_category(raw_chapter_title)
 
             # Do not ship article cards that contain no Arabic recitation; they would open blank.
             section["articles"] = [article for article in articles if article.get("items")]

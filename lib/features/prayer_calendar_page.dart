@@ -125,7 +125,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
           Text('الوقت المحسوب: ${nextTime.hour.toString().padLeft(2, '0')}:${nextTime.minute.toString().padLeft(2, '0')}', style: const TextStyle(color: _muted, fontSize: 12)),
         ])),
         Text(
-          hours > 0 ? '${hours}س ${minutes}د' : '${minutes} دقيقة',
+          hours > 0 ? '$hoursس $minutesد' : '$minutes دقيقة',
           style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 17),
         ),
       ]),

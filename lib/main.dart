@@ -80,6 +80,7 @@ class MainShell extends StatefulWidget {
 }
 
 class _MainShellState extends State<MainShell> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _selected = 0;
   PrayerCity _prayerCity = PrayerLocations.cities.first;
   DateTime _now = DateTime.now();
@@ -205,38 +206,8 @@ class _MainShellState extends State<MainShell> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       drawer: _navigationDrawer(),
-      appBar: AppBar(
-        title: Row(
-          children: [
-            Container(
-              width: 34,
-              height: 34,
-              clipBehavior: Clip.antiAlias,
-              decoration: BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.circular(7),
-                border: Border.all(color: _gold.withValues(alpha: .4)),
-              ),
-              child: Image.asset(
-                'assets/branding/mithaq_logo.png',
-                fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) =>
-                    const Icon(Icons.auto_awesome_outlined, color: _gold, size: 25),
-              ),
-            ),
-            const SizedBox(width: 10),
-            const Text('ميثاق المؤمن', style: TextStyle(fontWeight: FontWeight.w800)),
-          ],
-        ),
-        actions: [
-          IconButton(
-            tooltip: 'الباحث الذكي',
-            onPressed: () => _pushPage(const SmartSearchPage()),
-            icon: const Icon(Icons.search_rounded, color: _gold),
-          ),
-        ],
-      ),
       body: SafeArea(
         child: IndexedStack(
           index: _selected,
@@ -552,6 +523,11 @@ class _MainShellState extends State<MainShell> {
                       Text('طريقك إلى رضا الله', style: TextStyle(color: Color(0xFFE0E9E2), fontSize: 11)),
                     ],
                   )),
+                  IconButton(
+                    tooltip: 'الأقسام',
+                    onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+                    icon: const Icon(Icons.menu_rounded, color: _gold),
+                  ),
                   IconButton(
                     tooltip: 'الباحث الذكي',
                     onPressed: () => _pushPage(const SmartSearchPage()),

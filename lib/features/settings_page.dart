@@ -39,7 +39,11 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<void> _saveCity(String? id) async {
-    if (id == null || id == 'current_location') return;
+    if (id == null) return;
+    if (id == 'current_location') {
+      await _useCurrentLocation();
+      return;
+    }
     setState(() { _cityId = id; _currentCity = PrayerLocations.byId(id); });
     try {
       await PrayerLocations.save(id);

@@ -762,7 +762,7 @@ class _TasbeehPageState extends State<TasbeehPage> {
             ),
             const SizedBox(height: 18),
             if (_zahraMode) ...[
-              Text('\$_count', style: const TextStyle(fontSize: 54, fontWeight: FontWeight.w800)),
+              Text('$_count', style: const TextStyle(fontSize: 54, fontWeight: FontWeight.w800)),
               const SizedBox(height: 8),
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
@@ -776,7 +776,7 @@ class _TasbeehPageState extends State<TasbeehPage> {
               const SizedBox(height: 8),
               Text('المرحلة ${_step + 1} من 3 • المطلوب ${step.target}', style: const TextStyle(color: _muted)),
             ] else
-              Text('\$_generalCount', style: const TextStyle(fontSize: 58, fontWeight: FontWeight.w800)),
+              Text('$_generalCount', style: const TextStyle(fontSize: 58, fontWeight: FontWeight.w800)),
             const SizedBox(height: 22),
             Semantics(
               button: true,

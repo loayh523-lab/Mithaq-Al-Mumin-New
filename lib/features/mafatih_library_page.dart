@@ -17,13 +17,24 @@ String normalizeMafatihArabicText(String value) => value
 bool containsPersianOnlyLetters(String value) =>
     RegExp(r'[پچژگ]').hasMatch(value);
 
+/// Detect common Persian-language words even when all letters are shared
+/// with Arabic and Unicode-range checks alone cannot distinguish the language.
+bool containsPersianLanguageMarkers(String value) {
+  final normalized = normalizeMafatihArabicText(value);
+  final bothForms = '$value $normalized';
+  return RegExp(
+    r'دعای|دعاي|روزهای|روزهاي|روزها|هفته|فارسی|فارسي|برای|براي|میباشد|می شود|ميشود|خواهد شد|نمی|نمي',
+  ).hasMatch(bothForms);
+}
+
 /// True only for Arabic-script recitation text; translations and romanization
 /// are not allowed into the Arabic-only reader.
 bool isArabicMafatihRecitation(String value) {
   final normalized = normalizeMafatihArabicText(value);
   return normalized.runes.any((rune) => rune >= 0x0600 && rune <= 0x06FF) &&
       !RegExp(r'[A-Za-z]').hasMatch(normalized) &&
-      !containsPersianOnlyLetters(normalized);
+      !containsPersianOnlyLetters(normalized) &&
+      !containsPersianLanguageMarkers(value);
 }
 
 String _arabicOnlyTitle(Object? value, String fallback) {
@@ -32,6 +43,7 @@ String _arabicOnlyTitle(Object? value, String fallback) {
       : '';
   return title.isEmpty ||
       containsPersianOnlyLetters(title) ||
+      containsPersianLanguageMarkers(value is String ? value : title) ||
       RegExp(r'[A-Za-z]').hasMatch(title)
       ? fallback
       : title;

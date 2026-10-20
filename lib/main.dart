@@ -222,7 +222,7 @@ class _MainShellState extends State<MainShell> {
                 'assets/branding/mithaq_logo.png',
                 fit: BoxFit.contain,
                 errorBuilder: (context, error, stackTrace) =>
-                    const Icon(Icons.auto_awesome_rounded, color: _gold, size: 25),
+                    const Icon(Icons.auto_awesome_outlined, color: _gold, size: 25),
               ),
             ),
             const SizedBox(width: 10),
@@ -444,7 +444,7 @@ class _MainShellState extends State<MainShell> {
     final prayers = <({String name, String time, IconData icon})>[
       (name: 'الفجر', time: times.fajr, icon: Icons.nights_stay_outlined),
       (name: 'الظهر', time: times.noon, icon: Icons.wb_sunny_outlined),
-      (name: 'العصر', time: times.asr, icon: Icons.wb_sunny_rounded),
+      (name: 'العصر', time: times.asr, icon: Icons.wb_sunny_outlined),
       (name: 'المغرب', time: times.maghrib, icon: Icons.wb_twilight_rounded),
       (name: 'العشاء', time: times.isha, icon: Icons.dark_mode_outlined),
     ];
@@ -477,7 +477,7 @@ class _MainShellState extends State<MainShell> {
                   color: _gold.withValues(alpha: .13),
                   borderRadius: BorderRadius.circular(16),
                 ),
-                child: const Icon(Icons.calendar_month_rounded, color: _gold, size: 26),
+                child: const Icon(Icons.calendar_month_outlined, color: _gold, size: 26),
               ),
               const SizedBox(width: 13),
               Expanded(
@@ -639,7 +639,7 @@ class _MainShellState extends State<MainShell> {
                 width: 43,
                 height: 43,
                 decoration: BoxDecoration(color: _gold.withValues(alpha: .12), borderRadius: BorderRadius.circular(14)),
-                child: const Icon(Icons.volunteer_activism_rounded, color: _gold),
+                child: const Icon(Icons.volunteer_activism_outlined, color: _gold),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -665,7 +665,7 @@ class _MainShellState extends State<MainShell> {
           alignment: AlignmentDirectional.centerStart,
           child: TextButton.icon(
             onPressed: () => _pushPage(const GoodDeedsPage()),
-            icon: const Icon(Icons.checklist_rounded),
+            icon: const Icon(Icons.checklist_outlined),
             label: const Text('عرض بقية صالح الأعمال'),
           ),
         ),
@@ -688,7 +688,7 @@ class _MainShellState extends State<MainShell> {
                     width: 48,
                     height: 48,
                     decoration: BoxDecoration(color: Color(0x223CB58B), borderRadius: BorderRadius.all(Radius.circular(15))),
-                    child: Icon(Icons.menu_book_rounded, color: _gold, size: 26),
+                    child: Icon(Icons.menu_book_outlined, color: _gold, size: 26),
                   ),
                   SizedBox(width: 13),
                   Expanded(
@@ -826,7 +826,7 @@ class _TasbeehPageState extends State<TasbeehPage> {
         const SizedBox(height: 18),
         SegmentedButton<bool>(
           segments: const [
-            ButtonSegment(value: true, label: Text('تسبيح الزهراء'), icon: Icon(Icons.auto_awesome_rounded)),
+            ButtonSegment(value: true, label: Text('تسبيح الزهراء'), icon: Icon(Icons.auto_awesome_outlined)),
             ButtonSegment(value: false, label: Text('تسبيح عام'), icon: Icon(Icons.fingerprint_rounded)),
           ],
           selected: {_zahraMode},
@@ -999,7 +999,7 @@ class _DuaLibraryState extends State<_DuaLibrary> {
         Card(
           color: _panel,
           child: ListTile(
-            leading: const CircleAvatar(backgroundColor: Color(0x223CB58B), child: Icon(Icons.auto_stories_rounded, color: _gold)),
+            leading: const CircleAvatar(backgroundColor: Color(0x223CB58B), child: Icon(Icons.auto_stories_outlined, color: _gold)),
             title: const Text('نهج البلاغة', style: TextStyle(fontWeight: FontWeight.bold)),
             subtitle: const Text('الخطب والرسائل والحِكم مع البحث', style: TextStyle(color: _muted)),
             trailing: const Icon(Icons.chevron_left_rounded, color: _gold),
@@ -1011,7 +1011,7 @@ class _DuaLibraryState extends State<_DuaLibrary> {
         Card(
           color: _panel,
           child: ListTile(
-            leading: const CircleAvatar(backgroundColor: Color(0x223CB58B), child: Icon(Icons.menu_book_rounded, color: _gold)),
+            leading: const CircleAvatar(backgroundColor: Color(0x223CB58B), child: Icon(Icons.menu_book_outlined, color: _gold)),
             title: const Text('الأدعية والزيارات والصحيفة السجادية', style: TextStyle(fontWeight: FontWeight.bold)),
             subtitle: const Text('مجموعة نصوص مع البحث والعرض دون إنترنت', style: TextStyle(color: _muted)),
             trailing: const Icon(Icons.chevron_left_rounded, color: _gold),
@@ -1030,7 +1030,7 @@ class _DuaLibraryState extends State<_DuaLibrary> {
         const SizedBox(height: 8),
         _sectionCard(
           context,
-          icon: Icons.auto_awesome_rounded,
+          icon: Icons.auto_awesome_outlined,
           title: 'الأدعية العامة',
           subtitle: 'الأدعية والمناجيات غير المصنفة في قسم خاص',
           onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
@@ -1102,7 +1102,7 @@ class _DuaLibraryState extends State<_DuaLibrary> {
         ),
         _sectionCard(
           context,
-          icon: Icons.today_rounded,
+          icon: Icons.today_outlined,
           title: 'أدعية الأيام',
           subtitle: 'أدعية أيام الأسبوع وما يرتبط بها',
           onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
@@ -1111,7 +1111,7 @@ class _DuaLibraryState extends State<_DuaLibrary> {
         ),
         _sectionCard(
           context,
-          icon: Icons.event_note_rounded,
+          icon: Icons.event_note_outlined,
           title: 'الأعمال اليومية والمناسبات',
           subtitle: 'أعمال الأيام والليالي والأوقات الخاصة',
           onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
@@ -1120,7 +1120,7 @@ class _DuaLibraryState extends State<_DuaLibrary> {
         ),
         _sectionCard(
           context,
-          icon: Icons.calendar_month_rounded,
+          icon: Icons.calendar_month_outlined,
           title: 'الأعمال الشهرية',
           subtitle: 'أعمال الأشهر الهجرية والمواسم الخاصة',
           onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
@@ -1156,7 +1156,7 @@ class _DuaLibraryState extends State<_DuaLibrary> {
         ),
         _sectionCard(
           context,
-          icon: Icons.menu_book_rounded,
+          icon: Icons.menu_book_outlined,
           title: 'الصحيفة السجادية',
           subtitle: 'أدعية الإمام زين العابدين عليه السلام',
           onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
@@ -1165,7 +1165,7 @@ class _DuaLibraryState extends State<_DuaLibrary> {
         ),
         _sectionCard(
           context,
-          icon: Icons.auto_awesome_rounded,
+          icon: Icons.auto_awesome_outlined,
           title: 'المناجيات الخمس عشرة',
           subtitle: 'مناجيات الإمام زين العابدين عليه السلام',
           onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
@@ -1426,7 +1426,7 @@ class _KhatmaPageState extends State<KhatmaPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.auto_stories_rounded, color: _gold, size: 34),
+                const Icon(Icons.auto_stories_outlined, color: _gold, size: 34),
                 const SizedBox(height: 16),
                 const Text(
                   'خطوة كل يوم',
@@ -1642,7 +1642,7 @@ class _PrayerTrackerPageState extends State<PrayerTrackerPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.volunteer_activism_rounded, color: _gold, size: 34),
+                const Icon(Icons.volunteer_activism_outlined, color: _gold, size: 34),
                 const SizedBox(height: 14),
                 const Text('صلوات اليوم', style: TextStyle(fontSize: 25, fontWeight: FontWeight.w800)),
                 const SizedBox(height: 6),

@@ -26,3 +26,4 @@ flutter:
   assets:
     - assets/quran/chapters.json
     - assets/quran/uthmani_surahs.json
+    - assets/mafatih/mafatih.json

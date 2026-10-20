@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mithaq_al_mumin/main.dart';
 import 'package:mithaq_al_mumin/quran/quran_pages.dart';
 import 'package:mithaq_al_mumin/features/prayer_calendar_page.dart';
-import 'package:mithaq_al_mumin/features/mafatih_library_page.dart';
+import 'package:mithaq_al_mumin/data/mafatih_data.dart';
 import 'package:mithaq_al_mumin/features/shia_text_library_page.dart';
 import 'package:mithaq_al_mumin/features/good_deeds_page.dart';
 import 'package:mithaq_al_mumin/features/names_of_allah_page.dart';

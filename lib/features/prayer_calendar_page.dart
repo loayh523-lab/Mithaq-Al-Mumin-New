@@ -234,12 +234,21 @@ class _Hijri {
   final int day, month, year;
   String get monthName => const ['محرم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'][month - 1];
   factory _Hijri.fromGregorian(DateTime d) {
-    final a = (14 - d.month) ~/ 12, y = d.year + 4800 - a, m = d.month + 12*a - 3;
-    final jd = d.day + (153*m + 2) ~/ 5 + 365*y + y ~/ 4 - y ~/ 100 + y ~/ 400 - 32045;
-    final hy = ((30 * (jd - 1948439) + 10646) / 10631).floor();
-    int start(int year, int month) => 1 + (29.5 * (month - 1)).ceil() + (year - 1) * 354 + ((3 + 11 * year) ~/ 30) + 1948439 - 1;
-    var hm = 1; while (hm < 12 && jd >= start(hy, hm + 1)) { hm++; }
-    return _Hijri(jd - start(hy, hm) + 1, hm, hy);
+    // Standard tabular Islamic civil-calendar conversion (integer arithmetic).
+    // The result is an estimate; local moon-sighting announcements can differ by one day.
+    final a = (14 - d.month) ~/ 12;
+    final y = d.year + 4800 - a;
+    final m = d.month + 12 * a - 3;
+    final jd = d.day + (153 * m + 2) ~/ 5 + 365 * y + y ~/ 4 - y ~/ 100 + y ~/ 400 - 32045;
+    var l = jd - 1948440 + 10632;
+    final n = (l - 1) ~/ 10631;
+    l = l - 10631 * n + 354;
+    final j = ((10985 - l) ~/ 5316) * ((50 * l) ~/ 17719) + (l ~/ 5670) * ((43 * l) ~/ 15238);
+    l = l - ((30 - j) ~/ 15) * ((17719 * j) ~/ 50) - (j ~/ 16) * ((15238 * j) ~/ 43) + 29;
+    final month = (24 * l) ~/ 709;
+    final day = l - (709 * month) ~/ 24;
+    final year = 30 * n + j - 30;
+    return _Hijri(day, month.clamp(1, 12), year);
   }
 }
 

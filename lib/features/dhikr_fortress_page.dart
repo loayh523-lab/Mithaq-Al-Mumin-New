@@ -91,7 +91,7 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
 
             items.add(_DhikrItem(
               id: '${chapter.id}_${section.id}_${article.id}',
-              title: article.title.trim().isEmpty ? '${_periodTitle} ${article.id}' : article.title,
+              title: article.title.trim().isEmpty ? '$_periodTitle ${article.id}' : article.title,
               text: text,
               source: 'مفاتيح الجنان — ${chapter.title} — ${section.title}',
             ));

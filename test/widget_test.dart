@@ -115,6 +115,51 @@ void main() {
     expect(declination, inInclusiveRange(-180, 180));
   });
 
+  test('Mafatih Persian-only headings use distinct Arabic fallback titles', () {
+    final chapter = MafatihChapter.fromJson({
+      'id': 2,
+      'title': 'دعای روزهای هفته',
+      'sections': <dynamic>[],
+    });
+    final section = MafatihSection.fromJson({
+      'id': 4,
+      'title': 'دعای فارسی',
+      'articles': <dynamic>[],
+    });
+    expect(chapter.title, 'الباب 2 من مفاتيح الجنان');
+    expect(section.title, 'قسم رقم 4');
+  });
+
+  test('Dua categories prioritize specific collections over broad date heuristics', () {
+    const sahifaMunajat = ShiaTextEntry(
+      slug: 'sahifa-sajjadiya-munajat',
+      title: 'مناجاة',
+      alternateName: '',
+      type: 'dua',
+      sourceUrl: '',
+      lines: <ShiaTextLine>[],
+    );
+    const fridayArafah = ShiaTextEntry(
+      slug: 'dua-friday-arafah',
+      title: 'دعاء الجمعة في عرفة',
+      alternateName: '',
+      type: 'dua',
+      sourceUrl: '',
+      lines: <ShiaTextLine>[],
+    );
+    const munajat = ShiaTextEntry(
+      slug: 'munajat-15',
+      title: 'مناجاة',
+      alternateName: '',
+      type: 'dua',
+      sourceUrl: '',
+      lines: <ShiaTextLine>[],
+    );
+    expect(sahifaMunajat.category, 'الصحيفة السجادية');
+    expect(fridayArafah.category, 'أدعية المناسبات');
+    expect(munajat.category, 'المناجيات الخمس عشرة');
+  });
+
   test('Hijri civil conversion matches the expected date for 20 October 2026', () {
     expect(hijriDateLabel(DateTime(2026, 10, 20)), '8 جمادى الأولى 1448 هـ');
   });

@@ -38,9 +38,13 @@ void main() {
 
     final target = find.byKey(const ValueKey('quran-verse-1-3'));
     expect(target, findsOneWidget);
-    final targetRect = tester.getRect(target);
+    final targetBox = find.descendant(
+      of: target,
+      matching: find.byType(Container),
+    ).first;
+    final targetRect = tester.getRect(targetBox);
     expect(targetRect.top, greaterThanOrEqualTo(0));
     expect(targetRect.top, lessThan(tester.view.physicalSize.height));
-    expect(find.text('الفاتحة'), findsOneWidget);
+    expect(find.text('الفاتحة'), findsAtLeastNWidgets(2));
   });
 }

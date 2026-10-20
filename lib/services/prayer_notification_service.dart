@@ -40,8 +40,8 @@ class PrayerNotificationService {
         'إذا ظهر هذا التنبيه فقد وصل الإشعار التجريبي. افحص مستوى صوت التنبيهات إذا لم تسمع الأذان.',
         const NotificationDetails(
           android: AndroidNotificationDetails(
-            'mithaq_shia_adhan_v2', 'أذان الصلاة',
-            channelDescription: 'تنبيهات الصلاة بصوت الأذان المضمّن',
+            'mithaq_adhan_v3', 'أذان الصلاة',
+            channelDescription: 'تنبيهات الأذان — قناة صوت جديدة',
             importance: Importance.high, priority: Priority.high,
             sound: RawResourceAndroidNotificationSound('adhan_persian'),
             audioAttributesUsage: AudioAttributesUsage.alarm,
@@ -117,9 +117,9 @@ class PrayerNotificationService {
             scheduled,
             const NotificationDetails(
               android: AndroidNotificationDetails(
-                'mithaq_shia_adhan_v2',
+                'mithaq_adhan_v3',
                 'أذان الصلاة',
-                channelDescription: 'تنبيهات الصلاة بصوت الأذان الفارسي المضمّن',
+                channelDescription: 'تنبيهات الأذان — قناة صوت جديدة',
                 importance: Importance.high,
                 priority: Priority.high,
                 sound: RawResourceAndroidNotificationSound('adhan_persian'),

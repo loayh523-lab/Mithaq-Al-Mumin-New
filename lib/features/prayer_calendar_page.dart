@@ -106,18 +106,18 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
       ])),
       if (_occasion(hijri) != null) Card(color: _panel, child: ListTile(leading: const Icon(Icons.event, color: _gold), title: const Text('مناسبة دينية'), subtitle: Text(_occasion(hijri)!, style: const TextStyle(height: 1.5)))),
       const SizedBox(height: 14),
-      SegmentedButton<int>(segments: const [ButtonSegment(value: 0, label: Text('مواقيت الصلاة'), icon: Icon(Icons.access_time)), ButtonSegment(value: 1, label: Text('إمساكية رمضان'), icon: Icon(Icons.nights_stay_outlined))], selected: {tab}, onSelectionChanged: (v) => setState(() => tab = v.first)),
+      SegmentedButton<int>(segments: const [ButtonSegment(value: 0, label: Text('مواقيت الصلاة'), icon: Icon(Icons.access_time)), ButtonSegment(value: 1, label: Text('إمساكية رمضان'), icon: Icon(Icons.nights_stay_outlined)), ButtonSegment(value: 2, label: Text('التقويم السنوي'), icon: Icon(Icons.calendar_month_rounded))], selected: {tab}, onSelectionChanged: (v) => setState(() => tab = v.first)),
       const SizedBox(height: 12),
       if (tab == 0) ...[
         Row(children: [Expanded(child: Text('مواقيت ${_dateLabel(date)}', style: const TextStyle(fontWeight: FontWeight.bold))), IconButton(onPressed: () => setState(() => date = date.subtract(const Duration(days: 1))), icon: const Icon(Icons.chevron_right)), IconButton(onPressed: () => setState(() => date = date.add(const Duration(days: 1))), icon: const Icon(Icons.chevron_left)), IconButton(onPressed: () => setState(() => date = DateTime.now()), icon: const Icon(Icons.today))]),
         if (_sameDay(date, now)) _nextPrayerCard(times, now),
         _time(Icons.wb_twilight, 'الفجر (تقديري)', times.fajr), _time(Icons.wb_sunny_outlined, 'الشروق', times.sunrise), _time(Icons.sunny, 'الظهر', times.noon), _time(Icons.wb_sunny_rounded, 'العصر (تقديري)', times.asr), _time(Icons.wb_twilight, 'الغروب', times.sunset), _time(Icons.nights_stay_outlined, 'المغرب (تقديري)', times.maghrib), _time(Icons.dark_mode_outlined, 'العشاء (تقديري)', times.isha),
         const Padding(padding: EdgeInsets.all(8), child: Text('الحساب المحلي احتياطي تقريبي، وليس بديلاً عن جدول شرعي معتمد من مكتب مرجعك. استخدم زر GPS لتحديث الإحداثيات وفعّل تنبيهات الصلاة من الإعدادات.', style: TextStyle(color: _muted, fontSize: 11, height: 1.6))),
-      ] else ...[
+      ] else if (tab == 1) ...[
         Text('إمساكية تقديرية — ${city.name} / العراق', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17)), const SizedBox(height: 5),
-        const Text('يعرض الجدول 30 يوماً من التاريخ المختار. الفجر والغروب محسوبان فلكياً ولا يمثلان إمساكية رسمية لشهر رمضان محدد.', style: TextStyle(color: _muted, fontSize: 11, height: 1.5)),
+        const Text('يعرض الشهر كاملاً من اليوم الأول إلى آخر يوم من رمضان المحسوب تقويمياً. الأوقات فلكية تقديرية وليست بديلاً عن إمساكية مكتب مرجعك أو الجهة المحلية المعتمدة.', style: TextStyle(color: _muted, fontSize: 11, height: 1.5)),
         ..._ramadanRows(date, city.latitude, city.longitude),
-      ],
+      ] else ..._annualCalendar(date.year, correction),
       const Divider(),
       const Text('الموقع الحالي للحساب', style: TextStyle(fontWeight: FontWeight.bold)),
       Text(
@@ -132,6 +132,60 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
     ]));
   }
   bool _sameDay(DateTime a, DateTime b) => a.year == b.year && a.month == b.month && a.day == b.day;
+
+  void _changeAnnualYear(int delta) {
+    final year = date.year + delta;
+    final maxDay = DateUtils.getDaysInMonth(year, date.month);
+    setState(() => date = DateTime(year, date.month, date.day.clamp(1, maxDay).toInt()));
+  }
+
+  List<Widget> _annualCalendar(int year, int correction) {
+    final widgets = <Widget>[
+      Card(
+        color: _panel,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+          child: Row(children: [
+            IconButton(tooltip: 'السنة السابقة', onPressed: () => _changeAnnualYear(-1), icon: const Icon(Icons.chevron_right_rounded, color: _gold)),
+            Expanded(child: Text('التقويم السنوي $year', textAlign: TextAlign.center, style: const TextStyle(color: _gold, fontWeight: FontWeight.w800, fontSize: 18))),
+            IconButton(tooltip: 'السنة التالية', onPressed: () => _changeAnnualYear(1), icon: const Icon(Icons.chevron_left_rounded, color: _gold)),
+          ]),
+        ),
+      ),
+      const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+        child: Text('افتح أي شهر لتشاهد كل أيامه بالتاريخين الميلادي والهجري والمناسبات المسجلة. التاريخ الهجري حسابي تقريبي؛ قد يختلف عن إعلان ثبوت الهلال.', style: TextStyle(color: _muted, height: 1.6, fontSize: 12)),
+      ),
+    ];
+    for (var month = 1; month <= 12; month++) {
+      final daysInMonth = DateUtils.getDaysInMonth(year, month);
+      widgets.add(Card(
+        color: _panel,
+        child: ExpansionTile(
+          leading: const Icon(Icons.calendar_month_rounded, color: _gold),
+          title: Text(_gregorianMonthName(month), style: const TextStyle(fontWeight: FontWeight.bold)),
+          subtitle: Text('$daysInMonth يوماً'),
+          children: List<Widget>.generate(daysInMonth, (index) {
+            final day = index + 1;
+            final gregorian = DateTime(year, month, day);
+            final hijri = _Hijri.fromGregorian(gregorian.add(Duration(days: correction)));
+            final occasion = _occasion(hijri);
+            final hijriLabel = '${hijri.day} ${hijri.monthName} ${hijri.year} هـ';
+            return ListTile(
+              dense: true,
+              leading: SizedBox(width: 30, child: Text('$day', textAlign: TextAlign.center, style: const TextStyle(color: _gold, fontWeight: FontWeight.bold))),
+              title: Text('$day ${_gregorianMonthName(month)} $year م'),
+              subtitle: Text(occasion == null ? hijriLabel : '$hijriLabel\n$occasion', style: const TextStyle(color: _muted, height: 1.5)),
+              isThreeLine: occasion != null,
+              trailing: occasion == null ? null : const Icon(Icons.event_available_rounded, color: _gold, size: 18),
+              onTap: () => setState(() { date = gregorian; tab = 0; }),
+            );
+          }),
+        ),
+      ));
+    }
+    return widgets;
+  }
 
   Widget _nextPrayerCard(SolarPrayerTimes times, DateTime clock) {
     final prayers = <({String name, String time})>[
@@ -162,6 +216,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
       }
     }
     if (nextTime == null) return const SizedBox.shrink();
+    final nextTimeText = '${nextTime.hour.toString().padLeft(2, '0')}:${nextTime.minute.toString().padLeft(2, '0')}';
     final remaining = nextTime.difference(clock);
     final hours = remaining.inHours;
     final minutes = remaining.inMinutes % 60;
@@ -179,7 +234,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
         Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text('الصلاة القادمة: $nextName', style: const TextStyle(fontWeight: FontWeight.bold, color: _gold, fontSize: 16)),
           const SizedBox(height: 4),
-          Text('الوقت المحسوب: ${nextTime.hour.toString().padLeft(2, '0')}:${nextTime.minute.toString().padLeft(2, '0')}', style: const TextStyle(color: _muted, fontSize: 12)),
+          Text('الوقت المحسوب: ${formatPrayerTime12Hour(nextTimeText)}', style: const TextStyle(color: _muted, fontSize: 12)),
         ])),
         Text(
           hours > 0 ? '$hoursس $minutesد' : '$minutes دقيقة',
@@ -189,7 +244,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
     );
   }
 
-  Widget _time(IconData icon, String label, String time) => Card(color: _panel, child: ListTile(leading: Icon(icon, color: _gold), title: Text(label), trailing: Text(time, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold))));
+  Widget _time(IconData icon, String label, String time) => Card(color: _panel, child: ListTile(leading: Icon(icon, color: _gold), title: Text(label), trailing: Text(formatPrayerTime12Hour(time), style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold))));
 }
 
 String hijriDateLabel(DateTime date, {int correction = 0}) {
@@ -199,6 +254,23 @@ String hijriDateLabel(DateTime date, {int correction = 0}) {
 
 String _dateLabel(DateTime d) => '${d.day.toString().padLeft(2, '0')}/${d.month.toString().padLeft(2, '0')}/${d.year}';
 
+String _gregorianMonthName(int month) => const [
+  'كانون الثاني', 'شباط', 'آذار', 'نيسان', 'أيار', 'حزيران',
+  'تموز', 'آب', 'أيلول', 'تشرين الأول', 'تشرين الثاني', 'كانون الأول',
+][month - 1];
+
+String formatPrayerTime12Hour(String value) {
+  final parts = value.trim().split(':');
+  if (parts.length != 2) return value;
+  final hour = int.tryParse(parts[0]);
+  final minute = int.tryParse(parts[1]);
+  if (hour == null || hour < 0 || hour > 23 || minute == null || minute < 0 || minute > 59) {
+    return value;
+  }
+  final hour12 = hour % 12 == 0 ? 12 : hour % 12;
+  final suffix = hour < 12 ? 'ص' : 'م';
+  return '$hour12:${minute.toString().padLeft(2, '0')} $suffix';
+}
 class SolarPrayerTimes {
   const SolarPrayerTimes(this.fajr, this.sunrise, this.noon, this.asr, this.sunset, this.maghrib, this.isha);
   final String fajr, sunrise, noon, asr, sunset, maghrib, isha;
@@ -273,21 +345,54 @@ List<Widget> _ramadanRows(DateTime reference, double latitude, double longitude)
     final d = first.add(Duration(days: i));
     final t = SolarPrayerTimes.forDate(d, latitude, longitude, 3.0);
     final h = _Hijri.fromGregorian(d);
-    return Card(color: _panel, child: ListTile(dense: true, leading: CircleAvatar(backgroundColor: _gold.withValues(alpha: .15), child: Text('${i + 1}', style: const TextStyle(color: _gold))), title: Text('رمضان ${h.day} — ${_dateLabel(d)}'), subtitle: Text('الإمساك/الفجر: ${t.fajr}  •  الإفطار التقريبي: ${t.maghrib}')));
+    return Card(color: _panel, child: ListTile(dense: true, leading: CircleAvatar(backgroundColor: _gold.withValues(alpha: .15), child: Text('${i + 1}', style: const TextStyle(color: _gold))), title: Text('رمضان ${h.day} — ${_dateLabel(d)}'), subtitle: Text('الإمساك/الفجر: ${formatPrayerTime12Hour(t.fajr)}  •  الإفطار التقريبي: ${formatPrayerTime12Hour(t.maghrib)}')));
   });
 }
 
 String? _occasion(_Hijri h) {
+  // Dates follow common Shia devotional calendars; lunar sighting and narrations can differ.
   const events = <String, String>{
     '1-1': 'بداية السنة الهجرية',
-    '10-1': 'يوم عاشوراء — ذكرى استشهاد الإمام الحسين عليه السلام',
+    '2-1': 'ذكرى ورود الإمام الحسين عليه السلام أرض كربلاء (في بعض التقاويم)',
+    '7-1': 'ذكرى منع الماء عن الإمام الحسين عليه السلام وأهل بيته وأصحابه (مشهور في المجالس)',
+    '9-1': 'تاسوعاء — من أيام الحزن على الإمام الحسين عليه السلام',
+    '10-1': 'يوم عاشوراء — ذكرى استشهاد الإمام الحسين عليه السلام وأهل بيته وأصحابه',
     '20-2': 'زيارة الأربعين للإمام الحسين عليه السلام',
-    '17-3': 'ذكرى مولد النبي محمد صلى الله عليه وآله (المشهور عند كثير من الشيعة)',
+    '25-1': 'ذكرى استشهاد الإمام زين العابدين عليه السلام (على رواية مشهورة)',
+    '7-2': 'ذكرى استشهاد الإمام الحسن المجتبى عليه السلام (على رواية مشهورة)',
+    '29-2': 'ذكرى استشهاد الإمام علي بن موسى الرضا عليه السلام (على رواية)',
+    '8-3': 'ذكرى استشهاد الإمام الحسن العسكري عليه السلام',
+    '9-3': 'بداية إمامة الإمام المهدي عجل الله فرجه (في التقويم المشهور)',
+    '17-3': 'ذكرى مولد النبي محمد صلى الله عليه وآله والإمام جعفر الصادق عليه السلام (المشهور)',
+    '10-4': 'ذكرى وفاة السيدة فاطمة المعصومة عليها السلام (على رواية)',
+    '5-5': 'ذكرى ولادة السيدة زينب عليها السلام (المشهور)',
+    '13-6': 'ذكرى وفاة أم البنين عليها السلام (مشهورة في بعض التقويمات)',
+    '3-7': 'ذكرى استشهاد الإمام علي الهادي عليه السلام',
     '13-7': 'ذكرى ولادة أمير المؤمنين الإمام علي عليه السلام',
+    '25-7': 'ذكرى استشهاد الإمام موسى الكاظم عليه السلام (على رواية مشهورة)',
+    '27-7': 'عيد المبعث النبوي الشريف',
     '3-8': 'ذكرى ولادة الإمام الحسين عليه السلام',
+    '4-8': 'ذكرى ولادة أبي الفضل العباس عليه السلام (المشهور)',
+    '5-8': 'ذكرى ولادة الإمام زين العابدين عليه السلام',
     '15-8': 'ذكرى ولادة الإمام المهدي عجل الله فرجه',
-    '21-9': 'ذكرى استشهاد الإمام علي عليه السلام',
-    '25-10': 'ذكرى استشهاد الإمام جعفر الصادق عليه السلام',
+    '10-9': 'ذكرى وفاة السيدة خديجة عليها السلام (على رواية)',
+    '15-9': 'ذكرى ولادة الإمام الحسن المجتبى عليه السلام',
+    '19-9': 'ليلة جرح أمير المؤمنين الإمام علي عليه السلام — من ليالي القدر',
+    '21-9': 'ذكرى استشهاد أمير المؤمنين الإمام علي عليه السلام — من ليالي القدر',
+    '23-9': 'ليلة القدر المباركة بحسب رواية مشهورة',
+    '1-10': 'عيد الفطر المبارك',
+    '25-10': 'ذكرى استشهاد الإمام جعفر الصادق عليه السلام (المشهور عند كثير من الشيعة)',
+    '1-11': 'ذكرى ولادة السيدة فاطمة المعصومة عليها السلام',
+    '11-11': 'ذكرى ولادة الإمام علي بن موسى الرضا عليه السلام',
+    '25-11': 'يوم دحو الأرض — من الأعمال المذكورة في كتب الأدعية',
+    '1-12': 'ذكرى زواج أمير المؤمنين الإمام علي والسيدة فاطمة الزهراء عليهما السلام (المشهور)',
+    '7-12': 'ذكرى استشهاد الإمام محمد الباقر عليه السلام (على رواية مشهورة)',
+    '9-12': 'يوم عرفة، وذكرى شهادة مسلم بن عقيل عليه السلام (في التقويم المشهور)',
+    '10-12': 'عيد الأضحى المبارك',
+    '15-12': 'ذكرى ولادة الإمام علي الهادي عليه السلام',
+    '18-12': 'عيد الغدير الأغر',
+    '24-12': 'يوم المباهلة',
+    '25-12': 'نزول سورة هل أتى في شأن أهل البيت عليهم السلام (يُذكر في بعض كتب المناسبات)',
   };
   return events['${h.day}-${h.month}'];
 }

@@ -44,8 +44,7 @@ class ShiaTextEntry {
   bool get isSahifa => slug.startsWith('sahifa-sajjadiya-');
   bool get isDayDua =>
       RegExp(r'(sunday|monday|tuesday|wednesday|thursday|friday|saturday)', caseSensitive: false).hasMatch(slug) ||
-      title.contains('دعاء يوم') ||
-      alternateName.contains('دعاء يوم');
+      RegExp(r'دعاء يوم|أدعية يوم|دعاء الأحد|دعاء الاثنين|دعاء الثلاثاء|دعاء الأربعاء|دعاء الخميس|دعاء الجمعة|دعاء السبت').hasMatch('$title $alternateName');
   bool get isZiyara =>
       slug.toLowerCase().contains('ziyarat') ||
       title.contains('زيارة') ||
@@ -58,16 +57,31 @@ class ShiaTextEntry {
       slug.toLowerCase().contains('munajat') ||
       title.contains('مناجاة') ||
       alternateName.contains('مناجاة');
+  bool get isMahdiDua {
+    final value = '${slug.toLowerCase()} $title $alternateName';
+    return RegExp(r'mahdi|hujja|hujjah|sahib.al.zaman|imam.al.zaman|istighatha|ghayba|ghaib|nudba|al.ahd|faraj|صاحب الزمان|الإمام المهدي|الامام المهدي|الحجة|اللهم كن لوليك|دعاء العهد|دعاء الندبة|الاستغاثة بالحجة', caseSensitive: false).hasMatch(value);
+  }
+  bool get isMorningEveningDua {
+    final value = '${slug.toLowerCase()} $title $alternateName';
+    return RegExp(r'morning|evening|sabah|masa|asbah|amsa|adhkar|أذكار|الصباح|المساء|دعاء الصباح|دعاء المساء', caseSensitive: false).hasMatch(value);
+  }
+  bool get isHajatDua {
+    final value = '${slug.toLowerCase()} $title $alternateName';
+    return RegExp(r'hajat|hawaij|rizq|shifa|healing|tawfiq|success|الكرب|الحوائج|قضاء الدين|سعة الرزق|الشفاء|العافية|طلب العلم|تفريج الهم|الحزن').hasMatch(value);
+  }
   bool get isOccasionDua {
     final value = '${slug.toLowerCase()} $title $alternateName';
-    return RegExp(r'eid|ramadan|arafah|mubahala|mubahilah|laylat|مناسبة|العيد|رمضان|عرفة|مباهلة').hasMatch(value);
+    return RegExp(r'eid|ramadan|arafah|mubahala|mubahilah|laylat|rajab|shaaban|dhul.hijja|dhul.qadah|مناسبة|العيد|رمضان|عرفة|مباهلة|رجب|شعبان|ذي الحجة|ذي القعدة|ليلة القدر').hasMatch(value);
   }
   String get category {
-    // Specific text families take priority over broad title heuristics.
+    // Put specific collections first so broad date matches don't swallow them.
     if (isZiyara) return 'الزيارات';
     if (isSahifa) return 'الصحيفة السجادية';
     if (isMunajat) return 'المناجيات الخمس عشرة';
-    if (isOccasionDua) return 'أدعية المناسبات';
+    if (isMahdiDua) return 'أدعية صاحب الزمان';
+    if (isMorningEveningDua) return 'أدعية الصباح والمساء';
+    if (isHajatDua) return 'أدعية الحاجات والشفاء';
+    if (isOccasionDua) return 'أدعية الأشهر والمناسبات';
     if (isTaqibat) return 'تعقيبات';
     if (isDayDua) return 'أدعية الأيام';
     return 'أدعية عامة';
@@ -119,7 +133,18 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
   late Future<ShiaTextData> _future;
   String _query = '';
   String _category = 'أدعية عامة';
-  static const _categories = ['أدعية عامة', 'تعقيبات', 'أدعية الأيام', 'أدعية المناسبات', 'الزيارات', 'الصحيفة السجادية', 'المناجيات الخمس عشرة'];
+  static const _categories = [
+    'أدعية عامة',
+    'أدعية صاحب الزمان',
+    'أدعية الصباح والمساء',
+    'أدعية الحاجات والشفاء',
+    'تعقيبات',
+    'أدعية الأيام',
+    'أدعية الأشهر والمناسبات',
+    'الزيارات',
+    'الصحيفة السجادية',
+    'المناجيات الخمس عشرة',
+  ];
 
   @override void initState() {
     super.initState();
@@ -166,7 +191,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
               const SizedBox(height: 6),
               Text('${data.entries.length} نصاً • منها $sahifaCount من الصحيفة السجادية', style: const TextStyle(color: _shiaMuted)),
               const SizedBox(height: 6),
-              const Text('النصوص وسطرها العربي مأخوذة من مستودع CC0؛ راجع رابط المصدر لكل نص عند التدقيق.', style: TextStyle(color: _shiaMuted, fontSize: 11, height: 1.5)),
+              const Text('المكتبة مصنفة حسب نوع الدعاء مع إبقاء رابط المصدر لكل نص. قد تختلف العناوين أو الروايات بين الطبعات؛ لا نعرض النص غير العربي ضمن القراءة العربية.', style: TextStyle(color: _shiaMuted, fontSize: 11, height: 1.5)),
             ]),
           ),
           Padding(
@@ -205,16 +230,25 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
                         textAlign: TextAlign.center,
                         style: TextStyle(color: _shiaMuted, height: 1.6),
                       ),
-                      if (_category == 'تعقيبات') ...[
-                        const SizedBox(height: 12),
-                        FilledButton.icon(
-                          onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
-                            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihLibraryPage()),
-                          )),
-                          icon: const Icon(Icons.menu_book_rounded),
-                          label: const Text('افتح مفاتيح الجنان'),
-                        ),
-                      ],
+                      const SizedBox(height: 12),
+                      FilledButton.icon(
+                        onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
+                          builder: (_) => Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: MafatihCategoryPage(initialCategory: _category),
+                          ),
+                        )),
+                        icon: const Icon(Icons.menu_book_rounded),
+                        label: Text('ابحث في هذا القسم داخل مفاتيح الجنان'),
+                      ),
+                      const SizedBox(height: 8),
+                      OutlinedButton.icon(
+                        onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
+                          builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihLibraryPage()),
+                        )),
+                        icon: const Icon(Icons.auto_stories_rounded),
+                        label: const Text('تصفح جميع أبواب مفاتيح الجنان'),
+                      ),
                     ]),
                   ),
                 )

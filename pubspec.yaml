@@ -17,6 +17,7 @@ dependencies:
   flutter_local_notifications: ^19.5.0
   timezone: ^0.10.1
   geomag: ^0.3.0
+  audioplayers: ^6.5.1
 
 dev_dependencies:
   flutter_test:
@@ -30,3 +31,4 @@ flutter:
     - assets/quran/uthmani_surahs.json
     - assets/mafatih/mafatih.json
     - assets/shia_duas/shia_duas.json
+    - assets/audio/adhan_persian.ogg

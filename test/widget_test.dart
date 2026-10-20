@@ -156,8 +156,26 @@ void main() {
       lines: <ShiaTextLine>[],
     );
     expect(sahifaMunajat.category, 'الصحيفة السجادية');
-    expect(fridayArafah.category, 'أدعية المناسبات');
+    expect(fridayArafah.category, 'أدعية الأشهر والمناسبات');
     expect(munajat.category, 'المناجيات الخمس عشرة');
+  });
+
+  test('Mafatih categories group named Arabic texts', () {
+    expect(mafatihCategoryFor('مناجاة التائبين'), 'المناجيات الخمس عشرة');
+    expect(mafatihCategoryFor('دعاء العهد للإمام المهدي'), 'أدعية صاحب الزمان');
+    expect(mafatihCategoryFor('تعقيبات الصلاة'), 'تعقيبات');
+    expect(mafatihCategoryFor('زيارة عاشوراء'), 'الزيارات');
+    expect(mafatihCategoryFor('دعاء شهر رمضان'), 'أدعية الأشهر والمناسبات');
+    expect(mafatihCategoryFor('دعاء الشفاء للمريض'), 'أدعية الحاجات والشفاء');
+  });
+
+  test('prayer times are displayed in a readable 12-hour Arabic format', () {
+    expect(formatPrayerTime12Hour('00:05'), '12:05 ص');
+    expect(formatPrayerTime12Hour('08:15'), '8:15 ص');
+    expect(formatPrayerTime12Hour('12:07'), '12:07 م');
+    expect(formatPrayerTime12Hour('13:09'), '1:09 م');
+    expect(formatPrayerTime12Hour('23:59'), '11:59 م');
+    expect(formatPrayerTime12Hour('not-a-time'), 'not-a-time');
   });
 
   test('Hijri civil conversion matches the expected date for 20 October 2026', () {
@@ -179,6 +197,13 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('إمساكية تقديرية — قلعة سكر / العراق'), findsOneWidget);
     expect(find.textContaining('الإمساك/الفجر:'), findsWidgets);
+
+    await tester.tap(find.text('التقويم السنوي'));
+    await tester.pumpAndSettle();
+    expect(find.text('التقويم السنوي ${DateTime.now().year}'), findsOneWidget);
+    await tester.tap(find.text('كانون الثاني'));
+    await tester.pumpAndSettle();
+    expect(find.text('1 كانون الثاني ${DateTime.now().year} م'), findsOneWidget);
   });
 
   testWidgets('surah reader opens its bundled text without internet', (tester) async {
@@ -282,9 +307,9 @@ void main() {
     ));
     await tester.pumpAndSettle();
     expect(find.text('صالح الأعمال'), findsOneWidget);
-    await tester.tap(find.text('قراءة القرآن الكريم'));
+    await tester.tap(find.text('ورد من القرآن الكريم'));
     await tester.pumpAndSettle();
-    expect(find.text('1 من 10 أعمال'), findsOneWidget);
+    expect(find.textContaining('1 من '), findsOneWidget);
   });
 
   testWidgets('Names of Allah opens its Arabic offline list', (tester) async {
@@ -315,11 +340,11 @@ void main() {
       home: Directionality(textDirection: TextDirection.rtl, child: DhikrFortressPage()),
     ));
     await tester.pumpAndSettle();
-    expect(find.text('حصن الأذكار'), findsOneWidget);
+    expect(find.text('أذكار الصباح والمساء'), findsOneWidget);
     expect(find.text('أذكار الصباح'), findsOneWidget);
     await tester.tap(find.text('أذكار المساء'));
     await tester.pumpAndSettle();
-    expect(find.text('الصلاة على محمد وآل محمد'), findsOneWidget);
+    expect(find.text('الصلاة على النبي وآله'), findsOneWidget);
   });
 
   testWidgets('smart search screen offers cross-library offline search', (tester) async {

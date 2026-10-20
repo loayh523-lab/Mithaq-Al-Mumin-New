@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Download the openly licensed Persian adhan for Android notification sound."""
+"""Download the CC BY-SA 4.0 adhan recording for Android notifications and offline preview.
+
+This recording is described as Persian-style Mahur; its Jafari wording has not been independently verified.
+"""
 import json
 import os
 import tempfile
@@ -19,7 +22,10 @@ API_URL = (
         "format": "json",
     })
 )
-DEST = Path("android/app/src/main/res/raw/adhan_persian.ogg")
+DESTS = [
+    Path("android/app/src/main/res/raw/adhan_persian.ogg"),
+    Path("assets/audio/adhan_persian.ogg"),
+]
 USER_AGENT = "Mithaq-Al-Mumin/1.0 (openly licensed adhan asset preparation)"
 
 
@@ -49,16 +55,17 @@ def main() -> None:
     audio = read_url(source_url)
     if len(audio) < 100_000 or not audio.startswith(b"OggS"):
         raise SystemExit("Downloaded file is not a valid Ogg adhan recording.")
-    DEST.parent.mkdir(parents=True, exist_ok=True)
-    fd, temp_name = tempfile.mkstemp(prefix="adhan-", suffix=".ogg", dir=DEST.parent)
-    try:
-        with os.fdopen(fd, "wb") as handle:
-            handle.write(audio)
-        os.replace(temp_name, DEST)
-    finally:
-        if os.path.exists(temp_name):
-            os.remove(temp_name)
-    print(f"Prepared Persian adhan audio: {DEST} ({len(audio)} bytes)")
+    for destination in DESTS:
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        fd, temp_name = tempfile.mkstemp(prefix="adhan-", suffix=".ogg", dir=destination.parent)
+        try:
+            with os.fdopen(fd, "wb") as handle:
+                handle.write(audio)
+            os.replace(temp_name, destination)
+        finally:
+            if os.path.exists(temp_name):
+                os.remove(temp_name)
+        print(f"Prepared adhan audio: {destination} ({len(audio)} bytes)")
 
 
 if __name__ == "__main__":

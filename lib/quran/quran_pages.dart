@@ -519,7 +519,7 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
               margin: const EdgeInsets.only(top: 10), padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(color: _panel, borderRadius: BorderRadius.circular(16), border: Border.all(color: Colors.white.withValues(alpha: .05))),
               child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                Text(_verses[i], textAlign: TextAlign.justify, textDirection: TextDirection.rtl, style: TextStyle(fontSize: _fontSize, height: 2.1)),
+                Text(_verses[i], textAlign: TextAlign.right, textDirection: TextDirection.rtl, style: TextStyle(fontSize: _fontSize, height: 2.1)),
                 const SizedBox(height: 8),
                 Row(children: [
                   CircleAvatar(radius: 16, backgroundColor: _emerald, child: Text('${i + 1}', style: const TextStyle(color: Colors.white, fontSize: 12))),

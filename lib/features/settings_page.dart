@@ -23,7 +23,7 @@ class _SettingsPageState extends State<SettingsPage> {
       if (!mounted) return;
       setState(() {
         _cityId = PrayerLocations.byId(prefs.getString('prayer_city')).id;
-        _fontSize = (prefs.getDouble('quran_font_size') ?? 24).clamp(16, 34);
+        _fontSize = (prefs.getDouble('quran_font_size') ?? 24).clamp(16, 34).toDouble();
         _loaded = true;
       });
     } catch (_) {
@@ -64,7 +64,7 @@ class _SettingsPageState extends State<SettingsPage> {
           const Text('اختر أقرب مدينة إليك. الحسابات الفلكية المعروضة تقريبية ويجب مقارنتها بمواقيت مكتب مرجعك.', style: TextStyle(color: _settingsMuted, height: 1.6, fontSize: 12)),
           const SizedBox(height: 12),
           DropdownButtonFormField<String>(
-            value: _cityId,
+            initialValue: _cityId,
             decoration: const InputDecoration(labelText: 'مدينة الحساب', border: OutlineInputBorder()),
             items: PrayerLocations.cities.map((c) => DropdownMenuItem(value: c.id, child: Text(c.name))).toList(),
             onChanged: _loaded ? _saveCity : null,

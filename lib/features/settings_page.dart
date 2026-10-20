@@ -107,6 +107,7 @@ class _SettingsPageState extends State<SettingsPage> {
     final ok = await PrayerNotificationService.configure(
       enabled: true,
       city: _currentCity,
+      requestExactPermission: true,
     );
     if (!mounted) return;
     setState(() => _notificationsEnabled = ok);

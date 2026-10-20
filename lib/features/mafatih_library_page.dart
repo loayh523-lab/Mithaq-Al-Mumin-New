@@ -23,7 +23,7 @@ bool containsPersianLanguageMarkers(String value) {
   final normalized = normalizeMafatihArabicText(value);
   final bothForms = '$value $normalized';
   return RegExp(
-    r'دعای|دعاي|روزهای|روزهاي|روزها|هفته|فارسی|فارسي|برای|براي|میباشد|می شود|ميشود|خواهد شد|نمی|نمي',
+    r'دعای|دعاي|دعاهای|دعاهاي|روزهای|روزهاي|روزها|هفته|فارسی|فارسي|برای|براي|میباشد|می شود|ميشود|خواهد شد|نمی|نمي|زیارت|زيارت|زیارات|زيارات|مناجات',
   ).hasMatch(bothForms);
 }
 

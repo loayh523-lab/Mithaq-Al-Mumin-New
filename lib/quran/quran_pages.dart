@@ -180,7 +180,7 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
   Future<void> _loadFontSize() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      if (mounted) setState(() => _fontSize = (prefs.getDouble('quran_font_size') ?? 24).clamp(16, 34));
+      if (mounted) setState(() => _fontSize = (prefs.getDouble('quran_font_size') ?? 24).clamp(16, 34).toDouble());
     } catch (_) { /* Keep the default text size. */ }
   }
 

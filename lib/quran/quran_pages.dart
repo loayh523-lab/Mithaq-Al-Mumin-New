@@ -253,6 +253,11 @@ class _QuranBookmarksPageState extends State<QuranBookmarksPage> {
     try {
       final prefs = await SharedPreferences.getInstance();
       final refs = prefs.getStringList('quran_bookmarks') ?? const <String>[];
+      if (refs.isEmpty) {
+        if (!mounted) return;
+        setState(() { _items = const []; _loading = false; _error = null; });
+        return;
+      }
       final catalog = await _readSurahCatalog();
       final byId = {for (final s in catalog) s.id: s};
       final chapters = await (_offlineQuranFuture ??= _readBundledQuran());

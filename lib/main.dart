@@ -8,7 +8,6 @@ import 'features/prayer_calendar_page.dart';
 import 'features/qibla_page.dart';
 import 'features/settings_page.dart';
 import 'features/smart_search_page.dart';
-import 'features/mafatih_library_page.dart';
 import 'features/shia_text_library_page.dart';
 import 'features/good_deeds_page.dart';
 import 'features/names_of_allah_page.dart';
@@ -1024,29 +1023,34 @@ class _DuaLibraryState extends State<_DuaLibrary> {
         const SizedBox(height: 16),
         const Text('أقسام المكتبة', style: TextStyle(fontSize: 19, fontWeight: FontWeight.w800)),
         const SizedBox(height: 8),
+        const Text(
+          'كل النصوص العربية في مكتبة واحدة؛ يظهر مصدر كل دعاء أو زيارة داخل صفحة القراءة.',
+          style: TextStyle(color: _muted, height: 1.5),
+        ),
+        const SizedBox(height: 8),
         _sectionCard(
           context,
-          icon: Icons.auto_stories_rounded,
+          icon: Icons.auto_awesome_rounded,
           title: 'الأدعية العامة',
-          subtitle: 'الأدعية والمناجيات المتوفرة في المكتبة',
+          subtitle: 'الأدعية والمناجيات غير المصنفة في قسم خاص',
           onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihCategoryPage(initialCategory: 'أدعية عامة')),
+            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'أدعية عامة')),
           )),
         ),
         _sectionCard(
           context,
-          icon: Icons.today_rounded,
-          title: 'أدعية الأيام',
-          subtitle: 'الأدعية الأسبوعية المتوفرة',
+          icon: Icons.favorite_outline_rounded,
+          title: 'أدعية صاحب الزمان عجل الله فرجه',
+          subtitle: 'أدعية الفرج والعهد والندبة وما يرتبط بالإمام المهدي عليه السلام',
           onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihCategoryPage(initialCategory: 'أدعية الأيام')),
+            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'أدعية صاحب الزمان')),
           )),
         ),
         _sectionCard(
           context,
           icon: Icons.wb_sunny_outlined,
           title: 'أذكار الصباح',
-          subtitle: 'أذكار الصباح مع عدّاد مستقل',
+          subtitle: 'قائمة الصباح وحدها، مع عدّاد مستقل',
           onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
             builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: DhikrFortressPage(initialPeriod: 0)),
           )),
@@ -1055,113 +1059,104 @@ class _DuaLibraryState extends State<_DuaLibrary> {
           context,
           icon: Icons.nights_stay_outlined,
           title: 'أذكار المساء',
-          subtitle: 'أذكار المساء مع عدّاد مستقل',
+          subtitle: 'قائمة المساء وحدها، مع عدّاد مستقل',
           onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
             builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: DhikrFortressPage(initialPeriod: 1)),
           )),
         ),
         _sectionCard(
           context,
-          icon: Icons.wb_sunny_outlined,
+          icon: Icons.light_mode_outlined,
           title: 'أدعية الصباح',
-          subtitle: 'الأدعية الواردة في أعمال الصباح',
+          subtitle: 'الأدعية المنقولة في أبواب الصباح',
           onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihCategoryPage(initialCategory: 'أدعية الصباح')),
+            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'أدعية الصباح')),
           )),
         ),
         _sectionCard(
           context,
-          icon: Icons.nights_stay_outlined,
+          icon: Icons.bedtime_outlined,
           title: 'أدعية المساء',
-          subtitle: 'الأدعية الواردة في أعمال المساء',
+          subtitle: 'الأدعية المنقولة في أبواب المساء',
           onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihCategoryPage(initialCategory: 'أدعية المساء')),
+            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'أدعية المساء')),
           )),
         ),
         _sectionCard(
           context,
           icon: Icons.wb_twilight_outlined,
           title: 'الأذكار المشتركة',
-          subtitle: 'نصوص يذكر مصدرها أنها تقرأ في الصباح والمساء معاً',
+          subtitle: 'ما نصّ المصدر على قراءته في الصباح والمساء كليهما',
           onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihCategoryPage(initialCategory: 'أذكار مشتركة')),
-          )),
-        ),
-        _sectionCard(
-          context,
-          icon: Icons.event_note_rounded,
-          title: 'الأعمال اليومية والمناسبات',
-          subtitle: 'الأعمال والأدعية المرتبطة بالأيام والليالي',
-          onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihCategoryPage(initialCategory: 'الأعمال اليومية والمناسبات')),
-          )),
-        ),
-        _sectionCard(
-          context,
-          icon: Icons.calendar_month_rounded,
-          title: 'الأعمال الشهرية',
-          subtitle: 'أعمال الأشهر والمواسم مرتبة داخل المكتبة',
-          onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihCategoryPage(initialCategory: 'الأعمال الشهرية والمناسبات')),
-          )),
-        ),
-        _sectionCard(
-          context,
-          icon: Icons.favorite_outline_rounded,
-          title: 'أدعية صاحب الزمان عجل الله فرجه',
-          subtitle: 'الأدعية المرتبطة بالإمام المهدي عليه السلام',
-          onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihCategoryPage(initialCategory: 'أدعية صاحب الزمان')),
+            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'الأذكار المشتركة')),
           )),
         ),
         _sectionCard(
           context,
           icon: Icons.volunteer_activism_outlined,
           title: 'أدعية الحاجات والشفاء',
-          subtitle: 'الدعاء للرزق والعافية وتفريج الكرب',
+          subtitle: 'أدعية الرزق والعافية وتفريج الكرب وقضاء الحاجة',
           onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihCategoryPage(initialCategory: 'أدعية الحاجات والشفاء')),
+            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'أدعية الحاجات والشفاء')),
+          )),
+        ),
+        _sectionCard(
+          context,
+          icon: Icons.today_rounded,
+          title: 'أدعية الأيام',
+          subtitle: 'أدعية أيام الأسبوع وما يرتبط بها',
+          onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'أدعية الأيام')),
+          )),
+        ),
+        _sectionCard(
+          context,
+          icon: Icons.event_note_rounded,
+          title: 'الأعمال اليومية والمناسبات',
+          subtitle: 'أعمال الأيام والليالي والأوقات الخاصة',
+          onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'الأعمال اليومية والمناسبات')),
+          )),
+        ),
+        _sectionCard(
+          context,
+          icon: Icons.calendar_month_rounded,
+          title: 'الأعمال الشهرية',
+          subtitle: 'أعمال الأشهر الهجرية والمواسم الخاصة',
+          onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'الأعمال الشهرية والمناسبات')),
           )),
         ),
         _sectionCard(
           context,
           icon: Icons.event_available_outlined,
           title: 'أدعية الأشهر والمناسبات',
-          subtitle: 'أدعية المواسم والأيام المباركة',
+          subtitle: 'أدعية شهر رمضان ورجب وشعبان والأعياد والمناسبات',
           onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihCategoryPage(initialCategory: 'أدعية الأشهر والمناسبات')),
-          )),
-        ),
-        _sectionCard(
-          context,
-          icon: Icons.auto_awesome_rounded,
-          title: 'المناجيات الخمس عشرة',
-          subtitle: 'مناجيات الإمام زين العابدين عليه السلام',
-          onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihCategoryPage(initialCategory: 'المناجيات الخمس عشرة')),
+            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'أدعية الأشهر والمناسبات')),
           )),
         ),
         _sectionCard(
           context,
           icon: Icons.temple_buddhist_rounded,
           title: 'الزيارات الشريفة',
-          subtitle: 'زيارات المعصومين عليهم السلام',
+          subtitle: 'زيارات أهل البيت عليهم السلام، مع مصدر كل زيارة',
           onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihCategoryPage(initialCategory: 'الزيارات')),
+            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'الزيارات')),
           )),
         ),
         _sectionCard(
           context,
           icon: Icons.repeat_rounded,
           title: 'تعقيبات الصلوات',
-          subtitle: 'التعقيبات المتوفرة لكل صلاة',
+          subtitle: 'التعقيبات وأعمال ما بعد الصلاة',
           onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihCategoryPage(initialCategory: 'تعقيبات')),
+            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'تعقيبات الصلوات')),
           )),
         ),
         _sectionCard(
           context,
-          icon: Icons.auto_awesome_rounded,
+          icon: Icons.menu_book_rounded,
           title: 'الصحيفة السجادية',
           subtitle: 'أدعية الإمام زين العابدين عليه السلام',
           onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
@@ -1170,9 +1165,18 @@ class _DuaLibraryState extends State<_DuaLibrary> {
         ),
         _sectionCard(
           context,
-          icon: Icons.favorite_border_rounded,
+          icon: Icons.auto_awesome_rounded,
+          title: 'المناجيات الخمس عشرة',
+          subtitle: 'مناجيات الإمام زين العابدين عليه السلام',
+          onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'المناجيات الخمس عشرة')),
+          )),
+        ),
+        _sectionCard(
+          context,
+          icon: Icons.star_outline_rounded,
           title: 'أسماء الله الحسنى',
-          subtitle: 'الأسماء ومعانيها الموجزة',
+          subtitle: 'أسماء الله الحسنى ومعانيها الموجزة',
           onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
             builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: NamesOfAllahPage()),
           )),

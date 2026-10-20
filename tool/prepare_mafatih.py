@@ -132,33 +132,33 @@ def main() -> None:
             translated = re.sub(pattern, replacement, translated, flags=re.IGNORECASE)
 
         latin_replacements = [
-            (r"\\bdu[aāe']+\\b", "دعاء"),
-            (r"\\bziyar(at|ah)\\b", "زيارة"),
-            (r"\\ba'amal|aamal|amal\\b", "أعمال"),
-            (r"\\bmunajat\\b", "مناجاة"),
-            (r"\\bsahifa\\b", "الصحيفة"),
-            (r"\\bkumayl\\b", "كميل"),
-            (r"\\bashura\\b", "عاشوراء"),
-            (r"\\barba(een|'een)\\b", "الأربعين"),
-            (r"\\biftitah\\b", "الافتتاح"),
-            (r"\\bnudba\\b", "الندبة"),
-            (r"\\btawassul\\b", "التوسل"),
-            (r"\\bahd\\b", "العهد"),
-            (r"\\bsabah\\b", "الصباح"),
-            (r"\\bmas(a|aa|e)\\b", "المساء"),
-            (r"\\bjum(a|'a|ah)\\b", "الجمعة"),
-            (r"\\bshab(an|aan)\\b", "شعبان"),
-            (r"\\bramadan\\b", "رمضان"),
-            (r"\\brajab\\b", "رجب"),
-            (r"\\bday\\b", "يوم"),
-            (r"\\bnight\\b", "ليلة"),
-            (r"\\bchapter\\b", "الباب"),
-            (r"\\bsection\\b", "الفصل"),
+            (r"\bdu[aāe']+\\b", "دعاء"),
+            (r"\bziyar(at|ah)\\b", "زيارة"),
+            (r"\ba'amal|aamal|amal\\b", "أعمال"),
+            (r"\bmunajat\\b", "مناجاة"),
+            (r"\bsahifa\\b", "الصحيفة"),
+            (r"\bkumayl\\b", "كميل"),
+            (r"\bashura\\b", "عاشوراء"),
+            (r"\barba(een|'een)\\b", "الأربعين"),
+            (r"\biftitah\\b", "الافتتاح"),
+            (r"\bnudba\\b", "الندبة"),
+            (r"\btawassul\\b", "التوسل"),
+            (r"\bahd\\b", "العهد"),
+            (r"\bsabah\\b", "الصباح"),
+            (r"\bmas(a|aa|e)\\b", "المساء"),
+            (r"\bjum(a|'a|ah)\\b", "الجمعة"),
+            (r"\bshab(an|aan)\\b", "شعبان"),
+            (r"\bramadan\\b", "رمضان"),
+            (r"\brajab\\b", "رجب"),
+            (r"\bday\\b", "يوم"),
+            (r"\bnight\\b", "ليلة"),
+            (r"\bchapter\\b", "الباب"),
+            (r"\bsection\\b", "الفصل"),
         ]
         for pattern, replacement in latin_replacements:
             translated = re.sub(pattern, replacement, translated, flags=re.IGNORECASE)
         translated = re.sub(r"[A-Za-z]+", " ", translated)
-        translated = re.sub(r"\\s+", " ", translated).strip(" -_:،")
+        translated = re.sub(r"\s+", " ", translated).strip(" -_:،")
         translated = normalize_arabic_script(translated)
         if (translated and not has_persian_letters(translated)
                 and not has_latin_letters(translated)

@@ -357,7 +357,15 @@ class _QuranError extends StatelessWidget {
 Future<Map<int, List<String>>>? _offlineQuranFuture;
 
 Future<Map<int, List<String>>> _readBundledQuran() async {
-  final raw = await rootBundle.loadString('assets/quran/uthmani_surahs.json');
+  // The Quran JSON is larger than 50 KB. AssetBundle.loadString delegates
+  // UTF-8 decoding to an isolate for large assets, which can leave widget
+  // tests waiting on work started in Flutter's fake-async zone. Load the
+  // bytes asynchronously, then decode synchronously; the app's UI already
+  // awaits this method, so the file is still read off the build path.
+  final data = await rootBundle.load('assets/quran/uthmani_surahs.json');
+  final raw = utf8.decode(
+    data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes),
+  );
   final decoded = jsonDecode(raw) as Map<String, dynamic>;
   final items = decoded['surahs'] as List<dynamic>;
   if (items.length != 114) throw const FormatException('Expected 114 Quran surahs.');

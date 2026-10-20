@@ -135,9 +135,14 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
   Widget _time(IconData icon, String label, String time) => Card(color: _panel, child: ListTile(leading: Icon(icon, color: _gold), title: Text(label), trailing: Text(time, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold))));
 }
 
+String _arabicIndicDigits(int value) => value.toString().replaceAllMapped(
+  RegExp(r'[0-9]'),
+  (match) => '٠١٢٣٤٥٦٧٨٩'[int.parse(match.group(0)!)],
+);
+
 String hijriDateLabel(DateTime date, {int correction = 0}) {
   final hijri = _Hijri.fromGregorian(date.add(Duration(days: correction)));
-  return '${hijri.day} ${hijri.monthName} ${hijri.year} هـ';
+  return '${_arabicIndicDigits(hijri.day)} ${hijri.monthName} ${_arabicIndicDigits(hijri.year)} هـ';
 }
 
 String _dateLabel(DateTime d) => '${d.day.toString().padLeft(2, '0')}/${d.month.toString().padLeft(2, '0')}/${d.year}';
@@ -185,7 +190,7 @@ class _Hijri {
     final a = (14 - d.month) ~/ 12, y = d.year + 4800 - a, m = d.month + 12*a - 3;
     final jd = d.day + (153*m + 2) ~/ 5 + 365*y + y ~/ 4 - y ~/ 100 + y ~/ 400 - 32045;
     final hy = ((30 * (jd - 1948439) + 10646) / 10631).floor();
-    int start(int year, int month) => 1 + (29.5 * (month - 1)).ceil() + (year - 1) * 354 + ((3 + 11 * year) ~/ 30) + 1948439 - 1;
+    int start(int year, int month) => 1 + (29.5 * (month - 1)).ceil() + (year - 1) * 354 + ((3 + 11 * year) ~/ 30) + 1948439;
     var hm = 1; while (hm < 12 && jd >= start(hy, hm + 1)) { hm++; }
     return _Hijri(jd - start(hy, hm) + 1, hm, hy);
   }

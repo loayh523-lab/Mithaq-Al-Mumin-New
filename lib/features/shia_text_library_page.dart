@@ -203,8 +203,8 @@ class ShiaTextData {
     final metadata = decoded['metadata'] as Map<String, dynamic>? ?? const <String, dynamic>{};
     return ShiaTextData(
       entries: entries,
-      sourceProject: 'المكتبة العربية المدمجة، وتشمل مفاتيح الجنان',
-      license: metadata['license'] is String ? metadata['license'] as String : 'CC0 1.0',
+      sourceProject: 'مكتبة الأدعية والزيارات العربية',
+      license: 'تراخيص متعددة بحسب مصدر كل نص',
     );
   }
 
@@ -306,7 +306,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
               const SizedBox(height: 6),
               Text('${data.entries.length} نصاً • منها $sahifaCount من الصحيفة السجادية', style: const TextStyle(color: _shiaMuted)),
               const SizedBox(height: 6),
-              const Text('المكتبة مصنفة حسب نوع الدعاء مع إبقاء رابط المصدر لكل نص. قد تختلف العناوين أو الروايات بين الطبعات؛ لا نعرض النص غير العربي ضمن القراءة العربية.', style: TextStyle(color: _shiaMuted, fontSize: 11, height: 1.5)),
+              const Text('المكتبة مصنفة حسب نوع الدعاء والزيارة والعمل، ويظهر مصدر كل نص بوضوح في صفحة القراءة. قد تختلف العناوين أو الروايات بين الطبعات؛ العرض هنا عربي فقط.', style: TextStyle(color: _shiaMuted, fontSize: 11, height: 1.5)),
             ]),
           ),
           Padding(

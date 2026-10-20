@@ -329,12 +329,20 @@ void main() {
   });
 
   testWidgets('dhikr fortress displays distinct Arabic morning and evening lists', (tester) async {
+    final library = await ShiaTextData.load();
+    final morningEntries = library.entries
+        .where((entry) => entry.category == 'أدعية الصباح' && entry.arabicText.trim().isNotEmpty)
+        .toList(growable: false);
+    final eveningEntries = library.entries
+        .where((entry) => entry.category == 'أدعية المساء' && entry.arabicText.trim().isNotEmpty)
+        .toList(growable: false);
+    expect(morningEntries, isNotEmpty, reason: 'The unified library must provide Arabic morning text.');
+    expect(eveningEntries, isNotEmpty, reason: 'The unified library must provide Arabic evening text.');
+
     await tester.pumpWidget(const MaterialApp(
       home: Directionality(textDirection: TextDirection.rtl, child: DhikrFortressPage()),
     ));
-    await tester.runAsync(() => Future<void>.delayed(const Duration(seconds: 4)));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 100));
+    await tester.pumpAndSettle();
 
     expect(find.text('أذكار الصباح'), findsWidgets);
     expect(find.text('أذكار المساء'), findsOneWidget);
@@ -346,9 +354,7 @@ void main() {
         .toSet();
 
     await tester.tap(find.text('أذكار المساء'));
-    await tester.runAsync(() => Future<void>.delayed(const Duration(seconds: 4)));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 100));
+    await tester.pumpAndSettle();
 
     final eveningTexts = tester.widgetList<SelectableText>(find.byType(SelectableText))
         .map((widget) => widget.data)

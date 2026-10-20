@@ -17,6 +17,7 @@ import 'features/dhikr_fortress_page.dart';
 import 'features/faith_services_page.dart';
 import 'features/favorites_page.dart';
 import 'features/rakah_counter_page.dart';
+import 'features/about_support_page.dart';
 import 'services/prayer_locations.dart';
 import 'services/prayer_notification_service.dart';
 
@@ -297,6 +298,7 @@ class _MainShellState extends State<MainShell> {
                 _drawerItem(Icons.volunteer_activism_rounded, 'الخدمات الإيمانية', () => _openDrawerPage(const FaithServicesPage())),
                 _drawerItem(Icons.star_rounded, 'المفضلة المباركة', () => _openDrawerPage(const FavoritesPage())),
                 _drawerItem(Icons.calculate_outlined, 'حاسبة الركعات', () => _openDrawerPage(const RakahCounterPage())),
+                _drawerItem(Icons.info_outline_rounded, 'عن التطبيق والدعم', () => _openDrawerPage(const AboutSupportPage())),
               ],
             ),
           ),

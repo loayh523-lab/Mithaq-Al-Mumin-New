@@ -15,6 +15,7 @@ import 'package:mithaq_al_mumin/features/faith_services_page.dart';
 import 'package:mithaq_al_mumin/features/settings_page.dart';
 import 'package:mithaq_al_mumin/features/favorites_page.dart';
 import 'package:mithaq_al_mumin/features/rakah_counter_page.dart';
+import 'package:mithaq_al_mumin/features/about_support_page.dart';
 import 'package:mithaq_al_mumin/services/qibla_calculation.dart';
 
 void main() {
@@ -479,6 +480,34 @@ void main() {
     await tester.tap(find.text('10 دقائق').last);
     await tester.pumpAndSettle();
     expect(prefs.getInt('prayer_early_alert_minutes'), 10);
+  });
+
+  testWidgets('about and support page shows sharing and source information', (tester) async {
+    await tester.pumpWidget(const MaterialApp(
+      home: Directionality(
+        textDirection: TextDirection.rtl,
+        child: Scaffold(body: AboutSupportPage()),
+      ),
+    ));
+    await tester.pumpAndSettle();
+    expect(find.text('عن التطبيق والدعم'), findsOneWidget);
+    expect(find.text('ميثاق المؤمن'), findsOneWidget);
+    expect(find.text('مشاركة ميثاق المؤمن'), findsOneWidget);
+    expect(find.text('الدعم الفني والإبلاغ عن مشكلة'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('مصدر نص القرآن — Tanzil'),
+      250,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('مصدر نص القرآن — Tanzil'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.textContaining('لم نتحقق من مطابقته لألفاظ الأذان الجعفري'),
+      250,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    expect(find.textContaining('لم نتحقق من مطابقته لألفاظ الأذان الجعفري'), findsOneWidget);
   });
 
   testWidgets('smart search screen offers cross-library offline search', (tester) async {

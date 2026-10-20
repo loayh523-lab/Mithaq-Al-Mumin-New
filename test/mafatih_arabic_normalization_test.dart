@@ -16,6 +16,14 @@ void main() {
       expect(containsPersianOnlyLetters('الدعاء'), isFalse);
     });
 
+
+    test('rejects transliteration and English text from the Arabic-only reader', () {
+      expect(isArabicMafatihRecitation('اللهم صل على محمد وآل محمد'), isTrue);
+      expect(isArabicMafatihRecitation('Allahumma salli ala Muhammad'), isFalse);
+      expect(isArabicMafatihRecitation('English translation'), isFalse);
+      expect(isArabicMafatihRecitation('دعاء به واژه'), isFalse);
+    });
+
     test('detects distinctively Persian letters so Persian translations are omitted', () {
       expect(containsPersianOnlyLetters('گل و چهره'), isTrue);
     });

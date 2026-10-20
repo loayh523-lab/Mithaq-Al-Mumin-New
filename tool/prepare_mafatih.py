@@ -51,7 +51,7 @@ def main() -> None:
     def is_arabic_recitation(value: str) -> bool:
         plain = html.unescape(re.sub(r"<[^>]*>", " ", value))
         return (
-            bool(re.search(r"[\\u0600-\\u06FF]", plain))
+            any(0x0600 <= ord(character) <= 0x06FF for character in plain)
             and not has_latin_letters(plain)
             and not has_persian_letters(plain)
         )

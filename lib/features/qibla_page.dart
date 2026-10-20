@@ -10,7 +10,8 @@ const _qiblaMuted = Color(0xFF9EB5A9);
 
 /// Live compass direction for the configured approximate Qal'at Sukar location.
 class QiblaPage extends StatefulWidget {
-  const QiblaPage({super.key});
+  const QiblaPage({super.key, this.onLocationChanged});
+  final Future<void> Function()? onLocationChanged;
   @override State<QiblaPage> createState() => _QiblaPageState();
 }
 
@@ -53,6 +54,7 @@ class _QiblaPageState extends State<QiblaPage> {
         _declinationDegrees = _tryDeclination(precise);
         _locationMessage = accuracy == null ? 'تم تحديث الموقع من GPS.' : 'دقة الموقع المعلنة من الجهاز نحو ${accuracy.round()} متر.';
       });
+      await widget.onLocationChanged?.call();
     }
     if (mounted) setState(() => _gpsBusy = false);
   }

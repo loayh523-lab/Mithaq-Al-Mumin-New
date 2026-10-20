@@ -52,11 +52,11 @@ CATEGORY_MAP = {
 
 def plain_arabic_text(value: str) -> str:
     value = html.unescape(value)
-    value = re.sub(r"<br\\s*/?>", "\\n", value, flags=re.IGNORECASE)
-    value = re.sub(r"</(p|div|li|h[1-6])\\s*>", "\\n\\n", value, flags=re.IGNORECASE)
+    value = re.sub(r"<br\s*/?>", "\n", value, flags=re.IGNORECASE)
+    value = re.sub(r"</(p|div|li|h[1-6])\s*>", "\\n\\n", value, flags=re.IGNORECASE)
     value = re.sub(r"<[^>]*>", " ", value)
     value = value.replace("ک", "ك").replace("ی", "ي").replace("ے", "ي").replace("ہ", "ه")
-    return re.sub(r"\\n{3,}", "\\n\\n", value).strip()
+    return re.sub(r"\n{3,}", "\\n\\n", value).strip()
 
 
 def is_arabic_recitation(value: str) -> bool:
@@ -94,7 +94,7 @@ def merge_mafatih_entries(base_entries: list[dict]) -> tuple[list[dict], int]:
         (
             entry.get("categoryOverride", "") or "",
             str(entry.get("title", "")).strip(),
-            plain_arabic_text("\\n".join(
+            plain_arabic_text("\n".join(
                 line.get("text", "")
                 for line in entry.get("lines", [])
                 if isinstance(line, dict) and line.get("kind") == "arabic"
@@ -149,7 +149,7 @@ def merge_mafatih_entries(base_entries: list[dict]) -> tuple[list[dict], int]:
                 if not any(0x0600 <= ord(char) <= 0x06FF for char in title):
                     title = "نص عربي من الأدعية والزيارات"
 
-                normalized_body = plain_arabic_text("\\n".join(line["text"] for line in lines))
+                normalized_body = plain_arabic_text("\n".join(line["text"] for line in lines))
                 key = (category, title, normalized_body)
                 if key in seen:
                     continue

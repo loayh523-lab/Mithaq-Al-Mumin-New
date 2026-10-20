@@ -207,7 +207,7 @@ class _MainShellState extends State<MainShell> {
             _selected == 1 ? const QuranIndexPage() : const SizedBox.shrink(),
             _duaPage(),
             _tasbeehPage(),
-            const SettingsPage(),
+            SettingsPage(onLocationChanged: _loadDashboardData),
           ],
         ),
       ),

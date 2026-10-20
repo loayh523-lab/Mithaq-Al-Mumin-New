@@ -55,8 +55,9 @@ class PrayerNotificationService {
     }
   }
 
-  /// Schedules local reminders for the next 30 days. Prayer times are estimates;
-  /// the bundled recording is Persian-style and is not verified as Ja'fari adhan.
+  /// Schedules named prayer notifications for the next 30 days. Prayer times are estimates;
+  /// the current bundled recording remains a placeholder until the approved official
+  /// Alawi Shrine recording is added and its use is verified.
   static Future<bool> configure({
     required bool enabled,
     required PrayerCity city,
@@ -130,8 +131,8 @@ class PrayerNotificationService {
           if (scheduled.isAfter(now.add(const Duration(seconds: 15)))) {
             await _plugin.zonedSchedule(
               id,
-              'حان وقت الصلاة — ${prayerLabels[index]}',
-              'حان وقت ${prayerLabels[index]} وفق الحساب الفلكي التقديري داخل ميثاق المؤمن.',
+              'أذان ${prayerLabels[index]}',
+              'حان الآن وقت صلاة ${prayerLabels[index]}.',
               scheduled,
               const NotificationDetails(
                 android: AndroidNotificationDetails(
@@ -155,8 +156,8 @@ class PrayerNotificationService {
             if (earlyAt.isAfter(now.add(const Duration(seconds: 15)))) {
               await _plugin.zonedSchedule(
                 id + 5,
-                'تنبيه قبل الصلاة — ${prayerLabels[index]}',
-                'باقي $earlyAlertMinutes دقائق على وقت صلاة ${prayerLabels[index]}.',
+                'اقترب وقت صلاة ${prayerLabels[index]}',
+                'باقي $earlyAlertMinutes دقائق على أذان ${prayerLabels[index]}.',
                 earlyAt,
                 const NotificationDetails(
                   android: AndroidNotificationDetails(

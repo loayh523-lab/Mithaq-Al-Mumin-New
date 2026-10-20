@@ -29,7 +29,7 @@ class MafatihArticle {
   final List<MafatihItem> items;
   factory MafatihArticle.fromJson(Map<String, dynamic> json) => MafatihArticle(
     id: json['id'] is int ? json['id'] as int : 0,
-    title: _arabicOnlyTitle(json['title'], 'نص عربي ${json['id'] ?? ''}'),
+    title: _arabicOnlyTitle(json['title'], 'نص عربي'),
     href: json['href'] is String ? json['href'] as String : '',
     items: ((json['items'] as List<dynamic>?) ?? const <dynamic>[])
         .whereType<Map<String, dynamic>>().map(MafatihItem.fromJson).toList(),
@@ -43,7 +43,7 @@ class MafatihSection {
   final List<MafatihArticle> articles;
   factory MafatihSection.fromJson(Map<String, dynamic> json) => MafatihSection(
     id: json['id'] is int ? json['id'] as int : 0,
-    title: _arabicOnlyTitle(json['title'], 'قسم ${json['id'] ?? ''}'),
+    title: _arabicOnlyTitle(json['title'], 'قسم عربي'),
     articles: ((json['articles'] as List<dynamic>?) ?? const <dynamic>[])
         .whereType<Map<String, dynamic>>().map(MafatihArticle.fromJson).toList(),
   );
@@ -56,7 +56,7 @@ class MafatihChapter {
   final List<MafatihSection> sections;
   factory MafatihChapter.fromJson(Map<String, dynamic> json) => MafatihChapter(
     id: json['id'] is int ? json['id'] as int : 0,
-    title: _arabicOnlyTitle(json['title'], 'باب ${json['id'] ?? ''} من مفاتيح الجنان'),
+    title: _arabicOnlyTitle(json['title'], 'باب من مفاتيح الجنان'),
     sections: ((json['sections'] as List<dynamic>?) ?? const <dynamic>[])
         .whereType<Map<String, dynamic>>().map(MafatihSection.fromJson).toList(),
   );

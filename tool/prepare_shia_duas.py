@@ -53,10 +53,10 @@ CATEGORY_MAP = {
 def plain_arabic_text(value: str) -> str:
     value = html.unescape(value)
     value = re.sub(r"<br\s*/?>", "\n", value, flags=re.IGNORECASE)
-    value = re.sub(r"</(p|div|li|h[1-6])\s*>", "\\n\\n", value, flags=re.IGNORECASE)
+    value = re.sub(r"</(p|div|li|h[1-6])\s*>", "\n\n", value, flags=re.IGNORECASE)
     value = re.sub(r"<[^>]*>", " ", value)
     value = value.replace("ک", "ك").replace("ی", "ي").replace("ے", "ي").replace("ہ", "ه")
-    return re.sub(r"\n{3,}", "\\n\\n", value).strip()
+    return re.sub(r"\n{3,}", "\n\n", value).strip()
 
 
 def is_arabic_recitation(value: str) -> bool:

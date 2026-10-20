@@ -22,6 +22,9 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
   DateTime now = DateTime.now();
   Timer? _clockTimer;
   int correction = 0, tab = 0;
+  bool _gpsBusy = false;
+  double? _gpsAccuracy;
+  String? _locationMessage;
   @override void initState() {
     super.initState();
     _loadCorrection();
@@ -35,7 +38,33 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
     super.dispose();
   }
   Future<void> _loadCity() async {
-    try { final selected = await PrayerLocations.load(); if (mounted) setState(() => city = selected); } catch (_) { /* Keep the default city. */ }
+    try {
+      final selected = await PrayerLocations.load();
+      if (!mounted) return;
+      setState(() => city = selected);
+      if (selected.id == 'current_location') {
+        _gpsAccuracy = await PrayerLocations.currentLocationAccuracy();
+        if (mounted) setState(() {});
+      }
+    } catch (_) {}
+  }
+
+  Future<void> _refreshLocation() async {
+    setState(() { _gpsBusy = true; _locationMessage = null; });
+    final precise = await PrayerLocations.acquirePreciseLocation();
+    if (!mounted) return;
+    if (precise == null) {
+      setState(() => _locationMessage = 'تعذّر تحديد GPS. فعّل الموقع واسمح للتطبيق بالوصول إليه.');
+    } else {
+      final accuracy = await PrayerLocations.currentLocationAccuracy();
+      if (!mounted) return;
+      setState(() {
+        city = precise;
+        _gpsAccuracy = accuracy;
+        _locationMessage = accuracy == null ? 'تم تحديث الموقع بواسطة GPS.' : 'دقة الموقع المعلنة من الجهاز نحو ${accuracy.round()} متر.';
+      });
+    }
+    if (mounted) setState(() => _gpsBusy = false);
   }
   Future<void> _loadCorrection() async {
     final p = await SharedPreferences.getInstance();
@@ -49,13 +78,26 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
   @override Widget build(BuildContext context) {
     final hijri = _Hijri.fromGregorian(date.add(Duration(days: correction)));
     final times = SolarPrayerTimes.forDate(date, city.latitude, city.longitude, zone);
-    return Scaffold(appBar: AppBar(title: const Text('المواقيت والتقويم')), body: ListView(padding: const EdgeInsets.all(16), children: [
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('المواقيت والتقويم'),
+        actions: [
+          IconButton(
+            tooltip: 'تحديث الموقع من GPS',
+            onPressed: _gpsBusy ? null : _refreshLocation,
+            icon: _gpsBusy
+              ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+              : const Icon(Icons.my_location_rounded),
+          ),
+        ],
+      ),
+      body: ListView(padding: const EdgeInsets.all(16), children: [
       Container(padding: const EdgeInsets.all(18), decoration: BoxDecoration(color: _panel, borderRadius: BorderRadius.circular(22), border: Border.all(color: _gold.withValues(alpha: .3))), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const Text('التاريخ الهجري التقريبي', style: TextStyle(color: _muted)), const SizedBox(height: 8),
         Text('${hijri.day} ${hijri.monthName} ${hijri.year} هـ', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: _gold)),
         const SizedBox(height: 6), Text(_dateLabel(date), style: const TextStyle(color: _muted)),
         Row(children: [const Expanded(child: Text('تصحيح يدوي للتاريخ')), IconButton(onPressed: () => _correct(-1), icon: const Icon(Icons.remove_circle_outline)), Text('$correction يوم'), IconButton(onPressed: () => _correct(1), icon: const Icon(Icons.add_circle_outline))]),
-        const Text('الحساب الهجري جدولي تقريبي وقد يختلف عن ثبوت الهلال الشرعي. التصحيح محفوظ على الجهاز.', style: TextStyle(color: _muted, fontSize: 11, height: 1.5)),
+        const Text('التاريخ محسوب بالتقويم الهجري الجدولي وقد يختلف يوماً عن إعلان ثبوت الهلال في العراق. يمكنك ضبطه إذا اعتمد مكتب مرجعك تاريخاً مختلفاً.', style: TextStyle(color: _muted, fontSize: 11, height: 1.5)),
       ])),
       if (_occasion(hijri) != null) Card(color: _panel, child: ListTile(leading: const Icon(Icons.event, color: _gold), title: const Text('مناسبة دينية'), subtitle: Text(_occasion(hijri)!, style: const TextStyle(height: 1.5)))),
       const SizedBox(height: 14),
@@ -65,13 +107,23 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
         Row(children: [Expanded(child: Text('مواقيت ${_dateLabel(date)}', style: const TextStyle(fontWeight: FontWeight.bold))), IconButton(onPressed: () => setState(() => date = date.subtract(const Duration(days: 1))), icon: const Icon(Icons.chevron_right)), IconButton(onPressed: () => setState(() => date = date.add(const Duration(days: 1))), icon: const Icon(Icons.chevron_left)), IconButton(onPressed: () => setState(() => date = DateTime.now()), icon: const Icon(Icons.today))]),
         if (_sameDay(date, now)) _nextPrayerCard(times, now),
         _time(Icons.wb_twilight, 'الفجر (تقديري)', times.fajr), _time(Icons.wb_sunny_outlined, 'الشروق', times.sunrise), _time(Icons.sunny, 'الظهر', times.noon), _time(Icons.wb_sunny_rounded, 'العصر (تقديري)', times.asr), _time(Icons.wb_twilight, 'الغروب', times.sunset), _time(Icons.nights_stay_outlined, 'المغرب (تقديري)', times.maghrib), _time(Icons.dark_mode_outlined, 'العشاء (تقديري)', times.isha),
-        const Padding(padding: EdgeInsets.all(8), child: Text('الحساب الفلكي هنا تقديري: زاوية الفجر 16° والمغرب 4° بعد انخفاض الشمس. لا تعتمد عليه وحده للعبادة؛ قارن بمواقيت مكتب مرجعك في منطقتك. لا توجد حالياً تنبيهات أذان أو تحديد موقع تلقائي.', style: TextStyle(color: _muted, fontSize: 11, height: 1.6))),
+        const Padding(padding: EdgeInsets.all(8), child: Text('الحساب المحلي احتياطي تقريبي، وليس بديلاً عن جدول شرعي معتمد من مكتب مرجعك. استخدم زر GPS لتحديث الإحداثيات وفعّل تنبيهات الصلاة من الإعدادات.', style: TextStyle(color: _muted, fontSize: 11, height: 1.6))),
       ] else ...[
         Text('إمساكية تقديرية — ${city.name} / العراق', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17)), const SizedBox(height: 5),
         const Text('يعرض الجدول 30 يوماً من التاريخ المختار. الفجر والغروب محسوبان فلكياً ولا يمثلان إمساكية رسمية لشهر رمضان محدد.', style: TextStyle(color: _muted, fontSize: 11, height: 1.5)),
         ..._ramadanRows(date, city.latitude, city.longitude),
       ],
-      const Divider(), const Text('الموقع الحالي للحساب', style: TextStyle(fontWeight: FontWeight.bold)), Text('${city.name}، العراق — إحداثيات تقريبية', style: const TextStyle(color: _muted)),
+      const Divider(),
+      const Text('الموقع الحالي للحساب', style: TextStyle(fontWeight: FontWeight.bold)),
+      Text(
+        '${city.name} — ${city.id == 'current_location' ? 'موقع GPS من الجهاز' : 'إحداثيات المدينة التقريبية'}${_gpsAccuracy == null ? '' : ' (دقة نحو ${_gpsAccuracy!.round()} متر)'}',
+        style: const TextStyle(color: _muted),
+      ),
+      if (_locationMessage != null)
+        Padding(
+          padding: const EdgeInsets.only(top: 8),
+          child: Text(_locationMessage!, style: const TextStyle(color: _gold)),
+        ),
     ]));
   }
   bool _sameDay(DateTime a, DateTime b) => a.year == b.year && a.month == b.month && a.day == b.day;

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/prayer_locations.dart';
 import '../services/prayer_notification_service.dart';
@@ -57,40 +56,34 @@ class _SettingsPageState extends State<SettingsPage> {
   Future<void> _useCurrentLocation() async {
     setState(() => _gpsBusy = true);
     try {
-      final serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) {
-        if (mounted) _message('فعّل خدمة الموقع في إعدادات الجهاز أولاً');
-        return;
-      }
-      var permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-      }
-      if (permission == LocationPermission.denied ||
-          permission == LocationPermission.deniedForever) {
-        if (mounted) _message('اسمح للتطبيق باستخدام الموقع حتى يحسب المواقيت والقبلة بدقة أفضل');
-        return;
-      }
-      final position = await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
-      );
-      await PrayerLocations.saveCurrentLocation(
-        latitude: position.latitude,
-        longitude: position.longitude,
-      );
-      final city = await PrayerLocations.load();
+      final city = await PrayerLocations.acquirePreciseLocation();
       if (!mounted) return;
+      if (city == null) {
+        _message('ما حصلنا GPS بدقة كافية. فعّل الموقع واسمح للتطبيق بالموقع، ثم جرّب مجدداً.');
+        return;
+      }
       setState(() { _currentCity = city; _cityId = city.id; });
       if (_notificationsEnabled) {
         final ok = await PrayerNotificationService.configure(enabled: true, city: city);
         if (!ok && mounted) _message('حُفظ الموقع لكن تعذّر تحديث تذكيرات الصلاة');
       }
-      if (mounted) _message('تم استخدام موقعك الحالي للمواقيت واتجاه القبلة');
+      final accuracy = await PrayerLocations.currentLocationAccuracy();
+      if (mounted) _message(accuracy == null
+        ? 'تم تحديث موقع GPS للمواقيت والقبلة'
+        : 'تم تحديث GPS بدقة تقريبية ${accuracy.round()} متر للمواقيت والقبلة');
     } catch (_) {
-      if (mounted) _message('تعذّر تحديد الموقع. تقدر تختار المدينة يدوياً');
+      if (mounted) _message('تعذّر تحديد الموقع. فعّل GPS وتحقق من إذن الموقع.');
     } finally {
       if (mounted) setState(() => _gpsBusy = false);
     }
+  }
+
+  Future<void> _testNotification() async {
+    final ok = await PrayerNotificationService.showTestNotification();
+    if (!mounted) return;
+    _message(ok
+      ? 'أرسلنا الإشعار التجريبي. إذا لم يظهر، افحص إذن الإشعارات وإعدادات قناة أذان الصلاة.'
+      : 'فشل الإشعار التجريبي. فعّل إشعارات التطبيق من إعدادات أندرويد ثم جرّب مرة ثانية.');
   }
 
   Future<void> _toggleNotifications(bool enabled) async {
@@ -179,6 +172,16 @@ class _SettingsPageState extends State<SettingsPage> {
               activeThumbColor: _settingsGold,
             ),
           ),
+          const SizedBox(height: 8),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: _loaded ? _testNotification : null,
+              icon: const Icon(Icons.notifications_active_outlined),
+              label: const Text('تجربة الإشعار وصوت الأذان'),
+            ),
+          ),
+          const Text('يلزم السماح بإشعارات التطبيق من أندرويد. إذا وصل الإشعار بلا صوت، ارفع صوت التنبيهات وافحص إعداد قناة «أذان الصلاة».', style: TextStyle(color: _settingsMuted, fontSize: 11, height: 1.5)),
         ],
       ),
       const SizedBox(height: 14),

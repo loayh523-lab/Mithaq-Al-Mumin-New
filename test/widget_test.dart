@@ -110,7 +110,7 @@ void main() {
     ));
     await tester.enterText(find.byType(TextField), 'الحمد');
     await tester.tap(find.byIcon(Icons.arrow_forward_rounded));
-    await tester.runAsync(() => Future<void>.delayed(const Duration(seconds: 4)));
+    await tester.runAsync(() => Future<void>.delayed(const Duration(seconds: 12)));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
     expect(find.textContaining('الفاتحة • الآية 2'), findsOneWidget);

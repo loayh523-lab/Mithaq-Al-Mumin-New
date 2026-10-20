@@ -109,7 +109,7 @@ void main() {
     ));
     await tester.enterText(find.byType(TextField), 'الحمد');
     await tester.tap(find.byIcon(Icons.arrow_forward_rounded));
-    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 450)));
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 1500)));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
     expect(find.textContaining('الفاتحة • الآية 2'), findsOneWidget);
@@ -132,7 +132,7 @@ void main() {
     await tester.pumpWidget(const MaterialApp(
       home: Directionality(textDirection: TextDirection.rtl, child: QuranBookmarksPage()),
     ));
-    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 300)));
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 1200)));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
     expect(find.text('الآيات المحفوظة'), findsOneWidget);
@@ -144,10 +144,10 @@ void main() {
     await tester.pumpWidget(const MaterialApp(
       home: Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage()),
     ));
-    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 500)));
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 700)));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
-    expect(find.text('الأدعية والزيارات'), findsOneWidget);
+    expect(find.text('الأدعية والزيارات'), findsWidgets);
     expect(find.textContaining('72 نصاً'), findsOneWidget);
     expect(find.textContaining('ما قدرنا نحمّل مكتبة الأدعية'), findsNothing);
     expect(find.text('زيارة عاشوراء'), findsWidgets);

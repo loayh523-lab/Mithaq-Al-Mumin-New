@@ -74,117 +74,6 @@ def is_arabic_recitation(value: str) -> bool:
     return True
 
 
-def merge_mafatih_entries(base_entries: list[dict]) -> tuple[list[dict], int]:
-    """Merge the generated Arabic Mafatih data into the app's one dua/ziyara asset."""
-    source_path = Path("assets/mafatih/mafatih.json")
-    if not source_path.is_file():
-        raise SystemExit(
-            "Arabic Mafatih data is missing. Run tool/prepare_mafatih.py before preparing the unified dua library."
-        )
-    try:
-        mafatih = json.loads(source_path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
-        raise SystemExit(f"Could not read generated Mafatih data: {exc}") from exc
-
-    chapters = mafatih.get("chapters") if isinstance(mafatih, dict) else None
-    if not isinstance(chapters, list) or not chapters:
-        raise SystemExit("Generated Mafatih data has no readable chapters.")
-
-    seen = {
-        (
-            entry.get("categoryOverride", "") or "",
-            str(entry.get("title", "")).strip(),
-            plain_arabic_text("\n".join(
-                line.get("text", "")
-                for line in entry.get("lines", [])
-                if isinstance(line, dict) and line.get("kind") == "arabic"
-            )),
-        )
-        for entry in base_entries
-    }
-    added = 0
-    category_counts: dict[str, int] = {}
-
-    for chapter in chapters:
-        if not isinstance(chapter, dict):
-            continue
-        chapter_title = str(chapter.get("title", "")).strip()
-        for section in chapter.get("sections", []) or []:
-            if not isinstance(section, dict):
-                continue
-            section_title = str(section.get("title", "")).strip()
-            for article in section.get("articles", []) or []:
-                if not isinstance(article, dict):
-                    continue
-                items = article.get("items", [])
-                if not isinstance(items, list):
-                    continue
-
-                lines = []
-                for item in items:
-                    if not isinstance(item, dict) or not isinstance(item.get("content"), str):
-                        continue
-                    if not (
-                        isinstance(item.get("type"), str)
-                        and item["type"].strip().lower()
-                        in {"text", "arabic", "arabictext", "arabic_text"}
-                    ):
-                        continue
-                    text = plain_arabic_text(item["content"])
-                    if not text or not is_arabic_recitation(text):
-                        continue
-                    lines.append({
-                        "index": len(lines) + 1,
-                        "kind": "arabic",
-                        "text": text,
-                    })
-                if not lines:
-                    continue
-
-                raw_category = str(article.get("category", "")).strip()
-                category = CATEGORY_MAP.get(raw_category, "أدعية عامة")
-                title = str(article.get("title", "")).strip()
-                if not title or re.search(r"[A-Za-zپچژگ]", title):
-                    title = "نص عربي من الأدعية والزيارات"
-                if not any(0x0600 <= ord(char) <= 0x06FF for char in title):
-                    title = "نص عربي من الأدعية والزيارات"
-
-                normalized_body = plain_arabic_text("\n".join(line["text"] for line in lines))
-                key = (category, title, normalized_body)
-                if key in seen:
-                    continue
-                seen.add(key)
-
-                chapter_id = chapter.get("id", 0)
-                section_id = section.get("id", 0)
-                article_id = article.get("id", len(base_entries) + added + 1)
-                chapter_reference = (
-                    chapter_title
-                    if chapter_title.startswith(("الباب", "باب "))
-                    else f"باب {chapter_title}"
-                )
-                base_entries.append({
-                    "slug": f"mafatih-{chapter_id}-{section_id}-{article_id}",
-                    "title": title,
-                    "alternateName": "",
-                    "type": "mafatih",
-                    "sourceUrl": "",
-                    "sourceLabel": (
-                        f"مفاتيح الجنان، {chapter_reference}، "
-                        f"القسم: {section_title}، عنوان النص: {title}"
-                    ),
-                    "categoryOverride": category,
-                    "lines": lines,
-                })
-                added += 1
-                category_counts[category] = category_counts.get(category, 0) + 1
-
-    if added == 0:
-        raise SystemExit(
-            "Mafatih merge produced no Arabic entries. Check the source types and Arabic filtering rules."
-        )
-    return base_entries, added
-
 
 def main() -> None:
     index = fetch_json(INDEX_URL)
@@ -239,21 +128,17 @@ def main() -> None:
             "lines": normalized_lines,
         })
 
-    # The build workflow prepares Mafatih first. Merge its Arabic entries now so
-    # opening the library on the device requires one asset load, not a 5 MB
-    # second catalogue parse and runtime merge.
-    prepared, mafatih_count = merge_mafatih_entries(prepared)
+    # Keep the unified library sourced only from the reviewed Arabic base dataset.
 
     result = {
         "metadata": {
             "sourceProject": "مكتبة الأدعية والزيارات العربية الموحدة",
             "sourceIndex": INDEX_URL,
-            "contentSource": "Arabic entries from the Shia library dataset and Mafatih al-Jinan",
-            "license": "Per-entry sources/licenses: CC0 1.0 for the base dataset; Apache-2.0 for Mafatih entries; see THIRD_PARTY_NOTICES.md.",
+            "contentSource": "Arabic entries from the reviewed Shia library dataset",
+            "license": "CC0 1.0 for the base dataset; see THIRD_PARTY_NOTICES.md.",
             "count": len(prepared),
             "baseSourceCount": len(entries),
-            "mafatihCount": mafatih_count,
-            "note": "Mafatih entries are merged into destination categories and keep a human-readable book/chapter/section citation. Persian-only lines are omitted.",
+            "note": "Only Arabic recitation lines from the base dataset are included.",
         },
         "entries": prepared,
     }
@@ -271,7 +156,7 @@ def main() -> None:
     print(
         f"Prepared offline Shia library: {len(prepared)} texts, "
         f"{total_arabic_lines} Arabic lines, {total_lines} total lines, "
-        f"{mafatih_count} merged Mafatih entries"
+        "Mafatih entries disabled pending review of an Arabic-only source"
     )
 
 

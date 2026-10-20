@@ -80,15 +80,6 @@ class _MainShellState extends State<MainShell> {
     'راجع صلواتك الخمس واهتم بأدائها في وقتها',
   ];
 
-  static const _titles = ['الرئيسية', 'القرآن الكريم', 'الأدعية والزيارات', 'التسبيح', 'الإعدادات'];
-  static const _icons = [
-    Icons.home_rounded,
-    Icons.menu_book_rounded,
-    Icons.auto_awesome_rounded,
-    Icons.fingerprint_rounded,
-    Icons.settings_rounded,
-  ];
-
   @override
   void initState() {
     super.initState();

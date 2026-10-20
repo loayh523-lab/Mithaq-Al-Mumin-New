@@ -105,10 +105,14 @@ class _MafatihLibraryPageState extends State<MafatihLibraryPage> {
     body: FutureBuilder<MafatihData>(
       future: _dataFuture,
       builder: (context, snapshot) {
-        if (snapshot.hasError) return _error(snapshot.error.toString(), () {
-          setState(() { MafatihData._cache = null; _dataFuture = MafatihData.load(); });
-        });
-        if (!snapshot.hasData) return const Center(child: CircularProgressIndicator(color: _mfGold));
+        if (snapshot.hasError) {
+          return _error('تعذّر قراءة ملف النصوص المرفق.', () {
+            setState(() { MafatihData._cache = null; _dataFuture = MafatihData.load(); });
+          });
+        }
+        if (!snapshot.hasData) {
+          return const Center(child: CircularProgressIndicator(color: _mfGold));
+        }
         final data = snapshot.data!;
         final query = _normalizeTitle(_search.text.trim());
         final filtered = data.chapters.where((c) => query.isEmpty || _normalizeTitle(c.title).contains(query)).toList();

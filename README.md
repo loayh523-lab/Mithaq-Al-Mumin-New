@@ -22,6 +22,8 @@ flutter run
 
 ## القرآن الكريم ومصدر النص
 - فهرس السور المرفق: أسماء السور وعدد الآيات من مشروع [Quran JSON](https://github.com/risan/quran-json)، ضمن بيانات Tanzil.
-- نص الآيات يُطلب عند فتح السورة من `https://quran-json.risanb.com/text/uthmani/chapters/{رقم السورة}.json`. عرض الآيات يتطلب اتصالاً بالإنترنت.
-- يذكر مشروع Quran JSON أن النصوص العثمانية المنشورة مأخوذة من Tanzil؛ راجع [المستودع ومعلومات المصدر والترخيص](https://github.com/risan/quran-json).
-- عند تعذّر تنزيل النص، يعرض التطبيق رسالة خطأ وإعادة محاولة، ولا يستبدل نص الآيات بنص تقديري.
+- فهرس السور: `assets/quran/chapters.json`.
+- **نص القرآن دون إنترنت:** قبل تشغيل التطبيق محلياً نفّذ `python3 tool/prepare_quran.py` ثم `flutter pub get`. ينزّل السكربت النص العثماني المنشور من [dotquran/corpus](https://github.com/dotquran/corpus)، ويتحقق من 114 سورة و6236 آية، ثم يضعه في `assets/quran/uthmani_surahs.json` دون تغيير نص الآيات.
+- يبني GitHub Actions نسخة APK ويضمّن فيها ملف القرآن تلقائياً، لذلك لا تحتاج القراءة داخل هذه النسخة إلى اتصال بالإنترنت بعد التثبيت.
+- مصدر النص: [Tanzil Project](https://tanzil.net/) عبر [dotquran/corpus](https://github.com/dotquran/corpus). الترخيص المذكور للمحتوى هو Creative Commons Attribution 3.0، ويجب الإبقاء على الإسناد عند إعادة التوزيع.
+- إذا تعذّر تنزيل ملف المصدر أثناء إعداد البناء، يفشل الإعداد برسالة واضحة بدلاً من إنشاء APK ناقص القرآن.

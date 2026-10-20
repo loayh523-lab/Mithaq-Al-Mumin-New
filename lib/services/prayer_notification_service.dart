@@ -56,13 +56,27 @@ class PrayerNotificationService {
 
   /// Schedules local reminders with the bundled Persian adhan sound for the
   /// next 12 days using the app's clearly-labelled approximate calculation.
-  static Future<bool> configure({required bool enabled, required PrayerCity city}) async {
+  static Future<bool> configure({
+    required bool enabled,
+    required PrayerCity city,
+    bool requestExactPermission = false,
+  }) async {
     try {
       await _initialize();
+      var scheduleMode = AndroidScheduleMode.inexactAllowWhileIdle;
       if (defaultTargetPlatform == TargetPlatform.android) {
         final android = _plugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
         final granted = await android?.requestNotificationsPermission();
         if (enabled && granted == false) return false;
+        var canScheduleExact = await android?.canScheduleExactNotifications() ?? false;
+        if (enabled && requestExactPermission && !canScheduleExact) {
+          try {
+            canScheduleExact = await android?.requestExactAlarmsPermission() ?? false;
+          } catch (_) {
+            // Exact alarms are optional; retain the inexact fallback if unavailable.
+          }
+        }
+        if (canScheduleExact) scheduleMode = AndroidScheduleMode.exactAllowWhileIdle;
       }
 
       final pending = await _plugin.pendingNotificationRequests();
@@ -101,9 +115,17 @@ class PrayerNotificationService {
                 audioAttributesUsage: AudioAttributesUsage.alarm,
               ),
             ),
-            androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+            androidScheduleMode: scheduleMode,
           );
         }
+      }
+      final scheduled = await _plugin.pendingNotificationRequests();
+      final prayerReminders = scheduled.where((request) =>
+        request.id >= _idStart && request.id < _idStart + _daysToSchedule * 10).length;
+      if (prayerReminders == 0) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('prayer_notifications_enabled', false);
+        return false;
       }
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('prayer_notifications_enabled', true);

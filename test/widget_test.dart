@@ -11,6 +11,7 @@ import 'package:mithaq_al_mumin/features/names_of_allah_page.dart';
 import 'package:mithaq_al_mumin/features/qada_tracker_page.dart';
 import 'package:mithaq_al_mumin/features/dhikr_fortress_page.dart';
 import 'package:mithaq_al_mumin/features/smart_search_page.dart';
+import 'package:mithaq_al_mumin/features/faith_services_page.dart';
 import 'package:mithaq_al_mumin/services/qibla_calculation.dart';
 
 void main() {
@@ -345,6 +346,16 @@ void main() {
     await tester.tap(find.text('أذكار المساء'));
     await tester.pumpAndSettle();
     expect(find.text('الصلاة على النبي وآله'), findsOneWidget);
+  });
+
+  testWidgets('faith services page shows verified sources and safe guide entry points', (tester) async {
+    await tester.pumpWidget(const MaterialApp(
+      home: Directionality(textDirection: TextDirection.rtl, child: FaithServicesPage()),
+    ));
+    expect(find.text('الخدمات الإيمانية'), findsOneWidget);
+    expect(find.text('فقه المؤمن — المسائل الشرعية'), findsOneWidget);
+    expect(find.text('تفسير القرآن الكريم'), findsOneWidget);
+    expect(find.text('الاستخارة القرآنية — إرشاد شرعي'), findsOneWidget);
   });
 
   testWidgets('smart search screen offers cross-library offline search', (tester) async {

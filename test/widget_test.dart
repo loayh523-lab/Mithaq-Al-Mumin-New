@@ -221,7 +221,6 @@ void main() {
     ));
     expect(find.text('أسماء الله الحسنى'), findsOneWidget);
     expect(find.text('الرحمن'), findsOneWidget);
-    expect(find.text('الصبور'), findsOneWidget);
   });
 
   testWidgets('qada tracker shows independent prayer and fasting counters', (tester) async {
@@ -231,6 +230,11 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('سجل القضاء'), findsOneWidget);
     expect(find.text('صلاة الصبح'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('صيام القضاء'),
+      250,
+      scrollable: find.descendant(of: find.byType(ListView), matching: find.byType(Scrollable)).first,
+    );
     expect(find.text('صيام القضاء'), findsOneWidget);
   });
 

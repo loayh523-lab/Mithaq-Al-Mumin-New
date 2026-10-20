@@ -295,7 +295,6 @@ class _MainShellState extends State<MainShell> {
                 _drawerItem(Icons.calendar_month_outlined, 'مواقيت الصلاة والتقويم', () => _openDrawerPage(PrayerCalendarPage(onLocationChanged: _handleLocationChanged, onHijriCorrectionChanged: _loadDashboardData))),
                 _drawerItem(Icons.explore_outlined, 'اتجاه القبلة', () => _openDrawerPage(QiblaPage(onLocationChanged: _handleLocationChanged))),
                 _drawerItem(Icons.auto_stories_outlined, 'نهج البلاغة', () => _openDrawerPage(const NahjAlBalaghaPage())),
-                _drawerItem(Icons.library_books_outlined, 'مكتبة الأدعية والزيارات', () => _openDrawerPage(const ShiaTextLibraryPage())),
                 _drawerItem(Icons.volunteer_activism_outlined, 'الخدمات الإيمانية', () => _openDrawerPage(const FaithServicesPage())),
                 _drawerItem(Icons.star_outline_rounded, 'المفضلة المباركة', () => _openDrawerPage(const FavoritesPage())),
                 _drawerItem(Icons.calculate_outlined, 'حاسبة الركعات', () => _openDrawerPage(const RakahCounterPage())),
@@ -798,7 +797,7 @@ class _MainShellState extends State<MainShell> {
     );
   }
 
-  Widget _duaPage() => _DuaLibrary(onNotice: _notice);
+  Widget _duaPage() => const ShiaTextLibraryPage();
 
   Widget _tasbeehPage() => const TasbeehPage();
 

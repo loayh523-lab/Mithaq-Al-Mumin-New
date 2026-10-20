@@ -5,6 +5,7 @@ import 'data/religious_content.dart';
 import 'quran/quran_pages.dart';
 import 'features/prayer_calendar_page.dart';
 import 'features/qibla_page.dart';
+import 'features/settings_page.dart';
 
 void main() => runApp(const MithaqApp());
 
@@ -108,8 +109,9 @@ class _MainShellState extends State<MainShell> {
         actions: [
           IconButton(
             tooltip: 'التنبيهات',
-            onPressed: () => _notice('سيُضاف مركز التنبيهات لاحقاً'),
-            icon: const Icon(Icons.notifications_none_rounded),
+            onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: PrayerCalendarPage()))),
+            tooltip: 'المواقيت والتقويم',
+            icon: const Icon(Icons.calendar_month_rounded),
           ),
         ],
       ),
@@ -121,7 +123,7 @@ class _MainShellState extends State<MainShell> {
             _selected == 1 ? const QuranIndexPage() : const SizedBox.shrink(),
             _duaPage(),
             _tasbeehPage(),
-            _placeholderPage(Icons.settings_rounded, 'الإعدادات', 'التفضيلات والمظهر ومصادر المحتوى'),
+            const SettingsPage(),
           ],
         ),
       ),

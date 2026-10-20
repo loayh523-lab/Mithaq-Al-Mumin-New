@@ -504,29 +504,106 @@ class PlaceholderPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(28),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 86,
-              height: 86,
-              decoration: BoxDecoration(
-                color: panel,
-                borderRadius: BorderRadius.circular(28),
-                border: Border.all(color: const Color(0xFF2D5A43)),
+    return SafeArea(
+      top: false,
+      child: ListView(
+        padding: const EdgeInsets.fromLTRB(18, 14, 18, 28),
+        children: [
+          Text(title, style: const TextStyle(fontSize: 27, fontWeight: FontWeight.w800)),
+          const SizedBox(height: 5),
+          Text(subtitle, style: const TextStyle(color: muted, height: 1.8, fontSize: 13)),
+          const SizedBox(height: 22),
+          Container(
+            padding: const EdgeInsets.all(22),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25),
+              gradient: const LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                colors: [Color(0xFF225B42), Color(0xFF10271F)],
               ),
-              child: Icon(icon, color: gold, size: 38),
+              border: Border.all(color: gold.withValues(alpha: 0.28)),
             ),
-            const SizedBox(height: 22),
-            Text(title, style: const TextStyle(fontSize: 23, fontWeight: FontWeight.w800)),
-            const SizedBox(height: 9),
-            Text(subtitle, textAlign: TextAlign.center,
-                style: const TextStyle(color: muted, fontSize: 14, height: 1.9)),
-          ],
-        ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 58,
+                  height: 58,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(18),
+                  ),
+                  child: Icon(icon, color: gold, size: 30),
+                ),
+                const SizedBox(height: 19),
+                const Text('مساحتك الخاصة', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800)),
+                const SizedBox(height: 7),
+                Text(
+                  'نرتّب هذه الصفحة بعناية ضمن بناء الواجهة، ثم نضيف محتواها ووظائفها في المرحلة المخصصة.',
+                  style: TextStyle(color: Colors.white.withValues(alpha: 0.78), height: 1.9, fontSize: 13),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 27),
+          const _SectionHeading(title: 'سيكون هنا', subtitle: 'تصميم مبدئي لترتيب العناصر'),
+          const SizedBox(height: 13),
+          _PreviewTile(icon: icon, title: 'القسم الرئيسي', subtitle: 'مساحة أساسية لمحتوى الصفحة'),
+          const SizedBox(height: 10),
+          _PreviewTile(icon: Icons.bookmark_border_rounded, title: 'المحفوظات', subtitle: 'مكان واضح للعناصر التي تريد الرجوع إليها'),
+          const SizedBox(height: 10),
+          _PreviewTile(icon: Icons.history_rounded, title: 'آخر نشاط', subtitle: 'عرض مرتب للنشاط الأخير بعد تنفيذ الوظائف'),
+        ],
+      ),
+    );
+  }
+}
+
+class _PreviewTile extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+
+  const _PreviewTile({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: panel,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: const Color(0xFF254536)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 43,
+            height: 43,
+            decoration: BoxDecoration(
+              color: emerald.withValues(alpha: 0.13),
+              borderRadius: BorderRadius.circular(13),
+            ),
+            child: Icon(icon, color: emerald, size: 22),
+          ),
+          const SizedBox(width: 13),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14)),
+                const SizedBox(height: 4),
+                Text(subtitle, style: const TextStyle(color: muted, fontSize: 12, height: 1.6)),
+              ],
+            ),
+          ),
+          const Icon(Icons.chevron_left_rounded, color: muted),
+        ],
       ),
     );
   }

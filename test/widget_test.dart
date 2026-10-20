@@ -110,7 +110,7 @@ void main() {
     ));
     await tester.enterText(find.byType(TextField), 'الحمد');
     await tester.tap(find.byIcon(Icons.arrow_forward_rounded));
-    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 1500)));
+    await tester.runAsync(() => Future<void>.delayed(const Duration(seconds: 4)));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
     expect(find.textContaining('الفاتحة • الآية 2'), findsOneWidget);
@@ -133,7 +133,7 @@ void main() {
     await tester.pumpWidget(const MaterialApp(
       home: Directionality(textDirection: TextDirection.rtl, child: QuranBookmarksPage()),
     ));
-    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 1200)));
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 400)));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
     expect(find.text('الآيات المحفوظة'), findsOneWidget);

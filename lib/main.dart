@@ -742,7 +742,7 @@ class _PrayerTrackerPageState extends State<PrayerTrackerPage> {
                   style: const TextStyle(color: _muted),
                 ),
               ),
-            )),
+            ))),
           const SizedBox(height: 8),
           const Text('هذا سجلّ شخصي فقط وليس جدولاً لمواقيت الصلاة. ستُضاف المواقيت بعد اعتماد طريقة حساب جعفرية موثّقة.', style: TextStyle(color: _muted, fontSize: 12, height: 1.7)),
         ],

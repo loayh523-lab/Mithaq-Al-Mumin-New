@@ -24,3 +24,12 @@ The app distinguishes general reminder phrases from texts assigned to a book/sou
 ## Third-party code and data
 
 Keep upstream notices with redistributed source/builds. This project does not claim ownership of the third-party Quran or Mafatih text assets.
+
+## Additional Shia duas, ziyarat, and Sahifa text
+
+- Source repository: [adeeb10abbas/shia-library-json](https://github.com/adeeb10abbas/shia-library-json).
+- The repository declares CC0 1.0 Universal for its dataset and notes its source data at Thaqalayn public pages.
+- Build step: `python3 tool/prepare_shia_duas.py`
+- The script validates and packages 72 source entries, retaining Arabic lines and accompanying transliteration/translation where present, plus the source URL per item, into `assets/shia_duas/shia_duas.json`.
+- The package currently includes the listed Sahifa Sajjadiya entries from the source index. This should not be misrepresented as a critical-edition verification of every variant; source links remain visible in the reader.
+- A copy of the source repository's CC0 notice is included at [licenses/SHIA_LIBRARY_CC0_1.0.txt](licenses/SHIA_LIBRARY_CC0_1.0.txt).

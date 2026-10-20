@@ -1142,14 +1142,29 @@ class _KhatmaPageState extends State<KhatmaPage> {
   Future<void> _setProgress(int value) async {
     final target = value.clamp(0, 30).toInt();
     setState(() {
-      for (var juz = 0; juz < 30; juz++) {
-        final start = _juzStartPages[juz];
-        final end = juz == 29 ? 604 : _juzStartPages[juz + 1] - 1;
-        for (var page = start; page <= end; page++) {
-          if (juz < target) {
-            _completedPages.add(page);
-          } else {
-            _completedPages.remove(page);
+      if (target == 0) {
+        _completedPages.clear();
+      } else {
+        final current = _completedJuz;
+        int? juzToChange;
+        if (target > current) {
+          for (var juz = 0; juz < 30; juz++) {
+            if (!_isJuzComplete(juz)) { juzToChange = juz; break; }
+          }
+        } else {
+          for (var juz = 29; juz >= 0; juz--) {
+            if (_isJuzComplete(juz)) { juzToChange = juz; break; }
+          }
+        }
+        if (juzToChange != null) {
+          final start = _juzStartPages[juzToChange];
+          final end = juzToChange == 29 ? 604 : _juzStartPages[juzToChange + 1] - 1;
+          for (var page = start; page <= end; page++) {
+            if (target > current) {
+              _completedPages.add(page);
+            } else {
+              _completedPages.remove(page);
+            }
           }
         }
       }
@@ -1326,7 +1341,7 @@ class _KhatmaPageState extends State<KhatmaPage> {
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               const Text('تتبّع الصفحات', style: TextStyle(color: _gold, fontSize: 20, fontWeight: FontWeight.w800)),
               const SizedBox(height: 6),
-              const Text('سجّل كل صفحة بعد قراءتها في مصحف المدينة ذي 604 صفحات. هذا التتبّع مستقل عن عدّاد الأجزاء أعلاه.', style: TextStyle(color: _muted, height: 1.6, fontSize: 12)),
+              const Text('سجّل كل صفحة بعد قراءتها في مصحف المدينة ذي 604 صفحات. يُحسب اكتمال الجزء من الصفحات المسجّلة ضمن نطاقه.', style: TextStyle(color: _muted, height: 1.6, fontSize: 12)),
               const SizedBox(height: 12),
               Row(children: [
                 Expanded(child: Text('${_completedPages.length} / 604 صفحة', style: const TextStyle(color: _gold, fontWeight: FontWeight.bold))),

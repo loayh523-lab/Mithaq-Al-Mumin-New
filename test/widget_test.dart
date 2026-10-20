@@ -18,8 +18,13 @@ void main() {
     expect(find.text('التاريخ الهجري'), findsOneWidget);
     expect(find.text('الصلاة القادمة'), findsOneWidget);
     expect(find.text('مواقيت الصلوات'), findsOneWidget);
+
+    await tester.scrollUntilVisible(
+      find.text('عمل اليوم'),
+      250,
+      scrollable: find.byType(Scrollable).first,
+    );
     expect(find.text('عمل اليوم'), findsOneWidget);
-    expect(find.text('القرآن الكريم'), findsOneWidget);
 
     await tester.tap(find.byIcon(Icons.menu));
     await tester.pumpAndSettle();

@@ -110,21 +110,23 @@ void main() {
     ));
     await tester.enterText(find.byType(TextField), 'الحمد');
     await tester.tap(find.byIcon(Icons.arrow_forward_rounded));
-    // Let the asset bundle and JSON decoding finish in real async time, then
-    // pump the widget tree repeatedly so the completed search state is rendered.
+    // Wait for the asynchronous asset read and the full-text scan to finish.
+    // A fixed short delay is flaky on slower CI runners because the Quran corpus
+    // contains 6,236 verses and each verse is normalized before matching.
     await tester.pump();
-    await tester.runAsync(() async {
-      await Future<void>.delayed(const Duration(seconds: 2));
-    });
-    for (var i = 0; i < 10; i++) {
-      await tester.pump(const Duration(milliseconds: 100));
+    var finished = false;
+    for (var i = 0; i < 60; i++) {
+      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 250)));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 50));
       if (find.textContaining('النتائج الأولى').evaluate().isNotEmpty ||
           find.textContaining('ما لقينا آيات مطابقة').evaluate().isNotEmpty ||
           find.textContaining('تعذّر فتح ملف القرآن المحلي').evaluate().isNotEmpty) {
+        finished = true;
         break;
       }
-      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 200)));
     }
+    expect(finished, isTrue, reason: 'Quran search did not leave its loading state.');
     expect(find.textContaining('النتائج الأولى'), findsOneWidget);
     expect(find.textContaining('الفاتحة • الآية 2'), findsOneWidget);
   });

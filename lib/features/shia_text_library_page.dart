@@ -115,8 +115,14 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
           if (_query.isEmpty) return true;
           final header = _normalize('${entry.displayTitle} ${entry.title} ${entry.slug}');
           return header.contains(_query) ||
-              entry.lines.any((line) => line.isArabic && _normalize(line.text).contains(_query));
-        }).toList();
+              entry.lines.any((line) => (line.isArabic || line.isPersian) && _normalize(line.text).contains(_query));
+        }).toList()
+          ..sort((a, b) {
+            // Keep Sahifa entries grouped first and preserve their canonical source order.
+            if (a.isSahifa != b.isSahifa) return a.isSahifa ? -1 : 1;
+            if (a.isSahifa) return 0;
+            return _normalize(a.displayTitle).compareTo(_normalize(b.displayTitle));
+          });
         final sahifaCount = data.entries.where((entry) => entry.isSahifa).length;
         return Column(children: [
           Container(
@@ -207,13 +213,24 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
   String _display = 'العربي';
   double _fontSize = 23;
 
-  List<ShiaTextLine> get _visibleLines => widget.entry.lines.where((line) {
-    if (_display == 'العربي') return line.isArabic;
-    if (_display == 'الفارسي') return line.isPersian;
-    if (_display == 'العربي والترجمة') return line.isArabic || (line.isTranslation && !line.isPersian);
-    if (_display == 'العربي والفارسي') return line.isArabic || line.isPersian;
-    return true;
-  }).toList();
+  List<ShiaTextLine> get _visibleLines {
+    final source = widget.entry.lines;
+    if (_display == 'العربي') return source.where((line) => line.isArabic).toList();
+    if (_display == 'الفارسي') return source.where((line) => line.isPersian && !line.isArabic).toList();
+    if (_display == 'العربي والترجمة') {
+      return [
+        ...source.where((line) => line.isArabic),
+        ...source.where((line) => line.isTranslation && !line.isPersian),
+      ];
+    }
+    if (_display == 'العربي والفارسي') {
+      return [
+        ...source.where((line) => line.isArabic),
+        ...source.where((line) => line.isPersian && !line.isArabic),
+      ];
+    }
+    return source.toList();
+  }
 
   @override Widget build(BuildContext context) {
     final lines = _visibleLines;

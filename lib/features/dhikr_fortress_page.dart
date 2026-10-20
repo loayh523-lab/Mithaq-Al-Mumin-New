@@ -12,7 +12,6 @@ class _DhikrItem {
     required this.text,
     required this.target,
     required this.source,
-    this.eveningText,
   });
 
   final String id;
@@ -20,15 +19,12 @@ class _DhikrItem {
   final String text;
   final int? target;
   final String source;
-  final String? eveningText;
-
-  String textFor(int period) => period == 1 ? (eveningText ?? text) : text;
 }
 
 class DhikrFortressPage extends StatefulWidget {
   const DhikrFortressPage({super.key, this.initialPeriod = 0});
 
-  /// 0 opens the morning section; 1 opens the evening section.
+  /// 0 opens morning-only content; 1 opens evening-only content.
   final int initialPeriod;
 
   @override
@@ -36,63 +32,59 @@ class DhikrFortressPage extends StatefulWidget {
 }
 
 class _DhikrFortressPageState extends State<DhikrFortressPage> {
-  static const _items = <_DhikrItem>[
+  // Separate source-backed lists. No full text is copied between periods.
+  static const _morningItems = <_DhikrItem>[
     _DhikrItem(
-      id: 'shield-prayer',
-      title: 'دعاء الدرع الحصينة',
-      text: 'اللهم اجعلني في درعك الحصينة التي تجعل فيها من تريد',
-      target: 3,
-      source: 'ثلاث مرات صباحاً ومساءً. الكافي، ج 2، ص 534؛ وسائل الشيعة، ج 7، ص 229؛ بحار الأنوار، ج 83، ص 296.',
+      id: 'morning-surahs-before-sunrise',
+      title: 'سور وآية قبل طلوع الشمس',
+      text: 'تُقرأ سورة الإخلاص، وسورة القدر، وآية الكرسي إحدى عشرة مرة لكل واحدة قبل طلوع الشمس.',
+      target: 11,
+      source: 'مفاتيح الجنان، فصل الدعاء عند طلوع الشمس وعند غروبها؛ ينقل الرواية عن الخصال للشيخ الصدوق.',
     ),
     _DhikrItem(
-      id: 'salawat-prophetic',
-      title: 'الصلاة على النبي وآله',
-      text: 'اللهم صل على محمد وآل محمد في الأولين، وصل على محمد وآل محمد في الآخرين، وصل على محمد وآل محمد في الملأ الأعلى، وصل على محمد وآل محمد في المرسلين. اللهم أعط محمداً الوسيلة والشرف والفضيلة والدرجة الكبيرة. اللهم إني آمنت بمحمد ولم أره، فلا تحرمني يوم القيامة رؤيته، وارزقني صحبته وتوفني على ملته، واسقني من حوضه مشرباً روياً سائغاً هنيئاً لا أظمأ بعده أبداً، إنك على كل شيء قدير. اللهم كما آمنت بمحمد ولم أره، فعرفني في الجنان وجهه. اللهم بلغ روح محمد عني تحية كثيرة وسلاماً.',
-      target: 3,
-      source: 'وردت ثلاث مرات غدوة وعشية. ثواب الأعمال للشيخ الصدوق، ص 157؛ بحار الأنوار، ج 91، ص 59.',
+      id: 'morning-after-fajr',
+      title: 'ذكر بعد فريضة الصبح',
+      text: 'سُبْحَانَ اللهِ العَظِيمِ وَبِحَمْدِهِ، وَلا حَوْلَ وَلا قُوَّةَ إِلا بِاللهِ العَلِيِّ العَظِيمِ',
+      target: 10,
+      source: 'مفاتيح الجنان، باب تعقيبات صلاة الصبح؛ ينقله عن كتاب التهذيب.',
     ),
     _DhikrItem(
-      id: 'mutaqallib',
-      title: 'دعاء تثبيت القلب',
-      text: 'اللهم مقلب القلوب والأبصار، ثبت قلبي على دينك، ولا تزغ قلبي بعد إذ هديتني، وهب لي من لدنك رحمة إنك أنت الوهاب، وأجرني من النار برحمتك. اللهم امدد لي في عمري، وأوسع علي من رزقي، وانشر علي من رحمتك، وإن كنت عندك في أم الكتاب شقياً فاجعلني سعيداً، فإنك تمحو ما تشاء وتثبت وعندك أم الكتاب.',
-      target: 3,
-      source: 'ورد ثلاث مرات عند الصباح والمساء. الكافي، ج 2، ص 525.',
-    ),
-    _DhikrItem(
-      id: 'allah-allah',
-      title: 'ذكر التوحيد',
-      text: 'الله الله الله ربي الرحمن الرحيم، لا أشرك به شيئاً',
+      id: 'morning-entrusting',
+      title: 'تفويض الأمر إلى الله',
+      text: 'بِسْمِ اللهِ وَصَلَّى اللهُ عَلَى مُحَمَّدٍ وَآلِهِ، وَأُفَوِّضُ أَمْرِي إِلَى اللهِ، إِنَّ اللهَ بَصِيرٌ بِالْعِبَادِ، فَوَقَاهُ اللهُ سَيِّئَاتِ مَا مَكَرُوا، لا إِلَهَ إِلا أَنْتَ سُبْحَانَكَ إِنِّي كُنْتُ مِنَ الظَّالِمِينَ',
       target: null,
-      source: 'الكافي، ج 2، ص 534. ورد أن يقال صباحاً ومساءً، والنقل المذكور لا يحدد عدداً؛ العداد هنا للتتبع فقط.',
+      source: 'مفاتيح الجنان، ما ورد عقيب فريضة الصبح؛ لم يُذكر هنا عدد محدد للتكرار.',
     ),
+  ];
+
+  static const _eveningItems = <_DhikrItem>[
     _DhikrItem(
-      id: 'la-yadurru',
-      title: 'بسم الله الذي لا يضر',
-      text: 'بسم الله الذي لا يضر مع اسمه شيء في الأرض ولا في السماء وهو السميع العليم',
-      target: 3,
-      source: 'ثلاث مرات صباحاً ومساءً. بحار الأنوار، ج 83، ص 300.',
-    ),
-    _DhikrItem(
-      id: 'la-hawla',
-      title: 'لا حول ولا قوة إلا بالله',
-      text: 'لا حول ولا قوة إلا بالله العلي العظيم',
+      id: 'evening-tahlil-before-sunset',
+      title: 'التهليل قبل غروب الشمس',
+      text: 'لا إِلَهَ إِلا اللهُ وَحْدَهُ لا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، يُحْيِي وَيُمِيتُ وَهُوَ حَيٌّ لا يَمُوتُ، بِيَدِهِ الْخَيْرُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ',
       target: 10,
-      source: 'عشر مرات صباحاً وعشر مرات مساءً. بحار الأنوار، ج 83، ص 161. وذكر المصدر أيضاً قولها قبل النوم.',
+      source: 'مفاتيح الجنان، فصل الدعاء عند طلوع الشمس وعند غروبها؛ ينقله عن الكافي والخصال ومصباح المتهجد.',
     ),
     _DhikrItem(
-      id: 'maqalid',
-      title: 'دعاء المقاليد',
-      text: 'لا إله إلا الله، والله أكبر، سبحان الله، والحمد لله، أستغفر الله، ولا حول ولا قوة إلا بالله، هو الأول والآخر، والظاهر والباطن، له الملك وله الحمد، يحيي ويميت وهو حي لا يموت، بيده الخير وهو على كل شيء قدير',
+      id: 'evening-takbir',
+      title: 'تكبير المساء',
+      text: 'اللهُ أَكْبَرُ',
+      target: 100,
+      source: 'مفاتيح الجنان، فصل أذكار ودعوات تقرأ صباحاً ومساءً؛ ينقل عن المقنع للشيخ الصدوق ثواب التكبير عند المساء.',
+    ),
+    _DhikrItem(
+      id: 'evening-istiadha',
+      title: 'الاستعاذة قبل الغروب',
+      text: 'أَعُوذُ بِاللهِ السَّمِيعِ الْعَلِيمِ مِنْ هَمَزَاتِ الشَّيَاطِينِ، وَأَعُوذُ بِاللهِ أَنْ يَحْضُرُونَ، إِنَّ اللهَ هُوَ السَّمِيعُ الْعَلِيمُ',
       target: 10,
-      source: 'عشر مرات صباحاً وعشر مرات مساءً؛ منقول في المصدر عن بحار الأنوار ضمن أذكار الصباح والمساء.',
+      source: 'مفاتيح الجنان، فصل الدعاء عند طلوع الشمس وعند غروبها؛ ورد قبل طلوع الشمس وقبل غروبها.',
     ),
     _DhikrItem(
-      id: 'nimat',
-      title: 'دعاء النعمة والعافية والستر',
-      text: 'اللهم إني أصبحت في نعمة منك وعافية وستر، فصل على محمد وآل محمد، وأتمم علي نعمتك وعافيتك وسترك',
-      eveningText: 'اللهم إني أمسيت في نعمة منك وعافية وستر، فصل على محمد وآل محمد، وأتمم علي نعمتك وعافيتك وسترك',
-      target: 3,
-      source: 'ثلاث مرات صباحاً ومساءً. بحار الأنوار، ج 83، ص 283.',
+      id: 'evening-istighfar',
+      title: 'الاستغفار في ختام النهار',
+      text: 'أَسْتَغْفِرُ اللهَ رَبِّي وَأَتُوبُ إِلَيْهِ',
+      target: null,
+      source: 'صيغة استغفار عامة؛ لم يُنسب لها هنا عدد مخصوص أو رواية بعينها.',
     ),
   ];
 
@@ -101,7 +93,7 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
   int _period = 0;
 
   String get _periodName => _period == 0 ? 'صباح' : 'مساء';
-  List<_DhikrItem> get _visibleItems => _items;
+  List<_DhikrItem> get _visibleItems => _period == 0 ? _morningItems : _eveningItems;
 
   String _key(String id) {
     final now = DateTime.now();
@@ -220,7 +212,7 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
                     Text(target == null ? '$count' : '$count / $target', style: const TextStyle(color: _dhikrMuted, fontWeight: FontWeight.bold)),
                   ]),
                   const SizedBox(height: 10),
-                  Text(item.textFor(_period), textDirection: TextDirection.rtl, textAlign: TextAlign.right, style: const TextStyle(fontSize: 19, height: 1.9)),
+                  Text(item.text, textDirection: TextDirection.rtl, textAlign: TextAlign.right, style: const TextStyle(fontSize: 19, height: 1.9)),
                   if (target != null) ...[
                     const SizedBox(height: 12),
                     ClipRRect(

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'mafatih_library_page.dart';
+import '../data/mafatih_data.dart';
 
 const _shiaPanel = Color(0xFF10251E);
 const _shiaGold = Color(0xFFD9B66D);

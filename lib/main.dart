@@ -297,8 +297,7 @@ class _WelcomeCard extends StatelessWidget {
               ),
               const SizedBox(height: 15),
               const Text(
-                'طمأنينةٌ للقلب،
-ونورٌ للطريق',
+                'طمأنينةٌ للقلب،\nونورٌ للطريق',
                 style: TextStyle(fontSize: 25, height: 1.55, fontWeight: FontWeight.w800),
               ),
               const SizedBox(height: 8),
@@ -337,7 +336,7 @@ class _PrayerTimeCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(21),
         border: Border.all(color: const Color(0xFF254536)),
       ),
-      child: const Row(
+      child: Row(
         children: [
           Container(
             width: 47,

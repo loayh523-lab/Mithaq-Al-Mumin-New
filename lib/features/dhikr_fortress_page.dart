@@ -15,8 +15,6 @@ class _DhikrItem {
     required this.target,
     required this.source,
     this.eveningText,
-    this.morning = true,
-    this.evening = true,
   });
 
   final String id;
@@ -25,8 +23,6 @@ class _DhikrItem {
   final int? target;
   final String source;
   final String? eveningText;
-  final bool morning;
-  final bool evening;
 
   String textFor(int period) => period == 1 ? (eveningText ?? text) : text;
 }
@@ -103,7 +99,7 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
   int _period = 0;
 
   String get _periodName => _period == 0 ? 'صباح' : 'مساء';
-  List<_DhikrItem> get _visibleItems => _items.where((item) => _period == 0 ? item.morning : item.evening).toList();
+  List<_DhikrItem> get _visibleItems => _items;
 
   String _key(String id) {
     final now = DateTime.now();

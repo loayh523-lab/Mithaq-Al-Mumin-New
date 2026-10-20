@@ -48,18 +48,28 @@ def main() -> None:
     def has_latin_letters(value: str) -> bool:
         return re.search(r"[A-Za-z]", value) is not None
 
+    def has_persian_language_markers(value: str) -> bool:
+        normalized = normalize_arabic_script(value)
+        both_forms = f"{value} {normalized}"
+        return re.search(
+            r"دعای|دعاي|روزهای|روزهاي|روزها|هفته|فارسی|فارسي|برای|براي|میباشد|می شود|ميشود|خواهد شد|نمی|نمي",
+            both_forms,
+        ) is not None
+
     def is_arabic_recitation(value: str) -> bool:
         plain = html.unescape(re.sub(r"<[^>]*>", " ", value))
         return (
             any(0x0600 <= ord(character) <= 0x06FF for character in plain)
             and not has_latin_letters(plain)
             and not has_persian_letters(plain)
+            and not has_persian_language_markers(plain)
         )
 
     for cidx, chapter in enumerate(source):
         if not isinstance(chapter, dict) or not isinstance(chapter.get("title"), str):
             raise SystemExit(f"Invalid Mafatih chapter at index {cidx}.")
-        if has_persian_letters(chapter["title"]) or has_latin_letters(chapter["title"]):
+        if (has_persian_letters(chapter["title"]) or has_latin_letters(chapter["title"])
+                or has_persian_language_markers(chapter["title"])):
             if cidx < len(arabic_chapter_titles):
                 chapter["title"] = arabic_chapter_titles[cidx]
             else:
@@ -72,7 +82,8 @@ def main() -> None:
         for sidx, section in enumerate(sections):
             if not isinstance(section, dict) or not isinstance(section.get("title"), str):
                 raise SystemExit(f"Invalid section {sidx} in chapter {cidx}.")
-            if has_persian_letters(section["title"]) or has_latin_letters(section["title"]):
+            if (has_persian_letters(section["title"]) or has_latin_letters(section["title"])
+                    or has_persian_language_markers(section["title"])):
                 section["title"] = f"الفصل رقم {section.get('id', sidx + 1)} من {chapter['title']}"
             section["title"] = normalize_arabic_script(section["title"])
             articles = section.get("articles")
@@ -82,7 +93,8 @@ def main() -> None:
             for aidx, article in enumerate(articles):
                 if not isinstance(article, dict) or not isinstance(article.get("title"), str):
                     raise SystemExit(f"Invalid article {aidx} in chapter {cidx}, section {sidx}.")
-                if has_persian_letters(article["title"]) or has_latin_letters(article["title"]):
+                if (has_persian_letters(article["title"]) or has_latin_letters(article["title"])
+                    or has_persian_language_markers(article["title"])):
                     article["title"] = f"النص العربي رقم {article.get('id', aidx + 1)} ضمن {section['title']}"
                 article["title"] = normalize_arabic_script(article["title"])
                 items = article.get("items")

@@ -216,7 +216,8 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
       }
       if (!mounted) return;
       setState(() { _loading = false; _hits = hits; _message = hits.isEmpty ? 'ما لقينا آيات مطابقة.' : 'النتائج الأولى: ${hits.length}'; });
-    } catch (_) {
+    } catch (error, stackTrace) {
+      debugPrint('Quran search failed: $error\\n$stackTrace');
       if (!mounted) return;
       setState(() { _loading = false; _message = 'تعذّر فتح ملف القرآن المحلي. أعد المحاولة.'; });
     }

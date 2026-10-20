@@ -277,8 +277,15 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
           return const Center(child: CircularProgressIndicator(color: _shiaGold));
         }
         final data = snapshot.data!;
+        // Only show categories that actually contain readable Arabic entries.
+        final availableCategories = _categories
+            .where((category) => data.entries.any((entry) => entry.category == category))
+            .toList(growable: false);
+        final activeCategory = availableCategories.contains(_category)
+            ? _category
+            : (availableCategories.isNotEmpty ? availableCategories.first : 'أدعية عامة');
         final filtered = data.entries.where((entry) {
-          if (entry.category != _category) return false;
+          if (entry.category != activeCategory) return false;
           if (_query.isEmpty) return true;
           final header = _normalize('${entry.displayTitle} ${entry.title} ${entry.slug}');
           return header.contains(_query) ||
@@ -324,7 +331,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
               ..._categories
             ].map((choice) => Padding(
               padding: const EdgeInsets.only(left: 8),
-              child: ChoiceChip(label: Text(choice), selected: _category == choice, onSelected: (_) => setState(() => _category = choice)),
+              child: ChoiceChip(label: Text(choice), selected: activeCategory == choice, onSelected: (_) => setState(() => _category = choice)),
             )).toList()),
           ),
           Expanded(

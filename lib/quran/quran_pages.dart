@@ -263,7 +263,7 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
                   subtitle: Text(hit.text, maxLines: 4, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 19, height: 1.8)),
                   onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => Directionality(
                     textDirection: TextDirection.rtl,
-                    child: SurahReaderPage(surah: hit.surah),
+                    child: SurahReaderPage(surah: hit.surah, initialVerse: hit.verseNumber),
                   ))),
                 ));
               },
@@ -339,7 +339,7 @@ class _QuranBookmarksPageState extends State<QuranBookmarksPage> {
                   subtitle: Text(item.text, maxLines: 3, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 18, height: 1.7)),
                   onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => Directionality(
                     textDirection: TextDirection.rtl,
-                    child: SurahReaderPage(surah: item.surah),
+                    child: SurahReaderPage(surah: item.surah, initialVerse: item.verseNumber),
                   ))),
                   trailing: IconButton(tooltip: 'إزالة الحفظ', onPressed: () => _remove(item), icon: const Icon(Icons.bookmark_remove_outlined, color: _muted)),
                 ));
@@ -415,8 +415,13 @@ Future<Map<int, List<String>>> _readBundledQuran() async {
 }
 
 class SurahReaderPage extends StatefulWidget {
-  const SurahReaderPage({super.key, required this.surah});
+  const SurahReaderPage({
+    super.key,
+    required this.surah,
+    this.initialVerse,
+  });
   final SurahInfo surah;
+  final int? initialVerse;
   @override
   State<SurahReaderPage> createState() => _SurahReaderPageState();
 }
@@ -428,6 +433,7 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
   double _fontSize = 24;
   Set<String> _bookmarks = <String>{};
   bool _keepScreenOn = false;
+  final GlobalKey _initialVerseKey = GlobalKey();
 
   @override
   void initState() { super.initState(); _loadFontSize(); _loadVerses(); }
@@ -554,6 +560,19 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
       }
       if (!mounted) return;
       setState(() { _verses = verses; _loading = false; _error = null; });
+      final targetVerse = widget.initialVerse;
+      if (targetVerse != null && targetVerse >= 1 && targetVerse <= verses.length) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          final targetContext = _initialVerseKey.currentContext;
+          if (targetContext == null) return;
+          unawaited(Scrollable.ensureVisible(
+            targetContext,
+            duration: const Duration(milliseconds: 380),
+            curve: Curves.easeInOut,
+            alignment: 0.14,
+          ));
+        });
+      }
     } catch (_) {
       _offlineQuranCache = null;
       if (!mounted) return;
@@ -605,9 +624,21 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
                 padding: EdgeInsets.symmetric(vertical: 16),
                 child: Center(child: Text('بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ', textAlign: TextAlign.center, style: TextStyle(fontSize: 25, color: _gold, height: 2))),
               ),
-            ...List.generate(_verses.length, (i) => Container(
+            ...List.generate(_verses.length, (i) {
+              final isInitialVerse = widget.initialVerse == i + 1;
+              return KeyedSubtree(
+                key: ValueKey('quran-verse-${widget.surah.id}-${i + 1}'),
+                child: Container(
+              key: isInitialVerse ? _initialVerseKey : null,
               margin: const EdgeInsets.only(top: 10), padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(color: _panel, borderRadius: BorderRadius.circular(16), border: Border.all(color: Colors.white.withValues(alpha: .05))),
+              decoration: BoxDecoration(
+                color: isInitialVerse ? _emerald.withValues(alpha: .18) : _panel,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: isInitialVerse ? _gold.withValues(alpha: .75) : Colors.white.withValues(alpha: .05),
+                  width: isInitialVerse ? 1.4 : 1,
+                ),
+              ),
               child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
                 Text(_verses[i], textAlign: TextAlign.right, textDirection: TextDirection.rtl, style: TextStyle(fontSize: _fontSize, height: 2.1)),
                 const SizedBox(height: 8),
@@ -639,7 +670,9 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
                   ),
                 ]),
               ]),
-            )),
+                ),
+              );
+            }),
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 16),
               child: Text('المصدر: Tanzil Project عبر dotquran/corpus. النص مضمّن في التطبيق للقراءة دون إنترنت؛ راجع التوثيق والترخيص في صفحة المشروع.', textAlign: TextAlign.center, style: TextStyle(color: _muted, fontSize: 11, height: 1.6)),

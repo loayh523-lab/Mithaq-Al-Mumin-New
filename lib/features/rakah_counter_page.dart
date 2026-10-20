@@ -225,7 +225,7 @@ class _RakahCounterPageState extends State<RakahCounterPage> {
                       ),
                       const SizedBox(height: 18),
                       DropdownButtonFormField<String>(
-                        value: _prayer,
+                        initialValue: _prayer,
                         decoration: InputDecoration(
                           labelText: 'الصلاة',
                           filled: true,

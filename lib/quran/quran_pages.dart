@@ -169,12 +169,21 @@ String _normalizeArabic(String value) {
   return out.toString();
 }
 
+List<SurahInfo>? _surahCatalogCache;
+
 Future<List<SurahInfo>> _readSurahCatalog() async {
-  final raw = await rootBundle.loadString('assets/quran/chapters.json');
+  final cached = _surahCatalogCache;
+  if (cached != null) return cached;
+
+  final data = await rootBundle.load('assets/quran/chapters.json');
+  final raw = utf8.decode(
+    data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes),
+  );
   final decoded = jsonDecode(raw) as Map<String, dynamic>;
   final list = (decoded['chapters'] as List<dynamic>)
       .map((e) => SurahInfo.fromJson(e as Map<String, dynamic>)).toList();
   if (list.length != 114) throw const FormatException('Expected 114 surahs.');
+  _surahCatalogCache = list;
   return list;
 }
 

@@ -32,6 +32,21 @@ def normalize_arabic(value: str) -> str:
     )
 
 
+PERSIAN_MARKERS = (
+    "برای", "میباشد", "می شود", "ميشود", "نمی", "نمي",
+    "دعای", "دعاهای", "روزهای", "روزها", "هفته", "فارسی", "فارسي",
+    "زیارت", "زیارات", "نیمه شعبان", "هزار رکعت",
+)
+PERSIAN_ONLY_LETTERS = set("پچژگ")
+
+
+def looks_persian(value: str) -> bool:
+    normalized = normalize_arabic(value)
+    if any(char in PERSIAN_ONLY_LETTERS for char in normalized):
+        return True
+    return any(marker in normalized for marker in PERSIAN_MARKERS)
+
+
 def main() -> None:
     request = urllib.request.Request(SOURCE_URL, headers={"User-Agent": USER_AGENT})
     try:
@@ -86,6 +101,7 @@ def main() -> None:
 
     entries = []
     counts = {1: 0, 2: 0, 3: 0}
+    rejected_persian = 0
     for row in rows:
         category = int(row["cat"])
         title = normalize_arabic(str(row["title"] or ""))
@@ -93,7 +109,11 @@ def main() -> None:
         number = normalize_arabic(str(row["num"] or "")).strip()
         if not text or not title:
             continue
-        # Keep the Arabic source wording intact; only strip empty/invalid records.
+        # Never bundle records that show Persian-script or Persian-language markers.
+        if looks_persian(title) or looks_persian(text):
+            rejected_persian += 1
+            continue
+        # Preserve Arabic source wording; only normalize keyboard variants.
         entries.append(
             {
                 "id": int(row["id"]),
@@ -138,7 +158,11 @@ def main() -> None:
         if os.path.exists(temporary):
             os.remove(temporary)
 
-    print(f"Prepared offline Nahj al-Balagha: {len(entries)} entries; category counts={counts}")
+    print(
+        f"Prepared offline Nahj al-Balagha: {len(entries)} Arabic entries; "
+        f"rejected {rejected_persian} records with Persian indicators; "
+        f"category counts={counts}"
+    )
 
 
 if __name__ == "__main__":

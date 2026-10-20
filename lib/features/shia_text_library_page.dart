@@ -51,9 +51,9 @@ class ShiaTextEntry {
     for (final candidate in <String>[alternateName, title]) {
       final clean = normalizeMafatihArabicText(candidate.trim());
       if (clean.isEmpty) continue;
-      if (!RegExp(r'[\\u0600-\\u06FF]').hasMatch(clean)) continue;
-      if (RegExp(r'[A-Za-zپچژگ]').hasMatch(clean)) continue;
-      if (containsPersianLanguageMarkers(candidate)) continue;
+      if (!clean.runes.any((rune) => rune >= 0x0600 && rune <= 0x06FF)) continue;
+      if (RegExp(r'[A-Za-z]').hasMatch(clean)) continue;
+      if (containsPersianOnlyLetters(clean) || containsPersianLanguageMarkers(candidate)) continue;
       return clean;
     }
     return _arabicTitleFromSlug(slug, type);
@@ -146,106 +146,23 @@ class ShiaTextEntry {
 
 String _arabicTitleFromSlug(String slug, String type) {
   final value = slug.toLowerCase().replaceAll('_', '-');
-  if (RegExp(r'ziyarat-?ashura|ziyarah-?ashura').hasMatch(value)) return 'زيارة عاشوراء';
-  if (RegExp(r'ziyarat-?arba|ziyarah-?arba').hasMatch(value)) return 'زيارة الأربعين';
-  if (RegExp(r'ziyarat-?warith|ziyarah-?warith').hasMatch(value)) return 'زيارة وارث';
-  if (RegExp(r'ziyarat-?amin-?allah|ziyarah-?amin-?allah').hasMatch(value)) return 'زيارة أمين الله';
-  if (RegExp(r'dua-?kumayl|du-a-?kumayl').hasMatch(value)) return 'دعاء كميل';
-  if (RegExp(r'dua-?sabah|du-a-?sabah').hasMatch(value)) return 'دعاء الصباح';
-  if (RegExp(r'dua-?nudba|du-a-?nudba').hasMatch(value)) return 'دعاء الندبة';
-  if (RegExp(r'dua-?al-?ahd|du-a-?al-?ahd').hasMatch(value)) return 'دعاء العهد';
-  if (RegExp(r'dua-?iftitah|du-a-?iftitah').hasMatch(value)) return 'دعاء الافتتاح';
-  if (RegExp(r'dua-?tawassul|du-a-?tawassul').hasMatch(value)) return 'دعاء التوسل';
+  if (value.contains('ziyarat-ashura') || value.contains('ziyarah-ashura')) return 'زيارة عاشوراء';
+  if (value.contains('ziyarat-arba') || value.contains('ziyarah-arba')) return 'زيارة الأربعين';
+  if (value.contains('ziyarat-warith') || value.contains('ziyarah-warith')) return 'زيارة وارث';
+  if (value.contains('ziyarat-amin-allah') || value.contains('ziyarah-amin-allah')) return 'زيارة أمين الله';
+  if (value.contains('dua-kumayl') || value.contains('du-a-kumayl')) return 'دعاء كميل';
+  if (value.contains('dua-sabah') || value.contains('du-a-sabah')) return 'دعاء الصباح';
+  if (value.contains('dua-nudba') || value.contains('du-a-nudba')) return 'دعاء الندبة';
+  if (value.contains('dua-al-ahd') || value.contains('du-a-al-ahd')) return 'دعاء العهد';
+  if (value.contains('dua-iftitah') || value.contains('du-a-iftitah')) return 'دعاء الافتتاح';
+  if (value.contains('dua-tawassul') || value.contains('du-a-tawassul')) return 'دعاء التوسل';
   if (value.startsWith('sahifa-sajjadiya-')) {
-    final number = RegExp(r'(\\d+)  const ShiaTextData({required this.entries, required this.sourceProject, required this.license});
-  final List<ShiaTextEntry> entries;
-  final String sourceProject;
-  final String license;
-  static Future<ShiaTextData>? _cache;
-  static Future<ShiaTextData> load() => _cache ??= _load();
-
-  static Future<ShiaTextData> _load() async {
-    final raw = await rootBundle.loadString('assets/shia_duas/shia_duas.json');
-    final decoded = jsonDecode(raw) as Map<String, dynamic>;
-    final rawEntries = decoded['entries'] as List<dynamic>;
-    final entries = rawEntries.whereType<Map<String, dynamic>>()
-        .map(ShiaTextEntry.fromJson)
-        .where((entry) => entry.lines.any((line) => line.isArabic && line.text.trim().isNotEmpty))
-        .toList();
-
-    // Merge the Arabic Mafatih content into the appropriate library categories.
-    // There is no separate "Mafatih al-Jinan" destination in the app; each text
-    // retains its exact chapter/section/article breadcrumb as a source citation.
-    final mafatih = await MafatihData.load();
-    final seen = <String>{
-      for (final entry in entries)
-        _normalize('${entry.category}|${entry.displayTitle}|${entry.arabicText}'),
-    };
-    var importedCount = 0;
-    for (final chapter in mafatih.chapters) {
-      for (final section in chapter.sections) {
-        for (final article in section.articles) {
-          final searchable = '${chapter.title} ${section.title} ${article.title} '
-              '${article.items.map((item) => plainMafatihText(item.content)).where((text) => text.isNotEmpty).take(3).join(' ')}';
-          final category = _categoryForMafatih(mafatihCategoryFor(searchable));
-          final lines = article.items
-              .where((item) => isArabicMafatihRecitation(item.content))
-              .map((item) => ShiaTextLine(
-                    index: 0,
-                    kind: 'arabic',
-                    text: plainMafatihText(item.content),
-                  ))
-              .where((line) => line.text.trim().isNotEmpty)
-              .toList(growable: false);
-          if (lines.isEmpty) continue;
-
-          final title = article.title.trim().isEmpty ? 'نص عربي من مفاتيح الجنان' : article.title.trim();
-          final arabicText = lines.map((line) => line.text).join('\n');
-          final dedupeKey = _normalize('$category|$title|$arabicText');
-          if (!seen.add(dedupeKey)) continue;
-
-          entries.add(ShiaTextEntry(
-            slug: 'mafatih-${chapter.id}-${section.id}-${article.id}',
-            title: title,
-            alternateName: '',
-            type: 'mafatih',
-            sourceUrl: '',
-            sourceLabel: 'مفاتيح الجنان، ${chapter.title}، ${section.title}، ${article.title}',
-            categoryOverride: category,
-            lines: lines,
-          ));
-          importedCount++;
-        }
-      }
-    }
-
-    if (entries.isEmpty || importedCount == 0) {
-      throw const FormatException('Arabic supplication library is empty or the Mafatih merge produced no readable entries.');
-    }
-    final metadata = decoded['metadata'] as Map<String, dynamic>? ?? const <String, dynamic>{};
-    return ShiaTextData(
-      entries: entries,
-      sourceProject: 'مكتبة الأدعية والزيارات العربية',
-      license: 'تراخيص متعددة بحسب مصدر كل نص',
-    );
+    final number = int.tryParse(value.split('-').last);
+    return number == null ? 'الصحيفة السجادية' : 'الصحيفة السجادية — الدعاء رقم $number';
   }
-
-  static String _categoryForMafatih(String sourceCategory) => switch (sourceCategory) {
-    'أدعية الصباح' => 'أدعية الصباح',
-    'أدعية المساء' => 'أدعية المساء',
-    'أذكار مشتركة' => 'الأذكار المشتركة',
-    'الزيارات' => 'الزيارات',
-    'تعقيبات' => 'تعقيبات الصلوات',
-    'أدعية الأيام' => 'أدعية الأيام',
-    'الأعمال اليومية والمناسبات' => 'الأعمال اليومية والمناسبات',
-    'الأعمال الشهرية والمناسبات' => 'الأعمال الشهرية والمناسبات',
-    'أدعية صاحب الزمان' => 'أدعية صاحب الزمان',
-    'أدعية الحاجات والشفاء' => 'أدعية الحاجات والشفاء',
-    'أدعية الأشهر والمناسبات' => 'أدعية الأشهر والمناسبات',
-    'المناجيات الخمس عشرة' => 'المناجيات الخمس عشرة',
-    'الصحيفة السجادية' => 'الصحيفة السجادية',
-    _ => 'أدعية عامة',
-  };
+  if (value.contains('ziyarat') || value.contains('ziyarah') || type.toLowerCase().contains('ziyara')) return 'زيارة';
+  if (value.contains('sahifa')) return 'الصحيفة السجادية';
+  return 'دعاء';
 }
 
 class ShiaTextData {

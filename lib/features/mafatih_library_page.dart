@@ -234,7 +234,6 @@ class MafatihArticlePage extends StatefulWidget {
 
 class _MafatihArticlePageState extends State<MafatihArticlePage> {
   double _fontSize = 22;
-  String _language = 'العربي';
   bool _focusMode = false;
 
   Future<void> _toggleFocusMode() async {
@@ -249,20 +248,25 @@ class _MafatihArticlePageState extends State<MafatihArticlePage> {
     super.dispose();
   }
 
-  bool _looksPersian(String text) => RegExp(r'[پچژگ]').hasMatch(text);
+  bool _looksPersian(String text) => RegExp(r'[پچژگک]').hasMatch(text);
+
+  bool _isArabicRecitationType(String type) {
+    final normalized = type.trim().toLowerCase();
+    return normalized == 'text' || normalized == 'arabic' || normalized == 'arabictext' || normalized == 'arabic_text';
+  }
+
+  String _arabicSafeTitle(String title, String fallback) => _looksPersian(title) ? fallback : title;
 
   @override Widget build(BuildContext context) {
-    final allChunks = widget.article.items.map((item) => (type: item.type, text: _plainText(item.content))).where((item) => item.text.trim().isNotEmpty).toList();
-    final chunks = allChunks.where((item) {
-      final persian = _looksPersian(item.text);
-      if (_language == 'الفارسي') return persian;
-      if (_language == 'النص الكامل') return true;
-      return !persian;
-    }).toList();
+    final chunks = widget.article.items
+        .where((item) => _isArabicRecitationType(item.type))
+        .map((item) => (type: item.type, text: _plainText(item.content)))
+        .where((item) => item.text.trim().isNotEmpty && !_looksPersian(item.text))
+        .toList();
     final wholeText = chunks.map((item) => item.text).join('\n\n');
     return Scaffold(
       appBar: _focusMode ? null : AppBar(
-        title: Text(widget.article.title, maxLines: 2, overflow: TextOverflow.ellipsis),
+        title: Text(_arabicSafeTitle(widget.article.title, 'نص عربي من مفاتيح الجنان'), maxLines: 2, overflow: TextOverflow.ellipsis),
         actions: [
           IconButton(
             tooltip: 'وضع القراءة الخاشعة',
@@ -285,13 +289,6 @@ class _MafatihArticlePageState extends State<MafatihArticlePage> {
         if (!_focusMode) Padding(
           padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
           child: Column(children: [
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(children: ['العربي', 'الفارسي', 'النص الكامل'].map((choice) => Padding(
-                padding: const EdgeInsetsDirectional.only(end: 7),
-                child: ChoiceChip(label: Text(choice), selected: _language == choice, onSelected: (_) => setState(() => _language = choice)),
-              )).toList()),
-            ),
             Row(children: [
             const Icon(Icons.text_fields_rounded, color: _mfGold),
             Expanded(child: Slider(value: _fontSize, min: 16, max: 34, divisions: 9, label: _fontSize.round().toString(), onChanged: (value) => setState(() => _fontSize = value), activeColor: _mfGold)),
@@ -308,7 +305,7 @@ class _MafatihArticlePageState extends State<MafatihArticlePage> {
                   margin: const EdgeInsets.only(bottom: 18),
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(color: _mfPanel, borderRadius: BorderRadius.circular(18), border: Border.all(color: _mfGold.withValues(alpha: .3))),
-                  child: Text(widget.article.title, textAlign: TextAlign.center, style: const TextStyle(color: _mfGold, fontSize: 23, fontWeight: FontWeight.w800, height: 1.7)),
+                  child: Text(_arabicSafeTitle(widget.article.title, 'نص عربي من مفاتيح الجنان'), textAlign: TextAlign.center, style: const TextStyle(color: _mfGold, fontSize: 23, fontWeight: FontWeight.w800, height: 1.7)),
                 ),
                 ...chunks.map((chunk) {
                   final label = chunk.type.toLowerCase();

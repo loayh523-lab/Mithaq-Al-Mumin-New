@@ -156,8 +156,17 @@ void main() {
       lines: <ShiaTextLine>[],
     );
     expect(sahifaMunajat.category, 'الصحيفة السجادية');
-    expect(fridayArafah.category, 'أدعية المناسبات');
+    expect(fridayArafah.category, 'أدعية الأشهر والمناسبات');
     expect(munajat.category, 'المناجيات الخمس عشرة');
+  });
+
+  test('prayer times are displayed in a readable 12-hour Arabic format', () {
+    expect(formatPrayerTime12Hour('00:05'), '12:05 ص');
+    expect(formatPrayerTime12Hour('08:15'), '8:15 ص');
+    expect(formatPrayerTime12Hour('12:07'), '12:07 م');
+    expect(formatPrayerTime12Hour('13:09'), '1:09 م');
+    expect(formatPrayerTime12Hour('23:59'), '11:59 م');
+    expect(formatPrayerTime12Hour('not-a-time'), 'not-a-time');
   });
 
   test('Hijri civil conversion matches the expected date for 20 October 2026', () {
@@ -179,6 +188,13 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('إمساكية تقديرية — قلعة سكر / العراق'), findsOneWidget);
     expect(find.textContaining('الإمساك/الفجر:'), findsWidgets);
+
+    await tester.tap(find.text('التقويم السنوي'));
+    await tester.pumpAndSettle();
+    expect(find.text('التقويم السنوي ${DateTime.now().year}'), findsOneWidget);
+    await tester.tap(find.text('كانون الثاني'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('1 كانون الثاني ${DateTime.now().year} م'), findsOneWidget);
   });
 
   testWidgets('surah reader opens its bundled text without internet', (tester) async {

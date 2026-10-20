@@ -5,7 +5,6 @@ import 'package:mithaq_al_mumin/main.dart';
 import 'package:mithaq_al_mumin/quran/quran_pages.dart';
 import 'package:mithaq_al_mumin/features/prayer_calendar_page.dart';
 import 'package:mithaq_al_mumin/features/mafatih_library_page.dart';
-import 'package:mithaq_al_mumin/quran/quran_pages.dart' show QuranSearchPage, QuranBookmarksPage;
 
 void main() {
   setUp(() {

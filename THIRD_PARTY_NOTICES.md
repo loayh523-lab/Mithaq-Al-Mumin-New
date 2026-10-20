@@ -33,3 +33,13 @@ Keep upstream notices with redistributed source/builds. This project does not cl
 - The script validates and packages 72 source entries, retaining Arabic lines and accompanying transliteration/translation where present, plus the source URL per item, into `assets/shia_duas/shia_duas.json`.
 - The package currently includes the listed Sahifa Sajjadiya entries from the source index. This should not be misrepresented as a critical-edition verification of every variant; source links remain visible in the reader.
 - A copy of the source repository's CC0 notice is included at [licenses/SHIA_LIBRARY_CC0_1.0.txt](licenses/SHIA_LIBRARY_CC0_1.0.txt).
+
+ 
+## Nahj al-Balagha
+
+- Source project: [saber13812002/application-nahj-al-balaghah](https://github.com/saber13812002/application-nahj-al-balaghah).
+- Source database: `nahj-sqlite.db`, table `nahj`; categories 1, 2, and 3 are used for sermons, letters, and maxims.
+- Build step: `python3 tool/prepare_nahj.py`.
+- The generated offline catalogue is written to `assets/nahj/nahj.json`.
+- The upstream project is licensed under MIT. A copy of the license and attribution is included at [licenses/NAHJ_MIT_LICENSE.txt](licenses/NAHJ_MIT_LICENSE.txt).
+- Numbering and wording can vary across editions; the app keeps the source's wording and flags the need to compare critical quotations against a named printed edition.

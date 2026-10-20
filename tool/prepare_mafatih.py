@@ -180,10 +180,42 @@ def main() -> None:
             "article": f"نص رقم {index} ضمن {parent or 'مفاتيح الجنان'}",
         }.get(kind, f"نص رقم {index} من مفاتيح الجنان")
 
+    def classify_mafatih_category(value: str) -> str:
+        """Classify an entry using its original source context before its heading is translated."""
+        text = normalize_arabic_script(value).lower()
+        if re.search(r"زيارة|زيارت|زيارات|ziyarat|ziyarah", text):
+            return "الزيارات"
+        if re.search(r"الصحيفة السجادية|صحيفة سجادية|sahifa sajjadiya", text):
+            return "الصحيفة السجادية"
+        if re.search(r"مناجاة|مناجات|munajat", text):
+            return "المناجيات الخمس عشرة"
+        if re.search(r"الإمام المهدي|الامام المهدي|صاحب الزمان|الحجة|دعاء العهد|دعاء الندبة|استغاثة بالحجة|دعاء الفرج|mahdi|sahib.?al.?zaman|nudba|faraj|ghayba", text):
+            return "أدعية صاحب الزمان"
+        if re.search(r"الصباح.{0,28}المساء|المساء.{0,28}الصباح|صبح.{0,24}شام|شام.{0,24}صبح|صباح.{0,24}مساء|مساء.{0,24}صباح|morning.{0,24}evening|evening.{0,24}morning", text):
+            return "الأذكار المشتركة"
+        if re.search(r"أذكار الصباح|دعاء الصباح|الصباح|الصبح|طلوع الشمس|طلوع آفتاب|هنگام طلوع|صبحگاه|الفجر|sabah|asbah|morning|sunrise", text):
+            return "أدعية الصباح"
+        if re.search(r"أذكار المساء|دعاء المساء|المساء|عشية|غروب الشمس|غروب آفتاب|هنگام غروب|شامگاه|قبل الغروب|عند الغروب|صلاة المغرب|تعقيب المغرب|masa|amsa|evening|sunset", text):
+            return "أدعية المساء"
+        if re.search(r"أعمال.{0,30}(اليوم|ليلة|يوم|روز|شب)|اعمال.{0,30}(اليوم|ليلة|يوم|روز|شب)|الأعمال اليومية|الاعمال اليومية|عمل ليلة|عمل يوم|daily deeds|amal.?al.?yawm", text):
+            return "الأعمال اليومية والمناسبات"
+        if re.search(r"أعمال.{0,30}(الشهر|الأشهر|أشهر|ماه|رجب|رمضان|شعبان)|اعمال.{0,30}(الشهر|الأشهر|أشهر|ماه|رجب|رمضان|شعبان)|الأعمال الشهرية|monthly deeds", text):
+            return "الأعمال الشهرية والمناسبات"
+        if re.search(r"تعقيبات|تعقيب الصلاة|تعقيب الفجر|تعقيب الظهر|تعقيب العصر|تعقيب المغرب|تعقيب العشاء|taqibat|ta'qib", text):
+            return "تعقيبات"
+        if re.search(r"دعاء الأحد|دعاء الاثنين|دعاء الثلاثاء|دعاء الأربعاء|دعاء الخميس|دعاء الجمعة|دعاء السبت|دعاء يوم|أدعية يوم|روزهای هفته|روز جمعه|روز شنبه|روز یکشنبه|روز دوشنبه|روز سه|روز چهارشنبه|روز پنجشنبه|sunday|monday|tuesday|wednesday|thursday|friday|saturday|days of the week", text):
+            return "أدعية الأيام"
+        if re.search(r"الشفاء|العافية|الرزق|قضاء الدين|تفريج الهم|الكرب|الحوائج|المرض|المريض|shifa|rizq|hajat|hawaij", text):
+            return "أدعية الحاجات والشفاء"
+        if re.search(r"رمضان|رجب|شعبان|ذي الحجة|ذي القعدة|شوال|محرم|صفر|ليلة القدر|عرفة|العيد|مباهلة|ramadan|rajab|shaaban|arafah|eid|mubahala", text):
+            return "أدعية الأشهر والمناسبات"
+        return "أدعية عامة"
+
     for cidx, chapter in enumerate(source):
         if not isinstance(chapter, dict) or not isinstance(chapter.get("title"), str):
             raise SystemExit(f"Invalid Mafatih chapter at index {cidx}.")
-        chapter_title = arabic_title(chapter["title"], "chapter", cidx + 1)
+        raw_chapter_title = chapter["title"]
+        chapter_title = arabic_title(raw_chapter_title, "chapter", cidx + 1)
         if cidx < len(arabic_chapter_titles) and chapter_title.startswith("الباب رقم "):
             chapter_title = arabic_chapter_titles[cidx]
         chapter["title"] = chapter_title
@@ -194,7 +226,8 @@ def main() -> None:
         for sidx, section in enumerate(sections):
             if not isinstance(section, dict) or not isinstance(section.get("title"), str):
                 raise SystemExit(f"Invalid section {sidx} in chapter {cidx}.")
-            section["title"] = arabic_title(section["title"], "section", sidx + 1, chapter["title"])
+            raw_section_title = section["title"]
+            section["title"] = arabic_title(raw_section_title, "section", sidx + 1, chapter["title"])
             articles = section.get("articles")
             if not isinstance(articles, list):
                 raise SystemExit(f"Section {sidx} in chapter {cidx} has no articles list.")
@@ -202,7 +235,8 @@ def main() -> None:
             for aidx, article in enumerate(articles):
                 if not isinstance(article, dict) or not isinstance(article.get("title"), str):
                     raise SystemExit(f"Invalid article {aidx} in chapter {cidx}, section {sidx}.")
-                article["title"] = arabic_title(article["title"], "article", aidx + 1, section["title"])
+                raw_article_title = article["title"]
+                article["title"] = arabic_title(raw_article_title, "article", aidx + 1, section["title"])
                 items = article.get("items")
                 if not isinstance(items, list):
                     raise SystemExit(f"Article {aidx} does not have an items list.")
@@ -227,6 +261,14 @@ def main() -> None:
                     item["content"] = item_content
                     arabic_items.append(item)
                 article["items"] = arabic_items
+                source_text = " ".join(
+                    item.get("content", "")
+                    for item in items
+                    if isinstance(item, dict) and isinstance(item.get("content", ""), str)
+                )
+                article["category"] = classify_mafatih_category(
+                    f"{raw_chapter_title} {raw_section_title} {raw_article_title} {source_text}"
+                )
 
             # Do not ship article cards that contain no Arabic recitation; they would open blank.
             section["articles"] = [article for article in articles if article.get("items")]

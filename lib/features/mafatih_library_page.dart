@@ -183,6 +183,132 @@ class _MafatihLibraryPageState extends State<MafatihLibraryPage> {
   );
 }
 
+String _mafatihCategoryFor(String value) {
+  final text = _normalizeTitle(value);
+  if (RegExp(r'زيارة|زيارات|ziyarat|ziyarah').hasMatch(text)) return 'الزيارات';
+  if (RegExp(r'الصحيفة السجادية|صحيفة سجادية|sahifa sajjadiya').hasMatch(text)) return 'الصحيفة السجادية';
+  if (RegExp(r'مناجاة|munajat').hasMatch(text)) return 'المناجيات الخمس عشرة';
+  if (RegExp(r'الإمام المهدي|الامام المهدي|صاحب الزمان|الحجة|دعاء العهد|دعاء الندبة|الاستغاثة بالحجة|دعاء الفرج|mahdi|sahib al zaman|nudba|faraj|ghayba').hasMatch(text)) return 'أدعية صاحب الزمان';
+  if (RegExp(r'أذكار الصباح|أذكار المساء|دعاء الصباح|دعاء المساء|morning|evening|sabah|masa').hasMatch(text)) return 'أدعية الصباح والمساء';
+  if (RegExp(r'تعقيبات|تعقيب الصلاة|تعقيب الفجر|تعقيب الظهر|تعقيب العصر|تعقيب المغرب|تعقيب العشاء|taqibat').hasMatch(text)) return 'تعقيبات';
+  if (RegExp(r'دعاء الأحد|دعاء الاثنين|دعاء الثلاثاء|دعاء الأربعاء|دعاء الخميس|دعاء الجمعة|دعاء السبت|دعوات أيام الأسبوع|sunday|monday|tuesday|wednesday|thursday|friday|saturday').hasMatch(text)) return 'أدعية الأيام';
+  if (RegExp(r'رمضان|رجب|شعبان|ذي الحجة|ذي القعدة|شوال|محرم|صفر|ليلة القدر|عرفة|العيد|مباهلة|ramadan|rajab|shaaban|arafah|eid|mubahala').hasMatch(text)) return 'أدعية الأشهر والمناسبات';
+  if (RegExp(r'الشفاء|العافية|الرزق|قضاء الدين|تفريج الهم|الكرب|الحوائج|المرض|المريض|shifa|rizq|hajat|hawaij').hasMatch(text)) return 'أدعية الحاجات والشفاء';
+  return 'أدعية عامة';
+}
+
+class MafatihCategoryPage extends StatefulWidget {
+  const MafatihCategoryPage({super.key, required this.initialCategory});
+  final String initialCategory;
+  @override
+  State<MafatihCategoryPage> createState() => _MafatihCategoryPageState();
+}
+
+class _MafatihCategoryPageState extends State<MafatihCategoryPage> {
+  late Future<MafatihData> _future;
+
+  @override
+  void initState() {
+    super.initState();
+    _future = MafatihData.load();
+  }
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: Text(widget.initialCategory)),
+    body: FutureBuilder<MafatihData>(
+      future: _future,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return _error('تعذّر تحميل النصوص من مكتبة مفاتيح الجنان.', () {
+            setState(() { MafatihData._cache = null; _future = MafatihData.load(); });
+          });
+        }
+        if (!snapshot.hasData) {
+          return const Center(child: CircularProgressIndicator(color: _mfGold));
+        }
+        final hits = <_MafatihSearchHit>[];
+        for (final chapter in snapshot.data!.chapters) {
+          for (final section in chapter.sections) {
+            for (final article in section.articles) {
+              final contentHead = article.items
+                  .map((item) => _plainText(item.content))
+                  .where((text) => text.isNotEmpty)
+                  .take(3)
+                  .join(' ');
+              final searchable = '${article.title} ${section.title} ${chapter.title} ${contentHead}';
+              if (_mafatihCategoryFor(searchable) == widget.initialCategory) {
+                hits.add(_MafatihSearchHit(chapter: chapter, section: section, article: article));
+              }
+            }
+          }
+        }
+        final orderedHits = hits.toList()
+          ..sort((a, b) => _normalizeTitle(a.article.title).compareTo(_normalizeTitle(b.article.title)));
+        return Column(children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: _mfPanel,
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(color: _mfGold.withValues(alpha: .25)),
+              ),
+              child: Text(
+                '${orderedHits.length} نصاً مصنفاً من مكتبة مفاتيح الجنان. أسماء النصوص المعروضة مأخوذة من المصدر، وقد تختلف بعض العناوين بين الطبعات.',
+                style: const TextStyle(color: _mfMuted, height: 1.6),
+              ),
+            ),
+          ),
+          Expanded(
+            child: orderedHits.isEmpty
+                ? Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: Column(mainAxisSize: MainAxisSize.min, children: [
+                        const Icon(Icons.menu_book_outlined, color: _mfGold, size: 40),
+                        const SizedBox(height: 10),
+                        const Text('ما لقينا عنواناً مطابقاً في التصنيف، لذلك ما راح نعرض نصاً منسوباً خطأً لهذا القسم.', textAlign: TextAlign.center, style: TextStyle(color: _mfMuted, height: 1.6)),
+                        const SizedBox(height: 14),
+                        FilledButton.icon(
+                          onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
+                            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihLibraryPage()),
+                          )),
+                          icon: const Icon(Icons.menu_book_rounded),
+                          label: const Text('تصفح جميع أبواب مفاتيح الجنان'),
+                        ),
+                      ]),
+                    ),
+                  )
+                : ListView.separated(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+                    itemCount: orderedHits.length,
+                    separatorBuilder: (_, __) => const SizedBox(height: 7),
+                    itemBuilder: (context, index) {
+                      final hit = orderedHits[index];
+                      return Card(
+                        color: _mfPanel,
+                        child: ListTile(
+                          leading: const Icon(Icons.auto_stories_rounded, color: _mfGold),
+                          title: Text(_arabicOnlyTitle(hit.article.title, 'نص عربي رقم ${hit.article.id}'), style: const TextStyle(fontWeight: FontWeight.bold)),
+                          subtitle: Text('${_arabicOnlyTitle(hit.chapter.title, 'باب من مفاتيح الجنان')} • ${_arabicOnlyTitle(hit.section.title, 'قسم من الكتاب')}', style: const TextStyle(color: _mfMuted, height: 1.5)),
+                          trailing: const Icon(Icons.chevron_left_rounded, color: _mfGold),
+                          onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+                            builder: (_) => Directionality(textDirection: TextDirection.rtl, child: MafatihArticlePage(article: hit.article)),
+                          )),
+                        ),
+                      );
+                    },
+                  ),
+          ),
+        ]);
+      },
+    ),
+  );
+}
+
 class MafatihSectionsPage extends StatelessWidget {
   const MafatihSectionsPage({super.key, required this.chapter});
   final MafatihChapter chapter;

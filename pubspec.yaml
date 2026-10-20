@@ -33,7 +33,6 @@ flutter:
   assets:
     - assets/quran/chapters.json
     - assets/quran/uthmani_surahs.json
-    - assets/mafatih/mafatih.json
     - assets/shia_duas/shia_duas.json
     - assets/nahj/nahj.json
     - assets/audio/adhan_persian.ogg

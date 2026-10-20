@@ -230,16 +230,25 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
                         textAlign: TextAlign.center,
                         style: TextStyle(color: _shiaMuted, height: 1.6),
                       ),
-                      if (_category == 'تعقيبات') ...[
-                        const SizedBox(height: 12),
-                        FilledButton.icon(
-                          onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
-                            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihLibraryPage()),
-                          )),
-                          icon: const Icon(Icons.menu_book_rounded),
-                          label: const Text('افتح مفاتيح الجنان'),
-                        ),
-                      ],
+                      const SizedBox(height: 12),
+                      FilledButton.icon(
+                        onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
+                          builder: (_) => Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: MafatihCategoryPage(initialCategory: _category),
+                          ),
+                        )),
+                        icon: const Icon(Icons.menu_book_rounded),
+                        label: Text('ابحث في هذا القسم داخل مفاتيح الجنان'),
+                      ),
+                      const SizedBox(height: 8),
+                      OutlinedButton.icon(
+                        onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
+                          builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihLibraryPage()),
+                        )),
+                        icon: const Icon(Icons.auto_stories_rounded),
+                        label: const Text('تصفح جميع أبواب مفاتيح الجنان'),
+                      ),
                     ]),
                   ),
                 )

@@ -415,7 +415,7 @@ void main() {
     await tester.pumpWidget(const MaterialApp(
       home: Directionality(
         textDirection: TextDirection.rtl,
-        child: SettingsPage(),
+        child: Scaffold(body: SettingsPage()),
       ),
     ));
     await tester.pumpAndSettle();

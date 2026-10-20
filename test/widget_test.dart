@@ -160,6 +160,15 @@ void main() {
     expect(munajat.category, 'المناجيات الخمس عشرة');
   });
 
+  test('Mafatih categories group named Arabic texts', () {
+    expect(mafatihCategoryFor('مناجاة التائبين'), 'المناجيات الخمس عشرة');
+    expect(mafatihCategoryFor('دعاء العهد للإمام المهدي'), 'أدعية صاحب الزمان');
+    expect(mafatihCategoryFor('تعقيبات الصلاة'), 'تعقيبات');
+    expect(mafatihCategoryFor('زيارة عاشوراء'), 'الزيارات');
+    expect(mafatihCategoryFor('دعاء شهر رمضان'), 'أدعية الأشهر والمناسبات');
+    expect(mafatihCategoryFor('دعاء الشفاء للمريض'), 'أدعية الحاجات والشفاء');
+  });
+
   test('prayer times are displayed in a readable 12-hour Arabic format', () {
     expect(formatPrayerTime12Hour('00:05'), '12:05 ص');
     expect(formatPrayerTime12Hour('08:15'), '8:15 ص');

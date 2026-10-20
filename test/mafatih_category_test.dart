@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mithaq_al_mumin/features/mafatih_library_page.dart';
+import 'package:mithaq_al_mumin/data/mafatih_data.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

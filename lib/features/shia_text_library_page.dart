@@ -223,7 +223,7 @@ class ShiaTextData {
             alternateName: '',
             type: 'mafatih',
             sourceUrl: '',
-            sourceLabel: 'مفاتيح الجنان، ${chapter.title}، ${section.title}، ${article.title}',
+            sourceLabel: 'مفاتيح الجنان، باب: ${chapter.title}، فصل: ${section.title}، عنوان النص: ${article.title}',
             categoryOverride: category,
             lines: lines,
           ));

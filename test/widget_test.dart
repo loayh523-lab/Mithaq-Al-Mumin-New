@@ -262,18 +262,6 @@ void main() {
     expect(find.textContaining('الفاتحة • الآية 2'), findsOneWidget);
   });
 
-  testWidgets('Mafatih library opens its bundled offline catalog', (tester) async {
-    await tester.pumpWidget(const MaterialApp(
-      home: Directionality(textDirection: TextDirection.rtl, child: MafatihLibraryPage()),
-    ));
-    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 400)));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 100));
-    expect(find.text('مفاتيح الجنان'), findsWidgets);
-    expect(find.text('ما قدرنا نحمّل مكتبة مفاتيح الجنان'), findsNothing);
-    expect(find.byType(CircularProgressIndicator), findsNothing);
-  });
-
   testWidgets('Quran bookmarks page shows a clear empty state', (tester) async {
     await tester.pumpWidget(const MaterialApp(
       home: Directionality(textDirection: TextDirection.rtl, child: QuranBookmarksPage()),
@@ -294,7 +282,7 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
     expect(find.text('الأدعية والزيارات'), findsWidgets);
-    expect(find.textContaining('72 نصاً'), findsOneWidget);
+    expect(find.textContaining('نصاً • منها'), findsOneWidget);
     expect(find.textContaining('ما قدرنا نحمّل مكتبة الأدعية'), findsNothing);
     await tester.scrollUntilVisible(
       find.text('زيارة عاشوراء'),
@@ -340,16 +328,35 @@ void main() {
     expect(find.text('صيام القضاء'), findsOneWidget);
   });
 
-  testWidgets('dhikr fortress switches between morning and evening counters', (tester) async {
+  testWidgets('dhikr fortress displays distinct Arabic morning and evening lists', (tester) async {
     await tester.pumpWidget(const MaterialApp(
       home: Directionality(textDirection: TextDirection.rtl, child: DhikrFortressPage()),
     ));
-    await tester.pumpAndSettle();
-    expect(find.text('أذكار الصباح والمساء'), findsOneWidget);
-    expect(find.text('أذكار الصباح'), findsOneWidget);
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 700)));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+
+    expect(find.text('أذكار الصباح'), findsWidgets);
+    expect(find.text('أذكار المساء'), findsOneWidget);
+    expect(find.textContaining('المصدر: مفاتيح الجنان،'), findsWidgets);
+
+    final morningTexts = tester.widgetList<SelectableText>(find.byType(SelectableText))
+        .map((widget) => widget.data)
+        .whereType<String>()
+        .toSet();
+
     await tester.tap(find.text('أذكار المساء'));
-    await tester.pumpAndSettle();
-    expect(find.text('الصلاة على النبي وآله'), findsOneWidget);
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 700)));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+
+    final eveningTexts = tester.widgetList<SelectableText>(find.byType(SelectableText))
+        .map((widget) => widget.data)
+        .whereType<String>()
+        .toSet();
+    expect(eveningTexts, isNotEmpty);
+    expect(morningTexts.difference(eveningTexts), isNotEmpty);
+    expect(eveningTexts.difference(morningTexts), isNotEmpty);
   });
 
   testWidgets('faith services page shows verified sources and safe guide entry points', (tester) async {

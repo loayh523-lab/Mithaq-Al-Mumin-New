@@ -45,6 +45,6 @@ void main() {
     final targetRect = tester.getRect(targetBox);
     expect(targetRect.top, greaterThanOrEqualTo(0));
     expect(targetRect.top, lessThan(tester.view.physicalSize.height));
-    expect(find.text('الفاتحة'), findsAtLeastNWidgets(2));
+    expect(find.text('الفاتحة'), findsOneWidget);
   });
 }

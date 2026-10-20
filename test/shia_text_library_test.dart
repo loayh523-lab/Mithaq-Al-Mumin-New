@@ -4,26 +4,10 @@ import 'package:mithaq_al_mumin/features/shia_text_library_page.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('Mafatih content is merged into the Arabic library, not a separate category', () async {
+  test('Arabic dua and ziyara library has readable content and distinct categories', () async {
     final data = await ShiaTextData.load();
 
     expect(data.entries, isNotEmpty);
-    final mafatihEntries = data.entries
-        .where((entry) => entry.sourceLabel.startsWith('مفاتيح الجنان،'))
-        .toList(growable: false);
-    expect(
-      mafatihEntries,
-      isNotEmpty,
-      reason: 'Imported texts should retain a human-readable citation to the book and actual headings.',
-    );
-    expect(
-      mafatihEntries.every((entry) =>
-          entry.sourceLabel.contains('القسم:') &&
-          RegExp(r'^مفاتيح الجنان، (?:الباب|باب) ').hasMatch(entry.sourceLabel) &&
-          !entry.sourceLabel.contains('باب: الباب')),
-      isTrue,
-      reason: 'Every Mafatih citation should name its chapter and section without duplicating باب.',
-    );
     expect(
       data.entries.any((entry) => entry.category == 'الزيارات'),
       isTrue,
@@ -44,21 +28,48 @@ void main() {
       data.entries.any((entry) => entry.category == 'الأعمال الشهرية والمناسبات'),
       isTrue,
     );
+
+    // Mafatih al-Jinan is intentionally not merged into the library while its
+    // complete Arabic edition is being prepared for the user's review.
     expect(
-      data.entries.any((entry) => entry.category == 'مفاتيح الجنان'),
+      data.entries.any((entry) => entry.sourceLabel.startsWith('مفاتيح الجنان،')),
       isFalse,
-      reason: 'The book title is a source citation, never a library category.',
+      reason: 'Do not silently merge Mafatih content before the Arabic source is reviewed.',
     );
     expect(
-      data.entries.where((entry) => entry.sourceLabel.startsWith('مفاتيح الجنان،'))
-          .every((entry) => entry.arabicText.trim().isNotEmpty),
+      data.entries.every((entry) => entry.arabicText.trim().isNotEmpty),
       isTrue,
-      reason: 'Imported entries must not create blank reader pages.',
+      reason: 'Every library entry must have readable Arabic text.',
     );
-    expect(
-      data.entries.every((entry) => !RegExp(r'[A-Za-zپچژگ]').hasMatch(entry.displayTitle)),
-      isTrue,
-      reason: 'Visible entry titles must be Arabic, never English transliteration or Persian-script headings.',
-    );
+
+    for (final entry in data.entries) {
+      expect(
+        RegExp(r'[A-Za-zپچژگ]').hasMatch(entry.displayTitle),
+        isFalse,
+        reason: 'Entry title is not Arabic-only: ${entry.slug}',
+      );
+      expect(
+        containsPersianLanguageMarkers(entry.displayTitle),
+        isFalse,
+        reason: 'Persian-language title marker found: ${entry.slug}',
+      );
+      expect(
+        RegExp(r'[پچژگ]').hasMatch(entry.sourceLabel),
+        isFalse,
+        reason: 'Persian-script source label found: ${entry.slug}',
+      );
+      for (final line in entry.lines.where((line) => line.isArabic)) {
+        expect(
+          RegExp(r'[پچژگ]').hasMatch(line.text),
+          isFalse,
+          reason: 'Persian-script character found in Arabic content: ${entry.slug}, line ${line.index}',
+        );
+        expect(
+          containsPersianLanguageMarkers(line.text),
+          isFalse,
+          reason: 'Persian-language marker found in Arabic content: ${entry.slug}, line ${line.index}',
+        );
+      }
+    }
   });
 }

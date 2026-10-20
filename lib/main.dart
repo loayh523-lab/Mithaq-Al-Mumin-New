@@ -436,6 +436,39 @@ class _MainShellState extends State<MainShell> {
     return '${date.day} ${months[date.month - 1]} ${date.year}';
   }
 
+  Widget _homeQuickTile({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+  }) => Material(
+    color: const Color(0xCC071D16),
+    borderRadius: BorderRadius.circular(16),
+    child: InkWell(
+      borderRadius: BorderRadius.circular(16),
+      onTap: onTap,
+      child: Container(
+        constraints: const BoxConstraints(minHeight: 108),
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: _emerald.withValues(alpha: .62)),
+        ),
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Icon(icon, color: _gold, size: 27),
+          const SizedBox(height: 8),
+          Text(title, textAlign: TextAlign.center, maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 11)),
+          const SizedBox(height: 4),
+          Text(subtitle, textAlign: TextAlign.center, maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(color: _muted, fontSize: 9)),
+        ]),
+      ),
+    ),
+  );
+
   Widget _homePage() {
     final times = SolarPrayerTimes.forDate(
       _now, _prayerCity.latitude, _prayerCity.longitude, 3.0,
@@ -457,47 +490,125 @@ class _MainShellState extends State<MainShell> {
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
       children: [
         Container(
-          padding: const EdgeInsets.all(19),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(24),
-            gradient: const LinearGradient(
-              begin: Alignment.topRight,
-              end: Alignment.bottomLeft,
-              colors: [Color(0xFF1B5943), Color(0xFF103226), Color(0xFF0B211A)],
-            ),
-            border: Border.all(color: _gold.withValues(alpha: .35)),
+          height: 320,
+          clipBehavior: Clip.antiAlias,
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.vertical(bottom: Radius.circular(28)),
           ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+          child: Stack(
+            fit: StackFit.expand,
             children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: _gold.withValues(alpha: .13),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: const Icon(Icons.calendar_month_outlined, color: _gold, size: 26),
-              ),
-              const SizedBox(width: 13),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text('التاريخ الهجري', style: TextStyle(color: _muted, fontSize: 12)),
-                    const SizedBox(height: 5),
-                    Text(
-                      hijriDateLabel(_now, correction: _hijriCorrection),
-                      style: const TextStyle(color: _gold, fontSize: 21, fontWeight: FontWeight.w800, height: 1.5),
+              Image.network(
+                'https://upload.wikimedia.org/wikipedia/commons/e/e1/Imam_Sayyid_Ali_Khamenei_and_Ayatollah_Sayyid_Mojtaba_Khamenei.jpg',
+                fit: BoxFit.cover,
+                alignment: Alignment.topCenter,
+                errorBuilder: (context, error, stackTrace) => const DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topRight,
+                      end: Alignment.bottomLeft,
+                      colors: [Color(0xFF245B42), Color(0xFF071713)],
                     ),
-                    const SizedBox(height: 3),
-                    Text(_gregorianLabel(_now), style: const TextStyle(color: Color(0xFFD0DED6), fontSize: 12)),
-                  ],
+                  ),
                 ),
+              ),
+              const DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    stops: [0.0, .28, .55, 1.0],
+                    colors: [
+                      Color(0x77030B08),
+                      Color(0x22030B08),
+                      Color(0xA8071712),
+                      Color(0xFF071713),
+                    ],
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 16, right: 15, left: 15,
+                child: Row(children: [
+                  Container(
+                    width: 42, height: 42, padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      color: const Color(0xCC06140F),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: _gold.withValues(alpha: .7)),
+                    ),
+                    child: Image.asset(
+                      'assets/branding/mithaq_logo.png',
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) =>
+                        const Icon(Icons.auto_awesome_outlined, color: _gold),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  const Expanded(child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('ميثاق المؤمن', style: TextStyle(color: _gold, fontSize: 20, fontWeight: FontWeight.w900)),
+                      Text('طريقك إلى رضا الله', style: TextStyle(color: Color(0xFFE0E9E2), fontSize: 11)),
+                    ],
+                  )),
+                  IconButton(
+                    tooltip: 'الباحث الذكي',
+                    onPressed: () => _pushPage(const SmartSearchPage()),
+                    icon: const Icon(Icons.search_rounded, color: _gold),
+                  ),
+                ]),
+              ),
+              Positioned(
+                right: 16, left: 16, bottom: 20,
+                child: Column(children: [
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    const Icon(Icons.calendar_month_outlined, color: _gold, size: 24),
+                    const SizedBox(width: 8),
+                    Flexible(child: Text(
+                      hijriDateLabel(_now, correction: _hijriCorrection),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: _gold, fontSize: 23, fontWeight: FontWeight.w900,
+                        shadows: [Shadow(color: Colors.black87, blurRadius: 12)],
+                      ),
+                    )),
+                  ]),
+                  Container(
+                    width: 150, height: 2, margin: const EdgeInsets.symmetric(vertical: 9),
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(colors: [Colors.transparent, _gold, Colors.transparent]),
+                    ),
+                  ),
+                  Text(_gregorianLabel(_now),
+                    style: const TextStyle(color: Color(0xFFE3E9E3), fontSize: 13, fontWeight: FontWeight.w600)),
+                ]),
               ),
             ],
           ),
         ),
+        const SizedBox(height: 12),
+        Row(children: [
+          Expanded(child: _homeQuickTile(
+            icon: Icons.menu_book_rounded, title: 'القرآن الكريم', subtitle: 'اقرأ وتدبّر',
+            onTap: () => setState(() => _selected = 1),
+          )),
+          const SizedBox(width: 7),
+          Expanded(child: _homeQuickTile(
+            icon: Icons.auto_awesome_rounded, title: 'قبس اليوم', subtitle: 'نور في القلب',
+            onTap: () => _pushPage(const ShiaTextLibraryPage()),
+          )),
+          const SizedBox(width: 7),
+          Expanded(child: _homeQuickTile(
+            icon: Icons.checklist_rounded, title: 'عمل اليوم', subtitle: 'خطوة للأفضل',
+            onTap: () => _pushPage(const GoodDeedsPage()),
+          )),
+          const SizedBox(width: 7),
+          Expanded(child: _homeQuickTile(
+            icon: Icons.volunteer_activism_outlined, title: 'الأدعية', subtitle: 'قربًا من الله',
+            onTap: () => setState(() => _selected = 2),
+          )),
+        ]),
         const SizedBox(height: 12),
         Container(
           padding: const EdgeInsets.all(17),

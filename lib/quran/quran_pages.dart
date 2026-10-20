@@ -201,7 +201,7 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
     try {
       final catalog = await _readSurahCatalog();
       final byId = {for (final s in catalog) s.id: s};
-      final chapters = await (_offlineQuranFuture ??= _readBundledQuran());
+      final chapters = await _loadOfflineQuran();
       final hits = <QuranSearchHit>[];
       for (var surahId = 1; surahId <= 114; surahId++) {
         final surah = byId[surahId]!;
@@ -283,7 +283,7 @@ class _QuranBookmarksPageState extends State<QuranBookmarksPage> {
       }
       final catalog = await _readSurahCatalog();
       final byId = {for (final s in catalog) s.id: s};
-      final chapters = await (_offlineQuranFuture ??= _readBundledQuran());
+      final chapters = await _loadOfflineQuran();
       final entries = <QuranSearchHit>[];
       for (final ref in refs) {
         final parts = ref.split(':');
@@ -354,7 +354,18 @@ class _QuranError extends StatelessWidget {
   ));
 }
 
-Future<Map<int, List<String>>>? _offlineQuranFuture;
+Map<int, List<String>>? _offlineQuranCache;
+
+/// Cache only completed reads, never the in-flight Future. If an asynchronous
+/// read is interrupted or fails, later callers can retry instead of awaiting
+/// a permanently pending/failed Future.
+Future<Map<int, List<String>>> _loadOfflineQuran() async {
+  final cached = _offlineQuranCache;
+  if (cached != null) return cached;
+  final loaded = await _readBundledQuran();
+  _offlineQuranCache = loaded;
+  return loaded;
+}
 
 Future<Map<int, List<String>>> _readBundledQuran() async {
   // The Quran JSON is larger than 50 KB. AssetBundle.loadString delegates
@@ -444,7 +455,7 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
   Future<void> _loadVerses() async {
     setState(() { _loading = true; _error = null; });
     try {
-      final chapters = await (_offlineQuranFuture ??= _readBundledQuran());
+      final chapters = await _loadOfflineQuran();
       final verses = chapters[widget.surah.id];
       if (verses == null || verses.length != widget.surah.totalVerses) {
         throw FormatException('Quran asset is missing surah ${widget.surah.id}.');
@@ -452,7 +463,7 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
       if (!mounted) return;
       setState(() { _verses = verses; _loading = false; _error = null; });
     } catch (_) {
-      _offlineQuranFuture = null;
+      _offlineQuranCache = null;
       if (!mounted) return;
       setState(() {
         _loading = false;

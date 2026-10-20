@@ -563,10 +563,6 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
                   const SizedBox(height: 6),
                   SelectableText('المصدر: ${widget.entry.sourceLabel}', textDirection: TextDirection.rtl, style: const TextStyle(color: _shiaGold, fontSize: 11, height: 1.6)),
                 ],
-                if (widget.entry.sourceLabel.isNotEmpty) ...[
-                  const SizedBox(height: 6),
-                  SelectableText('المصدر: ${widget.entry.sourceLabel}', textDirection: TextDirection.rtl, style: const TextStyle(color: _shiaGold, fontSize: 11, height: 1.6)),
-                ],
                 if (widget.entry.sourceUrl.isNotEmpty) ...[
                   const SizedBox(height: 6),
                   SelectableText('رابط المصدر: ${widget.entry.sourceUrl}', textDirection: TextDirection.ltr, style: const TextStyle(color: _shiaMuted, fontSize: 10)),

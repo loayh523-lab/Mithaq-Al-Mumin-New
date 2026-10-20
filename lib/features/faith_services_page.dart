@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'faith_library_pages.dart';
+import 'tafsir_reader_page.dart';
 
 const _faithPanel = Color(0xFF10251E);
 const _faithGold = Color(0xFFD9B66D);
@@ -80,9 +81,14 @@ class FaithServicesPage extends StatelessWidget {
         _ServiceTile(
           icon: Icons.auto_stories_rounded,
           title: 'تفسير القرآن الكريم',
-          description: 'مكتبة إلكترونية لتفسير الميزان باللغة العربية. هذه نسخة خارجية تحتاج اتصالاً؛ لم نضمّن نص التفسير محلياً ولم نختصره من دون مراجعة.',
-          actionLabel: 'فتح تفسير الميزان',
-          onTap: () => openFaithSource(context, _tafsirUrl),
+          description: 'قراءات ومعانٍ إجمالية موجزة داخل التطبيق، مع إمكانية فتح تفسير الميزان الكامل من المصدر الخارجي.',
+          actionLabel: 'قراءة التفسير داخل التطبيق',
+          onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+            builder: (_) => const Directionality(
+              textDirection: TextDirection.rtl,
+              child: TafsirReaderPage(),
+            ),
+          )),
         ),
         _ServiceTile(
           icon: Icons.explore_rounded,

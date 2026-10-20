@@ -17,11 +17,24 @@ String normalizeMafatihArabicText(String value) => value
 bool containsPersianOnlyLetters(String value) =>
     RegExp(r'[پچژگ]').hasMatch(value);
 
+/// True only for Arabic-script recitation text; translations and romanization
+/// are not allowed into the Arabic-only reader.
+bool isArabicMafatihRecitation(String value) {
+  final normalized = normalizeMafatihArabicText(value);
+  return RegExp(r'[\\u0600-\\u06FF]').hasMatch(normalized) &&
+      !RegExp(r'[A-Za-z]').hasMatch(normalized) &&
+      !containsPersianOnlyLetters(normalized);
+}
+
 String _arabicOnlyTitle(Object? value, String fallback) {
   final title = value is String
       ? normalizeMafatihArabicText(value.trim())
       : '';
-  return title.isEmpty || containsPersianOnlyLetters(title) ? fallback : title;
+  return title.isEmpty ||
+      containsPersianOnlyLetters(title) ||
+      RegExp(r'[A-Za-z]').hasMatch(title)
+      ? fallback
+      : title;
 }
 
 class MafatihItem {
@@ -402,7 +415,7 @@ class _MafatihArticlePageState extends State<MafatihArticlePage> {
     final chunks = widget.article.items
         .where((item) => _isArabicRecitationType(item.type))
         .map((item) => (type: item.type, text: _plainText(item.content)))
-        .where((item) => item.text.trim().isNotEmpty && !_looksPersian(item.text))
+        .where((item) => item.text.trim().isNotEmpty && isArabicMafatihRecitation(item.text))
         .toList();
     final wholeText = chunks.map((item) => item.text).join('\n\n');
     return Scaffold(

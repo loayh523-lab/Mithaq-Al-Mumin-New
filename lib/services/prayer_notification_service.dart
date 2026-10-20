@@ -108,7 +108,7 @@ class PrayerNotificationService {
       final earlyAlertEnabled =
           prefs.getBool('prayer_early_alert_enabled') ?? false;
       final earlyAlertMinutes =
-          (prefs.getInt('prayer_early_alert_minutes') ?? 5).clamp(1, 30);
+          (prefs.getInt('prayer_early_alert_minutes') ?? 5).clamp(1, 30).toInt();
       final now = tz.TZDateTime.now(tz.local);
       for (var dayOffset = 0; dayOffset < _daysToSchedule; dayOffset++) {
         final date = DateTime(now.year, now.month, now.day).add(Duration(days: dayOffset));
@@ -178,11 +178,9 @@ class PrayerNotificationService {
       final prayerReminders = scheduled.where((request) =>
         request.id >= _idStart && request.id < _idStart + _daysToSchedule * 10).length;
       if (prayerReminders == 0) {
-        final prefs = await SharedPreferences.getInstance();
         await prefs.setBool('prayer_notifications_enabled', false);
         return false;
       }
-      final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('prayer_notifications_enabled', true);
       return true;
     } catch (error, stackTrace) {

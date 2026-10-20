@@ -911,7 +911,7 @@ class _DuaLibrary extends StatefulWidget {
 class _DuaLibraryState extends State<_DuaLibrary> {
   final _search = TextEditingController();
   String _filter = 'الاستغفار';
-  static const _filters = ['الاستغفار', 'الصلاة على محمد وآل محمد', 'التسبيح'];
+  late final List<String> _filters = dailyDhikr.map((item) => item.title).toList(growable: false);
 
   @override
   void dispose() {

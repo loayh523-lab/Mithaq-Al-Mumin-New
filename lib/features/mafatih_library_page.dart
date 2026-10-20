@@ -6,9 +6,47 @@ const _mfPanel = Color(0xFF10251E);
 const _mfGold = Color(0xFFD9B66D);
 const _mfMuted = Color(0xFF9EB5A9);
 
+/// Converts Persian/Urdu keyboard variants commonly present in Arabic
+/// editions into standard Arabic letter forms without replacing valid titles.
+String normalizeMafatihArabicText(String value) => value
+    .replaceAll('ک', 'ك')
+    .replaceAll('ی', 'ي')
+    .replaceAll('ے', 'ي')
+    .replaceAll('ہ', 'ه');
+
+bool containsPersianOnlyLetters(String value) =>
+    RegExp(r'[پچژگ]').hasMatch(value);
+
+/// Detect common Persian-language words even when all letters are shared
+/// with Arabic and Unicode-range checks alone cannot distinguish the language.
+bool containsPersianLanguageMarkers(String value) {
+  final normalized = normalizeMafatihArabicText(value);
+  final bothForms = '$value $normalized';
+  return RegExp(
+    r'دعای|دعاي|روزهای|روزهاي|روزها|هفته|فارسی|فارسي|برای|براي|میباشد|می شود|ميشود|خواهد شد|نمی|نمي',
+  ).hasMatch(bothForms);
+}
+
+/// True only for Arabic-script recitation text; translations and romanization
+/// are not allowed into the Arabic-only reader.
+bool isArabicMafatihRecitation(String value) {
+  final normalized = normalizeMafatihArabicText(value);
+  return normalized.runes.any((rune) => rune >= 0x0600 && rune <= 0x06FF) &&
+      !RegExp(r'[A-Za-z]').hasMatch(normalized) &&
+      !containsPersianOnlyLetters(normalized) &&
+      !containsPersianLanguageMarkers(value);
+}
+
 String _arabicOnlyTitle(Object? value, String fallback) {
-  final title = value is String ? value.trim() : '';
-  return title.isEmpty || RegExp(r'[پچژگکی]').hasMatch(title) ? fallback : title;
+  final title = value is String
+      ? normalizeMafatihArabicText(value.trim())
+      : '';
+  return title.isEmpty ||
+      containsPersianOnlyLetters(title) ||
+      containsPersianLanguageMarkers(value is String ? value : title) ||
+      RegExp(r'[A-Za-z]').hasMatch(title)
+      ? fallback
+      : title;
 }
 
 class MafatihItem {
@@ -134,7 +172,10 @@ class _MafatihLibraryPageState extends State<MafatihLibraryPage> {
             child: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text('مكتبة أدعية وزيارات', style: TextStyle(color: _mfGold, fontSize: 21, fontWeight: FontWeight.w800)),
               SizedBox(height: 6),
-              Text('نصوص مفاتيح الجنان مضمّنة في نسخة التطبيق؛ تقدر تتصفحها دون إنترنت.', style: TextStyle(color: _mfMuted, height: 1.6)),
+              Text(
+                'النصوص العربية المتاحة مضمّنة في التطبيق وتُقرأ دون إنترنت. تمّت معالجة عرض الحروف واستبعاد الترجمة غير العربية، لكن هذه المجموعة ليست نسخة كاملة محقّقة، ولم تُراجع جميع النصوص على طبعة ورقية محددة.',
+                style: TextStyle(color: _mfMuted, height: 1.6),
+              ),
             ]),
           ),
           Padding(
@@ -378,8 +419,6 @@ class _MafatihArticlePageState extends State<MafatihArticlePage> {
     super.dispose();
   }
 
-  bool _looksPersian(String text) => RegExp(r'[پچژگکی]').hasMatch(text);
-
   bool _isArabicRecitationType(String type) {
     final normalized = type.trim().toLowerCase();
     return normalized == 'text' || normalized == 'arabic' || normalized == 'arabictext' || normalized == 'arabic_text';
@@ -389,7 +428,7 @@ class _MafatihArticlePageState extends State<MafatihArticlePage> {
     final chunks = widget.article.items
         .where((item) => _isArabicRecitationType(item.type))
         .map((item) => (type: item.type, text: _plainText(item.content)))
-        .where((item) => item.text.trim().isNotEmpty && !_looksPersian(item.text))
+        .where((item) => item.text.trim().isNotEmpty && isArabicMafatihRecitation(item.text))
         .toList();
     final wholeText = chunks.map((item) => item.text).join('\n\n');
     return Scaffold(
@@ -551,7 +590,11 @@ String _normalizeTitle(String value) => value
   .toLowerCase()
   .replaceAll(RegExp(r'[\u064B-\u065F\u0670\u0640]'), '')
   .replaceAll(RegExp('[أإآٱ]'), 'ا')
-  .replaceAll('ى', 'ي');
+  .replaceAll('ى', 'ي')
+  .replaceAll('ک', 'ك')
+  .replaceAll('ی', 'ي')
+  .replaceAll('ے', 'ي')
+  .replaceAll('ہ', 'ه');
 
 String _plainText(String value) => value
   .replaceAll(RegExp(r'<br\s*/?>', caseSensitive: false), '\n')
@@ -563,6 +606,10 @@ String _plainText(String value) => value
   .replaceAll('&#39;', "'")
   .replaceAll('&lt;', '<')
   .replaceAll('&gt;', '>')
+  .replaceAll('ک', 'ك')
+  .replaceAll('ی', 'ي')
+  .replaceAll('ے', 'ي')
+  .replaceAll('ہ', 'ه')
   .trim();
 
 Widget _error(String message, VoidCallback retry) => Center(

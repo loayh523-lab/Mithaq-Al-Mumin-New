@@ -173,7 +173,7 @@ class _SettingsPageState extends State<SettingsPage> {
             child: SwitchListTile(
               contentPadding: EdgeInsets.zero,
               title: const Text('إشعارات الصلاة'),
-              subtitle: const Text('تنبيهات محلية للأيام الـ12 القادمة وفق الحساب الفلكي التقديري. لا يتضمن ذلك أذاناً صوتياً، وقد تتأخر الإشعارات بسبب إعدادات توفير الطاقة.', style: TextStyle(color: _settingsMuted, height: 1.5, fontSize: 12)),
+              subtitle: const Text('تذكيرات محلية للأيام الـ12 القادمة مع صوت الأذان. المواقيت الحسابية تقديرية، وقد تتأخر الإشعارات بسبب إعدادات توفير الطاقة.', style: TextStyle(color: _settingsMuted, height: 1.5, fontSize: 12)),
               value: _notificationsEnabled,
               onChanged: _loaded ? _toggleNotifications : null,
               activeThumbColor: _settingsGold,

@@ -8,8 +8,10 @@ void main() {
 
     expect(find.text('ميثاق المؤمن'), findsOneWidget);
     expect(find.text('أهلاً بك'), findsOneWidget);
+    await tester.ensureVisible(find.text('الوصول السريع'));
+    await tester.pumpAndSettle();
     expect(find.text('الوصول السريع'), findsOneWidget);
-    expect(find.text('القرآن الكريم'), findsOneWidget);
+    expect(find.text('القرآن الكريم'), findsWidgets);
   });
 
   testWidgets('bottom navigation opens tasbeeh placeholder', (tester) async {

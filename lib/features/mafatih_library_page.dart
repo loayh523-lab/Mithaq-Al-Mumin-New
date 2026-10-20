@@ -226,13 +226,22 @@ class _MafatihLibraryPageState extends State<MafatihLibraryPage> {
 
 String mafatihCategoryFor(String value) {
   final text = _normalizeTitle(value);
+
+  // Keep visits, Sahifa and special supplication collections ahead of broad matches.
   if (RegExp(r'زيارة|زيارات|ziyarat|ziyarah').hasMatch(text)) return 'الزيارات';
   if (RegExp(r'الصحيفة السجادية|صحيفة سجادية|sahifa sajjadiya').hasMatch(text)) return 'الصحيفة السجادية';
   if (RegExp(r'مناجاة|munajat').hasMatch(text)) return 'المناجيات الخمس عشرة';
   if (RegExp(r'الإمام المهدي|الامام المهدي|صاحب الزمان|الحجة|دعاء العهد|دعاء الندبة|الاستغاثة بالحجة|دعاء الفرج|mahdi|sahib al zaman|nudba|faraj|ghayba').hasMatch(text)) return 'أدعية صاحب الزمان';
-  if (RegExp(r'أذكار الصباح|أذكار المساء|دعاء الصباح|دعاء المساء|morning|evening|sabah|masa').hasMatch(text)) return 'أدعية الصباح والمساء';
-  if (RegExp(r'تعقيبات|تعقيب الصلاة|تعقيب الفجر|تعقيب الظهر|تعقيب العصر|تعقيب المغرب|تعقيب العشاء|taqibat').hasMatch(text)) return 'تعقيبات';
+
+  // Texts explicitly prescribed for both periods live in their own catalogue.
+  if (RegExp(r'الصباح.{0,18}المساء|المساء.{0,18}الصباح|صباحاً ومساءً|صباحا ومساء|صباحاً ومساء|صباحا ومساءً|صباحا ومساءا|morning.{0,18}evening|evening.{0,18}morning').hasMatch(text)) return 'أذكار مشتركة';
+  if (RegExp(r'أذكار الصباح|دعاء الصباح|الصباح|sabah|morning').hasMatch(text)) return 'أدعية الصباح';
+  if (RegExp(r'أذكار المساء|دعاء المساء|المساء|masa|evening').hasMatch(text)) return 'أدعية المساء';
+
+  if (RegExp(r'تعقيبات|تعقيب الصلاة|تعقيب الفجر|تعقيب الظهر|تعقيب العصر|تعقيب المغرب|تعقيب العشاء|taqibat').hasMatch(text)) return 'تعقيبات الصلوات';
   if (RegExp(r'دعاء الأحد|دعاء الاثنين|دعاء الثلاثاء|دعاء الأربعاء|دعاء الخميس|دعاء الجمعة|دعاء السبت|دعوات أيام الأسبوع|sunday|monday|tuesday|wednesday|thursday|friday|saturday').hasMatch(text)) return 'أدعية الأيام';
+  if (RegExp(r'أعمال.{0,22}(اليوم|ليلة|يوم)|اعمال.{0,22}(اليوم|ليلة|يوم)|عمل ليلة|عمل يوم|الأعمال اليومية|الاعمال اليومية|acts of|amal').hasMatch(text)) return 'الأعمال اليومية والمناسبات';
+  if (RegExp(r'أعمال.{0,25}(الشهر|الأشهر|اشهر|رجب|رمضان|شعبان)|اعمال.{0,25}(الشهر|الأشهر|اشهر|رجب|رمضان|شعبان)|عمل شهر|أعمال الأشهر|الاعمال الشهرية').hasMatch(text)) return 'الأعمال الشهرية والمناسبات';
   if (RegExp(r'رمضان|رجب|شعبان|ذي الحجة|ذي القعدة|شوال|محرم|صفر|ليلة القدر|عرفة|العيد|مباهلة|ramadan|rajab|shaaban|arafah|eid|mubahala').hasMatch(text)) return 'أدعية الأشهر والمناسبات';
   if (RegExp(r'الشفاء|العافية|الرزق|قضاء الدين|تفريج الهم|الكرب|الحوائج|المرض|المريض|shifa|rizq|hajat|hawaij').hasMatch(text)) return 'أدعية الحاجات والشفاء';
   return 'أدعية عامة';

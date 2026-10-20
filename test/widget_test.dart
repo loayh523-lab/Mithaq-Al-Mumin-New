@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mithaq_al_mumin/main.dart';
 import 'package:mithaq_al_mumin/quran/quran_pages.dart';
 import 'package:mithaq_al_mumin/features/prayer_calendar_page.dart';
+import 'package:mithaq_al_mumin/quran/quran_pages.dart' show SurahInfo, SurahReaderPage;
 
 void main() {
   setUp(() {
@@ -75,5 +76,28 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('إمساكية تقديرية لقلعة سكر / ذي قار'), findsOneWidget);
     expect(find.textContaining('الإمساك/الفجر:'), findsWidgets);
+  });
+
+  testWidgets('surah reader opens its bundled text without internet', (tester) async {
+    await tester.pumpWidget(const MaterialApp(
+      home: Directionality(
+        textDirection: TextDirection.rtl,
+        child: SurahReaderPage(
+          surah: SurahInfo(
+            id: 1,
+            name: 'الفاتحة',
+            transliteration: 'Al-Faatiha',
+            type: 'meccan',
+            totalVerses: 7,
+          ),
+        ),
+      ),
+    ));
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 250)));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(find.text('الفاتحة'), findsOneWidget);
+    expect(find.textContaining('7 آية'), findsOneWidget);
+    expect(find.textContaining('تعذّر فتح نص القرآن'), findsNothing);
   });
 }

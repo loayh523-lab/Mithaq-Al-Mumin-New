@@ -767,7 +767,7 @@ class _TasbeehPageState extends State<TasbeehPage> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: LinearProgressIndicator(
-                  value: progress.clamp(0.0, 1.0),
+                  value: progress < 0.0 ? 0.0 : (progress > 1.0 ? 1.0 : progress),
                   minHeight: 7,
                   backgroundColor: _panel,
                   color: _gold,

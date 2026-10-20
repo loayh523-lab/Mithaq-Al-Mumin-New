@@ -9,6 +9,36 @@ const _searchPanel = Color(0xFF10251E);
 const _searchGold = Color(0xFFD9B66D);
 const _searchMuted = Color(0xFF9EB5A9);
 
+
+/// Normalize common Arabic writing variants for offline text matching.
+String normalizeSmartSearchText(String value) => value
+    .toLowerCase()
+    .replaceAll(RegExp(r'[\u064B-\u065F\u0670\u0640\u06D6-\u06ED]'), '')
+    .replaceAll(RegExp(r'[أإآٱ]'), 'ا')
+    .replaceAll('ى', 'ي')
+    .replaceAll('ؤ', 'و')
+    .replaceAll('ئ', 'ي')
+    .replaceAll(RegExp(r'\s+'), ' ')
+    .trim();
+
+/// Convert the simple HTML markup in imported religious text to readable text.
+String stripSmartSearchMarkup(String value) => value
+    .replaceAll(RegExp(r'<br\s*/?>', caseSensitive: false), '\n')
+    .replaceAll(
+      RegExp(r'</(p|div|li|h[1-6])\s*>', caseSensitive: false),
+      '\n',
+    )
+    .replaceAll(RegExp(r'<[^>]*>'), '')
+    .replaceAll('&nbsp;', ' ')
+    .replaceAll('&amp;', '&')
+    .replaceAll('&quot;', '"')
+    .replaceAll('&#39;', "'")
+    .replaceAll('&lt;', '<')
+    .replaceAll('&gt;', '>')
+    .replaceAll(RegExp(r'[ \t]*\n[ \t]*'), '\n')
+    .replaceAll(RegExp(r'\n{2,}'), '\n')
+    .trim();
+
 class SmartSearchPage extends StatefulWidget {
   const SmartSearchPage({super.key});
   @override
@@ -40,25 +70,9 @@ class _SmartSearchPageState extends State<SmartSearchPage> {
     super.dispose();
   }
 
-  String _normalize(String value) => value
-      .toLowerCase()
-      .replaceAll(RegExp(r'[\\u064B-\\u065F\\u0670\\u0640\\u06D6-\\u06ED]'), '')
-      .replaceAll(RegExp('[أإآٱ]'), 'ا')
-      .replaceAll('ى', 'ي')
-      .replaceAll('ؤ', 'و')
-      .replaceAll('ئ', 'ي');
+  String _normalize(String value) => normalizeSmartSearchText(value);
 
-  String _plainText(String value) => value
-      .replaceAll(RegExp(r'<br\\s*/?>', caseSensitive: false), '\\n')
-      .replaceAll(RegExp(r'</(p|div|li|h[1-6])\\s*>', caseSensitive: false), '\\n')
-      .replaceAll(RegExp(r'<[^>]*>'), '')
-      .replaceAll('&nbsp;', ' ')
-      .replaceAll('&amp;', '&')
-      .replaceAll('&quot;', '"')
-      .replaceAll('&#39;', "'")
-      .replaceAll('&lt;', '<')
-      .replaceAll('&gt;', '>')
-      .trim();
+  String _plainText(String value) => stripSmartSearchMarkup(value);
 
   Future<void> _search() async {
     final query = _normalize(_controller.text.trim());

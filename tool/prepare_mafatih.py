@@ -61,7 +61,31 @@ def main() -> None:
                     item for item in items
                     if isinstance(item.get("type"), str)
                     and item["type"].strip().lower() in {"text", "arabic", "arabictext", "arabic_text"}
+                    and item.get("content", "").strip()
                 ]
+
+            # Empty articles would appear as broken/blank entries after Persian
+            # translations have been excluded, so remove them from the offline UI.
+            section["articles"] = [article for article in articles if article["items"]]
+
+        # Hide sections and chapters that contain no remaining Arabic recitation.
+        chapter["sections"] = [section for section in sections if section["articles"]]
+
+    source = [chapter for chapter in source if chapter["sections"]]
+    retained_sections = sum(len(chapter["sections"]) for chapter in source)
+    retained_articles = sum(
+        len(section["articles"])
+        for chapter in source
+        for section in chapter["sections"]
+    )
+    retained_items = sum(
+        len(article["items"])
+        for chapter in source
+        for section in chapter["sections"]
+        for article in section["articles"]
+    )
+    if not source:
+        raise SystemExit("No chapters with Arabic recitation remain after filtering.")
 
     result = {
         "metadata": {
@@ -69,7 +93,7 @@ def main() -> None:
             "upstream_project": "aminpaydar/Mafatih",
             "source_url": SOURCE_URL,
             "license": "Apache-2.0 as declared by the upstream repository; see licenses/MAFATIH_APACHE_2.0.txt",
-            "note": "Chapter, section, article and item content is preserved from the upstream JSON.",
+            "note": "Persian translation/explanatory items and any empty article, section or chapter are omitted; retained Arabic source items are otherwise preserved.",
         },
         "chapters": source,
     }
@@ -86,8 +110,10 @@ def main() -> None:
 
     print(
         "Prepared offline Mafatih library: "
-        f"{chapters_checked} chapters, {sections_checked} sections, "
-        f"{articles_checked} articles, {items_checked} text items"
+        f"{len(source)} retained chapters, {retained_sections} retained sections, "
+        f"{retained_articles} retained articles, {retained_items} retained Arabic items "
+        f"(validated {chapters_checked} chapters, {sections_checked} sections, "
+        f"{articles_checked} articles, {items_checked} source items)"
     )
 
 

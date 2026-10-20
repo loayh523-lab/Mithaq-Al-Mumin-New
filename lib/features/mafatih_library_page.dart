@@ -236,7 +236,7 @@ class _MafatihCategoryPageState extends State<MafatihCategoryPage> {
                   .where((text) => text.isNotEmpty)
                   .take(3)
                   .join(' ');
-              final searchable = '${article.title} ${section.title} ${contentHead}';
+              final searchable = '${article.title} ${section.title} $contentHead';
               if (mafatihCategoryFor(searchable) == widget.initialCategory) {
                 hits.add(_MafatihSearchHit(chapter: chapter, section: section, article: article));
               }

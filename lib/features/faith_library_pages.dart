@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -235,65 +236,70 @@ class _FiqhTopicsPageState extends State<FiqhTopicsPage> {
               ),
             ),
         ],
-      ),
-    );
+class NahjEntry {
+  const NahjEntry({
+    required this.id,
+    required this.category,
+    required this.number,
+    required this.title,
+    required this.text,
+  });
+
+  final int id;
+  final int category;
+  final String number;
+  final String title;
+  final String text;
+
+  String get categoryLabel => switch (category) {
+    1 => 'خطب',
+    2 => 'رسائل',
+    3 => 'حِكم',
+    _ => 'نص',
+  };
+
+  factory NahjEntry.fromJson(Map<String, dynamic> json) => NahjEntry(
+    id: json['id'] is int ? json['id'] as int : 0,
+    category: json['category'] is int ? json['category'] as int : 0,
+    number: json['number'] is String ? json['number'] as String : '',
+    title: json['title'] is String ? json['title'] as String : '',
+    text: json['text'] is String ? json['text'] as String : '',
+  );
+}
+
+class NahjData {
+  static Future<List<NahjEntry>> load() async {
+    final raw = await rootBundle.loadString('assets/nahj/nahj.json');
+    final decoded = jsonDecode(raw) as Map<String, dynamic>;
+    final rawEntries = decoded['entries'] as List<dynamic>;
+    final entries = rawEntries
+        .whereType<Map<String, dynamic>>()
+        .map(NahjEntry.fromJson)
+        .where((entry) => entry.text.trim().isNotEmpty)
+        .toList(growable: false);
+    if (entries.length < 500) {
+      throw FormatException('The offline Nahj catalogue appears incomplete: ${entries.length} entries.');
+    }
+    return entries;
   }
 }
 
-class _NahjWisdom {
-  const _NahjWisdom({
-    required this.text,
-    required this.meaning,
-    required this.sourceUrl,
-  });
-
-  final String text;
-  final String meaning;
-  final String sourceUrl;
-}
-
-const _nahjWisdoms = <_NahjWisdom>[
-  _NahjWisdom(
-    text: 'قِيمَةُ كُلِّ امْرِئٍ مَا يُحْسِنُهُ',
-    meaning: 'قيمة الإنسان فيما يتقنه من علم وعمل وخُلُق، لا في اسمه أو ماله وحدهما.',
-    sourceUrl: 'https://www.inahj.org/shortresearchwisdomstring/3061',
-  ),
-  _NahjWisdom(
-    text: 'النَّاسُ أَعْدَاءُ مَا جَهِلُوا',
-    meaning: 'قد يدفع الجهل إلى رفض ما لا نفهمه؛ لذلك نتعلّم ونتثبّت قبل إصدار الأحكام.',
-    sourceUrl: 'https://inahj.org/3387',
-  ),
-  _NahjWisdom(
-    text: 'لِسَانُ العَاقِلِ وَرَاءَ قَلْبِهِ، وَقَلْبُ الأَحْمَقِ وَرَاءَ لِسَانِهِ',
-    meaning: 'العاقل يفكّر قبل أن يتكلم، ولا يترك لسانه يسبقه إلى كلام يندم عليه.',
-    sourceUrl: 'https://inahj.org/2636',
-  ),
-  _NahjWisdom(
-    text: 'إِذَا تَمَّ العَقْلُ نَقَصَ الكَلَامُ',
-    meaning: 'ليس المقصود الصمت دائماً، بل أن يكون الكلام بقدر الحاجة والفائدة.',
-    sourceUrl: 'https://inahj.org/2977',
-  ),
-  _NahjWisdom(
-    text: 'فَقْدُ الأَحِبَّةِ غُرْبَةٌ',
-    meaning: 'فقد الأحبة يجعل الإنسان يشعر بالوحشة حتى لو كان بين الناس.',
-    sourceUrl: 'https://inahj.org/impact/695',
-  ),
-  _NahjWisdom(
-    text: 'الكَلَامُ فِي وَثَاقِكَ مَا لَمْ تَتَكَلَّمْ بِهِ، فَإِذَا تَكَلَّمْتَ بِهِ صِرْتَ فِي وَثَاقِهِ',
-    meaning: 'قبل الكلام تملك اختيارك، وبعده تتحمّل مسؤوليته وآثاره.',
-    sourceUrl: 'https://inahj.org/1089',
-  ),
-  _NahjWisdom(
-    text: 'لَا مَالَ أَعْوَدُ مِنَ العَقْلِ، وَلَا مِيرَاثَ كَالأَدَبِ',
-    meaning: 'العقل والأدب زاد يبقى مع الإنسان وينفعه أكثر من المال العابر.',
-    sourceUrl: 'https://www.inahj.org/articlesandresearch/2071',
-  ),
-  _NahjWisdom(
-    text: 'مَا رَأَيْتُ ظَالِمًا أَشْبَهَ بِمَظْلُومٍ مِنَ الحَاسِدِ',
-    meaning: 'الحسد يؤذي صاحبه قبل أن يؤذي غيره، فلا تجعل نجاح الآخرين سبباً للحقد.',
-    sourceUrl: 'https://inahj.org/559',
-  ),
+const _nahjCategoryOptions = <({int value, String label})>[
+  (value: 0, label: 'الكتاب كله'),
+  (value: 1, label: 'الخطب'),
+  (value: 2, label: 'الرسائل'),
+  (value: 3, label: 'الحِكم'),
 ];
+
+String _nahjSearchKey(String value) => value
+    .toLowerCase()
+    .replaceAll('أ', 'ا')
+    .replaceAll('إ', 'ا')
+    .replaceAll('آ', 'ا')
+    .replaceAll('ى', 'ي')
+    .replaceAll('ة', 'ه')
+    .replaceAll(RegExp(r'[\\u064B-\\u065F\\u0670]'), '')
+    .trim();
 
 class NahjAlBalaghaPage extends StatefulWidget {
   const NahjAlBalaghaPage({super.key});
@@ -303,7 +309,15 @@ class NahjAlBalaghaPage extends StatefulWidget {
 }
 
 class _NahjAlBalaghaPageState extends State<NahjAlBalaghaPage> {
-  final _search = TextEditingController();
+  final TextEditingController _search = TextEditingController();
+  late Future<List<NahjEntry>> _future;
+  int _category = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _future = NahjData.load();
+  }
 
   @override
   void dispose() {
@@ -311,154 +325,332 @@ class _NahjAlBalaghaPageState extends State<NahjAlBalaghaPage> {
     super.dispose();
   }
 
-  Future<void> _openSource(String url) async {
-    try {
-      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-    } catch (_) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('تعذّر فتح المصدر.')),
-        );
-      }
-    }
+  void _retry() {
+    setState(() => _future = NahjData.load());
   }
 
-  Future<void> _copyWisdom(String text) async {
-    await Clipboard.setData(ClipboardData(text: text));
-    if (mounted) {
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(
+      title: const Text('نهج البلاغة'),
+      actions: [
+        IconButton(
+          tooltip: 'إعادة تحميل المكتبة',
+          onPressed: _retry,
+          icon: const Icon(Icons.refresh_rounded),
+        ),
+      ],
+    ),
+    body: FutureBuilder<List<NahjEntry>>(
+      future: _future,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.menu_book_outlined, size: 44, color: _libraryGold),
+                  const SizedBox(height: 12),
+                  const Text(
+                    'تعذّر تحميل مكتبة نهج البلاغة داخل التطبيق.',
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'أعد المحاولة بعد تحديث بيانات التطبيق.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: _libraryMuted, height: 1.6),
+                  ),
+                  const SizedBox(height: 12),
+                  FilledButton.icon(
+                    onPressed: _retry,
+                    icon: const Icon(Icons.refresh_rounded),
+                    label: const Text('إعادة المحاولة'),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+        if (!snapshot.hasData) {
+          return const Center(child: CircularProgressIndicator(color: _libraryGold));
+        }
+
+        final allEntries = snapshot.data!;
+        final query = _nahjSearchKey(_search.text);
+        final visible = allEntries.where((entry) {
+          if (_category != 0 && entry.category != _category) return false;
+          if (query.isEmpty) return true;
+          return _nahjSearchKey(entry.title).contains(query) ||
+              _nahjSearchKey(entry.number).contains(query) ||
+              _nahjSearchKey(entry.text).contains(query);
+        }).toList(growable: false);
+
+        final sermonCount = allEntries.where((entry) => entry.category == 1).length;
+        final letterCount = allEntries.where((entry) => entry.category == 2).length;
+        final wisdomCount = allEntries.where((entry) => entry.category == 3).length;
+
+        return Column(
+          children: [
+            Container(
+              width: double.infinity,
+              margin: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: _libraryPanel,
+                borderRadius: BorderRadius.circular(19),
+                border: Border.all(color: _libraryGold.withValues(alpha: .3)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'مكتبة نهج البلاغة',
+                    style: TextStyle(color: _libraryGold, fontWeight: FontWeight.w800, fontSize: 20),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    'نصوص عربية داخل التطبيق، مع فهرسة وبحث في الخطب والرسائل والحِكم.',
+                    style: const TextStyle(color: _libraryMuted, height: 1.6),
+                  ),
+                  const SizedBox(height: 12),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      _NahjCountChip(label: 'الخطب', count: sermonCount),
+                      _NahjCountChip(label: 'الرسائل', count: letterCount),
+                      _NahjCountChip(label: 'الحِكم', count: wisdomCount),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+              child: TextField(
+                controller: _search,
+                onChanged: (_) => setState(() {}),
+                textDirection: TextDirection.rtl,
+                decoration: InputDecoration(
+                  hintText: 'ابحث في نصوص نهج البلاغة...',
+                  prefixIcon: const Icon(Icons.search_rounded),
+                  filled: true,
+                  fillColor: _libraryPanel,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
+            ),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              child: Row(
+                children: [
+                  for (final option in _nahjCategoryOptions)
+                    Padding(
+                      padding: const EdgeInsetsDirectional.only(end: 8),
+                      child: ChoiceChip(
+                        label: Text(option.label),
+                        selected: _category == option.value,
+                        onSelected: (_) => setState(() => _category = option.value),
+                        selectedColor: _libraryGold.withValues(alpha: .18),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(18, 4, 18, 8),
+              child: Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: Text(
+                  'نتائج البحث: ${visible.length}',
+                  style: const TextStyle(color: _libraryMuted, fontSize: 12),
+                ),
+              ),
+            ),
+            Expanded(
+              child: visible.isEmpty
+                  ? const Center(child: Text('ما لقينا نصاً مطابقاً لهذا البحث.'))
+                  : ListView.separated(
+                      padding: const EdgeInsets.fromLTRB(16, 2, 16, 24),
+                      itemCount: visible.length,
+                      separatorBuilder: (_, __) => const SizedBox(height: 8),
+                      itemBuilder: (context, index) {
+                        final entry = visible[index];
+                        final preview = entry.text.replaceAll(RegExp(r'\\s+'), ' ').trim();
+                        final shortPreview = preview.length > 180 ? '${preview.substring(0, 180)}…' : preview;
+                        return Card(
+                          color: _libraryPanel,
+                          margin: EdgeInsets.zero,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(16),
+                            onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute<void>(
+                                builder: (_) => Directionality(
+                                  textDirection: TextDirection.rtl,
+                                  child: NahjEntryPage(entry: entry),
+                                ),
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(14),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          entry.title.isEmpty ? '${entry.categoryLabel} ${entry.number}' : entry.title,
+                                          style: const TextStyle(color: _libraryGold, fontWeight: FontWeight.w800, fontSize: 16, height: 1.6),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+                                        decoration: BoxDecoration(
+                                          color: _libraryGold.withValues(alpha: .12),
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                        child: Text(
+                                          '${entry.categoryLabel} ${entry.number}',
+                                          style: const TextStyle(color: _libraryGold, fontSize: 11, fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    shortPreview,
+                                    textDirection: TextDirection.rtl,
+                                    style: const TextStyle(color: Colors.white, height: 1.75),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  const Align(
+                                    alignment: AlignmentDirectional.centerStart,
+                                    child: Icon(Icons.chevron_left_rounded, color: _libraryMuted),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+            ),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
+              child: Text(
+                'المصدر: قاعدة بيانات مفتوحة بترخيص MIT. قد يختلف ترقيم بعض النصوص بين الطبعات.',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: _libraryMuted, fontSize: 10, height: 1.5),
+              ),
+            ),
+          ],
+        );
+      },
+    ),
+  );
+}
+
+class _NahjCountChip extends StatelessWidget {
+  const _NahjCountChip({required this.label, required this.count});
+
+  final String label;
+  final int count;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+    decoration: BoxDecoration(
+      color: Colors.black.withValues(alpha: .16),
+      borderRadius: BorderRadius.circular(11),
+    ),
+    child: Text(
+      '$label: $count',
+      style: const TextStyle(color: _libraryMuted, fontSize: 12, fontWeight: FontWeight.w700),
+    ),
+  );
+}
+
+class NahjEntryPage extends StatelessWidget {
+  const NahjEntryPage({super.key, required this.entry});
+
+  final NahjEntry entry;
+
+  Future<void> _copy(BuildContext context) async {
+    await Clipboard.setData(ClipboardData(
+      text: '${entry.title} — ${entry.categoryLabel} ${entry.number}\\n\\n${entry.text}',
+    ));
+    if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('تم نسخ الحكمة')),
+        const SnackBar(content: Text('تم نسخ النص')),
       );
     }
   }
 
   @override
-  Widget build(BuildContext context) {
-    final query = _search.text.trim().toLowerCase();
-    final visible = _nahjWisdoms.where((item) =>
-        query.isEmpty ||
-        item.text.toLowerCase().contains(query) ||
-        item.meaning.toLowerCase().contains(query)).toList();
-
-    return Scaffold(
-      appBar: AppBar(title: const Text('نهج البلاغة والحِكم')),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 26),
-        children: [
-          Container(
-            padding: const EdgeInsets.all(17),
-            decoration: BoxDecoration(
-              color: _libraryPanel,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: _libraryGold.withValues(alpha: .32)),
-            ),
-            child: const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'مختارات من الحكم',
-                  style: TextStyle(
-                    color: _libraryGold,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 21,
-                  ),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  'هذه بداية لمختارات عربية مع شرح مبسّط وروابط توثيق. ليست النسخة الكاملة من نهج البلاغة؛ وقد يختلف ترقيم الحكم بين الطبعات. تحتاج المكتبة الكاملة إلى إدراج نص عربي موثوق ومراجعته.',
-                  style: TextStyle(color: _libraryMuted, height: 1.7),
-                ),
-              ],
-            ),
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(
+      title: Text('${entry.categoryLabel} ${entry.number}'),
+      actions: [
+        IconButton(
+          tooltip: 'نسخ النص',
+          onPressed: () => _copy(context),
+          icon: const Icon(Icons.copy_rounded, color: _libraryGold),
+        ),
+      ],
+    ),
+    body: ListView(
+      padding: const EdgeInsets.fromLTRB(18, 12, 18, 30),
+      children: [
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: _libraryPanel,
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(color: _libraryGold.withValues(alpha: .28)),
           ),
-          const SizedBox(height: 12),
-          TextField(
-            controller: _search,
-            onChanged: (_) => setState(() {}),
-            decoration: InputDecoration(
-              hintText: 'ابحث في الحكم ومعانيها...',
-              prefixIcon: const Icon(Icons.search_rounded),
-              filled: true,
-              fillColor: _libraryPanel,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15),
-                borderSide: BorderSide.none,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                entry.title.isEmpty ? '${entry.categoryLabel} ${entry.number}' : entry.title,
+                style: const TextStyle(color: _libraryGold, fontWeight: FontWeight.w800, fontSize: 19, height: 1.7),
               ),
-            ),
+              const SizedBox(height: 8),
+              Text(
+                '${entry.categoryLabel} ${entry.number}',
+                style: const TextStyle(color: _libraryMuted, fontSize: 12),
+              ),
+            ],
           ),
-          const SizedBox(height: 10),
-          for (var i = 0; i < visible.length; i++)
-            Card(
-              color: _libraryPanel,
-              margin: const EdgeInsets.only(bottom: 10),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CircleAvatar(
-                          backgroundColor: _libraryGold.withValues(alpha: .15),
-                          child: Text(
-                            '${i + 1}',
-                            style: const TextStyle(
-                              color: _libraryGold,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Text(
-                            visible[i].text,
-                            textAlign: TextAlign.right,
-                            style: const TextStyle(
-                              fontSize: 21,
-                              height: 1.9,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      visible[i].meaning,
-                      style: const TextStyle(
-                        color: _libraryMuted,
-                        height: 1.7,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Wrap(
-                      spacing: 8,
-                      children: [
-                        TextButton.icon(
-                          onPressed: () => _copyWisdom(visible[i].text),
-                          icon: const Icon(Icons.copy_rounded, size: 17),
-                          label: const Text('نسخ الحكمة'),
-                        ),
-                        TextButton.icon(
-                          onPressed: () => _openSource(visible[i].sourceUrl),
-                          icon: const Icon(Icons.source_outlined, size: 17),
-                          label: const Text('مصدر النص'),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          if (visible.isEmpty)
-            const Padding(
-              padding: EdgeInsets.all(24),
-              child: Center(child: Text('ما لقينا حكمة مطابقة.')),
-            ),
-        ],
-      ),
-    );
-  }
+        ),
+        const SizedBox(height: 14),
+        SelectableText(
+          entry.text,
+          textDirection: TextDirection.rtl,
+          textAlign: TextAlign.justify,
+          style: const TextStyle(fontSize: 20, height: 2.0, color: Colors.white),
+        ),
+        const SizedBox(height: 20),
+        Align(
+          alignment: AlignmentDirectional.centerStart,
+          child: FilledButton.icon(
+            onPressed: () => _copy(context),
+            icon: const Icon(Icons.copy_rounded),
+            label: const Text('نسخ النص كاملاً'),
+          ),
+        ),
+      ],
+    ),
+  );
 }

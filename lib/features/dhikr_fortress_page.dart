@@ -219,9 +219,9 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
                     const SizedBox(height: 4),
                     TextButton(
                       onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
-                        builder: (_) => const Directionality(
+                        builder: (_) => Directionality(
                           textDirection: TextDirection.rtl,
-                          child: MafatihCategoryPage(initialCategory: 'أدعية الصباح'),
+                          child: MafatihCategoryPage(initialCategory: _sourceCategory),
                         ),
                       )),
                       child: const Text('فتح الفهرس العربي'),

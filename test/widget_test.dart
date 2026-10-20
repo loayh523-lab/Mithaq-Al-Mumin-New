@@ -12,6 +12,7 @@ import 'package:mithaq_al_mumin/features/qada_tracker_page.dart';
 import 'package:mithaq_al_mumin/features/dhikr_fortress_page.dart';
 import 'package:mithaq_al_mumin/features/smart_search_page.dart';
 import 'package:mithaq_al_mumin/features/faith_services_page.dart';
+import 'package:mithaq_al_mumin/features/favorites_page.dart';
 import 'package:mithaq_al_mumin/services/qibla_calculation.dart';
 
 void main() {
@@ -365,6 +366,48 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(find.text('الاستخارة القرآنية — إرشاد شرعي'), findsOneWidget);
+  });
+
+  testWidgets('dua and ziyarat reader saves favorites locally', (tester) async {
+    const entry = ShiaTextEntry(
+      slug: 'test-ziyara-favorite',
+      title: 'زيارة للاختبار',
+      alternateName: '',
+      type: 'ziyara',
+      sourceUrl: '',
+      lines: <ShiaTextLine>[
+        ShiaTextLine(index: 1, kind: 'arabic', text: 'السلام عليكم'),
+      ],
+    );
+    await tester.pumpWidget(const MaterialApp(
+      home: Directionality(
+        textDirection: TextDirection.rtl,
+        child: Scaffold(body: ShiaTextReaderPage(entry: entry)),
+      ),
+    ));
+    await tester.pumpAndSettle();
+    expect(find.byTooltip('إضافة إلى المفضلة'), findsOneWidget);
+    await tester.tap(find.byTooltip('إضافة إلى المفضلة'));
+    await tester.pumpAndSettle();
+    final prefs = await SharedPreferences.getInstance();
+    expect(
+      prefs.getStringList('favorite_shia_text_slugs'),
+      contains('test-ziyara-favorite'),
+    );
+    expect(find.text('أُضيف النص إلى المفضلة المباركة'), findsOneWidget);
+  });
+
+  testWidgets('favorites page provides an offline empty state', (tester) async {
+    await tester.pumpWidget(const MaterialApp(
+      home: Directionality(
+        textDirection: TextDirection.rtl,
+        child: FavoritesPage(),
+      ),
+    ));
+    await tester.pumpAndSettle();
+    expect(find.text('المفضلة المباركة'), findsOneWidget);
+    expect(find.text('مفضلتك فارغة حالياً'), findsOneWidget);
+    expect(find.text('تصفح الأدعية والزيارات'), findsOneWidget);
   });
 
   testWidgets('smart search screen offers cross-library offline search', (tester) async {

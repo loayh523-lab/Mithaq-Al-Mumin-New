@@ -63,12 +63,13 @@ class ShiaTextEntry {
     return RegExp(r'eid|ramadan|arafah|mubahala|mubahilah|laylat|مناسبة|العيد|رمضان|عرفة|مباهلة').hasMatch(value);
   }
   String get category {
+    // Specific text families take priority over broad title heuristics.
     if (isZiyara) return 'الزيارات';
-    if (isDayDua) return 'أدعية الأيام';
-    if (isTaqibat) return 'تعقيبات';
-    if (isMunajat) return 'المناجيات الخمس عشرة';
     if (isSahifa) return 'الصحيفة السجادية';
+    if (isMunajat) return 'المناجيات الخمس عشرة';
     if (isOccasionDua) return 'أدعية المناسبات';
+    if (isTaqibat) return 'تعقيبات';
+    if (isDayDua) return 'أدعية الأيام';
     return 'أدعية عامة';
   }
   String get arabicText => lines.where((line) => line.isArabic).map((line) => line.text).join('\n');

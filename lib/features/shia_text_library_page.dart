@@ -54,11 +54,21 @@ class ShiaTextEntry {
       slug.toLowerCase().contains('taqib') ||
       title.contains('تعقيب') ||
       alternateName.contains('تعقيب');
+  bool get isMunajat =>
+      slug.toLowerCase().contains('munajat') ||
+      title.contains('مناجاة') ||
+      alternateName.contains('مناجاة');
+  bool get isOccasionDua {
+    final value = '${slug.toLowerCase()} $title $alternateName';
+    return RegExp(r'eid|ramadan|arafah|mubahala|mubahilah|laylat|مناسبة|العيد|رمضان|عرفة|مباهلة').hasMatch(value);
+  }
   String get category {
     if (isZiyara) return 'الزيارات';
     if (isDayDua) return 'أدعية الأيام';
     if (isTaqibat) return 'تعقيبات';
+    if (isMunajat) return 'المناجيات الخمس عشرة';
     if (isSahifa) return 'الصحيفة السجادية';
+    if (isOccasionDua) return 'أدعية المناسبات';
     return 'أدعية عامة';
   }
   String get arabicText => lines.where((line) => line.isArabic).map((line) => line.text).join('\n');
@@ -108,7 +118,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
   late Future<ShiaTextData> _future;
   String _query = '';
   String _category = 'أدعية عامة';
-  static const _categories = ['أدعية عامة', 'تعقيبات', 'أدعية الأيام', 'الزيارات', 'الصحيفة السجادية'];
+  static const _categories = ['أدعية عامة', 'تعقيبات', 'أدعية الأيام', 'أدعية المناسبات', 'الزيارات', 'الصحيفة السجادية', 'المناجيات الخمس عشرة'];
 
   @override void initState() {
     super.initState();

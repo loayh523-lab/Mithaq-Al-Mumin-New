@@ -8,7 +8,8 @@ const _settingsGold = Color(0xFFD9B66D);
 const _settingsMuted = Color(0xFF9EB5A9);
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
+  const SettingsPage({super.key, this.onLocationChanged});
+  final Future<void> Function()? onLocationChanged;
   @override State<SettingsPage> createState() => _SettingsPageState();
 }
 
@@ -39,10 +40,15 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<void> _saveCity(String? id) async {
-    if (id == null || id == 'current_location') return;
+    if (id == null) return;
+    if (id == 'current_location') {
+      await _useCurrentLocation();
+      return;
+    }
     setState(() { _cityId = id; _currentCity = PrayerLocations.byId(id); });
     try {
       await PrayerLocations.save(id);
+      await widget.onLocationChanged?.call();
       if (_notificationsEnabled) {
         final ok = await PrayerNotificationService.configure(enabled: true, city: PrayerLocations.byId(id));
         if (!ok && mounted) _message('تم حفظ المدينة لكن تعذّر تحديث التذكيرات. افتح إعدادات الإشعارات وتحقق من الإذن.');
@@ -63,6 +69,7 @@ class _SettingsPageState extends State<SettingsPage> {
         return;
       }
       setState(() { _currentCity = city; _cityId = city.id; });
+      await widget.onLocationChanged?.call();
       if (_notificationsEnabled) {
         final ok = await PrayerNotificationService.configure(enabled: true, city: city);
         if (!ok && mounted) _message('حُفظ الموقع لكن تعذّر تحديث تذكيرات الصلاة');
@@ -100,6 +107,7 @@ class _SettingsPageState extends State<SettingsPage> {
     final ok = await PrayerNotificationService.configure(
       enabled: true,
       city: _currentCity,
+      requestExactPermission: true,
     );
     if (!mounted) return;
     setState(() => _notificationsEnabled = ok);

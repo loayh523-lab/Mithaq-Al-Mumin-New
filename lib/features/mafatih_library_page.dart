@@ -6,6 +6,11 @@ const _mfPanel = Color(0xFF10251E);
 const _mfGold = Color(0xFFD9B66D);
 const _mfMuted = Color(0xFF9EB5A9);
 
+String _arabicOnlyTitle(Object? value, String fallback) {
+  final title = value is String ? value : '';
+  return RegExp(r'[پچژگکی]').hasMatch(title) ? fallback : title;
+}
+
 class MafatihItem {
   const MafatihItem({required this.type, required this.content});
   final String type;
@@ -24,7 +29,7 @@ class MafatihArticle {
   final List<MafatihItem> items;
   factory MafatihArticle.fromJson(Map<String, dynamic> json) => MafatihArticle(
     id: json['id'] is int ? json['id'] as int : 0,
-    title: json['title'] is String ? json['title'] as String : 'نص من المكتبة',
+    title: _arabicOnlyTitle(json['title'], 'نص عربي'),
     href: json['href'] is String ? json['href'] as String : '',
     items: ((json['items'] as List<dynamic>?) ?? const <dynamic>[])
         .whereType<Map<String, dynamic>>().map(MafatihItem.fromJson).toList(),
@@ -38,7 +43,7 @@ class MafatihSection {
   final List<MafatihArticle> articles;
   factory MafatihSection.fromJson(Map<String, dynamic> json) => MafatihSection(
     id: json['id'] is int ? json['id'] as int : 0,
-    title: json['title'] is String ? json['title'] as String : 'قسم',
+    title: _arabicOnlyTitle(json['title'], 'قسم عربي'),
     articles: ((json['articles'] as List<dynamic>?) ?? const <dynamic>[])
         .whereType<Map<String, dynamic>>().map(MafatihArticle.fromJson).toList(),
   );
@@ -51,7 +56,7 @@ class MafatihChapter {
   final List<MafatihSection> sections;
   factory MafatihChapter.fromJson(Map<String, dynamic> json) => MafatihChapter(
     id: json['id'] is int ? json['id'] as int : 0,
-    title: json['title'] is String ? json['title'] as String : 'باب',
+    title: _arabicOnlyTitle(json['title'], 'باب من مفاتيح الجنان'),
     sections: ((json['sections'] as List<dynamic>?) ?? const <dynamic>[])
         .whereType<Map<String, dynamic>>().map(MafatihSection.fromJson).toList(),
   );
@@ -158,7 +163,7 @@ class _MafatihLibraryPageState extends State<MafatihLibraryPage> {
                     color: _mfPanel,
                     child: ListTile(
                       leading: CircleAvatar(backgroundColor: _mfGold.withValues(alpha: .15), child: const Icon(Icons.auto_stories_rounded, color: _mfGold)),
-                      title: Text(chapter.title, style: const TextStyle(fontWeight: FontWeight.bold)),
+                      title: Text(_arabicOnlyTitle(chapter.title, 'باب ${chapter.id} من مفاتيح الجنان'), style: const TextStyle(fontWeight: FontWeight.bold)),
                       subtitle: Text('${chapter.sections.length} أقسام • $articles نصوص', style: const TextStyle(color: _mfMuted)),
                       trailing: const Icon(Icons.chevron_left_rounded, color: _mfGold),
                       onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
@@ -182,7 +187,7 @@ class MafatihSectionsPage extends StatelessWidget {
   const MafatihSectionsPage({super.key, required this.chapter});
   final MafatihChapter chapter;
   @override Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: Text(chapter.title)),
+    appBar: AppBar(title: Text(_arabicOnlyTitle(chapter.title, 'باب ${chapter.id} من مفاتيح الجنان'))),
     body: ListView.separated(
       padding: const EdgeInsets.all(16), itemCount: chapter.sections.length,
       separatorBuilder: (_, __) => const SizedBox(height: 8),
@@ -190,7 +195,7 @@ class MafatihSectionsPage extends StatelessWidget {
         final section = chapter.sections[index];
         return Card(color: _mfPanel, child: ListTile(
           leading: const Icon(Icons.folder_open_rounded, color: _mfGold),
-          title: Text(section.title, style: const TextStyle(fontWeight: FontWeight.w700)),
+          title: Text(_arabicOnlyTitle(section.title, 'قسم ${section.id}'), style: const TextStyle(fontWeight: FontWeight.w700)),
           subtitle: Text('${section.articles.length} نصوص', style: const TextStyle(color: _mfMuted)),
           trailing: const Icon(Icons.chevron_left_rounded, color: _mfGold),
           onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
@@ -206,7 +211,7 @@ class MafatihArticlesPage extends StatelessWidget {
   const MafatihArticlesPage({super.key, required this.section});
   final MafatihSection section;
   @override Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: Text(section.title)),
+    appBar: AppBar(title: Text(_arabicOnlyTitle(section.title, 'قسم ${section.id}'))),
     body: ListView.separated(
       padding: const EdgeInsets.all(16), itemCount: section.articles.length,
       separatorBuilder: (_, __) => const SizedBox(height: 8),
@@ -214,7 +219,7 @@ class MafatihArticlesPage extends StatelessWidget {
         final article = section.articles[index];
         final preview = article.items.map((item) => _plainText(item.content)).where((s) => s.isNotEmpty).take(2).join(' ');
         return Card(color: _mfPanel, child: ListTile(
-          title: Text(article.title, style: const TextStyle(fontWeight: FontWeight.bold)),
+          title: Text(_arabicOnlyTitle(article.title, 'نص عربي ${article.id}'), style: const TextStyle(fontWeight: FontWeight.bold)),
           subtitle: preview.isEmpty ? null : Text(preview, maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(color: _mfMuted)),
           trailing: const Icon(Icons.chevron_left_rounded, color: _mfGold),
           onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
@@ -234,7 +239,6 @@ class MafatihArticlePage extends StatefulWidget {
 
 class _MafatihArticlePageState extends State<MafatihArticlePage> {
   double _fontSize = 22;
-  String _language = 'العربي';
   bool _focusMode = false;
 
   Future<void> _toggleFocusMode() async {
@@ -249,20 +253,23 @@ class _MafatihArticlePageState extends State<MafatihArticlePage> {
     super.dispose();
   }
 
-  bool _looksPersian(String text) => RegExp(r'[پچژگ]').hasMatch(text);
+  bool _looksPersian(String text) => RegExp(r'[پچژگکی]').hasMatch(text);
+
+  bool _isArabicRecitationType(String type) {
+    final normalized = type.trim().toLowerCase();
+    return normalized == 'text' || normalized == 'arabic' || normalized == 'arabictext' || normalized == 'arabic_text';
+  }
 
   @override Widget build(BuildContext context) {
-    final allChunks = widget.article.items.map((item) => (type: item.type, text: _plainText(item.content))).where((item) => item.text.trim().isNotEmpty).toList();
-    final chunks = allChunks.where((item) {
-      final persian = _looksPersian(item.text);
-      if (_language == 'الفارسي') return persian;
-      if (_language == 'النص الكامل') return true;
-      return !persian;
-    }).toList();
+    final chunks = widget.article.items
+        .where((item) => _isArabicRecitationType(item.type))
+        .map((item) => (type: item.type, text: _plainText(item.content)))
+        .where((item) => item.text.trim().isNotEmpty && !_looksPersian(item.text))
+        .toList();
     final wholeText = chunks.map((item) => item.text).join('\n\n');
     return Scaffold(
       appBar: _focusMode ? null : AppBar(
-        title: Text(widget.article.title, maxLines: 2, overflow: TextOverflow.ellipsis),
+        title: Text(_arabicOnlyTitle(widget.article.title, 'نص عربي من مفاتيح الجنان'), maxLines: 2, overflow: TextOverflow.ellipsis),
         actions: [
           IconButton(
             tooltip: 'وضع القراءة الخاشعة',
@@ -285,13 +292,6 @@ class _MafatihArticlePageState extends State<MafatihArticlePage> {
         if (!_focusMode) Padding(
           padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
           child: Column(children: [
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(children: ['العربي', 'الفارسي', 'النص الكامل'].map((choice) => Padding(
-                padding: const EdgeInsetsDirectional.only(end: 7),
-                child: ChoiceChip(label: Text(choice), selected: _language == choice, onSelected: (_) => setState(() => _language = choice)),
-              )).toList()),
-            ),
             Row(children: [
             const Icon(Icons.text_fields_rounded, color: _mfGold),
             Expanded(child: Slider(value: _fontSize, min: 16, max: 34, divisions: 9, label: _fontSize.round().toString(), onChanged: (value) => setState(() => _fontSize = value), activeColor: _mfGold)),
@@ -308,7 +308,7 @@ class _MafatihArticlePageState extends State<MafatihArticlePage> {
                   margin: const EdgeInsets.only(bottom: 18),
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(color: _mfPanel, borderRadius: BorderRadius.circular(18), border: Border.all(color: _mfGold.withValues(alpha: .3))),
-                  child: Text(widget.article.title, textAlign: TextAlign.center, style: const TextStyle(color: _mfGold, fontSize: 23, fontWeight: FontWeight.w800, height: 1.7)),
+                  child: Text(_arabicOnlyTitle(widget.article.title, 'نص عربي من مفاتيح الجنان'), textAlign: TextAlign.center, style: const TextStyle(color: _mfGold, fontSize: 23, fontWeight: FontWeight.w800, height: 1.7)),
                 ),
                 ...chunks.map((chunk) {
                   final label = chunk.type.toLowerCase();

@@ -92,6 +92,10 @@ void main() {
     expect(find.text('الخطوة التالية'), findsOneWidget);
   });
 
+  test('Hijri civil conversion matches the expected date for 20 October 2026', () {
+    expect(hijriDateLabel(DateTime(2026, 10, 20)), '8 جمادى الأولى 1448 هـ');
+  });
+
   testWidgets('prayer calendar shows estimated times and imsakiyah switch', (tester) async {
     await tester.pumpWidget(const MaterialApp(
       home: Directionality(

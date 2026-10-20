@@ -207,7 +207,7 @@ class _MainShellState extends State<MainShell> {
             _selected == 1 ? const QuranIndexPage() : const SizedBox.shrink(),
             _duaPage(),
             _tasbeehPage(),
-            const SettingsPage(),
+            SettingsPage(onLocationChanged: _loadDashboardData),
           ],
         ),
       ),
@@ -753,7 +753,7 @@ class _TasbeehPageState extends State<TasbeehPage> {
       children: [
         const Text('التسبيح', style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800)),
         const SizedBox(height: 6),
-        const Text('عداد محفوظ على جهازك، مع تسبيح الزهراء عليها السلام بالترتيب', style: TextStyle(color: _muted, height: 1.6)),
+        if (_zahraMode) const Text('عداد محفوظ على جهازك، مع تسبيح الزهراء عليها السلام بالترتيب', style: TextStyle(color: _muted, height: 1.6)),
         const SizedBox(height: 18),
         SegmentedButton<bool>(
           segments: const [
@@ -843,7 +843,7 @@ class _TasbeehPageState extends State<TasbeehPage> {
               ),
             ),
             const SizedBox(height: 10),
-            const Text('اضغط على الدائرة للتسبيح', style: TextStyle(color: _muted)),
+            if (_zahraMode) const Text('اضغط على الدائرة للتسبيح', style: TextStyle(color: _muted)),
             const SizedBox(height: 18),
             Wrap(alignment: WrapAlignment.center, spacing: 10, children: [
               OutlinedButton.icon(
@@ -1104,8 +1104,19 @@ class KhatmaPage extends StatefulWidget {
 }
 
 class _KhatmaPageState extends State<KhatmaPage> {
-  int _completedJuz = 0;
+  static const _juzStartPages = <int>[1, 22, 42, 62, 82, 102, 121, 142, 162, 182, 201, 222, 242, 262, 282, 302, 322, 342, 362, 382, 402, 422, 442, 462, 482, 502, 522, 542, 562, 582];
   final Set<int> _completedPages = <int>{};
+
+  bool _isJuzComplete(int juz) {
+    final start = _juzStartPages[juz];
+    final end = juz == 29 ? 604 : _juzStartPages[juz + 1] - 1;
+    for (var page = start; page <= end; page++) {
+      if (!_completedPages.contains(page)) return false;
+    }
+    return true;
+  }
+
+  int get _completedJuz => List<int>.generate(30, (index) => index).where(_isJuzComplete).length;
 
   @override
   void initState() {
@@ -1119,9 +1130,6 @@ class _KhatmaPageState extends State<KhatmaPage> {
       if (!mounted) return;
       final savedPages = prefs.getStringList('khatma_completed_pages') ?? const <String>[];
       setState(() {
-        _completedJuz = (prefs.getInt('khatma_completed_juz') ?? 0)
-            .clamp(0, 30)
-            .toInt();
         _completedPages
           ..clear()
           ..addAll(savedPages.map(int.tryParse).whereType<int>().where((page) => page >= 1 && page <= 604));
@@ -1132,15 +1140,43 @@ class _KhatmaPageState extends State<KhatmaPage> {
   }
 
   Future<void> _setProgress(int value) async {
-    final next = value.clamp(0, 30).toInt();
-    setState(() => _completedJuz = next);
+    final target = value.clamp(0, 30).toInt();
+    setState(() {
+      if (target == 0) {
+        _completedPages.clear();
+      } else {
+        final current = _completedJuz;
+        int? juzToChange;
+        if (target > current) {
+          for (var juz = 0; juz < 30; juz++) {
+            if (!_isJuzComplete(juz)) { juzToChange = juz; break; }
+          }
+        } else {
+          for (var juz = 29; juz >= 0; juz--) {
+            if (_isJuzComplete(juz)) { juzToChange = juz; break; }
+          }
+        }
+        if (juzToChange != null) {
+          final start = _juzStartPages[juzToChange];
+          final end = juzToChange == 29 ? 604 : _juzStartPages[juzToChange + 1] - 1;
+          for (var page = start; page <= end; page++) {
+            if (target > current) {
+              _completedPages.add(page);
+            } else {
+              _completedPages.remove(page);
+            }
+          }
+        }
+      }
+    });
     try {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setInt('khatma_completed_juz', next);
+      await prefs.setStringList('khatma_completed_pages', (_completedPages.toList()..sort()).map((page) => page.toString()).toList());
+      await prefs.remove('khatma_completed_juz');
     } catch (_) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('تعذّر حفظ التقدّم على الجهاز')),
+          const SnackBar(content: Text('تعذّر حفظ تقدّم الختمة')),
         );
       }
     }
@@ -1305,7 +1341,7 @@ class _KhatmaPageState extends State<KhatmaPage> {
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               const Text('تتبّع الصفحات', style: TextStyle(color: _gold, fontSize: 20, fontWeight: FontWeight.w800)),
               const SizedBox(height: 6),
-              const Text('سجّل كل صفحة بعد قراءتها في مصحف المدينة ذي 604 صفحات. هذا التتبّع مستقل عن عدّاد الأجزاء أعلاه.', style: TextStyle(color: _muted, height: 1.6, fontSize: 12)),
+              const Text('سجّل كل صفحة بعد قراءتها في مصحف المدينة ذي 604 صفحات. يُحسب اكتمال الجزء من الصفحات المسجّلة ضمن نطاقه.', style: TextStyle(color: _muted, height: 1.6, fontSize: 12)),
               const SizedBox(height: 12),
               Row(children: [
                 Expanded(child: Text('${_completedPages.length} / 604 صفحة', style: const TextStyle(color: _gold, fontWeight: FontWeight.bold))),
@@ -1314,7 +1350,10 @@ class _KhatmaPageState extends State<KhatmaPage> {
               const SizedBox(height: 8),
               ClipRRect(borderRadius: BorderRadius.circular(20), child: LinearProgressIndicator(value: _completedPages.length / 604, minHeight: 8, backgroundColor: _ink, color: _gold)),
               const SizedBox(height: 8),
-              ExpansionTile(
+              Material(
+                color: _panel,
+                borderRadius: BorderRadius.circular(12),
+                child: ExpansionTile(
                 tilePadding: EdgeInsets.zero,
                 title: const Text('اختيار الصفحات المكتملة'),
                 subtitle: const Text('اضغط رقم الصفحة لتسجيلها أو إلغاء تسجيلها'),
@@ -1341,7 +1380,7 @@ class _KhatmaPageState extends State<KhatmaPage> {
                     ),
                   ),
                 ],
-              ),
+              )),
             ]),
           ),
           const SizedBox(height: 8),

@@ -107,22 +107,33 @@ def main() -> None:
                 raise SystemExit(f"Missing line type/text in {slug}.")
             if not text.strip():
                 continue
+            # Bundle only Arabic recitation text. This excludes translations,
+            # transliterations, and any Persian-language line from the app assets.
+            if kind.lower() != "arabic" or not is_arabic_recitation(text):
+                continue
             normalized_lines.append({
                 "index": line.get("index", len(normalized_lines) + 1),
-                "kind": kind,
-                "text": text,
+                "kind": "arabic",
+                "text": plain_arabic_text(text),
             })
             total_lines += 1
-            if kind.lower() == "arabic":
-                total_arabic_lines += 1
+            total_arabic_lines += 1
 
-        if not any(item["kind"].lower() == "arabic" for item in normalized_lines):
-            raise SystemExit(f"No Arabic lines found in {slug}.")
+        if not normalized_lines:
+            # An entry without verified Arabic recitation must not be bundled.
+            continue
+
+        title = plain_arabic_text(str(raw.get("title") or record.get("title") or ""))
+        alternate_name = plain_arabic_text(str(raw.get("alternateName") or record.get("alternateName") or ""))
+        if not title or not any(0x0600 <= ord(char) <= 0x06FF for char in title) or re.search(r"[A-Za-zپچژگ]", title) or not is_arabic_recitation(title):
+            title = ""
+        if not alternate_name or not any(0x0600 <= ord(char) <= 0x06FF for char in alternate_name) or re.search(r"[A-Za-zپچژگ]", alternate_name) or not is_arabic_recitation(alternate_name):
+            alternate_name = ""
 
         prepared.append({
             "slug": slug,
-            "title": raw.get("title") or record.get("title") or slug,
-            "alternateName": raw.get("alternateName") or record.get("alternateName") or "",
+            "title": title,
+            "alternateName": alternate_name,
             "type": raw.get("type") or "dua",
             "sourceUrl": raw.get("url") or record.get("url") or "",
             "lines": normalized_lines,

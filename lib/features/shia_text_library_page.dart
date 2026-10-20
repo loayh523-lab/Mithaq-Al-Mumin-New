@@ -107,7 +107,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
           return const Center(child: CircularProgressIndicator(color: _shiaGold));
         }
         final data = snapshot.data!;
-        final filtered = data.entries.where((entry) {
+        final matchingEntries = data.entries.where((entry) {
           final categoryMatch = _category == 'الكل' ||
               (_category == 'الصحيفة السجادية' && entry.isSahifa) ||
               (_category == 'الأدعية والزيارات' && !entry.isSahifa);
@@ -116,13 +116,11 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
           final header = _normalize('${entry.displayTitle} ${entry.title} ${entry.slug}');
           return header.contains(_query) ||
               entry.lines.any((line) => (line.isArabic || line.isPersian) && _normalize(line.text).contains(_query));
-        }).toList()
-          ..sort((a, b) {
-            // Keep Sahifa entries grouped first and preserve their canonical source order.
-            if (a.isSahifa != b.isSahifa) return a.isSahifa ? -1 : 1;
-            if (a.isSahifa) return 0;
-            return _normalize(a.displayTitle).compareTo(_normalize(b.displayTitle));
-          });
+        }).toList();
+        final sahifaEntries = matchingEntries.where((entry) => entry.isSahifa).toList();
+        final duaEntries = matchingEntries.where((entry) => !entry.isSahifa).toList()
+          ..sort((a, b) => _normalize(a.displayTitle).compareTo(_normalize(b.displayTitle)));
+        final filtered = [...sahifaEntries, ...duaEntries];
         final sahifaCount = data.entries.where((entry) => entry.isSahifa).length;
         return Column(children: [
           Container(

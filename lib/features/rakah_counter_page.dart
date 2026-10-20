@@ -23,7 +23,7 @@ class _RakahCounterPageState extends State<RakahCounterPage> {
   int _sajdahs = 0;
   bool _completed = false;
   bool _loading = true;
-  bool _saving = false;
+  Future<void> _saveQueue = Future<void>.value();
 
   @override
   void initState() {
@@ -35,11 +35,14 @@ class _RakahCounterPageState extends State<RakahCounterPage> {
     try {
       final prefs = await SharedPreferences.getInstance();
       final storedTarget = (prefs.getInt('rakah_helper_target') ?? 4)
-          .clamp(2, 4);
+          .clamp(2, 4)
+          .toInt();
       final storedCurrent = (prefs.getInt('rakah_helper_current') ?? 1)
-          .clamp(1, storedTarget);
+          .clamp(1, storedTarget)
+          .toInt();
       final storedSajdahs = (prefs.getInt('rakah_helper_sajdahs') ?? 0)
-          .clamp(0, 2);
+          .clamp(0, 2)
+          .toInt();
       final storedPrayer = prefs.getString('rakah_helper_prayer') ?? 'الظهر';
       if (!mounted) return;
       setState(() {
@@ -56,30 +59,42 @@ class _RakahCounterPageState extends State<RakahCounterPage> {
     }
   }
 
-  Future<void> _persist() async {
-    if (_saving) return;
-    _saving = true;
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('rakah_helper_prayer', _prayer);
-      await prefs.setInt('rakah_helper_target', _targetRakahs);
-      await prefs.setInt('rakah_helper_current', _currentRakah);
-      await prefs.setInt('rakah_helper_sajdahs', _sajdahs);
-      await prefs.setBool('rakah_helper_completed', _completed);
-    } catch (_) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('تعذّر حفظ تقدم العدّاد على الجهاز')),
-        );
+  Future<void> _persist() {
+    // Queue writes so quick taps cannot cause a newer count to be overwritten
+    // by an older asynchronous preferences write.
+    final prayer = _prayer;
+    final target = _targetRakahs;
+    final current = _currentRakah;
+    final sajdahs = _sajdahs;
+    final completed = _completed;
+    _saveQueue = _saveQueue.then((_) async {
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('rakah_helper_prayer', prayer);
+        await prefs.setInt('rakah_helper_target', target);
+        await prefs.setInt('rakah_helper_current', current);
+        await prefs.setInt('rakah_helper_sajdahs', sajdahs);
+        await prefs.setBool('rakah_helper_completed', completed);
+      } catch (_) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('تعذّر حفظ تقدم العدّاد على الجهاز')),
+          );
+        }
       }
-    } finally {
-      _saving = false;
-    }
+    });
+    return _saveQueue;
   }
 
   Future<void> _changePrayer(String prayer) async {
+    final defaultTarget = switch (prayer) {
+      'الفجر' => 2,
+      'المغرب' => 3,
+      _ => 4,
+    };
     setState(() {
       _prayer = prayer;
+      _targetRakahs = defaultTarget;
       _currentRakah = 1;
       _sajdahs = 0;
       _completed = false;
@@ -163,7 +178,7 @@ class _RakahCounterPageState extends State<RakahCounterPage> {
     final progress = _completed
         ? 1.0
         : ((_currentRakah - 1 + _sajdahs / 2) / _targetRakahs)
-            .clamp(0.0, 1.0);
+            .clamp(0.0, 1.0).toDouble();
 
     return Scaffold(
       appBar: AppBar(

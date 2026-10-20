@@ -18,5 +18,35 @@ void main() {
       expect(mafatihCategoryFor('أعمال أشهر السنة الهجرية'), 'الأعمال الشهرية والمناسبات');
       expect(mafatihCategoryFor('دعاء كميل'), 'أدعية عامة');
     });
+  })
+  test('generated Arabic library has non-empty morning, evening, ziyara and deeds lists', () async {
+    final data = await MafatihData.load();
+    final counts = <String, int>{};
+
+    for (final chapter in data.chapters) {
+      for (final section in chapter.sections) {
+        for (final article in section.articles) {
+          final contentHead = article.items
+              .map((item) => plainMafatihText(item.content))
+              .where((value) => value.isNotEmpty)
+              .take(3)
+              .join(' ');
+          final searchable = '${chapter.title} ${section.title} ${article.title} $contentHead';
+          final category = mafatihCategoryFor(searchable);
+          counts[category] = (counts[category] ?? 0) + 1;
+
+          expect(article.title, isNot(contains(RegExp(r'[A-Za-zپچژگ]'))));
+          expect(section.title, isNot(contains(RegExp(r'[A-Za-zپچژگ]'))));
+          expect(chapter.title, isNot(contains(RegExp(r'[A-Za-zپچژگ]'))));
+          expect(article.items, isNotEmpty);
+        }
+      }
+    }
+
+    expect(counts['أدعية الصباح'] ?? 0, greaterThan(0));
+    expect(counts['أدعية المساء'] ?? 0, greaterThan(0));
+    expect(counts['الزيارات'] ?? 0, greaterThan(0));
+    expect(counts['الأعمال اليومية والمناسبات'] ?? 0, greaterThan(0));
   });
+;
 }

@@ -24,8 +24,8 @@ class PrayerNotificationService {
     _initialized = true;
   }
 
-  /// Schedules inexact local reminders for the next 12 days using the app's
-  /// clearly-labelled approximate calculation. No adhan audio is included.
+  /// Schedules local reminders with the bundled Persian adhan sound for the
+  /// next 12 days using the app's clearly-labelled approximate calculation.
   static Future<bool> configure({required bool enabled, required PrayerCity city}) async {
     try {
       await _initialize();
@@ -62,11 +62,13 @@ class PrayerNotificationService {
             scheduled,
             const NotificationDetails(
               android: AndroidNotificationDetails(
-                'mithaq_prayer_reminders',
-                'تذكيرات الصلاة',
-                channelDescription: 'تذكيرات محلية حسب مواقيت حسابية تقديرية',
+                'mithaq_shia_adhan_v1',
+                'أذان الصلاة',
+                channelDescription: 'تنبيهات الصلاة بصوت الأذان الفارسي المضمّن',
                 importance: Importance.high,
                 priority: Priority.high,
+                sound: const RawResourceAndroidNotificationSound('adhan_persian'),
+                audioAttributesUsage: AudioAttributesUsage.alarm,
               ),
             ),
             androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,

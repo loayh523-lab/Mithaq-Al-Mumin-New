@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import '../lib/features/mafatih_library_page.dart';
+import 'package:mithaq_al_mumin/features/mafatih_library_page.dart';
 
 void main() {
   group('Arabic-only Mafatih normalization', () {

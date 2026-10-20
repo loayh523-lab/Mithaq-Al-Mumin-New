@@ -55,6 +55,14 @@ def main() -> None:
                         raise SystemExit("Mafatih item content is not text.")
                     items_checked += 1
 
+                # The upstream source includes Persian translations (Translate) and
+                # explanatory text. Keep only Arabic recitation items in the app bundle.
+                article["items"] = [
+                    item for item in items
+                    if isinstance(item.get("type"), str)
+                    and item["type"].strip().lower() in {"text", "arabic", "arabictext", "arabic_text"}
+                ]
+
     result = {
         "metadata": {
             "title": "Mafatih al-Jinan data",

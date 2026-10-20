@@ -21,10 +21,10 @@ void main() {
     await tester.pumpWidget(const MithaqApp());
     await tester.tap(find.text('القرآن الكريم').last);
     await tester.pump();
-    for (var i = 0; i < 30 &&
-        find.text('جارٍ تجهيز فهرس القرآن الكريم...').evaluate().isNotEmpty; i++) {
-      await tester.pump(const Duration(milliseconds: 100));
-    }
+    await tester.pump(const Duration(milliseconds: 100));
+    await tester.pump(const Duration(milliseconds: 100));
+    await tester.pump(const Duration(milliseconds: 100));
+    await tester.pump(const Duration(milliseconds: 100));
     expect(find.text('فهرس السور'), findsOneWidget);
     expect(find.textContaining('114 سورة'), findsOneWidget);
     expect(find.text('الفاتحة'), findsOneWidget);

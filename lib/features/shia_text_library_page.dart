@@ -196,7 +196,11 @@ class ShiaTextData {
         for (final article in section.articles) {
           final searchable = '${chapter.title} ${section.title} ${article.title} '
               '${article.items.map((item) => plainMafatihText(item.content)).where((text) => text.isNotEmpty).take(3).join(' ')}';
-          final category = _categoryForMafatih(mafatihCategoryFor(searchable));
+          final category = _categoryForMafatih(
+            article.category.trim().isNotEmpty
+                ? article.category
+                : mafatihCategoryFor(searchable),
+          );
           final lines = article.items
               .where((item) => isArabicMafatihRecitation(item.content))
               .map((item) => ShiaTextLine(

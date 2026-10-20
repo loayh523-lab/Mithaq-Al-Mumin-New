@@ -39,7 +39,9 @@ void main() {
               .take(3)
               .join(' ');
           final searchable = '${chapter.title} ${section.title} ${article.title} $contentHead';
-          final category = mafatihCategoryFor(searchable);
+          final category = article.category.isNotEmpty
+              ? article.category
+              : mafatihCategoryFor(searchable);
           counts[category] = (counts[category] ?? 0) + 1;
         }
       }

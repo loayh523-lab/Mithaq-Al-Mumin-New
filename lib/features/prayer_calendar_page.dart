@@ -37,7 +37,9 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
         const SizedBox(height: 6), Text(_dateLabel(date), style: const TextStyle(color: _muted)),
         Row(children: [const Expanded(child: Text('تصحيح يدوي للتاريخ')), IconButton(onPressed: () => _correct(-1), icon: const Icon(Icons.remove_circle_outline)), Text('$correction يوم'), IconButton(onPressed: () => _correct(1), icon: const Icon(Icons.add_circle_outline))]),
         const Text('الحساب الهجري جدولي تقريبي وقد يختلف عن ثبوت الهلال الشرعي. التصحيح محفوظ على الجهاز.', style: TextStyle(color: _muted, fontSize: 11, height: 1.5)),
-      ])), const SizedBox(height: 14),
+      ])),
+      if (_occasion(hijri) != null) Card(color: _panel, child: ListTile(leading: const Icon(Icons.event, color: _gold), title: const Text('مناسبة دينية'), subtitle: Text(_occasion(hijri)!, style: const TextStyle(height: 1.5)))),
+      const SizedBox(height: 14),
       SegmentedButton<int>(segments: const [ButtonSegment(value: 0, label: Text('مواقيت الصلاة'), icon: Icon(Icons.access_time)), ButtonSegment(value: 1, label: Text('إمساكية رمضان'), icon: Icon(Icons.nights_stay_outlined))], selected: {tab}, onSelectionChanged: (v) => setState(() => tab = v.first)),
       const SizedBox(height: 12),
       if (tab == 0) ...[
@@ -105,4 +107,19 @@ List<Widget> _ramadanRows(DateTime reference) {
     final h = _Hijri.fromGregorian(d);
     return Card(color: _panel, child: ListTile(dense: true, leading: CircleAvatar(backgroundColor: _gold.withValues(alpha: .15), child: Text('${i + 1}', style: const TextStyle(color: _gold))), title: Text('رمضان ${h.day} — ${_dateLabel(d)}'), subtitle: Text('الإمساك/الفجر: ${t.fajr}  •  الإفطار التقريبي: ${t.maghrib}')));
   });
+}
+
+String? _occasion(_Hijri h) {
+  const events = <String, String>{
+    '1-1': 'بداية السنة الهجرية',
+    '10-1': 'يوم عاشوراء — ذكرى استشهاد الإمام الحسين عليه السلام',
+    '20-2': 'زيارة الأربعين للإمام الحسين عليه السلام',
+    '17-3': 'ذكرى مولد النبي محمد صلى الله عليه وآله (المشهور عند كثير من الشيعة)',
+    '13-7': 'ذكرى ولادة أمير المؤمنين الإمام علي عليه السلام',
+    '3-8': 'ذكرى ولادة الإمام الحسين عليه السلام',
+    '15-8': 'ذكرى ولادة الإمام المهدي عجل الله فرجه',
+    '21-9': 'ذكرى استشهاد الإمام علي عليه السلام',
+    '25-10': 'ذكرى استشهاد الإمام جعفر الصادق عليه السلام',
+  };
+  return events['${h.day}-${h.month}'];
 }

@@ -5,6 +5,7 @@ import 'package:mithaq_al_mumin/main.dart';
 import 'package:mithaq_al_mumin/quran/quran_pages.dart';
 import 'package:mithaq_al_mumin/features/prayer_calendar_page.dart';
 import 'package:mithaq_al_mumin/features/mafatih_library_page.dart';
+import 'package:mithaq_al_mumin/features/shia_text_library_page.dart';
 
 void main() {
   setUp(() {
@@ -136,5 +137,19 @@ void main() {
     await tester.pump(const Duration(milliseconds: 100));
     expect(find.text('الآيات المحفوظة'), findsOneWidget);
     expect(find.textContaining('ما عندك آيات محفوظة'), findsOneWidget);
+  });
+
+
+  testWidgets('Shia dua library opens its offline collection', (tester) async {
+    await tester.pumpWidget(const MaterialApp(
+      home: Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage()),
+    ));
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 500)));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(find.text('الأدعية والزيارات'), findsOneWidget);
+    expect(find.textContaining('72 نصاً'), findsOneWidget);
+    expect(find.textContaining('ما قدرنا نحمّل مكتبة الأدعية'), findsNothing);
+    expect(find.text('زيارة عاشوراء'), findsWidgets);
   });
 }

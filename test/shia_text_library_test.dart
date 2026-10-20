@@ -19,9 +19,10 @@ void main() {
     expect(
       mafatihEntries.every((entry) =>
           entry.sourceLabel.contains('القسم:') &&
+          RegExp(r'^مفاتيح الجنان، (?:الباب|باب) ').hasMatch(entry.sourceLabel) &&
           !entry.sourceLabel.contains('باب: الباب')),
       isTrue,
-      reason: 'Mafatih citations should show the actual chapter heading without repeating the word باب.',
+      reason: 'Every Mafatih citation should name its chapter and section without duplicating باب.',
     );
     expect(
       data.entries.any((entry) => entry.category == 'الزيارات'),

@@ -19,7 +19,7 @@ dependencies:
   geomag: ^0.3.0
   audioplayers: ^6.5.1
   url_launcher: ^6.3.2
-  wakelock_plus: ^1.8.1
+  wakelock_plus: 1.8.0
 
 dev_dependencies:
   flutter_test:

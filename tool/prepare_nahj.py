@@ -40,7 +40,7 @@ def main() -> None:
     except (urllib.error.URLError, TimeoutError) as exc:
         raise SystemExit(f"Could not download the Nahj source database: {exc}") from exc
 
-    if not database_bytes.startswith(b"SQLite format 3\\x00"):
+    if not database_bytes.startswith(b"SQLite format 3\x00"):
         raise SystemExit("Nahj source did not return a valid SQLite database.")
 
     fd, database_path = tempfile.mkstemp(prefix="nahj-source-", suffix=".db")
@@ -130,9 +130,9 @@ def main() -> None:
     DEST.parent.mkdir(parents=True, exist_ok=True)
     fd, temporary = tempfile.mkstemp(prefix="nahj-", suffix=".json", dir=DEST.parent)
     try:
-        with os.fdopen(fd, "w", encoding="utf-8", newline="\\n") as handle:
+        with os.fdopen(fd, "w", encoding="utf-8", newline="\n") as handle:
             json.dump(result, handle, ensure_ascii=False, separators=(",", ":"))
-            handle.write("\\n")
+            handle.write("\n")
         os.replace(temporary, DEST)
     finally:
         if os.path.exists(temporary):

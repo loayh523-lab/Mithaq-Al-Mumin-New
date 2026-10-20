@@ -44,5 +44,10 @@ void main() {
       isTrue,
       reason: 'Imported entries must not create blank reader pages.',
     );
+    expect(
+      data.entries.every((entry) => !RegExp(r'[A-Za-zپچژگ]').hasMatch(entry.displayTitle)),
+      isTrue,
+      reason: 'Visible entry titles must be Arabic, never English transliteration or Persian-script headings.',
+    );
   });
 }

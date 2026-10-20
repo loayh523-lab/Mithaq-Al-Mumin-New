@@ -141,7 +141,7 @@ class QuranSearchHit {
 
 String _normalizeArabic(String value) => value
     .toLowerCase()
-    .replaceAll(RegExp('[\\u064B-\\u065F\\u0670\\u0640]'), '')
+    .replaceAll(RegExp(r'[\u064B-\u065F\u0670\u0640]'), '')
     .replaceAll(RegExp('[أإآٱ]'), 'ا')
     .replaceAll('ى', 'ي')
     .replaceAll('ؤ', 'و')

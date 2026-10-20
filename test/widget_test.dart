@@ -4,6 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mithaq_al_mumin/main.dart';
 import 'package:mithaq_al_mumin/quran/quran_pages.dart';
 import 'package:mithaq_al_mumin/features/prayer_calendar_page.dart';
+import 'package:mithaq_al_mumin/features/mafatih_library_page.dart';
+import 'package:mithaq_al_mumin/quran/quran_pages.dart' show QuranSearchPage, QuranBookmarksPage;
 
 void main() {
   setUp(() {
@@ -98,5 +100,42 @@ void main() {
     expect(find.text('الفاتحة'), findsWidgets);
     expect(find.textContaining('7 آية'), findsOneWidget);
     expect(find.textContaining('تعذّر فتح نص القرآن'), findsNothing);
+  });
+
+
+  testWidgets('Quran full-text search returns offline verse matches', (tester) async {
+    await tester.pumpWidget(const MaterialApp(
+      home: Directionality(textDirection: TextDirection.rtl, child: QuranSearchPage()),
+    ));
+    await tester.enterText(find.byType(TextField), 'الحمد');
+    await tester.tap(find.byIcon(Icons.arrow_forward_rounded));
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 450)));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(find.textContaining('الفاتحة • الآية 2'), findsOneWidget);
+    expect(find.textContaining('النتائج الأولى'), findsOneWidget);
+  });
+
+  testWidgets('Mafatih library opens its bundled offline catalog', (tester) async {
+    await tester.pumpWidget(const MaterialApp(
+      home: Directionality(textDirection: TextDirection.rtl, child: MafatihLibraryPage()),
+    ));
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 400)));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(find.text('مفاتيح الجنان'), findsWidgets);
+    expect(find.text('ما قدرنا نحمّل مكتبة مفاتيح الجنان'), findsNothing);
+    expect(find.byType(CircularProgressIndicator), findsNothing);
+  });
+
+  testWidgets('Quran bookmarks page shows a clear empty state', (tester) async {
+    await tester.pumpWidget(const MaterialApp(
+      home: Directionality(textDirection: TextDirection.rtl, child: QuranBookmarksPage()),
+    ));
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 300)));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(find.text('الآيات المحفوظة'), findsOneWidget);
+    expect(find.textContaining('ما عندك آيات محفوظة'), findsOneWidget);
   });
 }

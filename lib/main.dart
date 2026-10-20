@@ -15,6 +15,7 @@ import 'features/names_of_allah_page.dart';
 import 'features/qada_tracker_page.dart';
 import 'features/dhikr_fortress_page.dart';
 import 'features/faith_services_page.dart';
+import 'features/faith_library_pages.dart';
 import 'features/favorites_page.dart';
 import 'features/rakah_counter_page.dart';
 import 'features/about_support_page.dart';
@@ -207,11 +208,26 @@ class _MainShellState extends State<MainShell> {
     return Scaffold(
       drawer: _navigationDrawer(),
       appBar: AppBar(
-        title: const Row(
+        title: Row(
           children: [
-            Icon(Icons.mosque_rounded, color: _gold, size: 27),
-            SizedBox(width: 10),
-            Text('ميثاق المؤمن', style: TextStyle(fontWeight: FontWeight.w800)),
+            Container(
+              width: 34,
+              height: 34,
+              clipBehavior: Clip.antiAlias,
+              decoration: BoxDecoration(
+                color: Colors.black,
+                borderRadius: BorderRadius.circular(7),
+                border: Border.all(color: _gold.withValues(alpha: .4)),
+              ),
+              child: Image.asset(
+                'assets/branding/mithaq_logo.png',
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) =>
+                    const Icon(Icons.auto_awesome_rounded, color: _gold, size: 25),
+              ),
+            ),
+            const SizedBox(width: 10),
+            const Text('ميثاق المؤمن', style: TextStyle(fontWeight: FontWeight.w800)),
           ],
         ),
         actions: [
@@ -253,11 +269,26 @@ class _MainShellState extends State<MainShell> {
               ),
               border: Border(bottom: BorderSide(color: _gold.withValues(alpha: .3))),
             ),
-            child: const Row(
+            child: Row(
               children: [
-                Icon(Icons.mosque_rounded, color: _gold, size: 34),
-                SizedBox(width: 12),
-                Expanded(
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(9),
+                    border: Border.all(color: _gold.withValues(alpha: .55)),
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: Image.asset(
+                    'assets/branding/mithaq_logo.png',
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) =>
+                        const Icon(Icons.auto_awesome_rounded, color: _gold, size: 32),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                const Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -293,7 +324,7 @@ class _MainShellState extends State<MainShell> {
                 _drawerItem(Icons.checklist_rounded, 'متابعة الصلاة', () => _openDrawerPage(const PrayerTrackerPage())),
                 _drawerItem(Icons.calendar_month_rounded, 'مواقيت الصلاة والتقويم', () => _openDrawerPage(PrayerCalendarPage(onLocationChanged: _handleLocationChanged, onHijriCorrectionChanged: _loadDashboardData))),
                 _drawerItem(Icons.explore_rounded, 'اتجاه القبلة', () => _openDrawerPage(QiblaPage(onLocationChanged: _handleLocationChanged))),
-                _drawerItem(Icons.menu_book_rounded, 'مفاتيح الجنان', () => _openDrawerPage(const MafatihLibraryPage())),
+                _drawerItem(Icons.auto_stories_rounded, 'نهج البلاغة', () => _openDrawerPage(const NahjAlBalaghaPage())),
                 _drawerItem(Icons.library_books_rounded, 'مكتبة الأدعية والزيارات', () => _openDrawerPage(const ShiaTextLibraryPage())),
                 _drawerItem(Icons.volunteer_activism_rounded, 'الخدمات الإيمانية', () => _openDrawerPage(const FaithServicesPage())),
                 _drawerItem(Icons.star_rounded, 'المفضلة المباركة', () => _openDrawerPage(const FavoritesPage())),
@@ -313,7 +344,19 @@ class _MainShellState extends State<MainShell> {
 
   Widget _drawerItem(IconData icon, String title, VoidCallback onTap, {bool selected = false}) =>
       ListTile(
-        leading: Icon(icon, color: selected ? _gold : _muted),
+        leading: Container(
+          width: 42,
+          height: 42,
+          decoration: BoxDecoration(
+            color: selected ? _gold.withValues(alpha: .14) : _panel.withValues(alpha: .72),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: selected ? _gold.withValues(alpha: .78) : _emerald.withValues(alpha: .34),
+            ),
+          ),
+          alignment: Alignment.center,
+          child: Icon(icon, color: selected ? _gold : _muted, size: 22),
+        ),
         title: Text(title, style: TextStyle(color: selected ? Colors.white : _muted, fontWeight: selected ? FontWeight.w800 : FontWeight.w500)),
         selected: selected,
         selectedTileColor: _emerald.withValues(alpha: .18),
@@ -958,11 +1001,11 @@ class _DuaLibraryState extends State<_DuaLibrary> {
           color: _panel,
           child: ListTile(
             leading: const CircleAvatar(backgroundColor: Color(0x223CB58B), child: Icon(Icons.auto_stories_rounded, color: _gold)),
-            title: const Text('مفاتيح الجنان', style: TextStyle(fontWeight: FontWeight.bold)),
-            subtitle: const Text('تصفح الأبواب والنصوص دون إنترنت', style: TextStyle(color: _muted)),
+            title: const Text('نهج البلاغة', style: TextStyle(fontWeight: FontWeight.bold)),
+            subtitle: const Text('الخطب والرسائل والحِكم مع البحث', style: TextStyle(color: _muted)),
             trailing: const Icon(Icons.chevron_left_rounded, color: _gold),
             onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-              builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihLibraryPage()),
+              builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: NahjAlBalaghaPage()),
             )),
           ),
         ),
@@ -1001,11 +1044,20 @@ class _DuaLibraryState extends State<_DuaLibrary> {
         ),
         _sectionCard(
           context,
-          icon: Icons.nights_stay_outlined,
-          title: 'أذكار الصباح والمساء',
-          subtitle: 'أذكار عربية مع العدّاد والمصادر',
+          icon: Icons.wb_sunny_outlined,
+          title: 'أذكار الصباح',
+          subtitle: 'أذكار الصباح مع عدّاد مستقل',
           onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: DhikrFortressPage()),
+            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: DhikrFortressPage(initialPeriod: 0)),
+          )),
+        ),
+        _sectionCard(
+          context,
+          icon: Icons.nights_stay_outlined,
+          title: 'أذكار المساء',
+          subtitle: 'أذكار المساء مع عدّاد مستقل',
+          onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: DhikrFortressPage(initialPeriod: 1)),
           )),
         ),
         _sectionCard(

@@ -157,82 +157,174 @@ class _MainShellState extends State<MainShell> {
   }
 
   Widget _homePage() => ListView(
-    padding: const EdgeInsets.fromLTRB(18, 12, 18, 24),
+    padding: const EdgeInsets.fromLTRB(18, 12, 18, 28),
     children: [
       Container(
         padding: const EdgeInsets.all(22),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(26),
+          borderRadius: BorderRadius.circular(28),
           gradient: const LinearGradient(
             begin: Alignment.topRight,
             end: Alignment.bottomLeft,
-            colors: [Color(0xFF174C3A), Color(0xFF0D2820), Color(0xFF102019)],
+            colors: [Color(0xFF1B5943), Color(0xFF103226), Color(0xFF0B211A)],
           ),
-          border: Border.all(color: _gold.withValues(alpha: .3)),
+          border: Border.all(color: _gold.withValues(alpha: .32)),
+          boxShadow: [
+            BoxShadow(
+              color: _emerald.withValues(alpha: .12),
+              blurRadius: 24,
+              offset: const Offset(0, 10),
+            ),
+          ],
         ),
-        child: const Column(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ', style: TextStyle(color: _gold, fontSize: 17)),
-            SizedBox(height: 18),
-            Text('ميثاقٌ يتجدّد', style: TextStyle(fontSize: 27, fontWeight: FontWeight.w800)),
-            SizedBox(height: 8),
-            Text('مساحة هادئة للقرآن والدعاء والذكر', style: TextStyle(color: _muted, fontSize: 14)),
+            Row(
+              children: [
+                Container(
+                  width: 46,
+                  height: 46,
+                  decoration: BoxDecoration(
+                    color: _gold.withValues(alpha: .12),
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(color: _gold.withValues(alpha: .35)),
+                  ),
+                  child: const Icon(Icons.mosque_rounded, color: _gold, size: 27),
+                ),
+                const SizedBox(width: 12),
+                const Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('ميثاق المؤمن', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
+                      SizedBox(height: 3),
+                      Text('رفيقك في العبادة اليومية', style: TextStyle(color: _muted, fontSize: 12)),
+                    ],
+                  ),
+                ),
+                const Icon(Icons.auto_awesome_rounded, color: _gold, size: 20),
+              ],
+            ),
+            const SizedBox(height: 26),
+            const Text(
+              'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ',
+              style: TextStyle(color: _gold, fontSize: 16, height: 1.8),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'ميثاقٌ يتجدّد',
+              style: TextStyle(fontSize: 29, fontWeight: FontWeight.w800, height: 1.35),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'مساحة هادئة تجمع القرآن والذكر والدعاء في مكان واحد.',
+              style: TextStyle(color: Color(0xFFD0DED6), fontSize: 14, height: 1.8),
+            ),
           ],
         ),
       ),
-      const SizedBox(height: 24),
-      const Text('الوصول السريع', style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold)),
-      const SizedBox(height: 12),
+      const SizedBox(height: 26),
+      const Row(
+        children: [
+          Expanded(
+            child: Text('الوصول السريع', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800)),
+          ),
+          Text('اختر ما تحتاجه', style: TextStyle(color: _muted, fontSize: 12)),
+        ],
+      ),
+      const SizedBox(height: 14),
       GridView.count(
         crossAxisCount: 2,
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         mainAxisSpacing: 12,
         crossAxisSpacing: 12,
-        childAspectRatio: 1.45,
+        childAspectRatio: 1.12,
         children: [
-          _featureCard(Icons.menu_book_rounded, 'القرآن الكريم', 'المصحف والفهرس', () => setState(() => _selected = 1)),
-          _featureCard(Icons.auto_awesome_rounded, 'الأدعية والزيارات', 'مكتبة المصادر', () => setState(() => _selected = 2)),
-          _featureCard(Icons.fingerprint_rounded, 'التسبيح', 'عداد الذكر', () => setState(() => _selected = 3)),
-          _featureCard(Icons.auto_stories_rounded, 'ختمة القرآن', 'حفظ تقدّم الختمة', () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: KhatmaPage())))),
+          _featureCard(Icons.menu_book_rounded, 'القرآن الكريم', 'المصحف وفهرس السور', () => setState(() => _selected = 1)),
+          _featureCard(Icons.auto_awesome_rounded, 'الأدعية والزيارات', 'مكتبة النصوص', () => setState(() => _selected = 2)),
+          _featureCard(Icons.fingerprint_rounded, 'التسبيح', 'عداد الذكر اليومي', () => setState(() => _selected = 3)),
+          _featureCard(Icons.auto_stories_rounded, 'ختمة القرآن', 'تابع تقدّمك', () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: KhatmaPage())))),
           _featureCard(Icons.checklist_rounded, 'متابعة الصلاة', 'سجلّ صلوات اليوم', () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: PrayerTrackerPage())))),
-          _featureCard(Icons.explore_rounded, 'المواقيت والتقويم', 'الصلاة والتاريخ الهجري والإمساكية', () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: PrayerCalendarPage())))),
-          _featureCard(Icons.explore_rounded, 'اتجاه القبلة', 'بوصلة الجهاز الحية', () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: QiblaPage())))),
+          _featureCard(Icons.calendar_month_rounded, 'المواقيت والتقويم', 'التاريخ والمناسبات', () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: PrayerCalendarPage())))),
+          _featureCard(Icons.explore_rounded, 'اتجاه القبلة', 'تحديد الاتجاه', () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: QiblaPage())))),
         ],
       ),
       const SizedBox(height: 22),
       Container(
         padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(color: _panel, borderRadius: BorderRadius.circular(20)),
+        decoration: BoxDecoration(
+          color: _panel,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.white.withValues(alpha: .06)),
+        ),
         child: const Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(Icons.verified_outlined, color: _gold),
+            Icon(Icons.verified_outlined, color: _gold, size: 23),
             SizedBox(width: 12),
-            Expanded(child: Text('نعتمد النصوص الموثّقة والمصادر الواضحة، ولا نعرض مواقيت أو نصوصاً غير متحقَّق منها.', style: TextStyle(color: _muted, height: 1.6))),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('الدقّة والأمانة', style: TextStyle(fontWeight: FontWeight.w800)),
+                  SizedBox(height: 5),
+                  Text(
+                    'نعمل على ترتيب النصوص مع مصادرها بوضوح، ونحرص على عدم عرض معلومات دينية غير متحقَّق منها.',
+                    style: TextStyle(color: _muted, height: 1.7, fontSize: 12),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
     ],
   );
 
-  Widget _featureCard(IconData icon, String title, String subtitle, VoidCallback onTap) => InkWell(
-    onTap: onTap,
-    borderRadius: BorderRadius.circular(20),
-    child: Ink(
-      padding: const EdgeInsets.all(15),
-      decoration: BoxDecoration(color: _panel, borderRadius: BorderRadius.circular(20), border: Border.all(color: Colors.white.withValues(alpha: .06))),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, color: _gold, size: 25),
-          const SizedBox(height: 10),
-          Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-          const SizedBox(height: 4),
-          Text(subtitle, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: _muted, fontSize: 11)),
-        ],
+  Widget _featureCard(IconData icon, String title, String subtitle, VoidCallback onTap) => Material(
+    color: Colors.transparent,
+    child: InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(22),
+      child: Ink(
+        padding: const EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          color: _panel,
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(color: Colors.white.withValues(alpha: .07)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 46,
+              height: 46,
+              decoration: BoxDecoration(
+                color: _emerald.withValues(alpha: .18),
+                borderRadius: BorderRadius.circular(15),
+                border: Border.all(color: _gold.withValues(alpha: .18)),
+              ),
+              child: Icon(icon, color: _gold, size: 24),
+            ),
+            const Spacer(),
+            Text(
+              title,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14, height: 1.4),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              subtitle,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(color: _muted, fontSize: 11, height: 1.45),
+            ),
+          ],
+        ),
       ),
     ),
   );

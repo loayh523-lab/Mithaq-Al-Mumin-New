@@ -159,7 +159,19 @@ class HomePage extends StatelessWidget {
           const _WelcomeCard(),
           const SizedBox(height: 18),
           const _PrayerTimeCard(),
-          const SizedBox(height: 28),
+          const SizedBox(height: 22),
+          const _SectionHeading(title: 'مساحة يومك', subtitle: 'نظرة سريعة على رحلتك اليومية'),
+          const SizedBox(height: 12),
+          const Row(
+            children: [
+              Expanded(child: _MiniStat(icon: Icons.menu_book_rounded, label: 'القراءة', value: 'ابدأ وردك', tint: emerald)),
+              SizedBox(width: 10),
+              Expanded(child: _MiniStat(icon: Icons.favorite_rounded, label: 'العبادة', value: 'خطوة اليوم', tint: gold)),
+              SizedBox(width: 10),
+              Expanded(child: _MiniStat(icon: Icons.track_changes_rounded, label: 'هدفك', value: 'اصنع عادة', tint: Color(0xFF8DBB78))),
+            ],
+          ),
+          const SizedBox(height: 26),
           const _SectionHeading(title: 'الوصول السريع', subtitle: 'كل ما تحتاجه في مكان واحد'),
           const SizedBox(height: 14),
           GridView.count(
@@ -345,6 +357,55 @@ class _PrayerTimeCard extends StatelessWidget {
             ),
           ),
           Icon(Icons.chevron_left_rounded, color: muted),
+        ],
+      ),
+    );
+  }
+}
+
+class _MiniStat extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+  final Color tint;
+
+  const _MiniStat({
+    required this.icon,
+    required this.label,
+    required this.value,
+    required this.tint,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(11, 14, 11, 13),
+      decoration: BoxDecoration(
+        color: panel,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: const Color(0xFF254536)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 35,
+            height: 35,
+            decoration: BoxDecoration(
+              color: tint.withValues(alpha: 0.13),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(icon, color: tint, size: 19),
+          ),
+          const SizedBox(height: 12),
+          Text(label, style: const TextStyle(color: muted, fontSize: 11)),
+          const SizedBox(height: 5),
+          Text(
+            value,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800),
+          ),
         ],
       ),
     );

@@ -236,6 +236,11 @@ class _FiqhTopicsPageState extends State<FiqhTopicsPage> {
               ),
             ),
         ],
+      ),
+    );
+  }
+}
+
 class NahjEntry {
   const NahjEntry({
     required this.id,

@@ -60,8 +60,6 @@ void main() {
     expect(find.text('1'), findsOneWidget);
     expect(find.text('الخطوة التالية'), findsOneWidget);
   });
-}
-
 
   testWidgets('prayer calendar shows estimated times and imsakiyah switch', (tester) async {
     await tester.pumpWidget(const MaterialApp(
@@ -78,3 +76,4 @@ void main() {
     expect(find.text('إمساكية تقديرية لقلعة سكر / ذي قار'), findsOneWidget);
     expect(find.textContaining('الإمساك/الفجر:'), findsWidgets);
   });
+}

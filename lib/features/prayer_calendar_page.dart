@@ -260,8 +260,17 @@ String _gregorianMonthName(int month) => const [
 ][month - 1];
 
 String formatPrayerTime12Hour(String value) {
-  final match = RegExp(r'^(\\d{1,2}):(\\d{2})
-
+  final parts = value.trim().split(':');
+  if (parts.length != 2) return value;
+  final hour = int.tryParse(parts[0]);
+  final minute = int.tryParse(parts[1]);
+  if (hour == null || hour < 0 || hour > 23 || minute == null || minute < 0 || minute > 59) {
+    return value;
+  }
+  final hour12 = hour % 12 == 0 ? 12 : hour % 12;
+  final suffix = hour < 12 ? 'ص' : 'م';
+  return '$hour12:${minute.toString().padLeft(2, '0')} $suffix';
+}
 class SolarPrayerTimes {
   const SolarPrayerTimes(this.fajr, this.sunrise, this.noon, this.asr, this.sunset, this.maghrib, this.isha);
   final String fajr, sunrise, noon, asr, sunset, maghrib, isha;

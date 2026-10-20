@@ -1,3 +1,4 @@
+import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PrayerCity {
@@ -27,6 +28,41 @@ class PrayerLocations {
     return cities.first;
   }
 
+  /// Request and store a fresh GPS fix. Returns null when access or accuracy
+  /// is insufficient, allowing the previous city to remain as a fallback.
+  static Future<PrayerCity?> acquirePreciseLocation() async {
+    try {
+      if (!await Geolocator.isLocationServiceEnabled()) return null;
+      var permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever ||
+          permission == LocationPermission.unableToDetermine) return null;
+      final position = await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.bestForNavigation,
+          timeLimit: Duration(seconds: 25),
+        ),
+      );
+      if (!position.latitude.isFinite || !position.longitude.isFinite ||
+          position.accuracy.isNaN || position.accuracy > 250) return null;
+      await saveCurrentLocation(
+        latitude: position.latitude,
+        longitude: position.longitude,
+        accuracyMeters: position.accuracy,
+      );
+      return PrayerCity(id: 'current_location', name: 'موقعي الحالي',
+        latitude: position.latitude, longitude: position.longitude);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  static Future<double?> currentLocationAccuracy() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getDouble('prayer_location_accuracy_meters');
+  }
+
   static Future<PrayerCity> load() async {
     final prefs = await SharedPreferences.getInstance();
     final latitude = prefs.getDouble('prayer_latitude');
@@ -47,16 +83,19 @@ class PrayerLocations {
     await prefs.remove('prayer_latitude');
     await prefs.remove('prayer_longitude');
     await prefs.remove('prayer_location_name');
+    await prefs.remove('prayer_location_accuracy_meters');
     await prefs.setString('prayer_city', byId(id).id);
   }
 
   static Future<void> saveCurrentLocation({
     required double latitude,
     required double longitude,
+    double? accuracyMeters,
   }) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setDouble('prayer_latitude', latitude);
     await prefs.setDouble('prayer_longitude', longitude);
     await prefs.setString('prayer_location_name', 'موقعي الحالي');
+    if (accuracyMeters != null) await prefs.setDouble('prayer_location_accuracy_meters', accuracyMeters);
   }
 }

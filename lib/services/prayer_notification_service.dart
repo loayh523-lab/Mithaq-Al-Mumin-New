@@ -24,6 +24,36 @@ class PrayerNotificationService {
     _initialized = true;
   }
 
+  /// Fire an immediate diagnostic notification to check permissions and sound.
+  static Future<bool> showTestNotification() async {
+    try {
+      await _initialize();
+      if (defaultTargetPlatform == TargetPlatform.android) {
+        final android = _plugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+        final granted = await android?.requestNotificationsPermission();
+        if (granted == false) return false;
+      }
+      await _plugin.show(
+        _idStart - 1,
+        'ميثاق المؤمن — تجربة الإشعار',
+        'إذا ظهر هذا التنبيه فقد وصل الإشعار التجريبي. افحص مستوى صوت التنبيهات إذا لم تسمع الأذان.',
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'mithaq_shia_adhan_v2', 'أذان الصلاة',
+            channelDescription: 'تنبيهات الصلاة بصوت الأذان المضمّن',
+            importance: Importance.high, priority: Priority.high,
+            sound: RawResourceAndroidNotificationSound('adhan_persian'),
+            audioAttributesUsage: AudioAttributesUsage.alarm,
+          ),
+        ),
+      );
+      return true;
+    } catch (error, stackTrace) {
+      debugPrint('Test notification failed: $error\n$stackTrace');
+      return false;
+    }
+  }
+
   /// Schedules local reminders with the bundled Persian adhan sound for the
   /// next 12 days using the app's clearly-labelled approximate calculation.
   static Future<bool> configure({required bool enabled, required PrayerCity city}) async {
@@ -62,7 +92,7 @@ class PrayerNotificationService {
             scheduled,
             const NotificationDetails(
               android: AndroidNotificationDetails(
-                'mithaq_shia_adhan_v1',
+                'mithaq_shia_adhan_v2',
                 'أذان الصلاة',
                 channelDescription: 'تنبيهات الصلاة بصوت الأذان الفارسي المضمّن',
                 importance: Importance.high,

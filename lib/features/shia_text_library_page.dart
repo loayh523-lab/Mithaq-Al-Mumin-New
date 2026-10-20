@@ -231,7 +231,6 @@ class ShiaTextData {
     if (entries.isEmpty || importedCount == 0) {
       throw const FormatException('Arabic supplication library is empty or the Mafatih merge produced no readable entries.');
     }
-    final metadata = decoded['metadata'] as Map<String, dynamic>? ?? const <String, dynamic>{};
     return ShiaTextData(
       entries: entries,
       sourceProject: 'مكتبة الأدعية والزيارات العربية',
@@ -359,7 +358,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 3),
             child: Row(children: [
-              ..._categories
+              ...availableCategories
             ].map((choice) => Padding(
               padding: const EdgeInsets.only(left: 8),
               child: ChoiceChip(label: Text(choice), selected: activeCategory == choice, onSelected: (_) => setState(() => _category = choice)),

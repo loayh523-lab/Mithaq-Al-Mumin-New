@@ -68,9 +68,11 @@ class _SettingsPageState extends State<SettingsPage> {
         if (!ok && mounted) _message('حُفظ الموقع لكن تعذّر تحديث تذكيرات الصلاة');
       }
       final accuracy = await PrayerLocations.currentLocationAccuracy();
-      if (mounted) _message(accuracy == null
-        ? 'تم تحديث موقع GPS للمواقيت والقبلة'
-        : 'تم تحديث GPS بدقة تقريبية ${accuracy.round()} متر للمواقيت والقبلة');
+      if (mounted) {
+        _message(accuracy == null
+          ? 'تم تحديث موقع GPS للمواقيت والقبلة'
+          : 'تم تحديث GPS بدقة تقريبية ${accuracy.round()} متر للمواقيت والقبلة');
+      }
     } catch (_) {
       if (mounted) _message('تعذّر تحديد الموقع. فعّل GPS وتحقق من إذن الموقع.');
     } finally {

@@ -22,6 +22,22 @@ class _SettingsPageState extends State<SettingsPage> {
   bool _loaded = false;
   bool _notificationsEnabled = false;
   bool _gpsBusy = false;
+  bool _earlyAlertEnabled = false;
+  int _earlyAlertMinutes = 5;
+  Map<String, bool> _prayerEnabled = {
+    'fajr': true,
+    'noon': true,
+    'asr': true,
+    'maghrib': true,
+    'isha': true,
+  };
+  static const _prayerOptions = <MapEntry<String, String>>[
+    MapEntry('fajr', 'الفجر'),
+    MapEntry('noon', 'الظهر'),
+    MapEntry('asr', 'العصر'),
+    MapEntry('maghrib', 'المغرب'),
+    MapEntry('isha', 'العشاء'),
+  ];
   AudioPlayer? _adhanPlayer;
   StreamSubscription<void>? _adhanCompleteSubscription;
   bool _isPlayingAdhan = false;
@@ -67,6 +83,13 @@ class _SettingsPageState extends State<SettingsPage> {
         _cityId = savedCity.id;
         _fontSize = (prefs.getDouble('quran_font_size') ?? 24).clamp(16, 34).toDouble();
         _notificationsEnabled = prefs.getBool('prayer_notifications_enabled') ?? false;
+        _earlyAlertEnabled = prefs.getBool('prayer_early_alert_enabled') ?? false;
+        _earlyAlertMinutes =
+            (prefs.getInt('prayer_early_alert_minutes') ?? 5).clamp(1, 30).toInt();
+        _prayerEnabled = {
+          for (final option in _prayerOptions)
+            option.key: prefs.getBool('prayer_enabled_${option.key}') ?? true,
+        };
         _loaded = true;
       });
     } catch (_) {
@@ -139,6 +162,10 @@ class _SettingsPageState extends State<SettingsPage> {
       }
       return;
     }
+    if (!_prayerEnabled.values.any((value) => value)) {
+      _message('فعّل صلاة واحدة على الأقل قبل تشغيل التذكيرات');
+      return;
+    }
     final ok = await PrayerNotificationService.configure(
       enabled: true,
       city: _currentCity,
@@ -147,8 +174,65 @@ class _SettingsPageState extends State<SettingsPage> {
     if (!mounted) return;
     setState(() => _notificationsEnabled = ok);
     _message(ok
-      ? 'تمت جدولة تذكيرات الصلاة للأيام الثلاثين القادمة'
-      : 'تعذّر التفعيل. تحقق من إذن الإشعارات في إعدادات الجهاز.');
+      ? 'تمت جدولة تذكيرات الصلوات المختارة للأيام الثلاثين القادمة'
+      : 'تعذّر التفعيل. تحقق من إذن الإشعارات وإعدادات الجهاز.');
+  }
+
+  Future<void> _refreshReminderSchedule() async {
+    if (!_notificationsEnabled) return;
+    if (!_prayerEnabled.values.any((value) => value)) {
+      await PrayerNotificationService.cancelAll();
+      if (!mounted) return;
+      setState(() => _notificationsEnabled = false);
+      _message('أوقفت كل الصلوات، لذلك أوقفنا التذكيرات أيضاً');
+      return;
+    }
+    final ok = await PrayerNotificationService.configure(
+      enabled: true,
+      city: _currentCity,
+    );
+    if (!mounted) return;
+    setState(() => _notificationsEnabled = ok);
+    if (!ok) {
+      _message('تعذّر تحديث جدول التذكيرات؛ تحقق من الأذونات');
+    }
+  }
+
+  Future<void> _togglePrayerReminder(String key, bool enabled) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('prayer_enabled_$key', enabled);
+      if (!mounted) return;
+      setState(() => _prayerEnabled = {..._prayerEnabled, key: enabled});
+      await _refreshReminderSchedule();
+    } catch (_) {
+      if (mounted) _message('تعذّر حفظ إعداد الصلاة على الجهاز');
+    }
+  }
+
+  Future<void> _toggleEarlyAlert(bool enabled) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('prayer_early_alert_enabled', enabled);
+      if (!mounted) return;
+      setState(() => _earlyAlertEnabled = enabled);
+      await _refreshReminderSchedule();
+    } catch (_) {
+      if (mounted) _message('تعذّر حفظ إعداد التنبيه المسبق');
+    }
+  }
+
+  Future<void> _changeEarlyAlertMinutes(int? minutes) async {
+    if (minutes == null) return;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt('prayer_early_alert_minutes', minutes);
+      if (!mounted) return;
+      setState(() => _earlyAlertMinutes = minutes);
+      await _refreshReminderSchedule();
+    } catch (_) {
+      if (mounted) _message('تعذّر حفظ مدة التنبيه المسبق');
+    }
   }
 
   Future<void> _saveFontSize(double value) async {
@@ -216,6 +300,55 @@ class _SettingsPageState extends State<SettingsPage> {
               onChanged: _loaded ? _toggleNotifications : null,
               activeThumbColor: _settingsGold,
             ),
+          ),
+          const SizedBox(height: 10),
+          const Text(
+            'تخصيص تنبيهات كل صلاة',
+            style: TextStyle(fontWeight: FontWeight.w700, color: _settingsGold),
+          ),
+          const SizedBox(height: 4),
+          ..._prayerOptions.map((option) => SwitchListTile(
+            key: ValueKey('prayer_enabled_${option.key}'),
+            contentPadding: EdgeInsets.zero,
+            title: Text('أذان ${option.value}'),
+            subtitle: Text(
+              _prayerEnabled[option.key] == true
+                  ? 'الأذان والتذكير مفعّلان'
+                  : 'لا يوجد تنبيه لهذه الصلاة',
+              style: const TextStyle(color: _settingsMuted, fontSize: 11),
+            ),
+            value: _prayerEnabled[option.key] ?? true,
+            onChanged: _loaded
+                ? (value) => _togglePrayerReminder(option.key, value)
+                : null,
+            activeThumbColor: _settingsGold,
+          )),
+          const Divider(color: Color(0x334A7562)),
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            title: const Text('تنبيه قبل الأذان'),
+            subtitle: const Text(
+              'يرسل إشعاراً عادياً قبل وقت الصلاة؛ لا يشغّل تسجيل الأذان مبكراً.',
+              style: TextStyle(color: _settingsMuted, height: 1.5, fontSize: 12),
+            ),
+            value: _earlyAlertEnabled,
+            onChanged: _loaded ? _toggleEarlyAlert : null,
+            activeThumbColor: _settingsGold,
+          ),
+          DropdownButtonFormField<int>(
+            key: const ValueKey('prayer_early_alert_minutes'),
+            initialValue: _earlyAlertMinutes,
+            decoration: const InputDecoration(
+              labelText: 'كم دقيقة قبل الصلاة؟',
+              border: OutlineInputBorder(),
+            ),
+            items: [5, 10, 15, 20, 30]
+                .map((minutes) => DropdownMenuItem(
+                      value: minutes,
+                      child: Text('$minutes دقائق'),
+                    ))
+                .toList(),
+            onChanged: _loaded ? _changeEarlyAlertMinutes : null,
           ),
           const SizedBox(height: 8),
           SizedBox(

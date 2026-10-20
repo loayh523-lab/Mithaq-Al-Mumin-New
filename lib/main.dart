@@ -6,6 +6,8 @@ import 'quran/quran_pages.dart';
 import 'features/prayer_calendar_page.dart';
 import 'features/qibla_page.dart';
 import 'features/settings_page.dart';
+import 'services/prayer_locations.dart';
+import 'services/prayer_notification_service.dart';
 
 void main() => runApp(const MithaqApp());
 
@@ -73,6 +75,19 @@ class _MainShellState extends State<MainShell> {
   void initState() {
     super.initState();
     _restoreCounter();
+    _refreshPrayerReminders();
+  }
+
+  Future<void> _refreshPrayerReminders() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      if (prefs.getBool('prayer_notifications_enabled') ?? false) {
+        final city = await PrayerLocations.load();
+        await PrayerNotificationService.configure(enabled: true, city: city);
+      }
+    } catch (_) {
+      // Reminder issues must never prevent the app from opening.
+    }
   }
 
   Future<void> _restoreCounter() async {

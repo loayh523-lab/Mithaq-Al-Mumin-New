@@ -26,10 +26,10 @@ void main() {
         child: Scaffold(body: QuranIndexPage()),
       ),
     ));
-    // Avoid pumpAndSettle while the page displays its animated loading indicator.
-    for (var i = 0; i < 10; i++) {
-      await tester.pump(const Duration(milliseconds: 100));
-    }
+    // AssetBundle I/O uses real asynchronous work; allow it to finish outside fake time.
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 200)));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
     expect(find.text('فهرس السور'), findsOneWidget);
     expect(find.textContaining('114 سورة'), findsOneWidget);
     expect(find.text('الفاتحة'), findsOneWidget);

@@ -68,9 +68,11 @@ class _GoodDeedsPageState extends State<GoodDeedsPage> {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setStringList(_key, (_completed.toList()..sort()).map((i) => i.toString()).toList());
     } catch (_) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('تعذّر حفظ الأعمال على الجهاز')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('تعذّر حفظ الأعمال على الجهاز')),
+        );
+      }
     }
   }
 

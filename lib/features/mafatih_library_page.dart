@@ -234,13 +234,42 @@ class MafatihArticlePage extends StatefulWidget {
 
 class _MafatihArticlePageState extends State<MafatihArticlePage> {
   double _fontSize = 22;
+  String _language = 'العربي';
+  bool _focusMode = false;
+
+  Future<void> _toggleFocusMode() async {
+    final next = !_focusMode;
+    setState(() => _focusMode = next);
+    await SystemChrome.setEnabledSystemUIMode(next ? SystemUiMode.immersiveSticky : SystemUiMode.edgeToEdge);
+  }
+
+  @override
+  void dispose() {
+    if (_focusMode) SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    super.dispose();
+  }
+
+  bool _looksPersian(String text) => RegExp(r'[پچژگ]').hasMatch(text);
+
   @override Widget build(BuildContext context) {
-    final chunks = widget.article.items.map((item) => (type: item.type, text: _plainText(item.content))).where((item) => item.text.trim().isNotEmpty).toList();
+    final allChunks = widget.article.items.map((item) => (type: item.type, text: _plainText(item.content))).where((item) => item.text.trim().isNotEmpty).toList();
+    final chunks = allChunks.where((item) {
+      final persian = _looksPersian(item.text);
+      if (_language == 'الفارسي') return persian;
+      if (_language == 'النص الكامل') return true;
+      return !persian;
+    }).toList();
     final wholeText = chunks.map((item) => item.text).join('\n\n');
     return Scaffold(
-      appBar: AppBar(
+      appBar: _focusMode ? null : AppBar(
         title: Text(widget.article.title, maxLines: 2, overflow: TextOverflow.ellipsis),
-        actions: [IconButton(
+        actions: [
+          IconButton(
+            tooltip: 'وضع القراءة الخاشعة',
+            onPressed: _toggleFocusMode,
+            icon: const Icon(Icons.center_focus_strong_rounded),
+          ),
+          IconButton(
           tooltip: 'نسخ النص',
           onPressed: () async {
             await Clipboard.setData(ClipboardData(text: wholeText));
@@ -249,13 +278,25 @@ class _MafatihArticlePageState extends State<MafatihArticlePage> {
           icon: const Icon(Icons.copy_rounded),
         )],
       ),
+      floatingActionButton: _focusMode
+        ? FloatingActionButton.small(onPressed: _toggleFocusMode, tooltip: 'إنهاء وضع القراءة الخاشعة', child: const Icon(Icons.close_rounded))
+        : null,
       body: Column(children: [
-        Padding(
+        if (!_focusMode) Padding(
           padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
-          child: Row(children: [
+          child: Column(children: [
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(children: ['العربي', 'الفارسي', 'النص الكامل'].map((choice) => Padding(
+                padding: const EdgeInsetsDirectional.only(end: 7),
+                child: ChoiceChip(label: Text(choice), selected: _language == choice, onSelected: (_) => setState(() => _language = choice)),
+              )).toList()),
+            ),
+            Row(children: [
             const Icon(Icons.text_fields_rounded, color: _mfGold),
             Expanded(child: Slider(value: _fontSize, min: 16, max: 34, divisions: 9, label: _fontSize.round().toString(), onChanged: (value) => setState(() => _fontSize = value), activeColor: _mfGold)),
             Text('${_fontSize.round()}', style: const TextStyle(color: _mfMuted)),
+            ]),
           ]),
         ),
         Expanded(child: chunks.isEmpty

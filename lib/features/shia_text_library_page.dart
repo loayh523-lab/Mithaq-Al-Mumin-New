@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'mafatih_library_page.dart';
 
 const _shiaPanel = Color(0xFF10251E);
 const _shiaGold = Color(0xFFD9B66D);
@@ -41,6 +42,25 @@ class ShiaTextEntry {
   final List<ShiaTextLine> lines;
   String get displayTitle => alternateName.trim().isNotEmpty ? alternateName : title;
   bool get isSahifa => slug.startsWith('sahifa-sajjadiya-');
+  bool get isDayDua =>
+      RegExp(r'(sunday|monday|tuesday|wednesday|thursday|friday|saturday)', caseSensitive: false).hasMatch(slug) ||
+      title.contains('دعاء يوم') ||
+      alternateName.contains('دعاء يوم');
+  bool get isZiyara =>
+      slug.toLowerCase().contains('ziyarat') ||
+      title.contains('زيارة') ||
+      alternateName.contains('زيارة');
+  bool get isTaqibat =>
+      slug.toLowerCase().contains('taqib') ||
+      title.contains('تعقيب') ||
+      alternateName.contains('تعقيب');
+  String get category {
+    if (isZiyara) return 'الزيارات';
+    if (isDayDua) return 'أدعية الأيام';
+    if (isTaqibat) return 'تعقيبات';
+    if (isSahifa) return 'الصحيفة السجادية';
+    return 'أدعية عامة';
+  }
   String get arabicText => lines.where((line) => line.isArabic).map((line) => line.text).join('\n');
 
   factory ShiaTextEntry.fromJson(Map<String, dynamic> json) => ShiaTextEntry(
@@ -78,7 +98,8 @@ class ShiaTextData {
 }
 
 class ShiaTextLibraryPage extends StatefulWidget {
-  const ShiaTextLibraryPage({super.key});
+  const ShiaTextLibraryPage({super.key, this.initialCategory});
+  final String? initialCategory;
   @override State<ShiaTextLibraryPage> createState() => _ShiaTextLibraryPageState();
 }
 
@@ -86,9 +107,14 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
   final _controller = TextEditingController();
   late Future<ShiaTextData> _future;
   String _query = '';
-  String _category = 'الكل';
+  String _category = 'أدعية عامة';
+  static const _categories = ['أدعية عامة', 'تعقيبات', 'أدعية الأيام', 'الزيارات', 'الصحيفة السجادية'];
 
-  @override void initState() { super.initState(); _future = ShiaTextData.load(); }
+  @override void initState() {
+    super.initState();
+    _category = widget.initialCategory ?? 'أدعية عامة';
+    _future = ShiaTextData.load();
+  }
   @override void dispose() { _controller.dispose(); super.dispose(); }
 
   void _submitSearch() => setState(() => _query = _normalize(_controller.text.trim()));
@@ -107,20 +133,13 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
           return const Center(child: CircularProgressIndicator(color: _shiaGold));
         }
         final data = snapshot.data!;
-        final matchingEntries = data.entries.where((entry) {
-          final categoryMatch = _category == 'الكل' ||
-              (_category == 'الصحيفة السجادية' && entry.isSahifa) ||
-              (_category == 'الأدعية والزيارات' && !entry.isSahifa);
-          if (!categoryMatch) return false;
+        final filtered = data.entries.where((entry) {
+          if (entry.category != _category) return false;
           if (_query.isEmpty) return true;
           final header = _normalize('${entry.displayTitle} ${entry.title} ${entry.slug}');
           return header.contains(_query) ||
-              entry.lines.any((line) => (line.isArabic || line.isPersian) && _normalize(line.text).contains(_query));
+              entry.lines.where((line) => line.isArabic).any((line) => _normalize(line.text).contains(_query));
         }).toList();
-        final sahifaEntries = matchingEntries.where((entry) => entry.isSahifa).toList();
-        final duaEntries = matchingEntries.where((entry) => !entry.isSahifa).toList()
-          ..sort((a, b) => _normalize(a.displayTitle).compareTo(_normalize(b.displayTitle)));
-        final filtered = [...sahifaEntries, ...duaEntries];
         final sahifaCount = data.entries.where((entry) => entry.isSahifa).length;
         return Column(children: [
           Container(
@@ -158,7 +177,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 3),
             child: Row(children: [
-              'الكل', 'الأدعية والزيارات', 'الصحيفة السجادية'
+              ..._categories
             ].map((choice) => Padding(
               padding: const EdgeInsets.only(left: 8),
               child: ChoiceChip(label: Text(choice), selected: _category == choice, onSelected: (_) => setState(() => _category = choice)),
@@ -166,7 +185,28 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
           ),
           Expanded(
             child: filtered.isEmpty
-              ? const Center(child: Text('ماكو نصوص تطابق البحث', style: TextStyle(color: _shiaMuted)))
+              ? Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(mainAxisSize: MainAxisSize.min, children: [
+                      const Text(
+                        'ماكو نصوص ضمن هذا القسم في مصدر الأدعية الحالي.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: _shiaMuted, height: 1.6),
+                      ),
+                      if (_category == 'تعقيبات') ...[
+                        const SizedBox(height: 12),
+                        FilledButton.icon(
+                          onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
+                            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihLibraryPage()),
+                          )),
+                          icon: const Icon(Icons.menu_book_rounded),
+                          label: const Text('افتح مفاتيح الجنان'),
+                        ),
+                      ],
+                    ]),
+                  ),
+                )
               : ListView.separated(
                   padding: const EdgeInsets.all(16), itemCount: filtered.length,
                   separatorBuilder: (_, __) => const SizedBox(height: 8),
@@ -210,6 +250,21 @@ class ShiaTextReaderPage extends StatefulWidget {
 class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
   String _display = 'العربي';
   double _fontSize = 23;
+  bool _focusMode = false;
+
+  Future<void> _toggleFocusMode() async {
+    final next = !_focusMode;
+    setState(() => _focusMode = next);
+    await SystemChrome.setEnabledSystemUIMode(
+      next ? SystemUiMode.immersiveSticky : SystemUiMode.edgeToEdge,
+    );
+  }
+
+  @override
+  void dispose() {
+    if (_focusMode) SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    super.dispose();
+  }
 
   List<ShiaTextLine> get _visibleLines {
     final source = widget.entry.lines;
@@ -234,9 +289,15 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
     final lines = _visibleLines;
     final allText = lines.map((line) => line.text).join('\n');
     return Scaffold(
-      appBar: AppBar(
+      appBar: _focusMode ? null : AppBar(
         title: Text(widget.entry.displayTitle, maxLines: 2, overflow: TextOverflow.ellipsis),
-        actions: [IconButton(
+        actions: [
+          IconButton(
+            tooltip: 'وضع القراءة الخاشعة',
+            onPressed: _toggleFocusMode,
+            icon: const Icon(Icons.center_focus_strong_rounded),
+          ),
+          IconButton(
           tooltip: 'نسخ النص الظاهر',
           onPressed: () async {
             await Clipboard.setData(ClipboardData(text: allText));
@@ -245,8 +306,11 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
           icon: const Icon(Icons.copy_rounded),
         )],
       ),
+      floatingActionButton: _focusMode
+        ? FloatingActionButton.small(onPressed: _toggleFocusMode, tooltip: 'إنهاء وضع القراءة الخاشعة', child: const Icon(Icons.close_rounded))
+        : null,
       body: Column(children: [
-        Padding(
+        if (!_focusMode) Padding(
           padding: const EdgeInsets.fromLTRB(14, 4, 14, 4),
           child: Column(children: [
             SingleChildScrollView(

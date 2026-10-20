@@ -7,6 +7,7 @@ import 'quran/quran_pages.dart';
 import 'features/prayer_calendar_page.dart';
 import 'features/qibla_page.dart';
 import 'features/settings_page.dart';
+import 'features/smart_search_page.dart';
 import 'features/mafatih_library_page.dart';
 import 'features/shia_text_library_page.dart';
 import 'features/good_deeds_page.dart';
@@ -191,8 +192,8 @@ class _MainShellState extends State<MainShell> {
         actions: [
           IconButton(
             tooltip: 'الباحث الذكي',
-            onPressed: () => _pushPage(const GoodDeedsPage()),
-            icon: const Icon(Icons.checklist_rounded, color: _gold),
+            onPressed: () => _pushPage(const SmartSearchPage()),
+            icon: const Icon(Icons.search_rounded, color: _gold),
           ),
         ],
       ),
@@ -253,6 +254,7 @@ class _MainShellState extends State<MainShell> {
                 _drawerItem(Icons.auto_awesome_rounded, 'الأدعية والزيارات', () => _selectTab(2), selected: _selected == 2),
                 _drawerItem(Icons.fingerprint_rounded, 'التسبيح', () => _selectTab(3), selected: _selected == 3),
                 _drawerItem(Icons.settings_rounded, 'الإعدادات', () => _selectTab(4), selected: _selected == 4),
+                _drawerItem(Icons.search_rounded, 'الباحث الذكي', () => _openDrawerPage(const SmartSearchPage())),
                 _drawerItem(Icons.checklist_rounded, 'صالح الأعمال', () => _openDrawerPage(const GoodDeedsPage())),
                 _drawerItem(Icons.auto_awesome_rounded, 'أسماء الله الحسنى', () => _openDrawerPage(const NamesOfAllahPage())),
                 const Padding(
@@ -877,8 +879,8 @@ class _DuaLibrary extends StatefulWidget {
 
 class _DuaLibraryState extends State<_DuaLibrary> {
   final _search = TextEditingController();
-  String _filter = 'الكل';
-  static const _filters = ['الكل', 'الاستغفار', 'الصلاة على محمد وآل محمد', 'التسبيح'];
+  String _filter = 'الاستغفار';
+  static const _filters = ['الاستغفار', 'الصلاة على محمد وآل محمد', 'التسبيح'];
 
   @override
   void dispose() {
@@ -886,12 +888,32 @@ class _DuaLibraryState extends State<_DuaLibrary> {
     super.dispose();
   }
 
+  Widget _sectionCard(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+  }) => Card(
+    color: _panel,
+    child: ListTile(
+      leading: CircleAvatar(
+        backgroundColor: _gold.withValues(alpha: .13),
+        child: Icon(icon, color: _gold),
+      ),
+      title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+      subtitle: Text(subtitle, style: const TextStyle(color: _muted, height: 1.5)),
+      trailing: const Icon(Icons.chevron_left_rounded, color: _gold),
+      onTap: onTap,
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
     final query = _search.text.trim();
     final items = dailyDhikr.where((item) {
       final matchesQuery = query.isEmpty || item.title.contains(query) || item.text.contains(query);
-      final matchesFilter = _filter == 'الكل' || item.title == _filter;
+      final matchesFilter = item.title == _filter;
       return matchesQuery && matchesFilter;
     }).toList();
     return ListView(
@@ -924,6 +946,63 @@ class _DuaLibraryState extends State<_DuaLibrary> {
               builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage()),
             )),
           ),
+        ),
+        const SizedBox(height: 16),
+        const Text('أقسام المكتبة', style: TextStyle(fontSize: 19, fontWeight: FontWeight.w800)),
+        const SizedBox(height: 8),
+        _sectionCard(
+          context,
+          icon: Icons.auto_stories_rounded,
+          title: 'الأدعية العامة',
+          subtitle: 'الأدعية والمناجيات المتوفرة في المكتبة',
+          onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'أدعية عامة')),
+          )),
+        ),
+        _sectionCard(
+          context,
+          icon: Icons.today_rounded,
+          title: 'أدعية الأيام',
+          subtitle: 'الأدعية الأسبوعية المتوفرة',
+          onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'أدعية الأيام')),
+          )),
+        ),
+        _sectionCard(
+          context,
+          icon: Icons.temple_buddhist_rounded,
+          title: 'الزيارات الشريفة',
+          subtitle: 'زيارات المعصومين عليهم السلام',
+          onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'الزيارات')),
+          )),
+        ),
+        _sectionCard(
+          context,
+          icon: Icons.menu_book_rounded,
+          title: 'التعقيبات ومفاتيح الجنان',
+          subtitle: 'تصفح أبواب مفاتيح الجنان وبحثها',
+          onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihLibraryPage()),
+          )),
+        ),
+        _sectionCard(
+          context,
+          icon: Icons.auto_awesome_rounded,
+          title: 'الصحيفة السجادية',
+          subtitle: 'أدعية الإمام زين العابدين عليه السلام',
+          onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'الصحيفة السجادية')),
+          )),
+        ),
+        _sectionCard(
+          context,
+          icon: Icons.favorite_border_rounded,
+          title: 'أسماء الله الحسنى',
+          subtitle: 'الأسماء ومعانيها الموجزة',
+          onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: NamesOfAllahPage()),
+          )),
         ),
         const SizedBox(height: 16),
         TextField(
@@ -1078,9 +1157,11 @@ class _KhatmaPageState extends State<KhatmaPage> {
         (_completedPages.toList()..sort()).map((value) => value.toString()).toList(),
       );
     } catch (_) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('تعذّر حفظ صفحات الختمة')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('تعذّر حفظ صفحات الختمة')),
+        );
+      }
     }
   }
 

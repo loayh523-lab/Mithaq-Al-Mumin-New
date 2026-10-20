@@ -8,7 +8,6 @@ const _faithGold = Color(0xFFD9B66D);
 const _faithMuted = Color(0xFF9EB5A9);
 
 const _officialFiqhUrl = 'https://www.leader.ir/ar';
-const _tafsirUrl = 'https://almizan.wilayah.app/';
 const _hajjUrl = 'https://www.leader.ir/ar/book/240/%D9%85%D9%86%D8%A7%D8%B3%D9%83-%D8%A7%D9%84%D8%AD%D8%AC';
 
 Future<void> openFaithSource(BuildContext context, String url) async {

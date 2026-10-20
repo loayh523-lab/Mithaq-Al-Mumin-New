@@ -30,7 +30,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('التسبيح'));
     await tester.pumpAndSettle();
-    expect(find.text('اضغط على الدائرة لزيادة العدّاد'), findsOneWidget);
+    expect(find.text('اضغط على الدائرة للتسبيح'), findsOneWidget);
     expect(find.text('0'), findsOneWidget);
   });
 
@@ -181,6 +181,14 @@ void main() {
     expect(find.text('الأدعية والزيارات'), findsWidgets);
     expect(find.textContaining('72 نصاً'), findsOneWidget);
     expect(find.textContaining('ما قدرنا نحمّل مكتبة الأدعية'), findsNothing);
+    await tester.scrollUntilVisible(
+      find.text('زيارة عاشوراء'),
+      300,
+      scrollable: find.descendant(
+        of: find.byType(ListView),
+        matching: find.byType(Scrollable),
+      ).first,
+    );
     expect(find.text('زيارة عاشوراء'), findsWidgets);
   });
 }

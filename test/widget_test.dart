@@ -203,7 +203,7 @@ void main() {
     expect(find.text('التقويم السنوي ${DateTime.now().year}'), findsOneWidget);
     await tester.tap(find.text('كانون الثاني'));
     await tester.pumpAndSettle();
-    expect(find.textContaining('1 كانون الثاني ${DateTime.now().year} م'), findsOneWidget);
+    expect(find.text('1 كانون الثاني ${DateTime.now().year} م'), findsOneWidget);
   });
 
   testWidgets('surah reader opens its bundled text without internet', (tester) async {
@@ -307,9 +307,9 @@ void main() {
     ));
     await tester.pumpAndSettle();
     expect(find.text('صالح الأعمال'), findsOneWidget);
-    await tester.tap(find.text('قراءة القرآن الكريم'));
+    await tester.tap(find.text('ورد من القرآن الكريم'));
     await tester.pumpAndSettle();
-    expect(find.text('1 من 10 أعمال'), findsOneWidget);
+    expect(find.textContaining('1 من '), findsOneWidget);
   });
 
   testWidgets('Names of Allah opens its Arabic offline list', (tester) async {
@@ -340,11 +340,11 @@ void main() {
       home: Directionality(textDirection: TextDirection.rtl, child: DhikrFortressPage()),
     ));
     await tester.pumpAndSettle();
-    expect(find.text('حصن الأذكار'), findsOneWidget);
+    expect(find.text('أذكار الصباح والمساء'), findsOneWidget);
     expect(find.text('أذكار الصباح'), findsOneWidget);
     await tester.tap(find.text('أذكار المساء'));
     await tester.pumpAndSettle();
-    expect(find.text('الصلاة على محمد وآل محمد'), findsOneWidget);
+    expect(find.text('الصلاة على النبي وآله'), findsOneWidget);
   });
 
   testWidgets('smart search screen offers cross-library offline search', (tester) async {

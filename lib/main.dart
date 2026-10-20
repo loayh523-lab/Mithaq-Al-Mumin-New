@@ -7,6 +7,7 @@ import 'features/prayer_calendar_page.dart';
 import 'features/qibla_page.dart';
 import 'features/settings_page.dart';
 import 'features/mafatih_library_page.dart';
+import 'features/shia_text_library_page.dart';
 import 'services/prayer_locations.dart';
 import 'services/prayer_notification_service.dart';
 
@@ -320,10 +321,22 @@ class _DuaLibraryState extends State<_DuaLibrary> {
           child: ListTile(
             leading: const CircleAvatar(backgroundColor: Color(0x223CB58B), child: Icon(Icons.auto_stories_rounded, color: _gold)),
             title: const Text('مفاتيح الجنان', style: TextStyle(fontWeight: FontWeight.bold)),
-            subtitle: const Text('المكتبة الكاملة المتاحة دون إنترنت', style: TextStyle(color: _muted)),
+            subtitle: const Text('تصفح الأبواب والنصوص دون إنترنت', style: TextStyle(color: _muted)),
             trailing: const Icon(Icons.chevron_left_rounded, color: _gold),
             onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
               builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihLibraryPage()),
+            )),
+          ),
+        ),
+        Card(
+          color: _panel,
+          child: ListTile(
+            leading: const CircleAvatar(backgroundColor: Color(0x223CB58B), child: Icon(Icons.menu_book_rounded, color: _gold)),
+            title: const Text('الأدعية والزيارات والصحيفة السجادية', style: TextStyle(fontWeight: FontWeight.bold)),
+            subtitle: const Text('مجموعة نصوص مع البحث والعرض دون إنترنت', style: TextStyle(color: _muted)),
+            trailing: const Icon(Icons.chevron_left_rounded, color: _gold),
+            onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+              builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage()),
             )),
           ),
         ),

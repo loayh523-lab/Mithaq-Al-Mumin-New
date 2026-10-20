@@ -1,0 +1,120 @@
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../services/prayer_locations.dart';
+
+const _settingsPanel = Color(0xFF10251E);
+const _settingsGold = Color(0xFFD9B66D);
+const _settingsMuted = Color(0xFF9EB5A9);
+
+class SettingsPage extends StatefulWidget {
+  const SettingsPage({super.key});
+  @override State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  String _cityId = PrayerLocations.cities.first.id;
+  double _fontSize = 24;
+  bool _loaded = false;
+
+  @override void initState() { super.initState(); _load(); }
+  Future<void> _load() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      if (!mounted) return;
+      setState(() {
+        _cityId = PrayerLocations.byId(prefs.getString('prayer_city')).id;
+        _fontSize = (prefs.getDouble('quran_font_size') ?? 24).clamp(16, 34);
+        _loaded = true;
+      });
+    } catch (_) {
+      if (mounted) setState(() => _loaded = true);
+    }
+  }
+
+  Future<void> _saveCity(String? id) async {
+    if (id == null) return;
+    setState(() => _cityId = id);
+    try {
+      await PrayerLocations.save(id);
+      if (mounted) _message('تم حفظ المدينة للمواقيت والقبلة');
+    } catch (_) {
+      if (mounted) _message('تعذّر حفظ المدينة على الجهاز');
+    }
+  }
+
+  Future<void> _saveFontSize(double value) async {
+    setState(() => _fontSize = value);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble('quran_font_size', value);
+  }
+
+  void _message(String text) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
+
+  @override Widget build(BuildContext context) {
+    final city = PrayerLocations.byId(_cityId);
+    return ListView(padding: const EdgeInsets.fromLTRB(18, 14, 18, 24), children: [
+      const Text('الإعدادات', style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800)),
+      const SizedBox(height: 5),
+      const Text('خصّص التطبيق بما يناسبك، وتُحفظ هذه الخيارات على جهازك.', style: TextStyle(color: _settingsMuted, height: 1.6)),
+      const SizedBox(height: 18),
+      _section(
+        icon: Icons.location_on_outlined,
+        title: 'المدينة ومواقيت الصلاة',
+        children: [
+          const Text('اختر أقرب مدينة إليك. الحسابات الفلكية المعروضة تقريبية ويجب مقارنتها بمواقيت مكتب مرجعك.', style: TextStyle(color: _settingsMuted, height: 1.6, fontSize: 12)),
+          const SizedBox(height: 12),
+          DropdownButtonFormField<String>(
+            value: _cityId,
+            decoration: const InputDecoration(labelText: 'مدينة الحساب', border: OutlineInputBorder()),
+            items: PrayerLocations.cities.map((c) => DropdownMenuItem(value: c.id, child: Text(c.name))).toList(),
+            onChanged: _loaded ? _saveCity : null,
+          ),
+          const SizedBox(height: 8),
+          Text('الإحداثيات التقريبية: ${city.latitude.toStringAsFixed(3)}, ${city.longitude.toStringAsFixed(3)}', style: const TextStyle(color: _settingsMuted, fontSize: 11)),
+        ],
+      ),
+      const SizedBox(height: 14),
+      _section(
+        icon: Icons.menu_book_outlined,
+        title: 'قراءة القرآن',
+        children: [
+          Text('حجم خط الآيات: ${_fontSize.round()}', style: const TextStyle(fontWeight: FontWeight.w600)),
+          Slider(value: _fontSize, min: 16, max: 34, divisions: 9, label: _fontSize.round().toString(), activeColor: _settingsGold, onChanged: _loaded ? _saveFontSize : null),
+          Text('مثال على شكل الخط', textDirection: TextDirection.rtl, style: TextStyle(fontSize: _fontSize, height: 1.8, color: _settingsGold)),
+        ],
+      ),
+      const SizedBox(height: 14),
+      _section(
+        icon: Icons.verified_outlined,
+        title: 'المصادر والمحتوى',
+        children: const [
+          Text('نص القرآن العثماني: مشروع Tanzil Project عبر dotquran/corpus. فهرس السور مضمّن محلياً.', style: TextStyle(color: _settingsMuted, height: 1.6)),
+          SizedBox(height: 8),
+          Text('النصوص الدعائية ستُوسّع مع إظهار اسم الكتاب والباب أو الموضع المتاح؛ لا تُعرض صيغة عامة على أنها رواية مسندة.', style: TextStyle(color: _settingsMuted, height: 1.6)),
+          SizedBox(height: 8),
+          Text('مواقيت الصلاة والتاريخ الهجري تقديرية حالياً، وقد تختلف باختلاف الموقع وثبوت الهلال والرأي الفقهي.', style: TextStyle(color: _settingsMuted, height: 1.6)),
+        ],
+      ),
+      const SizedBox(height: 14),
+      _section(
+        icon: Icons.phonelink_lock_outlined,
+        title: 'الخصوصية',
+        children: const [
+          Text('التقدّم والخيارات تُحفظ محلياً على الجهاز. لا يتطلب التطبيق حساباً ولا يرسل سجلّ عبادتك إلى خادم.', style: TextStyle(color: _settingsMuted, height: 1.6)),
+        ],
+      ),
+      const SizedBox(height: 14),
+      const Center(child: Text('ميثاق المؤمن • إصدار التطوير 0.1.0', style: TextStyle(color: _settingsMuted, fontSize: 11))),
+    ]);
+  }
+
+  Widget _section({required IconData icon, required String title, required List<Widget> children}) => Container(
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(color: _settingsPanel, borderRadius: BorderRadius.circular(20), border: Border.all(color: Colors.white.withValues(alpha: .05))),
+    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Row(children: [Icon(icon, color: _settingsGold), const SizedBox(width: 10), Expanded(child: Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)))]),
+      const SizedBox(height: 14),
+      ...children,
+    ]),
+  );
+}

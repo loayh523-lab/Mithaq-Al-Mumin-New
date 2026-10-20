@@ -1,6 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mithaq_al_mumin/main.dart';
+import 'package:mithaq_al_mumin/quran/quran_pages.dart';
 
 void main() {
   setUp(() {
@@ -18,13 +20,13 @@ void main() {
   });
 
   testWidgets('Quran index loads the bundled 114-surah catalog', (tester) async {
-    await tester.pumpWidget(const MithaqApp());
-    await tester.tap(find.text('القرآن الكريم').last);
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 100));
-    await tester.pump(const Duration(milliseconds: 100));
-    await tester.pump(const Duration(milliseconds: 100));
-    await tester.pump(const Duration(milliseconds: 100));
+    await tester.pumpWidget(const MaterialApp(
+      home: Directionality(
+        textDirection: TextDirection.rtl,
+        child: Scaffold(body: QuranIndexPage()),
+      ),
+    ));
+    await tester.pumpAndSettle();
     expect(find.text('فهرس السور'), findsOneWidget);
     expect(find.textContaining('114 سورة'), findsOneWidget);
     expect(find.text('الفاتحة'), findsOneWidget);

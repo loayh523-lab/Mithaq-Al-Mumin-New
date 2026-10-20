@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../services/prayer_locations.dart';
 
 const _panel = Color(0xFF10251E);
 const _gold = Color(0xFFD9B66D);
@@ -14,10 +15,14 @@ class PrayerCalendarPage extends StatefulWidget {
 }
 
 class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
-  static const lat = 31.85, lon = 46.07, zone = 3.0;
+  static const zone = 3.0;
+  PrayerCity city = PrayerLocations.cities.first;
   DateTime date = DateTime.now();
   int correction = 0, tab = 0;
-  @override void initState() { super.initState(); _loadCorrection(); }
+  @override void initState() { super.initState(); _loadCorrection(); _loadCity(); }
+  Future<void> _loadCity() async {
+    try { final selected = await PrayerLocations.load(); if (mounted) setState(() => city = selected); } catch (_) { /* Keep the default city. */ }
+  }
   Future<void> _loadCorrection() async {
     final p = await SharedPreferences.getInstance();
     if (mounted) setState(() => correction = p.getInt('hijri_correction') ?? 0);
@@ -29,7 +34,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
   }
   @override Widget build(BuildContext context) {
     final hijri = _Hijri.fromGregorian(date.add(Duration(days: correction)));
-    final times = _SolarTimes.forDate(date, lat, lon, zone);
+    final times = _SolarTimes.forDate(date, city.latitude, city.longitude, zone);
     return Scaffold(appBar: AppBar(title: const Text('المواقيت والتقويم')), body: ListView(padding: const EdgeInsets.all(16), children: [
       Container(padding: const EdgeInsets.all(18), decoration: BoxDecoration(color: _panel, borderRadius: BorderRadius.circular(22), border: Border.all(color: _gold.withValues(alpha: .3))), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const Text('التاريخ الهجري التقريبي', style: TextStyle(color: _muted)), const SizedBox(height: 8),
@@ -49,7 +54,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
       ] else ...[
         const Text('إمساكية تقديرية لقلعة سكر / ذي قار', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17)), const SizedBox(height: 5),
         const Text('يعرض الجدول 30 يوماً من التاريخ المختار. الفجر والغروب محسوبان فلكياً ولا يمثلان إمساكية رسمية لشهر رمضان محدد.', style: TextStyle(color: _muted, fontSize: 11, height: 1.5)),
-        ..._ramadanRows(date),
+        ..._ramadanRows(date, city.latitude, city.longitude),
       ],
       const Divider(), const Text('الموقع الحالي للحساب', style: TextStyle(fontWeight: FontWeight.bold)), const Text('قلعة سكر، ذي قار، العراق — إحداثيات تقريبية', style: TextStyle(color: _muted)),
     ]));
@@ -89,7 +94,7 @@ class _Hijri {
   }
 }
 
-List<Widget> _ramadanRows(DateTime reference) {
+List<Widget> _ramadanRows(DateTime reference, double latitude, double longitude) {
   final current = _Hijri.fromGregorian(reference);
   final targetYear = current.month > 9 ? current.year + 1 : current.year;
   DateTime? start;
@@ -103,7 +108,7 @@ List<Widget> _ramadanRows(DateTime reference) {
   final first = start ?? DateTime(reference.year, reference.month, reference.day);
   return List.generate(30, (i) {
     final d = first.add(Duration(days: i));
-    final t = _SolarTimes.forDate(d, 31.85, 46.07, 3.0);
+    final t = _SolarTimes.forDate(d, latitude, longitude, 3.0);
     final h = _Hijri.fromGregorian(d);
     return Card(color: _panel, child: ListTile(dense: true, leading: CircleAvatar(backgroundColor: _gold.withValues(alpha: .15), child: Text('${i + 1}', style: const TextStyle(color: _gold))), title: Text('رمضان ${h.day} — ${_dateLabel(d)}'), subtitle: Text('الإمساك/الفجر: ${t.fajr}  •  الإفطار التقريبي: ${t.maghrib}')));
   });

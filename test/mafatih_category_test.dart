@@ -2,6 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mithaq_al_mumin/features/mafatih_library_page.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   group('Arabic Mafatih categories', () {
     test('morning and evening supplications are separate', () {
       expect(mafatihCategoryFor('دعاء الصباح لأمير المؤمنين'), 'أدعية الصباح');

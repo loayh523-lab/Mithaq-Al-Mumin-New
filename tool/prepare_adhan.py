@@ -1,0 +1,65 @@
+#!/usr/bin/env python3
+"""Download the openly licensed Persian adhan for Android notification sound."""
+import json
+import os
+import tempfile
+import time
+import urllib.error
+import urllib.parse
+import urllib.request
+from pathlib import Path
+
+API_URL = (
+    "https://commons.wikimedia.org/w/api.php?"
+    + urllib.parse.urlencode({
+        "action": "query",
+        "titles": "File:AzaanMaahur.ogg",
+        "prop": "imageinfo",
+        "iiprop": "url",
+        "format": "json",
+    })
+)
+DEST = Path("android/app/src/main/res/raw/adhan_persian.ogg")
+USER_AGENT = "Mithaq-Al-Mumin/1.0 (openly licensed adhan asset preparation)"
+
+
+def read_url(url: str, attempts: int = 3) -> bytes:
+    request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+    for attempt in range(attempts):
+        try:
+            with urllib.request.urlopen(request, timeout=60) as response:
+                return response.read()
+        except (urllib.error.URLError, TimeoutError) as exc:
+            if attempt + 1 >= attempts:
+                raise SystemExit(f"Failed to fetch {url}: {exc}") from exc
+            time.sleep(1.5 * (attempt + 1))
+    raise SystemExit("Download failed unexpectedly.")
+
+
+def main() -> None:
+    payload = json.loads(read_url(API_URL).decode("utf-8"))
+    pages = payload.get("query", {}).get("pages", {})
+    page = next(iter(pages.values()), {})
+    info = page.get("imageinfo", [])
+    if page.get("title") != "File:AzaanMaahur.ogg" or not info:
+        raise SystemExit("Wikimedia Commons did not return the expected adhan file.")
+    source_url = info[0].get("url")
+    if not isinstance(source_url, str) or not source_url.startswith("https://upload.wikimedia.org/"):
+        raise SystemExit("Unexpected Wikimedia source URL; refusing to download.")
+    audio = read_url(source_url)
+    if len(audio) < 100_000 or not audio.startswith(b"OggS"):
+        raise SystemExit("Downloaded file is not a valid Ogg adhan recording.")
+    DEST.parent.mkdir(parents=True, exist_ok=True)
+    fd, temp_name = tempfile.mkstemp(prefix="adhan-", suffix=".ogg", dir=DEST.parent)
+    try:
+        with os.fdopen(fd, "wb") as handle:
+            handle.write(audio)
+        os.replace(temp_name, DEST)
+    finally:
+        if os.path.exists(temp_name):
+            os.remove(temp_name)
+    print(f"Prepared Persian adhan audio: {DEST} ({len(audio)} bytes)")
+
+
+if __name__ == "__main__":
+    main()

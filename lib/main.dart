@@ -572,7 +572,7 @@ class _MainShellState extends State<MainShell> {
                 borderRadius: BorderRadius.circular(22),
                 border: Border.all(color: _gold.withValues(alpha: .2)),
               ),
-              child: const Row(
+              child: Row(
                 children: [
                   Container(
                     width: 48,

@@ -38,9 +38,14 @@ def main() -> None:
         if not isinstance(ayahs, list) or not ayahs:
             raise SystemExit(f"Missing ayahs for surah {expected_number}")
         texts = []
-        for expected_ayah, ayah in enumerate(ayahs, start=1):
+        # The source stores the standalone basmalah as ayah 0 for some surahs.
+        # The app renders that preface separately, so keep canonical numbered ayahs only.
+        for ayah in ayahs:
             ayah_number = ayah.get("number", ayah.get("numberInSurah"))
             text = ayah.get("text")
+            if ayah_number == 0:
+                continue
+            expected_ayah = len(texts) + 1
             if ayah_number != expected_ayah or not isinstance(text, str) or not text.strip():
                 raise SystemExit(f"Invalid ayah {expected_number}:{expected_ayah}")
             texts.append({"number": expected_ayah, "text": text})

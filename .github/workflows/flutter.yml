@@ -77,6 +77,8 @@ jobs:
           PY
       - name: Prepare full offline Quran text
         run: python3 tool/prepare_quran.py
+      - name: Prepare offline Mafatih library
+        run: python3 tool/prepare_mafatih.py
       - name: Install dependencies
         run: flutter pub get
       - name: Analyze

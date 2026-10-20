@@ -24,6 +24,12 @@ void main() {
       expect(isArabicMafatihRecitation('دعاء به واژه'), isFalse);
     });
 
+    test('detects common Persian words even when the letters are shared with Arabic', () {
+      expect(containsPersianLanguageMarkers('دعای روزهای هفته'), isTrue);
+      expect(containsPersianLanguageMarkers('دعاء الصباح'), isFalse);
+      expect(isArabicMafatihRecitation('دعای روزهای هفته'), isFalse);
+    });
+
     test('detects distinctively Persian letters so Persian translations are omitted', () {
       expect(containsPersianOnlyLetters('گل و چهره'), isTrue);
     });

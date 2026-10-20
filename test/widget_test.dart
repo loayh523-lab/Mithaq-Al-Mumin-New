@@ -13,6 +13,7 @@ import 'package:mithaq_al_mumin/features/dhikr_fortress_page.dart';
 import 'package:mithaq_al_mumin/features/smart_search_page.dart';
 import 'package:mithaq_al_mumin/features/faith_services_page.dart';
 import 'package:mithaq_al_mumin/features/favorites_page.dart';
+import 'package:mithaq_al_mumin/features/rakah_counter_page.dart';
 import 'package:mithaq_al_mumin/services/qibla_calculation.dart';
 
 void main() {
@@ -408,6 +409,35 @@ void main() {
     expect(find.text('المفضلة المباركة'), findsOneWidget);
     expect(find.text('مفضلتك فارغة حالياً'), findsOneWidget);
     expect(find.text('تصفح الأدعية والزيارات'), findsOneWidget);
+  });
+
+  testWidgets('manual rakah counter tracks sajdahs and persists progress', (tester) async {
+    await tester.pumpWidget(const MaterialApp(
+      home: Directionality(
+        textDirection: TextDirection.rtl,
+        child: RakahCounterPage(),
+      ),
+    ));
+    await tester.pumpAndSettle();
+    expect(find.text('الركعة 1 من 4'), findsOneWidget);
+    await tester.ensureVisible(find.text('تسجيل السجدة الأولى'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('تسجيل السجدة الأولى'));
+    await tester.pumpAndSettle();
+    expect(find.text('1 / 2'), findsOneWidget);
+    await tester.ensureVisible(find.text('تسجيل السجدة الثانية'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('تسجيل السجدة الثانية'));
+    await tester.pumpAndSettle();
+    expect(find.text('2 / 2'), findsOneWidget);
+    await tester.ensureVisible(find.text('الركعة التالية'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('الركعة التالية'));
+    await tester.pumpAndSettle();
+    expect(find.text('الركعة 2 من 4'), findsOneWidget);
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getInt('rakah_helper_current'), 2);
+    expect(prefs.getInt('rakah_helper_sajdahs'), 0);
   });
 
   testWidgets('smart search screen offers cross-library offline search', (tester) async {

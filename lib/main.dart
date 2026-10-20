@@ -455,6 +455,8 @@ class _MainShellState extends State<MainShell> {
         .difference(DateTime(_now.year, 1, 1)).inDays;
     final dailyTask = _dailyTasks[dayOfYear % _dailyTasks.length];
     final inspiration = _dailyInspirations[dayOfYear % _dailyInspirations.length];
+    const weekdayNames = <String>['الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت', 'الأحد'];
+    final todayName = weekdayNames[_now.weekday - 1];
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
@@ -575,7 +577,7 @@ class _MainShellState extends State<MainShell> {
           )),
           const SizedBox(width: 7),
           Expanded(child: _homeQuickTile(
-            icon: Icons.checklist_rounded, title: 'عمل اليوم', subtitle: 'خطوة للأفضل',
+            icon: Icons.checklist_rounded, title: 'أعمال اليوم', subtitle: todayName,
             onTap: () => _pushPage(const GoodDeedsPage()),
           )),
           const SizedBox(width: 7),

@@ -34,7 +34,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
   }
   @override Widget build(BuildContext context) {
     final hijri = _Hijri.fromGregorian(date.add(Duration(days: correction)));
-    final times = _SolarTimes.forDate(date, city.latitude, city.longitude, zone);
+    final times = SolarPrayerTimes.forDate(date, city.latitude, city.longitude, zone);
     return Scaffold(appBar: AppBar(title: const Text('المواقيت والتقويم')), body: ListView(padding: const EdgeInsets.all(16), children: [
       Container(padding: const EdgeInsets.all(18), decoration: BoxDecoration(color: _panel, borderRadius: BorderRadius.circular(22), border: Border.all(color: _gold.withValues(alpha: .3))), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const Text('التاريخ الهجري التقريبي', style: TextStyle(color: _muted)), const SizedBox(height: 8),
@@ -49,7 +49,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
       const SizedBox(height: 12),
       if (tab == 0) ...[
         Row(children: [Expanded(child: Text('مواقيت ${_dateLabel(date)}', style: const TextStyle(fontWeight: FontWeight.bold))), IconButton(onPressed: () => setState(() => date = date.subtract(const Duration(days: 1))), icon: const Icon(Icons.chevron_right)), IconButton(onPressed: () => setState(() => date = date.add(const Duration(days: 1))), icon: const Icon(Icons.chevron_left)), IconButton(onPressed: () => setState(() => date = DateTime.now()), icon: const Icon(Icons.today))]),
-        _time(Icons.wb_twilight, 'الفجر (تقديري)', times.fajr), _time(Icons.wb_sunny_outlined, 'الشروق', times.sunrise), _time(Icons.sunny, 'الظهر', times.noon), _time(Icons.wb_twilight, 'الغروب', times.sunset), _time(Icons.nights_stay_outlined, 'المغرب (تقديري)', times.maghrib),
+        _time(Icons.wb_twilight, 'الفجر (تقديري)', times.fajr), _time(Icons.wb_sunny_outlined, 'الشروق', times.sunrise), _time(Icons.sunny, 'الظهر', times.noon), _time(Icons.wb_sunny_rounded, 'العصر (تقديري)', times.asr), _time(Icons.wb_twilight, 'الغروب', times.sunset), _time(Icons.nights_stay_outlined, 'المغرب (تقديري)', times.maghrib), _time(Icons.dark_mode_outlined, 'العشاء (تقديري)', times.isha),
         const Padding(padding: EdgeInsets.all(8), child: Text('الحساب الفلكي هنا تقديري: زاوية الفجر 16° والمغرب 4° بعد انخفاض الشمس. لا تعتمد عليه وحده للعبادة؛ قارن بمواقيت مكتب مرجعك في منطقتك. لا توجد حالياً تنبيهات أذان أو تحديد موقع تلقائي.', style: TextStyle(color: _muted, fontSize: 11, height: 1.6))),
       ] else ...[
         const Text('إمساكية تقديرية لقلعة سكر / ذي قار', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17)), const SizedBox(height: 5),
@@ -64,20 +64,39 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
 
 String _dateLabel(DateTime d) => '${d.day.toString().padLeft(2, '0')}/${d.month.toString().padLeft(2, '0')}/${d.year}';
 
-class _SolarTimes {
-  const _SolarTimes(this.fajr, this.sunrise, this.noon, this.sunset, this.maghrib);
-  final String fajr, sunrise, noon, sunset, maghrib;
-  static _SolarTimes forDate(DateTime date, double lat, double lon, double zone) {
+class SolarPrayerTimes {
+  const SolarPrayerTimes(this.fajr, this.sunrise, this.noon, this.asr, this.sunset, this.maghrib, this.isha);
+  final String fajr, sunrise, noon, asr, sunset, maghrib, isha;
+
+  static SolarPrayerTimes forDate(DateTime date, double lat, double lon, double zone) {
     final n = date.difference(DateTime(date.year, 1, 1)).inDays + 1;
     final g = 2 * math.pi / 365 * (n - 1);
-    final eq = 229.18 * (0.000075 + 0.001868 * math.cos(g) - 0.032077 * math.sin(g) - 0.014615 * math.cos(2*g) - 0.040849 * math.sin(2*g));
-    final dec = 0.006918 - 0.399912 * math.cos(g) + 0.070257 * math.sin(g) - 0.006758 * math.cos(2*g) + 0.000907 * math.sin(2*g) - 0.002697 * math.cos(3*g) + 0.00148 * math.sin(3*g);
+    final eq = 229.18 * (0.000075 + 0.001868 * math.cos(g) - 0.032077 * math.sin(g) - 0.014615 * math.cos(2 * g) - 0.040849 * math.sin(2 * g));
+    final dec = 0.006918 - 0.399912 * math.cos(g) + 0.070257 * math.sin(g) - 0.006758 * math.cos(2 * g) + 0.000907 * math.sin(2 * g) - 0.002697 * math.cos(3 * g) + 0.00148 * math.sin(3 * g);
     final noon = 720 - 4 * lon - eq + zone * 60;
-    double angle(double altitude) { const rad = math.pi / 180; final c = ( (math.sin(altitude * rad) - math.sin(lat * rad) * math.sin(dec)) / (math.cos(lat * rad) * math.cos(dec))).clamp(-1.0, 1.0); return math.acos(c) / rad; }
-    final rise = noon - 4 * angle(-0.833), set = noon + 4 * angle(-0.833);
-    return _SolarTimes(_fmt(noon - 4 * angle(-16)), _fmt(rise), _fmt(noon), _fmt(set), _fmt(noon + 4 * angle(-4)));
+    double hourAngle(double altitude) {
+      const rad = math.pi / 180;
+      final cosine = ((math.sin(altitude * rad) - math.sin(lat * rad) * math.sin(dec)) / (math.cos(lat * rad) * math.cos(dec))).clamp(-1.0, 1.0);
+      return math.acos(cosine) / rad;
+    }
+    final rise = noon - 4 * hourAngle(-0.833);
+    final set = noon + 4 * hourAngle(-0.833);
+    final asrAltitude = math.atan(1 / (1 + math.tan((lat * math.pi / 180 - dec).abs()))) * 180 / math.pi;
+    return SolarPrayerTimes(
+      _fmt(noon - 4 * hourAngle(-16)),
+      _fmt(rise),
+      _fmt(noon),
+      _fmt(noon + 4 * hourAngle(asrAltitude)),
+      _fmt(set),
+      _fmt(noon + 4 * hourAngle(-4)),
+      _fmt(noon + 4 * hourAngle(-14)),
+    );
   }
-  static String _fmt(double v) { final m = v.round().clamp(0, 2879) % 1440; return '${(m ~/ 60).toString().padLeft(2, '0')}:${(m % 60).toString().padLeft(2, '0')}'; }
+
+  static String _fmt(double value) {
+    final minute = value.round().clamp(0, 2879) % 1440;
+    return '${(minute ~/ 60).toString().padLeft(2, '0')}:${(minute % 60).toString().padLeft(2, '0')}';
+  }
 }
 
 class _Hijri {
@@ -108,7 +127,7 @@ List<Widget> _ramadanRows(DateTime reference, double latitude, double longitude)
   final first = start ?? DateTime(reference.year, reference.month, reference.day);
   return List.generate(30, (i) {
     final d = first.add(Duration(days: i));
-    final t = _SolarTimes.forDate(d, latitude, longitude, 3.0);
+    final t = SolarPrayerTimes.forDate(d, latitude, longitude, 3.0);
     final h = _Hijri.fromGregorian(d);
     return Card(color: _panel, child: ListTile(dense: true, leading: CircleAvatar(backgroundColor: _gold.withValues(alpha: .15), child: Text('${i + 1}', style: const TextStyle(color: _gold))), title: Text('رمضان ${h.day} — ${_dateLabel(d)}'), subtitle: Text('الإمساك/الفجر: ${t.fajr}  •  الإفطار التقريبي: ${t.maghrib}')));
   });

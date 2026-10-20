@@ -1062,11 +1062,47 @@ class _DuaLibraryState extends State<_DuaLibrary> {
         ),
         _sectionCard(
           context,
-          icon: Icons.brightness_5_outlined,
-          title: 'أدعية الصباح والمساء',
-          subtitle: 'الأدعية المأثورة المصنفة بحسب وقتها',
+          icon: Icons.wb_sunny_outlined,
+          title: 'أدعية الصباح',
+          subtitle: 'الأدعية الواردة في أعمال الصباح',
           onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihCategoryPage(initialCategory: 'أدعية الصباح والمساء')),
+            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihCategoryPage(initialCategory: 'أدعية الصباح')),
+          )),
+        ),
+        _sectionCard(
+          context,
+          icon: Icons.nights_stay_outlined,
+          title: 'أدعية المساء',
+          subtitle: 'الأدعية الواردة في أعمال المساء',
+          onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihCategoryPage(initialCategory: 'أدعية المساء')),
+          )),
+        ),
+        _sectionCard(
+          context,
+          icon: Icons.wb_twilight_outlined,
+          title: 'الأذكار المشتركة',
+          subtitle: 'نصوص يذكر مصدرها أنها تقرأ في الصباح والمساء معاً',
+          onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihCategoryPage(initialCategory: 'أذكار مشتركة')),
+          )),
+        ),
+        _sectionCard(
+          context,
+          icon: Icons.event_note_rounded,
+          title: 'الأعمال اليومية والمناسبات',
+          subtitle: 'الأعمال والأدعية المرتبطة بالأيام والليالي',
+          onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihCategoryPage(initialCategory: 'الأعمال اليومية والمناسبات')),
+          )),
+        ),
+        _sectionCard(
+          context,
+          icon: Icons.calendar_month_rounded,
+          title: 'الأعمال الشهرية',
+          subtitle: 'أعمال الأشهر والمواسم مرتبة داخل المكتبة',
+          onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihCategoryPage(initialCategory: 'الأعمال الشهرية والمناسبات')),
           )),
         ),
         _sectionCard(

@@ -247,9 +247,14 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
   Widget _time(IconData icon, String label, String time) => Card(color: _panel, child: ListTile(leading: Icon(icon, color: _gold), title: Text(label), trailing: Text(formatPrayerTime12Hour(time), style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold))));
 }
 
+String _arabicIndicDigits(int value) => value.toString().replaceAllMapped(
+  RegExp(r'[0-9]'),
+  (match) => '٠١٢٣٤٥٦٧٨٩'[int.parse(match.group(0)!)],
+);
+
 String hijriDateLabel(DateTime date, {int correction = 0}) {
   final hijri = _Hijri.fromGregorian(date.add(Duration(days: correction)));
-  return '${hijri.day} ${hijri.monthName} ${hijri.year} هـ';
+  return '${_arabicIndicDigits(hijri.day)} ${hijri.monthName} ${_arabicIndicDigits(hijri.year)} هـ';
 }
 
 /// Structured tabular Hijri date for features that need month/day matching.

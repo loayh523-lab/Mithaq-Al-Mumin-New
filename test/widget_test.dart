@@ -278,7 +278,7 @@ void main() {
     await tester.pumpWidget(const MaterialApp(
       home: Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'الزيارات')),
     ));
-    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 700)));
+    await tester.runAsync(() => Future<void>.delayed(const Duration(seconds: 4)));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
     expect(find.text('الأدعية والزيارات'), findsWidgets);
@@ -332,7 +332,7 @@ void main() {
     await tester.pumpWidget(const MaterialApp(
       home: Directionality(textDirection: TextDirection.rtl, child: DhikrFortressPage()),
     ));
-    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 700)));
+    await tester.runAsync(() => Future<void>.delayed(const Duration(seconds: 4)));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
 
@@ -346,7 +346,7 @@ void main() {
         .toSet();
 
     await tester.tap(find.text('أذكار المساء'));
-    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 700)));
+    await tester.runAsync(() => Future<void>.delayed(const Duration(seconds: 4)));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
 

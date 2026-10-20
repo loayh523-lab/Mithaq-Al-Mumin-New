@@ -26,7 +26,7 @@ class _AboutSupportPageState extends State<AboutSupportPage> {
     setState(() => _busy = true);
     try {
       await SharePlus.instance.share(
-        const ShareParams(
+        ShareParams(
           title: 'مشاركة ميثاق المؤمن',
           text: 'ميثاق المؤمن — تطبيق للقرآن والأدعية والعبادات.\n'
               'هذه نسخة قيد التطوير؛ تابع المشروع والتحديثات من هنا:\n'

@@ -307,33 +307,39 @@ class _SettingsPageState extends State<SettingsPage> {
             style: TextStyle(fontWeight: FontWeight.w700, color: _settingsGold),
           ),
           const SizedBox(height: 4),
-          ..._prayerOptions.map((option) => SwitchListTile(
-            key: ValueKey('prayer_enabled_${option.key}'),
-            contentPadding: EdgeInsets.zero,
-            title: Text('أذان ${option.value}'),
-            subtitle: Text(
-              _prayerEnabled[option.key] == true
-                  ? 'الأذان والتذكير مفعّلان'
-                  : 'لا يوجد تنبيه لهذه الصلاة',
-              style: const TextStyle(color: _settingsMuted, fontSize: 11),
+          ..._prayerOptions.map((option) => Material(
+            color: _settingsPanel,
+            child: SwitchListTile(
+              key: ValueKey('prayer_enabled_${option.key}'),
+              contentPadding: EdgeInsets.zero,
+              title: Text('أذان ${option.value}'),
+              subtitle: Text(
+                _prayerEnabled[option.key] == true
+                    ? 'الأذان والتذكير مفعّلان'
+                    : 'لا يوجد تنبيه لهذه الصلاة',
+                style: const TextStyle(color: _settingsMuted, fontSize: 11),
+              ),
+              value: _prayerEnabled[option.key] ?? true,
+              onChanged: _loaded
+                  ? (value) => _togglePrayerReminder(option.key, value)
+                  : null,
+              activeThumbColor: _settingsGold,
             ),
-            value: _prayerEnabled[option.key] ?? true,
-            onChanged: _loaded
-                ? (value) => _togglePrayerReminder(option.key, value)
-                : null,
-            activeThumbColor: _settingsGold,
           )),
           const Divider(color: Color(0x334A7562)),
-          SwitchListTile(
-            contentPadding: EdgeInsets.zero,
-            title: const Text('تنبيه قبل الأذان'),
-            subtitle: const Text(
-              'يرسل إشعاراً عادياً قبل وقت الصلاة؛ لا يشغّل تسجيل الأذان مبكراً.',
-              style: TextStyle(color: _settingsMuted, height: 1.5, fontSize: 12),
+          Material(
+            color: _settingsPanel,
+            child: SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              title: const Text('تنبيه قبل الأذان'),
+              subtitle: const Text(
+                'يرسل إشعاراً عادياً قبل وقت الصلاة؛ لا يشغّل تسجيل الأذان مبكراً.',
+                style: TextStyle(color: _settingsMuted, height: 1.5, fontSize: 12),
+              ),
+              value: _earlyAlertEnabled,
+              onChanged: _loaded ? _toggleEarlyAlert : null,
+              activeThumbColor: _settingsGold,
             ),
-            value: _earlyAlertEnabled,
-            onChanged: _loaded ? _toggleEarlyAlert : null,
-            activeThumbColor: _settingsGold,
           ),
           DropdownButtonFormField<int>(
             key: const ValueKey('prayer_early_alert_minutes'),

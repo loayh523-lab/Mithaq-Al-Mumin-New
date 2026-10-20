@@ -15,6 +15,7 @@ import 'features/names_of_allah_page.dart';
 import 'features/qada_tracker_page.dart';
 import 'features/dhikr_fortress_page.dart';
 import 'features/faith_services_page.dart';
+import 'features/favorites_page.dart';
 import 'services/prayer_locations.dart';
 import 'services/prayer_notification_service.dart';
 
@@ -293,6 +294,7 @@ class _MainShellState extends State<MainShell> {
                 _drawerItem(Icons.menu_book_rounded, 'مفاتيح الجنان', () => _openDrawerPage(const MafatihLibraryPage())),
                 _drawerItem(Icons.library_books_rounded, 'مكتبة الأدعية والزيارات', () => _openDrawerPage(const ShiaTextLibraryPage())),
                 _drawerItem(Icons.volunteer_activism_rounded, 'الخدمات الإيمانية', () => _openDrawerPage(const FaithServicesPage())),
+                _drawerItem(Icons.star_rounded, 'المفضلة المباركة', () => _openDrawerPage(const FavoritesPage())),
               ],
             ),
           ),

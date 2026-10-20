@@ -195,6 +195,7 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
       if (!mounted) return;
       setState(() { _verses = verses; _loading = false; _error = null; });
     } catch (_) {
+      _offlineQuranFuture = null;
       if (!mounted) return;
       setState(() {
         _loading = false;

@@ -1,0 +1,8 @@
+Adhan recording attribution
+Title: AzaanMaahur.ogg
+Creator: Saeed Hatamzadeh-Varmazyar
+Source: https://commons.wikimedia.org/wiki/File:AzaanMaahur.ogg
+License: Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+License URL: https://creativecommons.org/licenses/by-sa/4.0/
+Changes: The audio file is redistributed unchanged for offline playback and Android notification sound.
+Verification note: Commons describes this as an adhan in the Mahur musical mode; this project has not independently verified that the spoken text matches the Ja'fari adhan wording. The app must not label it as a verified Ja'fari recording.

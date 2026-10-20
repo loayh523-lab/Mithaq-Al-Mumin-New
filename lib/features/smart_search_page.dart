@@ -104,7 +104,7 @@ class _SmartSearchPageState extends State<SmartSearchPage> {
             preview: text,
             openPage: () => Directionality(
               textDirection: TextDirection.rtl,
-              child: SurahReaderPage(surah: surah),
+              child: SurahReaderPage(surah: surah, initialVerse: verse),
             ),
           ));
           if (results.length >= 35) break;

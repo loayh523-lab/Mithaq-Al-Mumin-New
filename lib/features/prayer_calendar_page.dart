@@ -252,6 +252,21 @@ String hijriDateLabel(DateTime date, {int correction = 0}) {
   return '${hijri.day} ${hijri.monthName} ${hijri.year} هـ';
 }
 
+/// Structured tabular Hijri date for features that need month/day matching.
+/// Moon-sighting announcements can differ from this civil-calendar estimate.
+({int day, int month, int year, String monthName}) hijriDateParts(
+  DateTime date, {
+  int correction = 0,
+}) {
+  final hijri = _Hijri.fromGregorian(date.add(Duration(days: correction)));
+  return (
+    day: hijri.day,
+    month: hijri.month,
+    year: hijri.year,
+    monthName: hijri.monthName,
+  );
+}
+
 String _dateLabel(DateTime d) => '${d.day.toString().padLeft(2, '0')}/${d.month.toString().padLeft(2, '0')}/${d.year}';
 
 String _gregorianMonthName(int month) => const [

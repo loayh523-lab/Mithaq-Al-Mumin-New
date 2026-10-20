@@ -1,23 +1,31 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_compass/flutter_compass.dart';
+import '../services/prayer_locations.dart';
 
 const _qiblaGold = Color(0xFFD9B66D);
 const _qiblaPanel = Color(0xFF10251E);
 const _qiblaMuted = Color(0xFF9EB5A9);
 
 /// Live compass direction for the configured approximate Qal'at Sukar location.
-class QiblaPage extends StatelessWidget {
+class QiblaPage extends StatefulWidget {
   const QiblaPage({super.key});
-  static const double _lat = 31.85;
-  static const double _lon = 46.07;
+  @override State<QiblaPage> createState() => _QiblaPageState();
+}
+
+class _QiblaPageState extends State<QiblaPage> {
   static const double _kaabaLat = 21.4225;
   static const double _kaabaLon = 39.8262;
+  PrayerCity _city = PrayerLocations.cities.first;
+  @override void initState() { super.initState(); _loadCity(); }
+  Future<void> _loadCity() async {
+    try { final selected = await PrayerLocations.load(); if (mounted) setState(() => _city = selected); } catch (_) { /* Keep default city. */ }
+  }
 
   double get _bearing {
     const r = math.pi / 180;
-    final lat1 = _lat * r, lat2 = _kaabaLat * r;
-    final dLon = (_kaabaLon - _lon) * r;
+    final lat1 = _city.latitude * r, lat2 = _kaabaLat * r;
+    final dLon = (_kaabaLon - _city.longitude) * r;
     final y = math.sin(dLon) * math.cos(lat2);
     final x = math.cos(lat1) * math.sin(lat2) - math.sin(lat1) * math.cos(lat2) * math.cos(dLon);
     return (math.atan2(y, x) / r + 360) % 360;
@@ -55,7 +63,7 @@ class QiblaPage extends StatelessWidget {
             const SizedBox(height: 20), Text('اتجاه الهاتف: ${heading.round()}°', style: const TextStyle(color: _qiblaMuted)),
           ])),
           const SizedBox(height: 18),
-          const Text('الموقع المعتمد: قلعة سكر، ذي قار — إحداثيات تقريبية. حرّك الهاتف بعيداً عن المعادن والمغناطيس، ولا تعتمد على البوصلة قرب الأجهزة التي تؤثر في الحساس.', style: TextStyle(color: _qiblaMuted, height: 1.6, fontSize: 12)),
+          const Text('الموقع المعتمد: ${_city.name}، العراق — إحداثيات تقريبية. حرّك الهاتف بعيداً عن المعادن والمغناطيس، ولا تعتمد على البوصلة قرب الأجهزة التي تؤثر في الحساس.', style: TextStyle(color: _qiblaMuted, height: 1.6, fontSize: 12)),
         ]);
       },
     ),

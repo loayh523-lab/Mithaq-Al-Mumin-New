@@ -288,7 +288,7 @@ class _MainShellState extends State<MainShell> {
                 _drawerItem(Icons.auto_stories_rounded, 'ختمة القرآن', () => _openDrawerPage(const KhatmaPage())),
                 _drawerItem(Icons.checklist_rounded, 'متابعة الصلاة', () => _openDrawerPage(const PrayerTrackerPage())),
                 _drawerItem(Icons.calendar_month_rounded, 'مواقيت الصلاة والتقويم', () => _openDrawerPage(PrayerCalendarPage(onLocationChanged: _handleLocationChanged, onHijriCorrectionChanged: _loadDashboardData))),
-                _drawerItem(Icons.explore_rounded, 'اتجاه القبلة', () => _openDrawerPage(QiblaPage(onLocationChanged: _handleLocationChanged)),
+                _drawerItem(Icons.explore_rounded, 'اتجاه القبلة', () => _openDrawerPage(QiblaPage(onLocationChanged: _handleLocationChanged))),
                 _drawerItem(Icons.menu_book_rounded, 'مفاتيح الجنان', () => _openDrawerPage(const MafatihLibraryPage())),
                 _drawerItem(Icons.library_books_rounded, 'مكتبة الأدعية والزيارات', () => _openDrawerPage(const ShiaTextLibraryPage())),
               ],

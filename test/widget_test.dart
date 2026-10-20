@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mithaq_al_mumin/main.dart';
 import 'package:mithaq_al_mumin/quran/quran_pages.dart';
+import 'package:mithaq_al_mumin/features/prayer_calendar_page.dart';
 
 void main() {
   setUp(() {
@@ -60,3 +61,20 @@ void main() {
     expect(find.text('الخطوة التالية'), findsOneWidget);
   });
 }
+
+
+  testWidgets('prayer calendar shows estimated times and imsakiyah switch', (tester) async {
+    await tester.pumpWidget(const MaterialApp(
+      home: Directionality(
+        textDirection: TextDirection.rtl,
+        child: PrayerCalendarPage(),
+      ),
+    ));
+    await tester.pumpAndSettle();
+    expect(find.text('المواقيت والتقويم'), findsOneWidget);
+    expect(find.text('الفجر (تقديري)'), findsOneWidget);
+    await tester.tap(find.text('إمساكية رمضان'));
+    await tester.pumpAndSettle();
+    expect(find.text('إمساكية تقديرية لقلعة سكر / ذي قار'), findsOneWidget);
+    expect(find.textContaining('الإمساك/الفجر:'), findsWidgets);
+  });

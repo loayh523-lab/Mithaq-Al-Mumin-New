@@ -63,7 +63,7 @@ class _QiblaPageState extends State<QiblaPage> {
             const SizedBox(height: 20), Text('اتجاه الهاتف: ${heading.round()}°', style: const TextStyle(color: _qiblaMuted)),
           ])),
           const SizedBox(height: 18),
-          Text('الموقع المعتمد: ${_city.name}، العراق — إحداثيات تقريبية. حرّك الهاتف بعيداً عن المعادن والمغناطيس، ولا تعتمد على البوصلة قرب الأجهزة التي تؤثر في الحساس.', style: TextStyle(color: _qiblaMuted, height: 1.6, fontSize: 12)),
+          Text('الموقع المعتمد: ${_city.name}، العراق — ${_city.id == 'current_location' ? 'إحداثيات من موقع الجهاز' : 'إحداثيات المدينة التقريبية'}. حرّك الهاتف بعيداً عن المعادن والمغناطيس، ولا تعتمد على البوصلة قرب الأجهزة التي تؤثر في الحساس.', style: TextStyle(color: _qiblaMuted, height: 1.6, fontSize: 12)),
         ]);
       },
     ),

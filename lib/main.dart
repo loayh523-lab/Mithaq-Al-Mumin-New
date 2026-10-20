@@ -108,7 +108,6 @@ class _MainShellState extends State<MainShell> {
         ),
         actions: [
           IconButton(
-            tooltip: 'التنبيهات',
             onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: PrayerCalendarPage()))),
             tooltip: 'المواقيت والتقويم',
             icon: const Icon(Icons.calendar_month_rounded),
@@ -260,23 +259,6 @@ class _MainShellState extends State<MainShell> {
     ),
   );
 
-  Widget _placeholderPage(IconData icon, String title, String description) => Center(
-    child: Padding(
-      padding: const EdgeInsets.all(28),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, size: 56, color: _gold),
-          const SizedBox(height: 18),
-          Text(title, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 10),
-          Text(description, textAlign: TextAlign.center, style: const TextStyle(color: _muted, height: 1.7)),
-          const SizedBox(height: 20),
-          const Chip(avatar: Icon(Icons.construction_rounded, size: 18), label: Text('قيد البناء')),
-        ],
-      ),
-    ),
-  );
 
   void _notice(String message) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));

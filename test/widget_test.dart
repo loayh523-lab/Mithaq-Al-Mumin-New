@@ -494,7 +494,19 @@ void main() {
     expect(find.text('ميثاق المؤمن'), findsOneWidget);
     expect(find.text('مشاركة ميثاق المؤمن'), findsOneWidget);
     expect(find.text('الدعم الفني والإبلاغ عن مشكلة'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('مصدر نص القرآن — Tanzil'),
+      250,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
     expect(find.text('مصدر نص القرآن — Tanzil'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.textContaining('لم نتحقق من مطابقته لألفاظ الأذان الجعفري'),
+      250,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
     expect(find.textContaining('لم نتحقق من مطابقته لألفاظ الأذان الجعفري'), findsOneWidget);
   });
 

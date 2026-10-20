@@ -63,7 +63,6 @@ class MainShell extends StatefulWidget {
 
 class _MainShellState extends State<MainShell> {
   int _selected = 0;
-  int _count = 0;
   PrayerCity _prayerCity = PrayerLocations.cities.first;
   DateTime _now = DateTime.now();
   Timer? _dashboardClock;
@@ -83,7 +82,6 @@ class _MainShellState extends State<MainShell> {
   @override
   void initState() {
     super.initState();
-    _restoreCounter();
     _refreshPrayerReminders();
     _loadDashboardData();
     _dashboardClock = Timer.periodic(const Duration(seconds: 30), (_) {
@@ -164,26 +162,6 @@ class _MainShellState extends State<MainShell> {
       }
     } catch (_) {
       // Reminder issues must never prevent the app from opening.
-    }
-  }
-
-  Future<void> _restoreCounter() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      if (!mounted) return;
-      setState(() => _count = prefs.getInt('tasbeeh_count') ?? 0);
-    } catch (_) {
-      // Keep the counter usable even if local storage is unavailable.
-    }
-  }
-
-  Future<void> _saveCounter(int value) async {
-    setState(() => _count = value);
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setInt('tasbeeh_count', value);
-    } catch (_) {
-      if (mounted) _notice('تعذّر حفظ العدّاد على الجهاز');
     }
   }
 
@@ -660,9 +638,11 @@ class _TasbeehPageState extends State<TasbeehPage> {
       await prefs.setInt('tasbeeh_zahra_count', _count);
       await prefs.setInt('tasbeeh_general_count', _generalCount);
     } catch (_) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('تعذّر حفظ التقدم على الجهاز')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('تعذّر حفظ التقدم على الجهاز')),
+        );
+      }
     }
   }
 
@@ -762,7 +742,7 @@ class _TasbeehPageState extends State<TasbeehPage> {
             ),
             const SizedBox(height: 18),
             if (_zahraMode) ...[
-              Text('\$_count', style: const TextStyle(fontSize: 54, fontWeight: FontWeight.w800)),
+              Text('$_count', style: const TextStyle(fontSize: 54, fontWeight: FontWeight.w800)),
               const SizedBox(height: 8),
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
@@ -776,7 +756,7 @@ class _TasbeehPageState extends State<TasbeehPage> {
               const SizedBox(height: 8),
               Text('المرحلة ${_step + 1} من 3 • المطلوب ${step.target}', style: const TextStyle(color: _muted)),
             ] else
-              Text('\$_generalCount', style: const TextStyle(fontSize: 58, fontWeight: FontWeight.w800)),
+              Text('$_generalCount', style: const TextStyle(fontSize: 58, fontWeight: FontWeight.w800)),
             const SizedBox(height: 22),
             Semantics(
               button: true,

@@ -2,7 +2,22 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../data/mafatih_data.dart';
+
+String normalizeArabicText(String value) => value
+    .replaceAll('ک', 'ك')
+    .replaceAll('ی', 'ي')
+    .replaceAll('ے', 'ي')
+    .replaceAll('ہ', 'ه');
+
+bool containsPersianOnlyLetters(String value) =>
+    RegExp(r'[پچژگ]').hasMatch(value);
+
+bool containsPersianLanguageMarkers(String value) {
+  final normalized = normalizeArabicText(value);
+  return RegExp(
+    r'دعای|دعاي|دعاهای|دعاهاي|روزهای|روزهاي|روزها|هفته|فارسی|فارسي|برای|براي|میباشد|می شود|ميشود|خواهد شد|نمی|نمي|زیارت|زيارت|زیارات|زيارات|مناجات',
+  ).hasMatch('$value $normalized');
+}
 
 const _shiaPanel = Color(0xFF10251E);
 const _shiaGold = Color(0xFFD9B66D);
@@ -49,7 +64,7 @@ class ShiaTextEntry {
   final String categoryOverride;
   String get displayTitle {
     for (final candidate in <String>[alternateName, title]) {
-      final clean = normalizeMafatihArabicText(candidate.trim());
+      final clean = normalizeArabicText(candidate.trim());
       if (clean.isEmpty) continue;
       if (!clean.runes.any((rune) => rune >= 0x0600 && rune <= 0x06FF)) continue;
       if (RegExp(r'[A-Za-z]').hasMatch(clean)) continue;

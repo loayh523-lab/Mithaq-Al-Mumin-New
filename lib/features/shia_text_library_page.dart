@@ -13,7 +13,9 @@ class ShiaTextLine {
   final String text;
   bool get isArabic => kind.toLowerCase() == 'arabic';
   bool get isTranslation => kind.toLowerCase() == 'translation';
-  bool get isPersian => RegExp(r'persian|farsi|\bfa\b|فارسي|فارسی', caseSensitive: false).hasMatch(kind);
+  bool get isPersian =>
+      RegExp(r'persian|farsi|\bfa\b|فارسي|فارسی', caseSensitive: false).hasMatch(kind) ||
+      RegExp(r'[گچپژ]').hasMatch(text);
   bool get isTransliteration => kind.toLowerCase() == 'transliteration';
   factory ShiaTextLine.fromJson(Map<String, dynamic> json) => ShiaTextLine(
     index: json['index'] is int ? json['index'] as int : 0,

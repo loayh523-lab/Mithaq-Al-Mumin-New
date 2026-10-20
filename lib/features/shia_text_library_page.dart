@@ -399,7 +399,6 @@ class ShiaTextReaderPage extends StatefulWidget {
 }
 
 class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
-  String _display = 'العربي';
   double _fontSize = 23;
   bool _focusMode = false;
   bool _isFavorite = false;
@@ -475,24 +474,8 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
     super.dispose();
   }
 
-  List<ShiaTextLine> get _visibleLines {
-    final source = widget.entry.lines;
-    if (_display == 'العربي') return source.where((line) => line.isArabic).toList();
-    if (_display == 'الفارسي') return source.where((line) => line.isPersian && !line.isArabic).toList();
-    if (_display == 'العربي والترجمة') {
-      return [
-        ...source.where((line) => line.isArabic),
-        ...source.where((line) => line.isTranslation && !line.isPersian),
-      ];
-    }
-    if (_display == 'العربي والفارسي') {
-      return [
-        ...source.where((line) => line.isArabic),
-        ...source.where((line) => line.isPersian && !line.isArabic),
-      ];
-    }
-    return source.toList();
-  }
+  List<ShiaTextLine> get _visibleLines =>
+      widget.entry.lines.where((line) => line.isArabic && line.text.trim().isNotEmpty).toList(growable: false);
 
   @override Widget build(BuildContext context) {
     final lines = _visibleLines;
@@ -530,18 +513,12 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
         if (!_focusMode) Padding(
           padding: const EdgeInsets.fromLTRB(14, 4, 14, 4),
           child: Column(children: [
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(children: [
-                'العربي', 'الفارسي', 'العربي والفارسي', 'العربي والترجمة', 'كل الأسطر'
-              ].map((choice) => Padding(
-                padding: const EdgeInsetsDirectional.only(end: 7),
-                child: ChoiceChip(
-                  label: Text(choice),
-                  selected: _display == choice,
-                  onSelected: (_) => setState(() => _display = choice),
-                ),
-              )).toList()),
+            const Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: Text(
+                'عرض النص العربي فقط',
+                style: TextStyle(color: _shiaMuted, fontSize: 12),
+              ),
             ),
             Row(children: [
               const Icon(Icons.text_fields_rounded, color: _shiaGold),
@@ -581,7 +558,11 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
                   );
                 }),
                 const Divider(color: Color(0x334A7562)),
-                const Text('هذا النص منقول من سجلّ البيانات المشار إليه أدناه. قد تختلف الضبطات أو ترتيب الفقرات بين الطبعات.', style: TextStyle(color: _shiaMuted, height: 1.7, fontSize: 11)),
+                const Text('النص المعروض عربي فقط. قد تختلف الضبطات أو ترتيب الفقرات بين الطبعات.', style: TextStyle(color: _shiaMuted, height: 1.7, fontSize: 11)),
+                if (widget.entry.sourceLabel.isNotEmpty) ...[
+                  const SizedBox(height: 6),
+                  SelectableText('المصدر: ${widget.entry.sourceLabel}', textDirection: TextDirection.rtl, style: const TextStyle(color: _shiaGold, fontSize: 11, height: 1.6)),
+                ],
                 if (widget.entry.sourceLabel.isNotEmpty) ...[
                   const SizedBox(height: 6),
                   SelectableText('المصدر: ${widget.entry.sourceLabel}', textDirection: TextDirection.rtl, style: const TextStyle(color: _shiaGold, fontSize: 11, height: 1.6)),

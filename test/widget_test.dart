@@ -11,6 +11,7 @@ import 'package:mithaq_al_mumin/features/names_of_allah_page.dart';
 import 'package:mithaq_al_mumin/features/qada_tracker_page.dart';
 import 'package:mithaq_al_mumin/features/dhikr_fortress_page.dart';
 import 'package:mithaq_al_mumin/features/smart_search_page.dart';
+import 'package:mithaq_al_mumin/services/qibla_calculation.dart';
 
 void main() {
   setUp(() {
@@ -90,6 +91,28 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('1'), findsOneWidget);
     expect(find.text('الخطوة التالية'), findsOneWidget);
+  });
+
+  test('Qibla bearing and magnetic correction use the proper north reference', () {
+    expect(
+      qiblaBearingDegrees(latitude: 0, longitude: 39.8262),
+      closeTo(0, 0.01),
+    );
+    expect(
+      magneticQiblaBearingDegrees(trueBearing: 15, declinationDegrees: 20),
+      closeTo(355, 0.0001),
+    );
+    expect(
+      magneticQiblaBearingDegrees(trueBearing: 355, declinationDegrees: -10),
+      closeTo(5, 0.0001),
+    );
+    final declination = magneticDeclinationDegrees(
+      latitude: 31.85,
+      longitude: 46.07,
+      date: DateTime(2026, 10, 20),
+    );
+    expect(declination.isFinite, isTrue);
+    expect(declination, inInclusiveRange(-180, 180));
   });
 
   test('Hijri civil conversion matches the expected date for 20 October 2026', () {

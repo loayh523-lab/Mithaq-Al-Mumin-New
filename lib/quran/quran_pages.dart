@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 const _panel = Color(0xFF10251E);
 const _emerald = Color(0xFF1C8060);
@@ -171,9 +172,17 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
   bool _loading = true;
   String? _error;
   List<String> _verses = const [];
+  double _fontSize = 24;
 
   @override
-  void initState() { super.initState(); _loadVerses(); }
+  void initState() { super.initState(); _loadFontSize(); _loadVerses(); }
+
+  Future<void> _loadFontSize() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      if (mounted) setState(() => _fontSize = (prefs.getDouble('quran_font_size') ?? 24).clamp(16, 34));
+    } catch (_) { /* Keep the default text size. */ }
+  }
 
   Future<void> _loadVerses() async {
     setState(() { _loading = true; _error = null; });
@@ -232,7 +241,7 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
               margin: const EdgeInsets.only(top: 10), padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(color: _panel, borderRadius: BorderRadius.circular(16), border: Border.all(color: Colors.white.withValues(alpha: .05))),
               child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                Text(_verses[i], textAlign: TextAlign.justify, textDirection: TextDirection.rtl, style: const TextStyle(fontSize: 24, height: 2.1)),
+                Text(_verses[i], textAlign: TextAlign.justify, textDirection: TextDirection.rtl, style: TextStyle(fontSize: _fontSize, height: 2.1)),
                 const SizedBox(height: 8),
                 Row(children: [
                   CircleAvatar(radius: 16, backgroundColor: _emerald, child: Text('${i + 1}', style: const TextStyle(color: Colors.white, fontSize: 12))),

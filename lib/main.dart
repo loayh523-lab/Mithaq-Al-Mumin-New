@@ -235,13 +235,15 @@ class _MainShellState extends State<MainShell> {
               children: [
                 Icon(Icons.mosque_rounded, color: _gold, size: 34),
                 SizedBox(width: 12),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('ميثاق المؤمن', style: TextStyle(fontSize: 19, fontWeight: FontWeight.w800)),
-                    SizedBox(height: 4),
-                    Text('درب العبادة والطمأنينة', style: TextStyle(color: _muted, fontSize: 12)),
-                  ],
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('ميثاق المؤمن', maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 19, fontWeight: FontWeight.w800)),
+                      SizedBox(height: 4),
+                      Text('درب العبادة والطمأنينة', maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: _muted, fontSize: 12)),
+                    ],
+                  ),
                 ),
               ],
             ),

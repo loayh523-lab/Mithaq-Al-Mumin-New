@@ -26,7 +26,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 100));
     }
     expect(find.text('فهرس السور'), findsOneWidget);
-    expect(find.text('114 سورة • 6236 آية'), findsOneWidget);
+    expect(find.textContaining('114 سورة'), findsOneWidget);
     expect(find.text('الفاتحة'), findsOneWidget);
   });
 

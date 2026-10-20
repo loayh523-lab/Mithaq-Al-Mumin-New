@@ -12,6 +12,10 @@ void main() {
     SharedPreferences.setMockInitialValues({});
   });
 
+  test('Hijri date is formatted correctly for the agreed date', () {
+    expect(hijriDateLabel(DateTime(2026, 10, 20)), '٨ جمادى الأولى ١٤٤٨ هـ');
+  });
+
   testWidgets('home screen shows the agreed dashboard and drawer navigation opens tasbeeh', (tester) async {
     await tester.pumpWidget(const MithaqApp());
     expect(find.text('ميثاق المؤمن'), findsOneWidget);

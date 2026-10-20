@@ -177,87 +177,30 @@ class ShiaTextData {
     final raw = await rootBundle.loadString('assets/shia_duas/shia_duas.json');
     final decoded = jsonDecode(raw) as Map<String, dynamic>;
     final rawEntries = decoded['entries'] as List<dynamic>;
-    final entries = rawEntries.whereType<Map<String, dynamic>>()
+    final entries = rawEntries
+        .whereType<Map<String, dynamic>>()
         .map(ShiaTextEntry.fromJson)
-        .where((entry) => entry.lines.any((line) => line.isArabic && line.text.trim().isNotEmpty))
-        .toList();
+        .where((entry) => entry.lines.any(
+              (line) => line.isArabic && line.text.trim().isNotEmpty,
+            ))
+        .toList(growable: false);
 
-    // Merge the Arabic Mafatih content into the appropriate library categories.
-    // There is no separate "Mafatih al-Jinan" destination in the app; each text
-    // retains its exact chapter/section/article breadcrumb as a source citation.
-    final mafatih = await MafatihData.load();
-    final seen = <String>{
-      for (final entry in entries)
-        _normalize('${entry.category}|${entry.displayTitle}|${entry.arabicText}'),
-    };
-    var importedCount = 0;
-    for (final chapter in mafatih.chapters) {
-      for (final section in chapter.sections) {
-        for (final article in section.articles) {
-          final searchable = '${chapter.title} ${section.title} ${article.title} '
-              '${article.items.map((item) => plainMafatihText(item.content)).where((text) => text.isNotEmpty).take(3).join(' ')}';
-          final category = _categoryForMafatih(
-            article.category.trim().isNotEmpty
-                ? article.category
-                : mafatihCategoryFor(searchable),
-          );
-          final lines = article.items
-              .where((item) => isArabicMafatihRecitation(item.content))
-              .map((item) => ShiaTextLine(
-                    index: 0,
-                    kind: 'arabic',
-                    text: plainMafatihText(item.content),
-                  ))
-              .where((line) => line.text.trim().isNotEmpty)
-              .toList(growable: false);
-          if (lines.isEmpty) continue;
-
-          final title = article.title.trim().isEmpty ? 'نص عربي من مفاتيح الجنان' : article.title.trim();
-          final arabicText = lines.map((line) => line.text).join('\n');
-          final dedupeKey = _normalize('$category|$title|$arabicText');
-          if (!seen.add(dedupeKey)) continue;
-
-          entries.add(ShiaTextEntry(
-            slug: 'mafatih-${chapter.id}-${section.id}-${article.id}',
-            title: title,
-            alternateName: '',
-            type: 'mafatih',
-            sourceUrl: '',
-            sourceLabel: 'مفاتيح الجنان، باب: ${chapter.title}، فصل: ${section.title}، عنوان النص: ${article.title}',
-            categoryOverride: category,
-            lines: lines,
-          ));
-          importedCount++;
-        }
-      }
+    if (entries.isEmpty) {
+      throw const FormatException('The bundled Arabic dua/ziyara library is empty.');
     }
 
-    if (entries.isEmpty || importedCount == 0) {
-      throw const FormatException('Arabic supplication library is empty or the Mafatih merge produced no readable entries.');
-    }
+    final metadata = decoded['metadata'] as Map<String, dynamic>? ??
+        const <String, dynamic>{};
     return ShiaTextData(
       entries: entries,
-      sourceProject: 'مكتبة الأدعية والزيارات العربية',
-      license: 'تراخيص متعددة بحسب مصدر كل نص',
+      sourceProject: metadata['sourceProject'] is String
+          ? metadata['sourceProject'] as String
+          : 'مكتبة الأدعية والزيارات العربية',
+      license: metadata['license'] is String
+          ? metadata['license'] as String
+          : 'تختلف الرخص بحسب مصدر كل نص',
     );
   }
-
-  static String _categoryForMafatih(String sourceCategory) => switch (sourceCategory) {
-    'أدعية الصباح' => 'أدعية الصباح',
-    'أدعية المساء' => 'أدعية المساء',
-    'أذكار مشتركة' => 'الأذكار المشتركة',
-    'الزيارات' => 'الزيارات',
-    'تعقيبات' => 'تعقيبات الصلوات',
-    'أدعية الأيام' => 'أدعية الأيام',
-    'الأعمال اليومية والمناسبات' => 'الأعمال اليومية والمناسبات',
-    'الأعمال الشهرية والمناسبات' => 'الأعمال الشهرية والمناسبات',
-    'أدعية صاحب الزمان' => 'أدعية صاحب الزمان',
-    'أدعية الحاجات والشفاء' => 'أدعية الحاجات والشفاء',
-    'أدعية الأشهر والمناسبات' => 'أدعية الأشهر والمناسبات',
-    'المناجيات الخمس عشرة' => 'المناجيات الخمس عشرة',
-    'الصحيفة السجادية' => 'الصحيفة السجادية',
-    _ => 'أدعية عامة',
-  };
 }
 
 class ShiaTextLibraryPage extends StatefulWidget {

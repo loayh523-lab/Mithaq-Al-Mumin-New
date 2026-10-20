@@ -11,7 +11,9 @@ const _muted = Color(0xFF9EB5A9);
 /// Approximate solar times for Qal'at Sukar using a configurable Jafari-style estimate.
 /// Local religious authority timetables take precedence.
 class PrayerCalendarPage extends StatefulWidget {
-  const PrayerCalendarPage({super.key});
+  const PrayerCalendarPage({super.key, this.onLocationChanged, this.onHijriCorrectionChanged});
+  final Future<void> Function()? onLocationChanged;
+  final Future<void> Function()? onHijriCorrectionChanged;
   @override State<PrayerCalendarPage> createState() => _PrayerCalendarPageState();
 }
 
@@ -63,6 +65,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
         _gpsAccuracy = accuracy;
         _locationMessage = accuracy == null ? 'تم تحديث الموقع بواسطة GPS.' : 'دقة الموقع المعلنة من الجهاز نحو ${accuracy.round()} متر.';
       });
+      await widget.onLocationChanged?.call();
     }
     if (mounted) setState(() => _gpsBusy = false);
   }
@@ -72,8 +75,10 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
   }
   Future<void> _correct(int delta) async {
     final next = (correction + delta).clamp(-3, 3);
-    final p = await SharedPreferences.getInstance(); await p.setInt('hijri_correction', next);
+    final p = await SharedPreferences.getInstance();
+    await p.setInt('hijri_correction', next);
     if (mounted) setState(() => correction = next);
+    await widget.onHijriCorrectionChanged?.call();
   }
   @override Widget build(BuildContext context) {
     final hijri = _Hijri.fromGregorian(date.add(Duration(days: correction)));

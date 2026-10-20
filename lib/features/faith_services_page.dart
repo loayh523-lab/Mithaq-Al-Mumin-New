@@ -78,18 +78,6 @@ class FaithServicesPage extends StatelessWidget {
           )),
         ),
         _ServiceTile(
-          icon: Icons.format_quote_rounded,
-          title: 'نهج البلاغة والحِكم',
-          description: 'مختارات من حكم أمير المؤمنين علي عليه السلام باللغة العربية، مع معانٍ مبسطة وروابط للمصادر. هذه مختارات وليست النسخة الكاملة من الكتاب.',
-          actionLabel: 'قراءة الحكم',
-          onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (_) => const Directionality(
-              textDirection: TextDirection.rtl,
-              child: NahjAlBalaghaPage(),
-            ),
-          )),
-        ),
-        _ServiceTile(
           icon: Icons.auto_stories_rounded,
           title: 'تفسير القرآن الكريم',
           description: 'مكتبة إلكترونية لتفسير الميزان باللغة العربية. هذه نسخة خارجية تحتاج اتصالاً؛ لم نضمّن نص التفسير محلياً ولم نختصره من دون مراجعة.',
@@ -124,6 +112,18 @@ class FaithServicesPage extends StatelessWidget {
             builder: (_) => const Directionality(
               textDirection: TextDirection.rtl,
               child: ArbaeenGuidePage(),
+            ),
+          )),
+        ),
+        _ServiceTile(
+          icon: Icons.format_quote_rounded,
+          title: 'نهج البلاغة والحِكم',
+          description: 'مختارات من حكم أمير المؤمنين علي عليه السلام باللغة العربية، مع معانٍ مبسطة وروابط للمصادر. هذه مختارات وليست النسخة الكاملة من الكتاب.',
+          actionLabel: 'قراءة الحكم',
+          onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+            builder: (_) => const Directionality(
+              textDirection: TextDirection.rtl,
+              child: NahjAlBalaghaPage(),
             ),
           )),
         ),

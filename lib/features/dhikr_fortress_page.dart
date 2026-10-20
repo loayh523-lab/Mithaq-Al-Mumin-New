@@ -5,8 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 const _dhikrPanel = Color(0xFF10251E);
 const _dhikrGold = Color(0xFFD9B66D);
 const _dhikrMuted = Color(0xFF9EB5A9);
-const _dhikrSourceUrl = 'https://tableegh.imamali.net/?id=3117';
-
 class _DhikrItem {
   const _DhikrItem({
     required this.id,
@@ -28,7 +26,11 @@ class _DhikrItem {
 }
 
 class DhikrFortressPage extends StatefulWidget {
-  const DhikrFortressPage({super.key});
+  const DhikrFortressPage({super.key, this.initialPeriod = 0});
+
+  /// 0 opens the morning section; 1 opens the evening section.
+  final int initialPeriod;
+
   @override
   State<DhikrFortressPage> createState() => _DhikrFortressPageState();
 }
@@ -110,6 +112,7 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
   @override
   void initState() {
     super.initState();
+    _period = widget.initialPeriod == 1 ? 1 : 0;
     _load();
   }
 
@@ -121,7 +124,7 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
         for (final item in _visibleItems) {
           _counts[item.id] = (prefs.getInt(_key(item.id)) ?? 0);
           if (item.target != null) {
-            _counts[item.id] = _counts[item.id]!.clamp(0, item.target!);
+            _counts[item.id] = _counts[item.id]!.clamp(0, item.target!).toInt();
           }
         }
         _loading = false;
@@ -186,7 +189,7 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
             border: Border.all(color: _dhikrGold.withValues(alpha: .3)),
           ),
           child: const Text(
-            'نصوص أذكار منقولة مع مراجعها. إذا لم يحدد المصدر عدداً للتكرار، يظهر العداد مفتوحاً ولا يعني الرقم المقترح حكماً شرعياً.',
+            'قسمان منفصلان للصباح والمساء. الأذكار التي يذكرها المصدر في الوقتين تبقى مشتركة، ويتغيّر اللفظ في النصوص التي لها صيغة صباحية ومسائية. العداد مستقل لكل وقت ولكل يوم.',
             style: TextStyle(color: _dhikrMuted, height: 1.7),
           ),
         ),
@@ -227,8 +230,6 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
                   ],
                   const SizedBox(height: 8),
                   Text('المصدر: ${item.source}', style: const TextStyle(color: _dhikrMuted, height: 1.5, fontSize: 12)),
-                  const SizedBox(height: 4),
-                  const SelectableText(_dhikrSourceUrl, style: TextStyle(color: _dhikrGold, fontSize: 11)),
                   const SizedBox(height: 10),
                   Row(children: [
                     Expanded(

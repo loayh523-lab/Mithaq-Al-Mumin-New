@@ -638,9 +638,11 @@ class _TasbeehPageState extends State<TasbeehPage> {
       await prefs.setInt('tasbeeh_zahra_count', _count);
       await prefs.setInt('tasbeeh_general_count', _generalCount);
     } catch (_) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('تعذّر حفظ التقدم على الجهاز')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('تعذّر حفظ التقدم على الجهاز')),
+        );
+      }
     }
   }
 

@@ -605,46 +605,226 @@ class _MainShellState extends State<MainShell> {
 
   Widget _duaPage() => _DuaLibrary(onNotice: _notice);
 
-  Widget _tasbeehPage() => Center(
-    child: SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.fingerprint_rounded, size: 48, color: _gold),
-          const SizedBox(height: 12),
-          const Text('التسبيح', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8),
-          const Text('اضغط على الدائرة لزيادة العدّاد', style: TextStyle(color: _muted)),
-          const SizedBox(height: 28),
-          Semantics(
-            button: true,
-            label: 'زيادة عدّاد التسبيح',
-            child: InkWell(
-              onTap: () => _saveCounter(_count + 1),
-              customBorder: const CircleBorder(),
-              child: Container(
-                width: 210,
-                height: 210,
-                decoration: BoxDecoration(shape: BoxShape.circle, color: _panel, border: Border.all(color: _gold, width: 2), boxShadow: [BoxShadow(color: _emerald.withValues(alpha: .2), blurRadius: 30, spreadRadius: 5)]),
-                child: Center(child: Text('$_count', style: const TextStyle(fontSize: 56, fontWeight: FontWeight.w800, color: _gold))),
-              ),
-            ),
-          ),
-          const SizedBox(height: 22),
-          OutlinedButton.icon(
-            onPressed: () => _saveCounter(0),
-            icon: const Icon(Icons.refresh_rounded),
-            label: const Text('تصفير العدّاد'),
-          ),
-        ],
-      ),
-    ),
-  );
-
+  Widget _tasbeehPage() => const TasbeehPage();
 
   void _notice(String message) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+  }
+}
+
+class TasbeehPage extends StatefulWidget {
+  const TasbeehPage({super.key});
+  @override
+  State<TasbeehPage> createState() => _TasbeehPageState();
+}
+
+class _TasbeehPageState extends State<TasbeehPage> {
+  static const _steps = <({String title, String phrase, int target})>[
+    (title: 'التكبير', phrase: 'الله أكبر', target: 34),
+    (title: 'التحميد', phrase: 'الحمد لله', target: 33),
+    (title: 'التسبيح', phrase: 'سبحان الله', target: 33),
+  ];
+  bool _zahraMode = true;
+  int _step = 0;
+  int _count = 0;
+  int _generalCount = 0;
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      if (!mounted) return;
+      setState(() {
+        _zahraMode = prefs.getBool('tasbeeh_zahra_mode') ?? true;
+        _step = (prefs.getInt('tasbeeh_zahra_step') ?? 0).clamp(0, 2);
+        _count = (prefs.getInt('tasbeeh_zahra_count') ?? 0).clamp(0, 34);
+        _generalCount = prefs.getInt('tasbeeh_general_count') ?? 0;
+        _loading = false;
+      });
+    } catch (_) {
+      if (mounted) setState(() => _loading = false);
+    }
+  }
+
+  Future<void> _persist() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('tasbeeh_zahra_mode', _zahraMode);
+      await prefs.setInt('tasbeeh_zahra_step', _step);
+      await prefs.setInt('tasbeeh_zahra_count', _count);
+      await prefs.setInt('tasbeeh_general_count', _generalCount);
+    } catch (_) {
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('تعذّر حفظ التقدم على الجهاز')),
+      );
+    }
+  }
+
+  void _increment() {
+    setState(() {
+      if (!_zahraMode) {
+        _generalCount++;
+      } else {
+        final target = _steps[_step].target;
+        if (_count < target) _count++;
+        if (_count >= target && _step < _steps.length - 1) {
+          _step++;
+          _count = 0;
+        } else if (_count >= target && _step == _steps.length - 1) {
+          _count = target;
+        }
+      }
+    });
+    _persist();
+  }
+
+  Future<void> _reset() async {
+    setState(() {
+      _step = 0;
+      _count = 0;
+      _generalCount = 0;
+    });
+    await _persist();
+  }
+
+  Future<void> _setMode(bool zahra) async {
+    setState(() => _zahraMode = zahra);
+    await _persist();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final step = _steps[_step];
+    final current = _zahraMode ? _count : _generalCount;
+    final target = _zahraMode ? step.target : null;
+    final progress = target == null ? 0.0 : current / target;
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(20, 18, 20, 30),
+      children: [
+        const Text('التسبيح', style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800)),
+        const SizedBox(height: 6),
+        const Text('عداد محفوظ على جهازك، مع تسبيح الزهراء عليها السلام بالترتيب', style: TextStyle(color: _muted, height: 1.6)),
+        const SizedBox(height: 18),
+        SegmentedButton<bool>(
+          segments: const [
+            ButtonSegment(value: true, label: Text('تسبيح الزهراء'), icon: Icon(Icons.auto_awesome_rounded)),
+            ButtonSegment(value: false, label: Text('تسبيح عام'), icon: Icon(Icons.fingerprint_rounded)),
+          ],
+          selected: {_zahraMode},
+          onSelectionChanged: _loading ? null : (selection) => _setMode(selection.first),
+        ),
+        const SizedBox(height: 18),
+        if (_zahraMode) ...[
+          Container(
+            padding: const EdgeInsets.all(15),
+            decoration: BoxDecoration(
+              color: _panel,
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(color: _gold.withValues(alpha: .28)),
+            ),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              const Text('مراحل تسبيح الزهراء عليها السلام', style: TextStyle(color: _gold, fontWeight: FontWeight.w800)),
+              const SizedBox(height: 12),
+              for (var i = 0; i < _steps.length; i++)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Row(children: [
+                    Icon(
+                      i < _step || (i == _step && _count >= _steps[i].target)
+                          ? Icons.check_circle_rounded
+                          : i == _step ? Icons.radio_button_checked_rounded : Icons.radio_button_unchecked_rounded,
+                      color: i == _step ? _gold : _muted,
+                      size: 20,
+                    ),
+                    const SizedBox(width: 9),
+                    Expanded(child: Text('${_steps[i].title}: ${_steps[i].phrase}', style: TextStyle(color: i == _step ? Colors.white : _muted, fontWeight: i == _step ? FontWeight.bold : FontWeight.normal))),
+                    Text('${i == _step ? _count : i < _step ? _steps[i].target : 0}/${_steps[i].target}', style: const TextStyle(color: _gold, fontWeight: FontWeight.bold)),
+                  ]),
+                ),
+              const SizedBox(height: 4),
+              const Text('التكبير 34 مرة، ثم الحمد 33 مرة، ثم التسبيح 33 مرة.', style: TextStyle(color: _muted, fontSize: 12, height: 1.6)),
+            ]),
+          ),
+          const SizedBox(height: 20),
+        ],
+        Center(
+          child: Column(children: [
+            Text(
+              _zahraMode ? (current >= (target ?? 0) && _step == 2 ? 'اكتمل تسبيح الزهراء' : step.phrase) : 'سبحان الله والحمد لله ولا إله إلا الله والله أكبر',
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 20, height: 1.8, color: _gold, fontWeight: FontWeight.w800),
+            ),
+            const SizedBox(height: 18),
+            if (_zahraMode) ...[
+              Text('\$_count', style: const TextStyle(fontSize: 54, fontWeight: FontWeight.w800)),
+              const SizedBox(height: 8),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: LinearProgressIndicator(
+                  value: progress.clamp(0.0, 1.0),
+                  minHeight: 7,
+                  backgroundColor: _panel,
+                  color: _gold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text('المرحلة ${_step + 1} من 3 • المطلوب ${step.target}', style: const TextStyle(color: _muted)),
+            ] else
+              Text('\$_generalCount', style: const TextStyle(fontSize: 58, fontWeight: FontWeight.w800)),
+            const SizedBox(height: 22),
+            Semantics(
+              button: true,
+              label: 'زيادة عداد التسبيح',
+              child: InkWell(
+                onTap: _loading || (_zahraMode && _step == 2 && _count >= 33) ? null : _increment,
+                customBorder: const CircleBorder(),
+                child: Container(
+                  width: 190,
+                  height: 190,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: _panel,
+                    border: Border.all(color: _gold, width: 2),
+                    boxShadow: [BoxShadow(color: _emerald.withValues(alpha: .2), blurRadius: 28, spreadRadius: 4)],
+                  ),
+                  child: const Center(child: Icon(Icons.fingerprint_rounded, color: _gold, size: 76)),
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            const Text('اضغط على الدائرة للتسبيح', style: TextStyle(color: _muted)),
+            const SizedBox(height: 18),
+            Wrap(alignment: WrapAlignment.center, spacing: 10, children: [
+              OutlinedButton.icon(
+                onPressed: _loading ? null : _reset,
+                icon: const Icon(Icons.refresh_rounded),
+                label: const Text('إعادة من البداية'),
+              ),
+              if (_zahraMode && _step > 0)
+                OutlinedButton.icon(
+                  onPressed: _loading ? null : () {
+                    setState(() { _step--; _count = _steps[_step].target; });
+                    _persist();
+                  },
+                  icon: const Icon(Icons.undo_rounded),
+                  label: const Text('المرحلة السابقة'),
+                ),
+            ]),
+            if (_zahraMode && _step == 2 && _count >= 33)
+              const Padding(
+                padding: EdgeInsets.only(top: 14),
+                child: Text('تقبّل الله طاعتكم', style: TextStyle(color: _gold, fontSize: 18, fontWeight: FontWeight.bold)),
+              ),
+          ]),
+        ),
+      ],
+    );
   }
 }
 

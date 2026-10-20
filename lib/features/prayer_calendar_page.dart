@@ -47,7 +47,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
       ] else ...[
         const Text('إمساكية تقديرية لقلعة سكر / ذي قار', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17)), const SizedBox(height: 5),
         const Text('يعرض الجدول 30 يوماً من التاريخ المختار. الفجر والغروب محسوبان فلكياً ولا يمثلان إمساكية رسمية لشهر رمضان محدد.', style: TextStyle(color: _muted, fontSize: 11, height: 1.5)),
-        ...List.generate(30, (i) { final d = DateTime(date.year, date.month, date.day).add(Duration(days: i)); final t = _SolarTimes.forDate(d, lat, lon, zone); return Card(color: _panel, child: ListTile(dense: true, leading: CircleAvatar(backgroundColor: _gold.withValues(alpha: .15), child: Text('${i + 1}', style: const TextStyle(color: _gold))), title: Text(_dateLabel(d)), subtitle: Text('الإمساك/الفجر: ${t.fajr}  •  الإفطار التقريبي: ${t.maghrib}'))); }),
+        ..._ramadanRows(date),
       ],
       const Divider(), const Text('الموقع الحالي للحساب', style: TextStyle(fontWeight: FontWeight.bold)), const Text('قلعة سكر، ذي قار، العراق — إحداثيات تقريبية', style: TextStyle(color: _muted)),
     ]));
@@ -85,4 +85,24 @@ class _Hijri {
     var hm = 1; while (hm < 12 && jd >= start(hy, hm + 1)) { hm++; }
     return _Hijri(jd - start(hy, hm) + 1, hm, hy);
   }
+}
+
+List<Widget> _ramadanRows(DateTime reference) {
+  final current = _Hijri.fromGregorian(reference);
+  final targetYear = current.month > 9 ? current.year + 1 : current.year;
+  DateTime? start;
+  final scanStart = DateTime(reference.year - 1, 1, 1);
+  for (var i = 0; i < 800; i++) {
+    final candidate = scanStart.add(Duration(days: i));
+    final h = _Hijri.fromGregorian(candidate);
+    if (h.year == targetYear && h.month == 9 && h.day == 1) { start = candidate; break; }
+  }
+  // If conversion does not find the target, keep a clearly approximate 30-day table.
+  final first = start ?? DateTime(reference.year, reference.month, reference.day);
+  return List.generate(30, (i) {
+    final d = first.add(Duration(days: i));
+    final t = _SolarTimes.forDate(d, 31.85, 46.07, 3.0);
+    final h = _Hijri.fromGregorian(d);
+    return Card(color: _panel, child: ListTile(dense: true, leading: CircleAvatar(backgroundColor: _gold.withValues(alpha: .15), child: Text('${i + 1}', style: const TextStyle(color: _gold))), title: Text('رمضان ${h.day} — ${_dateLabel(d)}'), subtitle: Text('الإمساك/الفجر: ${t.fajr}  •  الإفطار التقريبي: ${t.maghrib}')));
+  });
 }

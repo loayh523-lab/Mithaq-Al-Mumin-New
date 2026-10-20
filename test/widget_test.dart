@@ -12,6 +12,7 @@ import 'package:mithaq_al_mumin/features/qada_tracker_page.dart';
 import 'package:mithaq_al_mumin/features/dhikr_fortress_page.dart';
 import 'package:mithaq_al_mumin/features/smart_search_page.dart';
 import 'package:mithaq_al_mumin/features/faith_services_page.dart';
+import 'package:mithaq_al_mumin/features/settings_page.dart';
 import 'package:mithaq_al_mumin/features/favorites_page.dart';
 import 'package:mithaq_al_mumin/features/rakah_counter_page.dart';
 import 'package:mithaq_al_mumin/services/qibla_calculation.dart';
@@ -438,6 +439,46 @@ void main() {
     final prefs = await SharedPreferences.getInstance();
     expect(prefs.getInt('rakah_helper_current'), 2);
     expect(prefs.getInt('rakah_helper_sajdahs'), 0);
+  });
+
+  testWidgets('settings save per-prayer reminders and pre-prayer alert options', (tester) async {
+    await tester.pumpWidget(const MaterialApp(
+      home: Directionality(
+        textDirection: TextDirection.rtl,
+        child: Scaffold(body: SettingsPage()),
+      ),
+    ));
+    await tester.pumpAndSettle();
+
+    final fajrSwitch = find.byKey(const ValueKey('prayer_enabled_fajr'));
+    await tester.ensureVisible(fajrSwitch);
+    await tester.pumpAndSettle();
+    await tester.tap(fajrSwitch);
+    await tester.pumpAndSettle();
+
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getBool('prayer_enabled_fajr'), isFalse);
+
+    final earlySwitch = find.widgetWithText(
+      SwitchListTile,
+      'تنبيه قبل الأذان',
+    );
+    await tester.ensureVisible(earlySwitch);
+    await tester.pumpAndSettle();
+    await tester.tap(earlySwitch);
+    await tester.pumpAndSettle();
+    expect(prefs.getBool('prayer_early_alert_enabled'), isTrue);
+
+    final minutesPicker = find.byKey(
+      const ValueKey('prayer_early_alert_minutes'),
+    );
+    await tester.ensureVisible(minutesPicker);
+    await tester.pumpAndSettle();
+    await tester.tap(minutesPicker);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('10 دقائق').last);
+    await tester.pumpAndSettle();
+    expect(prefs.getInt('prayer_early_alert_minutes'), 10);
   });
 
   testWidgets('smart search screen offers cross-library offline search', (tester) async {

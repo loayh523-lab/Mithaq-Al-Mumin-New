@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 const _panel = Color(0xFF10251E);
 const _emerald = Color(0xFF1C8060);
@@ -424,20 +427,100 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
   List<String> _verses = const [];
   double _fontSize = 24;
   Set<String> _bookmarks = <String>{};
+  bool _keepScreenOn = false;
 
   @override
   void initState() { super.initState(); _loadFontSize(); _loadVerses(); }
 
+  @override
+  void dispose() {
+    if (_keepScreenOn) unawaited(WakelockPlus.disable());
+    super.dispose();
+  }
+
   Future<void> _loadFontSize() async {
     try {
       final prefs = await SharedPreferences.getInstance();
+      final keepOn = prefs.getBool('keep_screen_on_reading') ?? false;
       if (mounted) {
         setState(() {
           _fontSize = (prefs.getDouble('quran_font_size') ?? 24).clamp(16, 34).toDouble();
           _bookmarks = (prefs.getStringList('quran_bookmarks') ?? const <String>[]).toSet();
+          _keepScreenOn = keepOn;
         });
       }
-    } catch (_) { /* Keep the default text size. */ }
+      if (keepOn) await WakelockPlus.enable();
+    } catch (_) { /* Keep the default text size and reading state. */ }
+  }
+
+  Future<void> _setKeepScreenOn(bool value) async {
+    setState(() => _keepScreenOn = value);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('keep_screen_on_reading', value);
+      if (value) {
+        await WakelockPlus.enable();
+      } else {
+        await WakelockPlus.disable();
+      }
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('تعذّر تغيير خيار إبقاء الشاشة مفعّلة')),
+        );
+      }
+    }
+  }
+
+  Future<void> _showTafsir(int index) async {
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: _panel,
+      showDragHandle: true,
+      builder: (sheetContext) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text('تفسير ${widget.surah.name} — الآية ${index + 1}',
+                style: const TextStyle(color: _gold, fontSize: 19, fontWeight: FontWeight.w800)),
+              const SizedBox(height: 12),
+              SelectableText(_verses[index], textDirection: TextDirection.rtl,
+                style: const TextStyle(fontSize: 22, height: 1.9)),
+              const SizedBox(height: 12),
+              const Text(
+                'هذه نافذة مرجعية للآية. يفتح الزر مكتبة تفسير الميزان على الإنترنت؛ اختر السورة والآية هناك. نص التفسير غير مضمّن دون اتصال في هذه النسخة.',
+                style: TextStyle(color: _muted, height: 1.7),
+              ),
+              const SizedBox(height: 14),
+              FilledButton.icon(
+                onPressed: () async {
+                  try {
+                    final opened = await launchUrl(Uri.parse('https://almizan.wilayah.app/'), mode: LaunchMode.externalApplication);
+                    if (!opened && sheetContext.mounted) {
+                      ScaffoldMessenger.of(sheetContext).showSnackBar(
+                        const SnackBar(content: Text('تعذّر فتح مكتبة التفسير. تحقق من الإنترنت.')),
+                      );
+                    }
+                  } catch (_) {
+                    if (sheetContext.mounted) {
+                      ScaffoldMessenger.of(sheetContext).showSnackBar(
+                        const SnackBar(content: Text('تعذّر فتح مكتبة التفسير.')),
+                      );
+                    }
+                  }
+                },
+                icon: const Icon(Icons.open_in_new_rounded),
+                label: const Text('فتح مكتبة تفسير الميزان'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   String _bookmarkKey(int index) => '${widget.surah.id}:${index + 1}';
@@ -485,7 +568,14 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(
       title: Text(widget.surah.name),
-      actions: [IconButton(
+      actions: [
+        IconButton(
+          tooltip: _keepScreenOn ? 'إيقاف إبقاء الشاشة مفعّلة' : 'إبقاء الشاشة مفعّلة أثناء القراءة',
+          onPressed: () => _setKeepScreenOn(!_keepScreenOn),
+          icon: Icon(_keepScreenOn ? Icons.light_mode_rounded : Icons.light_mode_outlined,
+            color: _keepScreenOn ? _gold : _muted),
+        ),
+        IconButton(
         tooltip: 'مصدر النص',
         onPressed: () => showAboutDialog(
           context: context, applicationName: 'ميثاق المؤمن', applicationVersion: '0.1.0',
@@ -532,6 +622,11 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
                       color: _bookmarks.contains('${widget.surah.id}:${i + 1}') ? _gold : _muted,
                       size: 20,
                     ),
+                  ),
+                  IconButton(
+                    tooltip: 'تفسير الآية',
+                    onPressed: () => _showTafsir(i),
+                    icon: const Icon(Icons.menu_book_outlined, color: _gold, size: 19),
                   ),
                   IconButton(
                     tooltip: 'نسخ الآية',

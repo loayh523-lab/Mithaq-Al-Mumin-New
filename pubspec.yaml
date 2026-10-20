@@ -4,7 +4,7 @@ publish_to: 'none'
 version: 0.1.0+1
 
 environment:
-  sdk: '>=3.4.0 <4.0.0'
+  sdk: '>=3.12.0 <4.0.0'
 
 dependencies:
   flutter:
@@ -18,6 +18,8 @@ dependencies:
   timezone: ^0.10.1
   geomag: ^0.3.0
   audioplayers: ^6.5.1
+  url_launcher: ^6.3.2
+  wakelock_plus: 1.8.0
 
 dev_dependencies:
   flutter_test:

@@ -34,7 +34,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('التسبيح'));
     await tester.pumpAndSettle();
-    expect(find.text('اضغط على الدائرة لزيادة العدّاد'), findsOneWidget);
+    expect(find.text('اضغط على الدائرة للتسبيح'), findsOneWidget);
     expect(find.text('0'), findsOneWidget);
   });
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'faith_library_pages.dart';
 
 const _faithPanel = Color(0xFF10251E);
 const _faithGold = Color(0xFFD9B66D);
@@ -67,9 +68,26 @@ class FaithServicesPage extends StatelessWidget {
         _ServiceTile(
           icon: Icons.menu_book_rounded,
           title: 'فقه المؤمن — المسائل الشرعية',
-          description: 'افتح موقع المكتب الذي تعتمد عليه، وابحث عن أحكام الطهارة والصلاة والصوم والخمس. تأكد أن الجواب يخص مرجع تقليدك.',
-          actionLabel: 'فتح المصدر الفقهي',
-          onTap: () => openFaithSource(context, _officialFiqhUrl),
+          description: 'فهرس لأبواب الطهارة والصلاة والصوم والخمس والمعاملات، مع عبارات بحث قابلة للنسخ للوصول إلى المصدر الرسمي. الفتاوى نفسها غير محفوظة دون إنترنت.',
+          actionLabel: 'تصفح أبواب المسائل',
+          onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+            builder: (_) => const Directionality(
+              textDirection: TextDirection.rtl,
+              child: FiqhTopicsPage(),
+            ),
+          )),
+        ),
+        _ServiceTile(
+          icon: Icons.format_quote_rounded,
+          title: 'نهج البلاغة والحِكم',
+          description: 'مختارات من حكم أمير المؤمنين علي عليه السلام باللغة العربية، مع معانٍ مبسطة وروابط للمصادر. هذه مختارات وليست النسخة الكاملة من الكتاب.',
+          actionLabel: 'قراءة الحكم',
+          onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+            builder: (_) => const Directionality(
+              textDirection: TextDirection.rtl,
+              child: NahjAlBalaghaPage(),
+            ),
+          )),
         ),
         _ServiceTile(
           icon: Icons.auto_stories_rounded,

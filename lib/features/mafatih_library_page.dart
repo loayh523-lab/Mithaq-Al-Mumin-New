@@ -6,9 +6,22 @@ const _mfPanel = Color(0xFF10251E);
 const _mfGold = Color(0xFFD9B66D);
 const _mfMuted = Color(0xFF9EB5A9);
 
+/// Converts Persian/Urdu keyboard variants commonly present in Arabic
+/// editions into standard Arabic letter forms without replacing valid titles.
+String normalizeMafatihArabicText(String value) => value
+    .replaceAll('ک', 'ك')
+    .replaceAll('ی', 'ي')
+    .replaceAll('ے', 'ي')
+    .replaceAll('ہ', 'ه');
+
+bool containsPersianOnlyLetters(String value) =>
+    RegExp(r'[پچژگ]').hasMatch(value);
+
 String _arabicOnlyTitle(Object? value, String fallback) {
-  final title = value is String ? value.trim() : '';
-  return title.isEmpty || RegExp(r'[پچژگکی]').hasMatch(title) ? fallback : title;
+  final title = value is String
+      ? normalizeMafatihArabicText(value.trim())
+      : '';
+  return title.isEmpty || containsPersianOnlyLetters(title) ? fallback : title;
 }
 
 class MafatihItem {
@@ -378,7 +391,7 @@ class _MafatihArticlePageState extends State<MafatihArticlePage> {
     super.dispose();
   }
 
-  bool _looksPersian(String text) => RegExp(r'[پچژگکی]').hasMatch(text);
+  bool _looksPersian(String text) => containsPersianOnlyLetters(text);
 
   bool _isArabicRecitationType(String type) {
     final normalized = type.trim().toLowerCase();
@@ -551,7 +564,11 @@ String _normalizeTitle(String value) => value
   .toLowerCase()
   .replaceAll(RegExp(r'[\u064B-\u065F\u0670\u0640]'), '')
   .replaceAll(RegExp('[أإآٱ]'), 'ا')
-  .replaceAll('ى', 'ي');
+  .replaceAll('ى', 'ي')
+  .replaceAll('ک', 'ك')
+  .replaceAll('ی', 'ي')
+  .replaceAll('ے', 'ي')
+  .replaceAll('ہ', 'ه');
 
 String _plainText(String value) => value
   .replaceAll(RegExp(r'<br\s*/?>', caseSensitive: false), '\n')
@@ -563,6 +580,10 @@ String _plainText(String value) => value
   .replaceAll('&#39;', "'")
   .replaceAll('&lt;', '<')
   .replaceAll('&gt;', '>')
+  .replaceAll('ک', 'ك')
+  .replaceAll('ی', 'ي')
+  .replaceAll('ے', 'ي')
+  .replaceAll('ہ', 'ه')
   .trim();
 
 Widget _error(String message, VoidCallback retry) => Center(

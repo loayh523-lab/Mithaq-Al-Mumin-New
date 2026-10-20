@@ -98,36 +98,80 @@ class PrayerNotificationService {
       }
       if (!enabled) return true;
 
-      final now = tz.TZDateTime.now(tz.local);
+      final prefs = await SharedPreferences.getInstance();
       const prayerLabels = ['الفجر', 'الظهر', 'العصر', 'المغرب', 'العشاء'];
+      const prayerKeys = ['fajr', 'noon', 'asr', 'maghrib', 'isha'];
+      final prayerEnabled = <bool>[
+        for (final key in prayerKeys)
+          prefs.getBool('prayer_enabled_$key') ?? true,
+      ];
+      final earlyAlertEnabled =
+          prefs.getBool('prayer_early_alert_enabled') ?? false;
+      final earlyAlertMinutes =
+          (prefs.getInt('prayer_early_alert_minutes') ?? 5).clamp(1, 30);
+      final now = tz.TZDateTime.now(tz.local);
       for (var dayOffset = 0; dayOffset < _daysToSchedule; dayOffset++) {
         final date = DateTime(now.year, now.month, now.day).add(Duration(days: dayOffset));
         final times = SolarPrayerTimes.forDate(date, city.latitude, city.longitude, 3.0);
         final timeLabels = [times.fajr, times.noon, times.asr, times.maghrib, times.isha];
         for (var index = 0; index < timeLabels.length; index++) {
+          if (!prayerEnabled[index]) continue;
           final parts = timeLabels[index].split(':');
           if (parts.length != 2) continue;
-          final scheduled = tz.TZDateTime(tz.local, date.year, date.month, date.day, int.parse(parts[0]), int.parse(parts[1]));
-          if (!scheduled.isAfter(now.add(const Duration(seconds: 15)))) continue;
-          final id = _idStart + dayOffset * 10 + index;
-          await _plugin.zonedSchedule(
-            id,
-            'تذكير الصلاة — ${prayerLabels[index]}',
-            'حان وقت ${prayerLabels[index]} وفق الحساب الفلكي التقديري داخل ميثاق المؤمن.',
-            scheduled,
-            const NotificationDetails(
-              android: AndroidNotificationDetails(
-                'mithaq_adhan_v3',
-                'أذان الصلاة',
-                channelDescription: 'تنبيهات الأذان — قناة صوت جديدة',
-                importance: Importance.high,
-                priority: Priority.high,
-                sound: RawResourceAndroidNotificationSound('adhan_persian'),
-                audioAttributesUsage: AudioAttributesUsage.alarm,
-              ),
-            ),
-            androidScheduleMode: scheduleMode,
+          final scheduled = tz.TZDateTime(
+            tz.local,
+            date.year,
+            date.month,
+            date.day,
+            int.tryParse(parts[0]) ?? 0,
+            int.tryParse(parts[1]) ?? 0,
           );
+          final id = _idStart + dayOffset * 10 + index;
+          if (scheduled.isAfter(now.add(const Duration(seconds: 15)))) {
+            await _plugin.zonedSchedule(
+              id,
+              'حان وقت الصلاة — ${prayerLabels[index]}',
+              'حان وقت ${prayerLabels[index]} وفق الحساب الفلكي التقديري داخل ميثاق المؤمن.',
+              scheduled,
+              const NotificationDetails(
+                android: AndroidNotificationDetails(
+                  'mithaq_adhan_v3',
+                  'أذان الصلاة',
+                  channelDescription: 'تنبيهات الأذان — قناة صوت جديدة',
+                  importance: Importance.high,
+                  priority: Priority.high,
+                  sound: RawResourceAndroidNotificationSound('adhan_persian'),
+                  audioAttributesUsage: AudioAttributesUsage.alarm,
+                ),
+              ),
+              androidScheduleMode: scheduleMode,
+            );
+          }
+
+          if (earlyAlertEnabled) {
+            final earlyAt = scheduled.subtract(
+              Duration(minutes: earlyAlertMinutes),
+            );
+            if (earlyAt.isAfter(now.add(const Duration(seconds: 15)))) {
+              await _plugin.zonedSchedule(
+                id + 5,
+                'تنبيه قبل الصلاة — ${prayerLabels[index]}',
+                'باقي $earlyAlertMinutes دقائق على وقت صلاة ${prayerLabels[index]}.',
+                earlyAt,
+                const NotificationDetails(
+                  android: AndroidNotificationDetails(
+                    'mithaq_prayer_early_v1',
+                    'التنبيه قبل الصلاة',
+                    channelDescription: 'تنبيه هادئ قبل موعد الصلاة',
+                    importance: Importance.defaultImportance,
+                    priority: Priority.defaultPriority,
+                    audioAttributesUsage: AudioAttributesUsage.notification,
+                  ),
+                ),
+                androidScheduleMode: scheduleMode,
+              );
+            }
+          }
         }
       }
       final scheduled = await _plugin.pendingNotificationRequests();

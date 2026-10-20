@@ -979,7 +979,7 @@ class _DuaLibraryState extends State<_DuaLibrary> {
           title: 'الأدعية العامة',
           subtitle: 'الأدعية والمناجيات المتوفرة في المكتبة',
           onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'أدعية عامة')),
+            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihCategoryPage(initialCategory: 'أدعية عامة')),
           )),
         ),
         _sectionCard(
@@ -988,7 +988,7 @@ class _DuaLibraryState extends State<_DuaLibrary> {
           title: 'أدعية الأيام',
           subtitle: 'الأدعية الأسبوعية المتوفرة',
           onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'أدعية الأيام')),
+            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihCategoryPage(initialCategory: 'أدعية الأيام')),
           )),
         ),
         _sectionCard(
@@ -1006,7 +1006,7 @@ class _DuaLibraryState extends State<_DuaLibrary> {
           title: 'أدعية الصباح والمساء',
           subtitle: 'الأدعية المأثورة المصنفة بحسب وقتها',
           onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'أدعية الصباح والمساء')),
+            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihCategoryPage(initialCategory: 'أدعية الصباح والمساء')),
           )),
         ),
         _sectionCard(
@@ -1015,7 +1015,7 @@ class _DuaLibraryState extends State<_DuaLibrary> {
           title: 'أدعية صاحب الزمان عجل الله فرجه',
           subtitle: 'الأدعية المرتبطة بالإمام المهدي عليه السلام',
           onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'أدعية صاحب الزمان')),
+            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihCategoryPage(initialCategory: 'أدعية صاحب الزمان')),
           )),
         ),
         _sectionCard(
@@ -1024,7 +1024,7 @@ class _DuaLibraryState extends State<_DuaLibrary> {
           title: 'أدعية الحاجات والشفاء',
           subtitle: 'الدعاء للرزق والعافية وتفريج الكرب',
           onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'أدعية الحاجات والشفاء')),
+            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihCategoryPage(initialCategory: 'أدعية الحاجات والشفاء')),
           )),
         ),
         _sectionCard(
@@ -1033,7 +1033,7 @@ class _DuaLibraryState extends State<_DuaLibrary> {
           title: 'أدعية الأشهر والمناسبات',
           subtitle: 'أدعية المواسم والأيام المباركة',
           onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'أدعية الأشهر والمناسبات')),
+            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihCategoryPage(initialCategory: 'أدعية الأشهر والمناسبات')),
           )),
         ),
         _sectionCard(
@@ -1042,7 +1042,7 @@ class _DuaLibraryState extends State<_DuaLibrary> {
           title: 'المناجيات الخمس عشرة',
           subtitle: 'مناجيات الإمام زين العابدين عليه السلام',
           onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'المناجيات الخمس عشرة')),
+            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihCategoryPage(initialCategory: 'المناجيات الخمس عشرة')),
           )),
         ),
         _sectionCard(
@@ -1051,7 +1051,7 @@ class _DuaLibraryState extends State<_DuaLibrary> {
           title: 'الزيارات الشريفة',
           subtitle: 'زيارات المعصومين عليهم السلام',
           onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'الزيارات')),
+            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihCategoryPage(initialCategory: 'الزيارات')),
           )),
         ),
         _sectionCard(
@@ -1060,7 +1060,7 @@ class _DuaLibraryState extends State<_DuaLibrary> {
           title: 'تعقيبات الصلوات',
           subtitle: 'التعقيبات المتوفرة لكل صلاة',
           onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'تعقيبات')),
+            builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihCategoryPage(initialCategory: 'تعقيبات')),
           )),
         ),
         _sectionCard(

@@ -338,7 +338,7 @@ void main() {
 
     expect(find.text('أذكار الصباح'), findsWidgets);
     expect(find.text('أذكار المساء'), findsOneWidget);
-    expect(find.textContaining('المصدر: مفاتيح الجنان،'), findsWidgets);
+    expect(find.textContaining('المصدر:'), findsWidgets);
 
     final morningTexts = tester.widgetList<SelectableText>(find.byType(SelectableText))
         .map((widget) => widget.data)

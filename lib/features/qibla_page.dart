@@ -15,8 +15,6 @@ class QiblaPage extends StatefulWidget {
 }
 
 class _QiblaPageState extends State<QiblaPage> {
-  static const double _kaabaLat = 21.4225;
-  static const double _kaabaLon = 39.8262;
   PrayerCity _city = PrayerLocations.cities.first;
   bool _gpsBusy = false;
   double? _gpsAccuracy;

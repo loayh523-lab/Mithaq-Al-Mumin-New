@@ -248,7 +248,7 @@ class _Hijri {
     final month = (24 * l) ~/ 709;
     final day = l - (709 * month) ~/ 24;
     final year = 30 * n + j - 30;
-    return _Hijri(day, month.clamp(1, 12), year);
+    return _Hijri(day, month, year);
   }
 }
 

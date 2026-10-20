@@ -197,7 +197,7 @@ class _MainShellState extends State<MainShell> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('ميثاق المؤمن', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
+                      Text('أهلاً بك', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
                       SizedBox(height: 3),
                       Text('رفيقك في العبادة اليومية', style: TextStyle(color: _muted, fontSize: 12)),
                     ],

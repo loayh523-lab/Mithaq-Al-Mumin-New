@@ -484,19 +484,67 @@ class _MainShellState extends State<MainShell> {
           child: Stack(
             fit: StackFit.expand,
             children: [
-              Image.network(
-                'https://upload.wikimedia.org/wikipedia/commons/e/e1/Imam_Sayyid_Ali_Khamenei_and_Ayatollah_Sayyid_Mojtaba_Khamenei.jpg',
-                fit: BoxFit.cover,
-                alignment: Alignment.topCenter,
-                errorBuilder: (context, error, stackTrace) => const DecoratedBox(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                      colors: [Color(0xFF245B42), Color(0xFF071713)],
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    child: Image.network(
+                      'https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3d/Portrait_of_Mojtaba_Khamenei_%282%29.jpg/500px-Portrait_of_Mojtaba_Khamenei_%282%29.jpg',
+                      fit: BoxFit.cover,
+                      alignment: Alignment.topCenter,
+                      cacheWidth: 500,
+                      loadingBuilder: (context, child, progress) => progress == null
+                          ? child
+                          : const DecoratedBox(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topRight,
+                                  end: Alignment.bottomLeft,
+                                  colors: [Color(0xFF245B42), Color(0xFF071713)],
+                                ),
+                              ),
+                            ),
+                      errorBuilder: (context, error, stackTrace) => const DecoratedBox(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topRight,
+                            end: Alignment.bottomLeft,
+                            colors: [Color(0xFF245B42), Color(0xFF071713)],
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                  Container(width: 1, color: _gold.withValues(alpha: .35)),
+                  Expanded(
+                    child: Image.network(
+                      'https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1c/Portrait_of_Ali_Khamenei.jpg/500px-Portrait_of_Ali_Khamenei.jpg',
+                      fit: BoxFit.cover,
+                      alignment: Alignment.topCenter,
+                      cacheWidth: 500,
+                      loadingBuilder: (context, child, progress) => progress == null
+                          ? child
+                          : const DecoratedBox(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topRight,
+                                  end: Alignment.bottomLeft,
+                                  colors: [Color(0xFF245B42), Color(0xFF071713)],
+                                ),
+                              ),
+                            ),
+                      errorBuilder: (context, error, stackTrace) => const DecoratedBox(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topRight,
+                            end: Alignment.bottomLeft,
+                            colors: [Color(0xFF245B42), Color(0xFF071713)],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
               const DecoratedBox(
                 decoration: BoxDecoration(
@@ -587,7 +635,35 @@ class _MainShellState extends State<MainShell> {
           const SizedBox(width: 7),
           Expanded(child: _homeQuickTile(
             icon: Icons.auto_awesome_rounded, title: 'قبس اليوم', subtitle: 'نور في القلب',
-            onTap: () => _pushPage(const ShiaTextLibraryPage()),
+            onTap: () => showDialog<void>(
+              context: context,
+              builder: (dialogContext) => AlertDialog(
+                title: const Text('قبس اليوم'),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      inspiration.text,
+                      textDirection: TextDirection.rtl,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 20, height: 1.8, fontWeight: FontWeight.w700),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      inspiration.source,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(color: _muted, fontSize: 12),
+                    ),
+                  ],
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(dialogContext).pop(),
+                    child: const Text('إغلاق'),
+                  ),
+                ],
+              ),
+            ),
           )),
           const SizedBox(width: 7),
           Expanded(child: _homeQuickTile(

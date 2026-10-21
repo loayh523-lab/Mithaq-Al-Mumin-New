@@ -4,7 +4,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mithaq_al_mumin/main.dart';
 import 'package:mithaq_al_mumin/quran/quran_pages.dart';
 import 'package:mithaq_al_mumin/features/prayer_calendar_page.dart';
-import 'package:mithaq_al_mumin/features/mafatih_library_page.dart';
 import 'package:mithaq_al_mumin/features/shia_text_library_page.dart';
 import 'package:mithaq_al_mumin/features/good_deeds_page.dart';
 import 'package:mithaq_al_mumin/features/names_of_allah_page.dart';
@@ -20,29 +19,65 @@ import 'package:mithaq_al_mumin/services/qibla_calculation.dart';
 
 void main() {
   setUp(() {
+    // Most widget tests exercise the app after the first-run reminder choice.
+    SharedPreferences.setMockInitialValues({
+      'prayer_notifications_enabled': false,
+    });
+  });
+
+  testWidgets('first launch asks before enabling prayer notifications', (tester) async {
     SharedPreferences.setMockInitialValues({});
+    await tester.pumpWidget(const MithaqApp());
+    // Let the first-frame callback and SharedPreferences future complete.
+    await tester.pump();
+    await tester.pump();
+    expect(find.text('أذان الصلاة'), findsOneWidget);
+    expect(find.text('تفعيل الأذان'), findsOneWidget);
+    await tester.tap(find.text('لاحقاً'));
+    await tester.pump(const Duration(milliseconds: 400));
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getBool('prayer_notifications_enabled'), isFalse);
   });
 
   testWidgets('home screen shows the agreed dashboard and drawer navigation opens tasbeeh', (tester) async {
     await tester.pumpWidget(const MithaqApp());
     expect(find.text('ميثاق المؤمن'), findsOneWidget);
-    expect(find.text('التاريخ الهجري'), findsOneWidget);
-    expect(find.text('الصلاة القادمة'), findsOneWidget);
-    expect(find.text('مواقيت الصلوات'), findsOneWidget);
-
+    expect(find.text('ورد اليوم'), findsOneWidget);
+    expect(find.textContaining('هـ'), findsOneWidget);
     await tester.scrollUntilVisible(
       find.text('عمل اليوم'),
       250,
       scrollable: find.byType(Scrollable).first,
     );
     expect(find.text('عمل اليوم'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('مواقيت الصلوات'),
+      250,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(find.text('مواقيت الصلوات'), findsOneWidget);
 
-    await tester.tap(find.byIcon(Icons.menu));
+    // The dashboard header scrolls with the home feed; return to its top before
+    // opening the menu so this test matches the real visible interaction.
+    await tester.drag(find.byType(ListView).first, const Offset(0, 2200));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('الأقسام'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('التسبيح'));
     await tester.pumpAndSettle();
     expect(find.text('اضغط على الدائرة للتسبيح'), findsOneWidget);
     expect(find.text('0'), findsOneWidget);
+  });
+
+  testWidgets('Qabas of the day opens its own reflection page, not the dua tab', (tester) async {
+    await tester.pumpWidget(const MithaqApp());
+    await tester.pump();
+    expect(find.text('قبس اليوم'), findsOneWidget);
+    await tester.tap(find.text('قبس اليوم'));
+    await tester.pumpAndSettle();
+    expect(find.text('نورٌ نتدبّره اليوم'), findsOneWidget);
+    expect(find.textContaining('سورة'), findsOneWidget);
+    expect(find.text('إغلاق'), findsNothing);
   });
 
   testWidgets('Quran index loads the bundled 114-surah catalog', (tester) async {
@@ -63,37 +98,39 @@ void main() {
 
   testWidgets('prayer tracker records a checked prayer from the drawer', (tester) async {
     await tester.pumpWidget(const MithaqApp());
-    await tester.tap(find.byIcon(Icons.menu));
-    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('الأقسام'));
+    await tester.pump(const Duration(milliseconds: 400));
     await tester.scrollUntilVisible(
       find.text('متابعة الصلاة'),
       250,
       scrollable: find.descendant(of: find.byType(Drawer), matching: find.byType(Scrollable)).first,
     );
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 400));
     await tester.tap(find.text('متابعة الصلاة'));
     await tester.pumpAndSettle();
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 150)));
+    await tester.pump();
     expect(find.text('0/5'), findsOneWidget);
     await tester.tap(find.text('الفجر'));
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 400));
     expect(find.text('1/5'), findsOneWidget);
   });
 
   testWidgets('khatma tracker opens and records completed juz from the drawer', (tester) async {
     await tester.pumpWidget(const MithaqApp());
-    await tester.tap(find.byIcon(Icons.menu));
-    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('الأقسام'));
+    await tester.pump(const Duration(milliseconds: 400));
     await tester.scrollUntilVisible(
       find.text('ختمة القرآن'),
       250,
       scrollable: find.descendant(of: find.byType(Drawer), matching: find.byType(Scrollable)).first,
     );
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 400));
     await tester.tap(find.text('ختمة القرآن'));
     await tester.pumpAndSettle();
     expect(find.text('/ 30 جزءاً'), findsOneWidget);
     await tester.tap(find.text('إكمال جزء'));
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 400));
     expect(find.text('1'), findsOneWidget);
     expect(find.text('الخطوة التالية'), findsOneWidget);
   });
@@ -118,21 +155,6 @@ void main() {
     );
     expect(declination.isFinite, isTrue);
     expect(declination, inInclusiveRange(-180, 180));
-  });
-
-  test('Mafatih Persian-only headings use distinct Arabic fallback titles', () {
-    final chapter = MafatihChapter.fromJson({
-      'id': 2,
-      'title': 'دعای روزهای هفته',
-      'sections': <dynamic>[],
-    });
-    final section = MafatihSection.fromJson({
-      'id': 4,
-      'title': 'دعای فارسی',
-      'articles': <dynamic>[],
-    });
-    expect(chapter.title, 'الباب 2 من مفاتيح الجنان');
-    expect(section.title, 'قسم رقم 4');
   });
 
   test('Dua categories prioritize specific collections over broad date heuristics', () {
@@ -163,15 +185,6 @@ void main() {
     expect(sahifaMunajat.category, 'الصحيفة السجادية');
     expect(fridayArafah.category, 'أدعية الأشهر والمناسبات');
     expect(munajat.category, 'المناجيات الخمس عشرة');
-  });
-
-  test('Mafatih categories group named Arabic texts', () {
-    expect(mafatihCategoryFor('مناجاة التائبين'), 'المناجيات الخمس عشرة');
-    expect(mafatihCategoryFor('دعاء العهد للإمام المهدي'), 'أدعية صاحب الزمان');
-    expect(mafatihCategoryFor('تعقيبات الصلاة'), 'تعقيبات');
-    expect(mafatihCategoryFor('زيارة عاشوراء'), 'الزيارات');
-    expect(mafatihCategoryFor('دعاء شهر رمضان'), 'أدعية الأشهر والمناسبات');
-    expect(mafatihCategoryFor('دعاء الشفاء للمريض'), 'أدعية الحاجات والشفاء');
   });
 
   test('prayer times are displayed in a readable 12-hour Arabic format', () {
@@ -262,18 +275,6 @@ void main() {
     expect(find.textContaining('الفاتحة • الآية 2'), findsOneWidget);
   });
 
-  testWidgets('Mafatih library opens its bundled offline catalog', (tester) async {
-    await tester.pumpWidget(const MaterialApp(
-      home: Directionality(textDirection: TextDirection.rtl, child: MafatihLibraryPage()),
-    ));
-    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 400)));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 100));
-    expect(find.text('مفاتيح الجنان'), findsWidgets);
-    expect(find.text('ما قدرنا نحمّل مكتبة مفاتيح الجنان'), findsNothing);
-    expect(find.byType(CircularProgressIndicator), findsNothing);
-  });
-
   testWidgets('Quran bookmarks page shows a clear empty state', (tester) async {
     await tester.pumpWidget(const MaterialApp(
       home: Directionality(textDirection: TextDirection.rtl, child: QuranBookmarksPage()),
@@ -287,14 +288,20 @@ void main() {
 
 
   testWidgets('Shia dua library opens its offline collection', (tester) async {
+    // The JSON library is large; complete asset I/O and isolate decoding outside
+    // the widget test's fake-async clock before mounting the reader.
+    final data = await tester.runAsync(() => ShiaTextData.load());
+    expect(data, isNotNull);
+    expect(data!.entries, isNotEmpty);
     await tester.pumpWidget(const MaterialApp(
       home: Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'الزيارات')),
     ));
-    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 700)));
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 250)));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
+    expect(find.text('نصوص شيعية للقراءة دون إنترنت'), findsOneWidget);
     expect(find.text('الأدعية والزيارات'), findsWidgets);
-    expect(find.textContaining('72 نصاً'), findsOneWidget);
+    expect(find.textContaining('نصاً • منها'), findsOneWidget);
     expect(find.textContaining('ما قدرنا نحمّل مكتبة الأدعية'), findsNothing);
     await tester.scrollUntilVisible(
       find.text('زيارة عاشوراء'),
@@ -340,16 +347,49 @@ void main() {
     expect(find.text('صيام القضاء'), findsOneWidget);
   });
 
-  testWidgets('dhikr fortress switches between morning and evening counters', (tester) async {
+  testWidgets('dhikr fortress displays distinct Arabic morning and evening lists', (tester) async {
+    // AssetBundle reads must run outside widget-test fake async time; otherwise
+    // awaiting the uncached JSON load can stall before the widget is even mounted.
+    final loadedLibrary = await tester.runAsync(() => ShiaTextData.load());
+    expect(loadedLibrary, isNotNull);
+    final library = loadedLibrary!;
+    final morningEntries = library.entries
+        .where((entry) => entry.category == 'أدعية الصباح' && entry.arabicText.trim().isNotEmpty)
+        .toList(growable: false);
+    final eveningEntries = library.entries
+        .where((entry) => entry.category == 'أدعية المساء' && entry.arabicText.trim().isNotEmpty)
+        .toList(growable: false);
+    expect(morningEntries, isNotEmpty, reason: 'The unified library must provide Arabic morning text.');
+    expect(eveningEntries, isNotEmpty, reason: 'The unified library must provide Arabic evening text.');
+
     await tester.pumpWidget(const MaterialApp(
       home: Directionality(textDirection: TextDirection.rtl, child: DhikrFortressPage()),
     ));
-    await tester.pumpAndSettle();
-    expect(find.text('أذكار الصباح والمساء'), findsOneWidget);
-    expect(find.text('أذكار الصباح'), findsOneWidget);
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 300)));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+
+    expect(find.text('أذكار الصباح'), findsWidgets);
+    expect(find.text('أذكار المساء'), findsOneWidget);
+    expect(find.textContaining('المصدر:'), findsWidgets);
+
+    final morningTexts = tester.widgetList<SelectableText>(find.byType(SelectableText))
+        .map((widget) => widget.data)
+        .whereType<String>()
+        .toSet();
+
     await tester.tap(find.text('أذكار المساء'));
-    await tester.pumpAndSettle();
-    expect(find.text('الصلاة على النبي وآله'), findsOneWidget);
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 300)));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+
+    final eveningTexts = tester.widgetList<SelectableText>(find.byType(SelectableText))
+        .map((widget) => widget.data)
+        .whereType<String>()
+        .toSet();
+    expect(eveningTexts, isNotEmpty);
+    expect(morningTexts.difference(eveningTexts), isNotEmpty);
+    expect(eveningTexts.difference(morningTexts), isNotEmpty);
   });
 
   testWidgets('faith services page shows verified sources and safe guide entry points', (tester) async {
@@ -502,12 +542,12 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('مصدر نص القرآن — Tanzil'), findsOneWidget);
     await tester.scrollUntilVisible(
-      find.textContaining('لم نتحقق من مطابقته لألفاظ الأذان الجعفري'),
+      find.textContaining('يُستخدم صوتاً لإشعارات أوقات الصلاة'),
       250,
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    expect(find.textContaining('لم نتحقق من مطابقته لألفاظ الأذان الجعفري'), findsOneWidget);
+    expect(find.textContaining('قد يحدّ أندرويد مدة صوت الإشعار أو يؤخره'), findsOneWidget);
   });
 
   testWidgets('smart search screen offers cross-library offline search', (tester) async {

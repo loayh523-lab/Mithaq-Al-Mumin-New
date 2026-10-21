@@ -8,8 +8,8 @@ const _aboutMuted = Color(0xFF9EB5A9);
 const _projectUri = 'https://github.com/loayh523-lab/Mithaq-Al-Mumin-New';
 const _supportUri = 'https://github.com/loayh523-lab/Mithaq-Al-Mumin-New/issues';
 const _quranSourceUri = 'https://tanzil.net/';
-const _adhanSourceUri =
-    'https://commons.wikimedia.org/wiki/File:AzaanMaahur.ogg';
+const _adhanSourceUri = 'https://www.youtube.com/watch?v=lKK4cOnIitg';
+const _officialAudioLibraryUri = 'https://media.imamali.net/?fid=1';
 
 class AboutSupportPage extends StatefulWidget {
   const AboutSupportPage({super.key});
@@ -95,6 +95,15 @@ class _AboutSupportPageState extends State<AboutSupportPage> {
                     'درب العبادة والطمأنينة',
                     style: TextStyle(color: _aboutMuted),
                   ),
+                  SizedBox(height: 10),
+                  Text(
+                    'تنفيذ وتطوير حسين لؤي',
+                    style: TextStyle(
+                      color: _aboutGold,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
                   SizedBox(height: 12),
                   Text(
                     'الإصدار 0.1.0+1 • نسخة تطويرية',
@@ -179,15 +188,22 @@ class _AboutSupportPageState extends State<AboutSupportPage> {
                   ),
                 ),
                 _sourceButton(
-                  title: 'مصدر تسجيل الأذان المرفق — Wikimedia Commons',
+                  title: 'الأذان المختار — الشيخ شبر معلة، العتبة العلوية',
                   onPressed: () => _open(
                     Uri.parse(_adhanSourceUri),
-                    label: 'مصدر التسجيل الصوتي',
+                    label: 'تسجيل الأذان الرسمي',
+                  ),
+                ),
+                _sourceButton(
+                  title: 'مكتبة الصوتيات الرسمية للعتبة العلوية',
+                  onPressed: () => _open(
+                    Uri.parse(_officialAudioLibraryUri),
+                    label: 'مكتبة الصوتيات الرسمية',
                   ),
                 ),
                 const SizedBox(height: 8),
                 const Text(
-                  'التسجيل الصوتي المرفق بنمط ماهور، ولم نتحقق من مطابقته لألفاظ الأذان الجعفري؛ لذلك لا نصفه بأنه تسجيل جعفري موثّق. راجع صفحات المصادر لمعرفة شروط إعادة الاستخدام.',
+                  'أُرفق تسجيل الأذان الذي اختاره صاحب التطبيق داخل التطبيق ويُستخدم صوتاً لإشعارات أوقات الصلاة. قد يحدّ أندرويد مدة صوت الإشعار أو يؤخره إذا كانت قيود البطارية مفعّلة؛ اسمح بإشعارات التطبيق والمنبّهات الدقيقة لتقليل التأخير.',
                   style: TextStyle(color: _aboutMuted, height: 1.7, fontSize: 12),
                 ),
               ],

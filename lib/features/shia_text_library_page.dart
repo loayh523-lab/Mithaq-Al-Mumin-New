@@ -1,8 +1,29 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart' show compute;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'mafatih_library_page.dart';
+
+Map<String, dynamic> _decodeShiaJson(String raw) =>
+    jsonDecode(raw) as Map<String, dynamic>;
+
+String normalizeArabicText(String value) => value
+    .replaceAll('ک', 'ك')
+    .replaceAll('ی', 'ي')
+    .replaceAll('ے', 'ي')
+    .replaceAll('ہ', 'ه');
+
+bool containsPersianOnlyLetters(String value) =>
+    RegExp(r'[پچژگ]').hasMatch(value);
+
+bool containsPersianLanguageMarkers(String value) {
+  final normalized = normalizeArabicText(value);
+  // Keep only unambiguous Persian-language markers. Some phrases that look
+  // Persian in isolation also occur in valid Arabic religious texts.
+  return RegExp(
+    r'دعای|دعاي|دعاهای|دعاهاي|روزهای|روزهاي|فارسی|فارسي|برای|براي|میباشد|می شود|ميشود|خواهد شد|نمی|نمي|هنگام|آفتاب|شامگاه|صبحگاه|هفته|هزار رکعت|هزار ركعت',
+  ).hasMatch('$value $normalized');
+}
 
 const _shiaPanel = Color(0xFF10251E);
 const _shiaGold = Color(0xFFD9B66D);
@@ -34,6 +55,8 @@ class ShiaTextEntry {
     required this.type,
     required this.sourceUrl,
     required this.lines,
+    this.sourceLabel = '',
+    this.categoryOverride = '',
   });
   final String slug;
   final String title;
@@ -41,53 +64,98 @@ class ShiaTextEntry {
   final String type;
   final String sourceUrl;
   final List<ShiaTextLine> lines;
-  String get displayTitle => alternateName.trim().isNotEmpty ? alternateName : title;
+  /// Human-readable source citation, e.g. a book title and the exact source headings.
+  final String sourceLabel;
+  /// Used for imported book entries whose original section is already verified.
+  final String categoryOverride;
+  String get displayTitle {
+    for (final candidate in <String>[alternateName, title]) {
+      final clean = normalizeArabicText(candidate.trim());
+      if (clean.isEmpty) continue;
+      if (!clean.runes.any((rune) => rune >= 0x0600 && rune <= 0x06FF)) continue;
+      if (RegExp(r'[A-Za-z]').hasMatch(clean)) continue;
+      if (containsPersianOnlyLetters(clean) || containsPersianLanguageMarkers(candidate)) continue;
+      return clean;
+    }
+    return _arabicTitleFromSlug(slug, type);
+  }
   bool get isSahifa => slug.startsWith('sahifa-sajjadiya-');
   bool get isDayDua =>
       RegExp(r'(sunday|monday|tuesday|wednesday|thursday|friday|saturday)', caseSensitive: false).hasMatch(slug) ||
-      RegExp(r'دعاء يوم|أدعية يوم|دعاء الأحد|دعاء الاثنين|دعاء الثلاثاء|دعاء الأربعاء|دعاء الخميس|دعاء الجمعة|دعاء السبت').hasMatch('$title $alternateName');
+      RegExp(r'دعاء يوم|أدعية يوم|دعاء الأحد|دعاء الاثنين|دعاء الثلاثاء|دعاء الأربعاء|دعاء الخميس|دعاء الجمعة|دعاء السبت|أدعية أيام الأسبوع').hasMatch('$title $alternateName $sourceLabel');
   bool get isZiyara =>
       slug.toLowerCase().contains('ziyarat') ||
-      title.contains('زيارة') ||
-      alternateName.contains('زيارة');
+      '$title $alternateName $sourceLabel'.contains('زيارة');
   bool get isTaqibat =>
       slug.toLowerCase().contains('taqib') ||
-      title.contains('تعقيب') ||
-      alternateName.contains('تعقيب');
+      '$title $alternateName $sourceLabel'.contains('تعقيب');
   bool get isMunajat =>
       slug.toLowerCase().contains('munajat') ||
-      title.contains('مناجاة') ||
-      alternateName.contains('مناجاة');
+      '$title $alternateName $sourceLabel'.contains('مناجاة');
   bool get isMahdiDua {
-    final value = '${slug.toLowerCase()} $title $alternateName';
+    final value = '${slug.toLowerCase()} $title $alternateName $sourceLabel';
     return RegExp(r'mahdi|hujja|hujjah|sahib.al.zaman|imam.al.zaman|istighatha|ghayba|ghaib|nudba|al.ahd|faraj|صاحب الزمان|الإمام المهدي|الامام المهدي|الحجة|اللهم كن لوليك|دعاء العهد|دعاء الندبة|الاستغاثة بالحجة', caseSensitive: false).hasMatch(value);
   }
-  bool get isMorningEveningDua {
-    final value = '${slug.toLowerCase()} $title $alternateName';
-    return RegExp(r'morning|evening|sabah|masa|asbah|amsa|adhkar|أذكار|الصباح|المساء|دعاء الصباح|دعاء المساء', caseSensitive: false).hasMatch(value);
+  bool get isSharedDua {
+    final value = '${slug.toLowerCase()} $title $alternateName $sourceLabel';
+    return RegExp(
+      r'morning.{0,24}evening|evening.{0,24}morning|صباح.{0,24}مساء|مساء.{0,24}صباح|صباحاً ومساءً|صباحا ومساء|أذكار مشتركة|التعقيبات المشتركة|both periods',
+      caseSensitive: false,
+    ).hasMatch(value);
+  }
+  bool get isMorningDua {
+    final value = '${slug.toLowerCase()} $title $alternateName $sourceLabel';
+    return !isSharedDua &&
+        RegExp(r'morning|sabah|asbah|أذكار الصباح|الصباح|الصبح|دعاء الصباح|قبل طلوع الشمس', caseSensitive: false).hasMatch(value);
+  }
+  bool get isEveningDua {
+    final value = '${slug.toLowerCase()} $title $alternateName $sourceLabel';
+    return !isSharedDua &&
+        RegExp(r'evening|masa|amsa|أذكار المساء|المساء|عند الغروب|قبل الغروب|دعاء المساء', caseSensitive: false).hasMatch(value);
+  }
+  bool get isDailyDeed {
+    final value = '${slug.toLowerCase()} $title $alternateName $sourceLabel';
+    return RegExp(r'daily deeds|أعمال اليوم|أعمال ليلة|أعمال يوم|أعمال الليلة|الأعمال اليومية|العمل اليومي').hasMatch(value);
+  }
+  bool get isMonthlyDeed {
+    final value = '${slug.toLowerCase()} $title $alternateName $sourceLabel';
+    return RegExp(r'monthly deeds|أعمال الأشهر|أعمال شهر|أعمال الشهر|الأعمال الشهرية|دخول شهر رمضان|وداع شهر رمضان|شهر رمضان|رؤية الهلال|يوم عرفة|عيد الفطر|يوم الأضحى').hasMatch(value);
   }
   bool get isHajatDua {
-    final value = '${slug.toLowerCase()} $title $alternateName';
+    final value = '${slug.toLowerCase()} $title $alternateName $sourceLabel';
     return RegExp(r'hajat|hawaij|rizq|shifa|healing|tawfiq|success|الكرب|الحوائج|قضاء الدين|سعة الرزق|الشفاء|العافية|طلب العلم|تفريج الهم|الحزن').hasMatch(value);
   }
   bool get isOccasionDua {
-    final value = '${slug.toLowerCase()} $title $alternateName';
+    final value = '${slug.toLowerCase()} $title $alternateName $sourceLabel';
     return RegExp(r'eid|ramadan|arafah|mubahala|mubahilah|laylat|rajab|shaaban|dhul.hijja|dhul.qadah|مناسبة|العيد|رمضان|عرفة|مباهلة|رجب|شعبان|ذي الحجة|ذي القعدة|ليلة القدر').hasMatch(value);
   }
   String get category {
-    // Put specific collections first so broad date matches don't swallow them.
+    if (categoryOverride.trim().isNotEmpty) return categoryOverride;
+    // Keep specific collections and distinct time periods before broad occasion matching.
     if (isZiyara) return 'الزيارات';
+    if (isSharedDua) return 'الأذكار المشتركة';
     if (isSahifa) return 'الصحيفة السجادية';
     if (isMunajat) return 'المناجيات الخمس عشرة';
     if (isMahdiDua) return 'أدعية صاحب الزمان';
-    if (isMorningEveningDua) return 'أدعية الصباح والمساء';
+    if (isMorningDua) return 'أدعية الصباح';
+    if (isEveningDua) return 'أدعية المساء';
+    if (isDailyDeed) return 'الأعمال اليومية والمناسبات';
+    if (isMonthlyDeed) return 'الأعمال الشهرية والمناسبات';
     if (isHajatDua) return 'أدعية الحاجات والشفاء';
-    if (isOccasionDua) return 'أدعية الأشهر والمناسبات';
-    if (isTaqibat) return 'تعقيبات';
+    if (isOccasionDua) return 'الأعمال الشهرية والمناسبات';
+    if (isTaqibat) return 'تعقيبات الصلوات';
     if (isDayDua) return 'أدعية الأيام';
     return 'أدعية عامة';
   }
-  String get arabicText => lines.where((line) => line.isArabic).map((line) => line.text).join('\n');
+
+  /// Keep each prayer as one record while allowing it to be discovered from
+  /// relevant topical sections. This reuses sourced Arabic content rather than
+  /// duplicating the text or inventing new attributions.
+  /// Every sourced text belongs to one section only. This prevents the same
+  /// prayer from appearing repeatedly across the app's section lists.
+  List<String> get categories => <String>[category];
+
+  String get arabicText => lines.where((line) => line.isArabic).map((line) => line.text).join('\\n');
 
   factory ShiaTextEntry.fromJson(Map<String, dynamic> json) => ShiaTextEntry(
     slug: json['slug'] is String ? json['slug'] as String : '',
@@ -95,9 +163,32 @@ class ShiaTextEntry {
     alternateName: json['alternateName'] is String ? json['alternateName'] as String : '',
     type: json['type'] is String ? json['type'] as String : 'dua',
     sourceUrl: json['sourceUrl'] is String ? json['sourceUrl'] as String : '',
+    sourceLabel: json['sourceLabel'] is String ? json['sourceLabel'] as String : '',
+    categoryOverride: json['categoryOverride'] is String ? json['categoryOverride'] as String : '',
     lines: ((json['lines'] as List<dynamic>?) ?? const <dynamic>[])
       .whereType<Map<String, dynamic>>().map(ShiaTextLine.fromJson).toList(),
   );
+}
+
+String _arabicTitleFromSlug(String slug, String type) {
+  final value = slug.toLowerCase().replaceAll('_', '-');
+  if (value.contains('ziyarat-ashura') || value.contains('ziyarah-ashura')) return 'زيارة عاشوراء';
+  if (value.contains('ziyarat-arba') || value.contains('ziyarah-arba')) return 'زيارة الأربعين';
+  if (value.contains('ziyarat-warith') || value.contains('ziyarah-warith')) return 'زيارة وارث';
+  if (value.contains('ziyarat-amin-allah') || value.contains('ziyarah-amin-allah')) return 'زيارة أمين الله';
+  if (value.contains('dua-kumayl') || value.contains('du-a-kumayl')) return 'دعاء كميل';
+  if (value.contains('dua-sabah') || value.contains('du-a-sabah')) return 'دعاء الصباح';
+  if (value.contains('dua-nudba') || value.contains('du-a-nudba')) return 'دعاء الندبة';
+  if (value.contains('dua-al-ahd') || value.contains('du-a-al-ahd')) return 'دعاء العهد';
+  if (value.contains('dua-iftitah') || value.contains('du-a-iftitah')) return 'دعاء الافتتاح';
+  if (value.contains('dua-tawassul') || value.contains('du-a-tawassul')) return 'دعاء التوسل';
+  if (value.startsWith('sahifa-sajjadiya-')) {
+    final number = int.tryParse(value.split('-').last);
+    return number == null ? 'الصحيفة السجادية' : 'الصحيفة السجادية — الدعاء رقم $number';
+  }
+  if (value.contains('ziyarat') || value.contains('ziyarah') || type.toLowerCase().contains('ziyara')) return 'زيارة';
+  if (value.contains('sahifa')) return 'الصحيفة السجادية';
+  return 'دعاء';
 }
 
 class ShiaTextData {
@@ -110,15 +201,31 @@ class ShiaTextData {
 
   static Future<ShiaTextData> _load() async {
     final raw = await rootBundle.loadString('assets/shia_duas/shia_duas.json');
-    final decoded = jsonDecode(raw) as Map<String, dynamic>;
+    // Decode the potentially large offline library away from Flutter's UI isolate.
+    final decoded = await compute(_decodeShiaJson, raw);
     final rawEntries = decoded['entries'] as List<dynamic>;
-    final entries = rawEntries.whereType<Map<String, dynamic>>().map(ShiaTextEntry.fromJson).toList();
-    if (entries.isEmpty) throw const FormatException('Shia text collection is empty.');
-    final metadata = decoded['metadata'] as Map<String, dynamic>? ?? const <String, dynamic>{};
+    final entries = rawEntries
+        .whereType<Map<String, dynamic>>()
+        .map(ShiaTextEntry.fromJson)
+        .where((entry) => entry.lines.any(
+              (line) => line.isArabic && line.text.trim().isNotEmpty,
+            ))
+        .toList(growable: false);
+
+    if (entries.isEmpty) {
+      throw const FormatException('The bundled Arabic dua/ziyara library is empty.');
+    }
+
+    final metadata = decoded['metadata'] as Map<String, dynamic>? ??
+        const <String, dynamic>{};
     return ShiaTextData(
       entries: entries,
-      sourceProject: metadata['sourceProject'] is String ? metadata['sourceProject'] as String : 'Shia library JSON',
-      license: metadata['license'] is String ? metadata['license'] as String : 'CC0 1.0',
+      sourceProject: metadata['sourceProject'] is String
+          ? metadata['sourceProject'] as String
+          : 'مكتبة الأدعية والزيارات العربية',
+      license: metadata['license'] is String
+          ? metadata['license'] as String
+          : 'تختلف الرخص بحسب مصدر كل نص',
     );
   }
 }
@@ -137,11 +244,14 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
   static const _categories = [
     'أدعية عامة',
     'أدعية صاحب الزمان',
-    'أدعية الصباح والمساء',
+    'أدعية الصباح',
+    'أدعية المساء',
+    'الأذكار المشتركة',
     'أدعية الحاجات والشفاء',
-    'تعقيبات',
+    'تعقيبات الصلوات',
     'أدعية الأيام',
-    'أدعية الأشهر والمناسبات',
+    'الأعمال اليومية والمناسبات',
+    'الأعمال الشهرية والمناسبات',
     'الزيارات',
     'الصحيفة السجادية',
     'المناجيات الخمس عشرة',
@@ -170,8 +280,15 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
           return const Center(child: CircularProgressIndicator(color: _shiaGold));
         }
         final data = snapshot.data!;
+        // Only show categories that actually contain readable Arabic entries.
+        final availableCategories = _categories
+            .where((category) => data.entries.any((entry) => entry.categories.contains(category)))
+            .toList(growable: false);
+        final activeCategory = availableCategories.contains(_category)
+            ? _category
+            : (availableCategories.isNotEmpty ? availableCategories.first : 'أدعية عامة');
         final filtered = data.entries.where((entry) {
-          if (entry.category != _category) return false;
+          if (!entry.categories.contains(activeCategory)) return false;
           if (_query.isEmpty) return true;
           final header = _normalize('${entry.displayTitle} ${entry.title} ${entry.slug}');
           return header.contains(_query) ||
@@ -192,7 +309,12 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
               const SizedBox(height: 6),
               Text('${data.entries.length} نصاً • منها $sahifaCount من الصحيفة السجادية', style: const TextStyle(color: _shiaMuted)),
               const SizedBox(height: 6),
-              const Text('المكتبة مصنفة حسب نوع الدعاء مع إبقاء رابط المصدر لكل نص. قد تختلف العناوين أو الروايات بين الطبعات؛ لا نعرض النص غير العربي ضمن القراءة العربية.', style: TextStyle(color: _shiaMuted, fontSize: 11, height: 1.5)),
+              const Text('المكتبة مصنفة حسب نوع الدعاء والزيارة والعمل، ويظهر مصدر كل نص بوضوح في صفحة القراءة. قد تختلف العناوين أو الروايات بين الطبعات؛ العرض هنا عربي فقط.', style: TextStyle(color: _shiaMuted, fontSize: 11, height: 1.5)),
+              const SizedBox(height: 10),
+              const Text(
+                'تظهر نصوص مفاتيح الجنان العربية ضمن الأقسام المناسبة دون قسم منفصل، ويظهر اسم الكتاب والباب والفصل والنص في مصدر كل دعاء أو زيارة.',
+                style: TextStyle(color: _shiaMuted, fontSize: 11, height: 1.5),
+              ),
             ]),
           ),
           Padding(
@@ -214,10 +336,10 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 3),
             child: Row(children: [
-              ..._categories
+              ...availableCategories
             ].map((choice) => Padding(
               padding: const EdgeInsets.only(left: 8),
-              child: ChoiceChip(label: Text(choice), selected: _category == choice, onSelected: (_) => setState(() => _category = choice)),
+              child: ChoiceChip(label: Text(choice), selected: activeCategory == choice, onSelected: (_) => setState(() => _category = choice)),
             )).toList()),
           ),
           Expanded(
@@ -233,22 +355,13 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
                       ),
                       const SizedBox(height: 12),
                       FilledButton.icon(
-                        onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
-                          builder: (_) => Directionality(
-                            textDirection: TextDirection.rtl,
-                            child: MafatihCategoryPage(initialCategory: _category),
-                          ),
-                        )),
-                        icon: const Icon(Icons.menu_book_rounded),
-                        label: Text('ابحث في هذا القسم داخل مفاتيح الجنان'),
-                      ),
-                      const SizedBox(height: 8),
-                      OutlinedButton.icon(
-                        onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
-                          builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihLibraryPage()),
-                        )),
-                        icon: const Icon(Icons.auto_stories_rounded),
-                        label: const Text('تصفح جميع أبواب مفاتيح الجنان'),
+                        onPressed: () => setState(() {
+                          _category = 'أدعية عامة';
+                          _query = '';
+                          _controller.clear();
+                        }),
+                        icon: const Icon(Icons.auto_awesome_rounded),
+                        label: const Text('عرض الأدعية العامة'),
                       ),
                     ]),
                   ),
@@ -294,7 +407,6 @@ class ShiaTextReaderPage extends StatefulWidget {
 }
 
 class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
-  String _display = 'العربي';
   double _fontSize = 23;
   bool _focusMode = false;
   bool _isFavorite = false;
@@ -370,24 +482,8 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
     super.dispose();
   }
 
-  List<ShiaTextLine> get _visibleLines {
-    final source = widget.entry.lines;
-    if (_display == 'العربي') return source.where((line) => line.isArabic).toList();
-    if (_display == 'الفارسي') return source.where((line) => line.isPersian && !line.isArabic).toList();
-    if (_display == 'العربي والترجمة') {
-      return [
-        ...source.where((line) => line.isArabic),
-        ...source.where((line) => line.isTranslation && !line.isPersian),
-      ];
-    }
-    if (_display == 'العربي والفارسي') {
-      return [
-        ...source.where((line) => line.isArabic),
-        ...source.where((line) => line.isPersian && !line.isArabic),
-      ];
-    }
-    return source.toList();
-  }
+  List<ShiaTextLine> get _visibleLines =>
+      widget.entry.lines.where((line) => line.isArabic && line.text.trim().isNotEmpty).toList(growable: false);
 
   @override Widget build(BuildContext context) {
     final lines = _visibleLines;
@@ -425,18 +521,12 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
         if (!_focusMode) Padding(
           padding: const EdgeInsets.fromLTRB(14, 4, 14, 4),
           child: Column(children: [
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(children: [
-                'العربي', 'الفارسي', 'العربي والفارسي', 'العربي والترجمة', 'كل الأسطر'
-              ].map((choice) => Padding(
-                padding: const EdgeInsetsDirectional.only(end: 7),
-                child: ChoiceChip(
-                  label: Text(choice),
-                  selected: _display == choice,
-                  onSelected: (_) => setState(() => _display = choice),
-                ),
-              )).toList()),
+            const Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: Text(
+                'عرض النص العربي فقط',
+                style: TextStyle(color: _shiaMuted, fontSize: 12),
+              ),
             ),
             Row(children: [
               const Icon(Icons.text_fields_rounded, color: _shiaGold),
@@ -476,10 +566,14 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
                   );
                 }),
                 const Divider(color: Color(0x334A7562)),
-                const Text('هذا النص منقول من سجلّ البيانات المشار إليه أدناه. قد تختلف الضبطات أو ترتيب الفقرات بين الطبعات.', style: TextStyle(color: _shiaMuted, height: 1.7, fontSize: 11)),
+                const Text('النص المعروض عربي فقط. قد تختلف الضبطات أو ترتيب الفقرات بين الطبعات.', style: TextStyle(color: _shiaMuted, height: 1.7, fontSize: 11)),
+                if (widget.entry.sourceLabel.isNotEmpty) ...[
+                  const SizedBox(height: 6),
+                  SelectableText('المصدر: ${widget.entry.sourceLabel}', textDirection: TextDirection.rtl, style: const TextStyle(color: _shiaGold, fontSize: 11, height: 1.6)),
+                ],
                 if (widget.entry.sourceUrl.isNotEmpty) ...[
                   const SizedBox(height: 6),
-                  SelectableText('المصدر: ${widget.entry.sourceUrl}', textDirection: TextDirection.ltr, style: const TextStyle(color: _shiaMuted, fontSize: 10)),
+                  SelectableText('رابط المصدر: ${widget.entry.sourceUrl}', textDirection: TextDirection.ltr, style: const TextStyle(color: _shiaMuted, fontSize: 10)),
                 ],
               ],
             )),

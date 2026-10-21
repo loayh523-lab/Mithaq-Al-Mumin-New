@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'faith_library_pages.dart';
+import 'tafsir_reader_page.dart';
 
 const _faithPanel = Color(0xFF10251E);
 const _faithGold = Color(0xFFD9B66D);
 const _faithMuted = Color(0xFF9EB5A9);
 
 const _officialFiqhUrl = 'https://www.leader.ir/ar';
-const _tafsirUrl = 'https://almizan.wilayah.app/';
 const _hajjUrl = 'https://www.leader.ir/ar/book/240/%D9%85%D9%86%D8%A7%D8%B3%D9%83-%D8%A7%D9%84%D8%AD%D8%AC';
 
 Future<void> openFaithSource(BuildContext context, String url) async {
@@ -32,6 +33,60 @@ Future<void> openFaithSource(BuildContext context, String url) async {
       );
     }
   }
+}
+
+const _sistaniIstiftaatUrl = 'https://www.sistani.org/arabic/qa/';
+
+/// Separate, source-linked gateways: answers are opened on each marja's own
+/// official site and are never mixed or paraphrased as one shared ruling.
+class IstiftaatPage extends StatelessWidget {
+  const IstiftaatPage({super.key});
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: const Text('استفتاءات المراجع')),
+    body: ListView(
+      padding: const EdgeInsets.fromLTRB(16, 14, 16, 28),
+      children: [
+        Container(
+          padding: const EdgeInsets.all(18),
+          decoration: BoxDecoration(
+            color: _faithPanel,
+            borderRadius: BorderRadius.circular(22),
+            border: Border.all(color: _faithGold.withValues(alpha: .32)),
+          ),
+          child: const Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('اختر مرجع التقليد', style: TextStyle(
+                color: _faithGold, fontSize: 21, fontWeight: FontWeight.w900,
+              )),
+              SizedBox(height: 8),
+              Text(
+                'كل خيار يفتح الاستفتاءات في الموقع الرسمي لمكتب المرجع نفسه. الأجوبة خارجية وتحتاج الإنترنت؛ لا يخلط التطبيق بين فتاوى المراجع.',
+                style: TextStyle(color: _faithMuted, height: 1.7),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 12),
+        _ServiceTile(
+          icon: Icons.account_balance_outlined,
+          title: 'استفتاءات السيد علي الخامنئي',
+          description: 'افتح الموقع الرسمي لمكتب السيد القائد للوصول إلى المسائل والأجوبة الفقهية.',
+          actionLabel: 'فتح استفتاءات السيد الخامنئي',
+          onTap: () => openFaithSource(context, _officialFiqhUrl),
+        ),
+        _ServiceTile(
+          icon: Icons.menu_book_outlined,
+          title: 'استفتاءات السيد السيستاني',
+          description: 'افتح قسم الاستفتاءات المنشور على الموقع الرسمي لمكتب السيد السيستاني.',
+          actionLabel: 'فتح استفتاءات السيد السيستاني',
+          onTap: () => openFaithSource(context, _sistaniIstiftaatUrl),
+        ),
+      ],
+    ),
+  );
 }
 
 class FaithServicesPage extends StatelessWidget {
@@ -80,9 +135,14 @@ class FaithServicesPage extends StatelessWidget {
         _ServiceTile(
           icon: Icons.auto_stories_rounded,
           title: 'تفسير القرآن الكريم',
-          description: 'مكتبة إلكترونية لتفسير الميزان باللغة العربية. هذه نسخة خارجية تحتاج اتصالاً؛ لم نضمّن نص التفسير محلياً ولم نختصره من دون مراجعة.',
-          actionLabel: 'فتح تفسير الميزان',
-          onTap: () => openFaithSource(context, _tafsirUrl),
+          description: 'قراءات ومعانٍ إجمالية موجزة داخل التطبيق، مع إمكانية فتح تفسير الميزان الكامل من المصدر الخارجي.',
+          actionLabel: 'قراءة التفسير داخل التطبيق',
+          onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+            builder: (_) => const Directionality(
+              textDirection: TextDirection.rtl,
+              child: TafsirReaderPage(),
+            ),
+          )),
         ),
         _ServiceTile(
           icon: Icons.explore_rounded,
@@ -321,42 +381,137 @@ class IstikharaGuidePage extends StatelessWidget {
   );
 }
 
-class ArbaeenGuidePage extends StatelessWidget {
+class ArbaeenGuidePage extends StatefulWidget {
   const ArbaeenGuidePage({super.key});
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('دليل المشاية')),
-    body: ListView(
-      padding: const EdgeInsets.all(18),
-      children: [
-        Container(
-          padding: const EdgeInsets.all(18),
-          decoration: BoxDecoration(
-            color: _faithPanel,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: _faithGold.withValues(alpha: .3)),
+  State<ArbaeenGuidePage> createState() => _ArbaeenGuidePageState();
+}
+
+class _ArbaeenGuidePageState extends State<ArbaeenGuidePage> {
+  static const _storageKey = 'mithaq_arbaeen_preparation_checked_v1';
+  static const _items = <({String title, String detail})>[
+    (title: 'تأكيد خط السير ونقطة الالتقاء', detail: 'اتفق مع المجموعة على مسارها ومكان واضح للاجتماع عند الانفصال.'),
+    (title: 'إبلاغ الأهل بالخطة', detail: 'شارك وقت الانطلاق وخط السير التقريبي ووسيلة التواصل.'),
+    (title: 'الهاتف والاتصال', detail: 'اشحن الهاتف وخذ بطارية احتياطية واحفظ الأرقام المهمة.'),
+    (title: 'الماء والراحة', detail: 'خطط للاستراحة واشرب الماء بانتظام، واطلب المساعدة عند الدوار أو التعب الشديد.'),
+    (title: 'الأغراض الأساسية', detail: 'هوية، مستلزمات النظافة، حذاء مريح وملابس تناسب الطقس.'),
+    (title: 'الأدوية اللازمة', detail: 'خذ أدويتك الموصوفة إن وجدت واحفظها بطريقة مناسبة.'),
+    (title: 'متابعة التعليمات المحلية', detail: 'تحقق من حالة الطقس والتنبيهات والتعليمات الرسمية قبل التحرك.'),
+    (title: 'احترام الطريق والآخرين', detail: 'حافظ على النظافة واتبع توجيهات المنظمين وتجنب المسارات المغلقة.'),
+  ];
+
+  Set<String> _checked = <String>{};
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadChecklist();
+  }
+
+  Future<void> _loadChecklist() async {
+    final prefs = await SharedPreferences.getInstance();
+    final saved = prefs.getStringList(_storageKey) ?? const <String>[];
+    if (!mounted) return;
+    setState(() {
+      _checked = saved.toSet();
+      _loading = false;
+    });
+  }
+
+  Future<void> _toggle(String title, bool checked) async {
+    final next = Set<String>.from(_checked);
+    if (checked) {
+      next.add(title);
+    } else {
+      next.remove(title);
+    }
+    setState(() => _checked = next);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList(_storageKey, next.toList()..sort());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final completed = _items.where((item) => _checked.contains(item.title)).length;
+    return Scaffold(
+      appBar: AppBar(title: const Text('دليل المشاية')),
+      body: ListView(
+        padding: const EdgeInsets.all(18),
+        children: [
+          Container(
+            padding: const EdgeInsets.all(18),
+            decoration: BoxDecoration(
+              color: _faithPanel,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: _faithGold.withValues(alpha: .3)),
+            ),
+            child: const Text(
+              'قائمة تحضير تعمل دون إنترنت وتحفظ علامات الإنجاز على جهازك. ليست خريطة طريق، ولا تؤكد مواقع المواكب أو الخدمات.',
+              style: TextStyle(color: _faithGold, height: 1.7, fontSize: 17, fontWeight: FontWeight.w700),
+            ),
           ),
-          child: const Text(
-            'قائمة تحضير تعمل دون إنترنت. ليست خريطة طريق، ولا تؤكد مواقع المواكب أو الخدمات.',
-            style: TextStyle(color: _faithGold, height: 1.7, fontSize: 17, fontWeight: FontWeight.w700),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              const Expanded(child: Text('قائمة الاستعداد', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800))),
+              Text('$completed من ${_items.length}', style: const TextStyle(color: _faithGold, fontWeight: FontWeight.bold)),
+            ],
           ),
-        ),
-        const SizedBox(height: 12),
-        const _GuideStep(number: '١', title: 'قبل الانطلاق', detail: 'تحقق من حالة الطقس وتعليمات الجهات المحلية وخط سير مجموعتك، وأخبر أهلك بخطتك.'),
-        const _GuideStep(number: '٢', title: 'الماء والراحة', detail: 'اشرب الماء بانتظام وخذ فترات راحة، ولا تواصل المشي إذا شعرت بدوار أو تعب شديد؛ اطلب مساعدة المشرفين أو الخدمات الطبية.'),
-        const _GuideStep(number: '٣', title: 'الهاتف والاتصال', detail: 'اشحن الهاتف وخذ بطارية احتياطية، واحفظ أرقام أفراد مجموعتك ومكان الالتقاء عند الانفصال.'),
-        const _GuideStep(number: '٤', title: 'الأغراض الأساسية', detail: 'هوية شخصية، أدوية موصوفة لك إن وجدت، حذاء مريح مجرّب، مستلزمات النظافة، وملابس مناسبة للطقس.'),
-        const _GuideStep(number: '٥', title: 'احترام الآخرين', detail: 'اتبع تعليمات المنظمين، حافظ على نظافة الطريق، ولا تدخل مساراً مغلقاً أو مزدحماً.'),
-        const SizedBox(height: 12),
-        OutlinedButton.icon(
-          onPressed: () => openFaithSource(context, _officialFiqhUrl),
-          icon: const Icon(Icons.open_in_new_rounded),
-          label: const Text('فتح موقع المكتب الرسمي'),
-        ),
-      ],
-    ),
-  );
+          const SizedBox(height: 8),
+          LinearProgressIndicator(
+            value: _items.isEmpty ? 0 : completed / _items.length,
+            minHeight: 6,
+            borderRadius: BorderRadius.circular(6),
+            backgroundColor: _faithMuted.withValues(alpha: .16),
+            color: _faithGold,
+          ),
+          const SizedBox(height: 10),
+          if (_loading)
+            const Center(child: Padding(
+              padding: EdgeInsets.all(20),
+              child: CircularProgressIndicator(),
+            ))
+          else
+            for (final item in _items)
+              Card(
+                color: _faithPanel,
+                margin: const EdgeInsets.only(bottom: 8),
+                child: CheckboxListTile(
+                  value: _checked.contains(item.title),
+                  onChanged: (value) => _toggle(item.title, value ?? false),
+                  controlAffinity: ListTileControlAffinity.leading,
+                  activeColor: _faithGold,
+                  title: Text(item.title, style: const TextStyle(fontWeight: FontWeight.w700)),
+                  subtitle: Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Text(item.detail, style: const TextStyle(color: _faithMuted, height: 1.5)),
+                  ),
+                ),
+              ),
+          const SizedBox(height: 12),
+          OutlinedButton.icon(
+            onPressed: _loading || _checked.isEmpty
+                ? null
+                : () async {
+                    final prefs = await SharedPreferences.getInstance();
+                    await prefs.remove(_storageKey);
+                    if (mounted) setState(() => _checked = <String>{});
+                  },
+            icon: const Icon(Icons.restart_alt_rounded),
+            label: const Text('إعادة تعيين القائمة'),
+          ),
+          const SizedBox(height: 8),
+          OutlinedButton.icon(
+            onPressed: () => openFaithSource(context, _officialFiqhUrl),
+            icon: const Icon(Icons.open_in_new_rounded),
+            label: const Text('فتح موقع المكتب الرسمي'),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _GuideStep extends StatelessWidget {

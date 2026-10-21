@@ -40,10 +40,11 @@ class PrayerNotificationService {
         'إذا ظهر هذا التنبيه فقد وصل الإشعار التجريبي. افحص مستوى صوت التنبيهات إذا لم تسمع الأذان.',
         const NotificationDetails(
           android: AndroidNotificationDetails(
-            'mithaq_adhan_v3', 'أذان الصلاة',
-            channelDescription: 'تنبيهات الأذان — قناة صوت جديدة',
+            'mithaq_prayer_adhan_v9', 'أذان الصلاة',
+            channelDescription: 'أذان الشيخ شبّر معلة عند وقت الصلاة',
+
+            sound: RawResourceAndroidNotificationSound('adhan_shabbar_maalla'),
             importance: Importance.high, priority: Priority.high,
-            sound: RawResourceAndroidNotificationSound('adhan_persian'),
             audioAttributesUsage: AudioAttributesUsage.alarm,
           ),
         ),
@@ -55,8 +56,9 @@ class PrayerNotificationService {
     }
   }
 
-  /// Schedules local reminders for the next 30 days. Prayer times are estimates;
-  /// the bundled recording is Persian-style and is not verified as Ja'fari adhan.
+  /// Schedules prayer-time reminders for the next 30 days. Times are estimates.
+  /// The recording supplied for this project is bundled as an Android raw resource and
+  /// used as the sound for prayer-time reminders. Early alerts use their own channel.
   static Future<bool> configure({
     required bool enabled,
     required PrayerCity city,
@@ -65,14 +67,17 @@ class PrayerNotificationService {
     try {
       await _initialize();
       var scheduleMode = AndroidScheduleMode.inexactAllowWhileIdle;
+      var canScheduleExact = false;
       if (defaultTargetPlatform == TargetPlatform.android) {
         final android = _plugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
         final granted = await android?.requestNotificationsPermission();
         final notificationsEnabled = await android?.areNotificationsEnabled();
         if (enabled && (granted == false || notificationsEnabled == false)) {
+          await _cancelScheduledReminders();
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setBool('prayer_notifications_enabled', false);
           return false;
         }
-        var canScheduleExact = false;
         try {
           canScheduleExact = await android?.canScheduleExactNotifications() ?? false;
         } catch (_) {
@@ -80,22 +85,25 @@ class PrayerNotificationService {
         }
         if (enabled && requestExactPermission && !canScheduleExact) {
           try {
-            canScheduleExact = await android?.requestExactAlarmsPermission() ?? false;
+            // Opening Android's special-access screen may not return a usable
+            // result on every device, so query the permission again afterwards.
+            await android?.requestExactAlarmsPermission();
+            canScheduleExact = await android?.canScheduleExactNotifications() ?? false;
           } catch (_) {
-            // Exact alarms are optional; retain the inexact fallback if unavailable.
+            // A denied exact-alarm permission is handled below without a silent
+            // switch to inexact delivery.
           }
-        }
-        if (canScheduleExact) {
-          scheduleMode = AndroidScheduleMode.exactAllowWhileIdle;
         }
       }
 
-      final pending = await _plugin.pendingNotificationRequests();
-      for (final request in pending) {
-        if (request.id >= _idStart && request.id < _idStart + _daysToSchedule * 10) {
-          await _plugin.cancel(request.id);
-        }
+      // Use exact alarms when Android grants special access. If the user has
+      // not granted it, still schedule reminders instead of silently disabling
+      // every prayer notification. Android may delay these fallback alarms.
+      if (canScheduleExact) {
+        scheduleMode = AndroidScheduleMode.exactAllowWhileIdle;
       }
+
+      await _cancelScheduledReminders();
       if (!enabled) return true;
 
       final prefs = await SharedPreferences.getInstance();
@@ -130,17 +138,18 @@ class PrayerNotificationService {
           if (scheduled.isAfter(now.add(const Duration(seconds: 15)))) {
             await _plugin.zonedSchedule(
               id,
-              'حان وقت الصلاة — ${prayerLabels[index]}',
-              'حان وقت ${prayerLabels[index]} وفق الحساب الفلكي التقديري داخل ميثاق المؤمن.',
+              'أذان ${prayerLabels[index]}',
+              'حان الآن وقت صلاة ${prayerLabels[index]}.',
               scheduled,
               const NotificationDetails(
                 android: AndroidNotificationDetails(
-                  'mithaq_adhan_v3',
+                  'mithaq_prayer_adhan_v9',
                   'أذان الصلاة',
-                  channelDescription: 'تنبيهات الأذان — قناة صوت جديدة',
+                  channelDescription: 'أذان الشيخ شبّر معلة عند وقت الصلاة',
+
+                  sound: RawResourceAndroidNotificationSound('adhan_shabbar_maalla'),
                   importance: Importance.high,
                   priority: Priority.high,
-                  sound: RawResourceAndroidNotificationSound('adhan_persian'),
                   audioAttributesUsage: AudioAttributesUsage.alarm,
                 ),
               ),
@@ -155,8 +164,8 @@ class PrayerNotificationService {
             if (earlyAt.isAfter(now.add(const Duration(seconds: 15)))) {
               await _plugin.zonedSchedule(
                 id + 5,
-                'تنبيه قبل الصلاة — ${prayerLabels[index]}',
-                'باقي $earlyAlertMinutes دقائق على وقت صلاة ${prayerLabels[index]}.',
+                'اقترب وقت صلاة ${prayerLabels[index]}',
+                'باقي $earlyAlertMinutes دقائق على أذان ${prayerLabels[index]}.',
                 earlyAt,
                 const NotificationDetails(
                   android: AndroidNotificationDetails(
@@ -189,15 +198,20 @@ class PrayerNotificationService {
     }
   }
 
+  static Future<void> _cancelScheduledReminders() async {
+    final pending = await _plugin.pendingNotificationRequests();
+    for (final request in pending) {
+      if (request.id >= _idStart &&
+          request.id < _idStart + _daysToSchedule * 10) {
+        await _plugin.cancel(request.id);
+      }
+    }
+  }
+
   static Future<void> cancelAll() async {
     try {
       await _initialize();
-      final pending = await _plugin.pendingNotificationRequests();
-      for (final request in pending) {
-        if (request.id >= _idStart && request.id < _idStart + _daysToSchedule * 10) {
-          await _plugin.cancel(request.id);
-        }
-      }
+      await _cancelScheduledReminders();
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('prayer_notifications_enabled', false);
     } catch (_) {

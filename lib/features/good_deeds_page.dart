@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../features/prayer_calendar_page.dart' show hijriDateLabel, hijriDateParts;
@@ -176,6 +177,8 @@ class _GoodDeedsPageState extends State<GoodDeedsPage> {
   final Set<String> _completed = <String>{};
   bool _loading = true;
   int _hijriCorrection = 0;
+  String _loadedDayKey = '';
+  Timer? _dayWatcher;
 
   List<_Deed> get _deeds {
     final today = DateTime.now();
@@ -200,7 +203,20 @@ class _GoodDeedsPageState extends State<GoodDeedsPage> {
   @override
   void initState() {
     super.initState();
+    _loadedDayKey = _key;
     _load();
+    _dayWatcher = Timer.periodic(const Duration(minutes: 1), (_) {
+      if (!mounted) return;
+      if (_key != _loadedDayKey) {
+        _load();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _dayWatcher?.cancel();
+    super.dispose();
   }
 
   Future<void> _load() async {
@@ -210,14 +226,20 @@ class _GoodDeedsPageState extends State<GoodDeedsPage> {
       final correction = prefs.getInt('hijri_correction') ?? 0;
       if (!mounted) return;
       setState(() {
+        _loadedDayKey = _key;
         _completed
           ..clear()
           ..addAll(values);
-        _hijriCorrection = correction.clamp(-3, 3).toInt();
+        _hijriCorrection = correction.clamp(-1, 2).toInt();
         _loading = false;
       });
     } catch (_) {
-      if (mounted) setState(() => _loading = false);
+      if (mounted) {
+        setState(() {
+          _loadedDayKey = _key;
+          _loading = false;
+        });
+      }
     }
   }
 

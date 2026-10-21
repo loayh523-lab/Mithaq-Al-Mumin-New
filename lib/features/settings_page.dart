@@ -22,6 +22,9 @@ class _SettingsPageState extends State<SettingsPage> {
   bool _loaded = false;
   bool _notificationsEnabled = false;
   bool _gpsBusy = false;
+  final AudioPlayer _adhanPlayer = AudioPlayer();
+  bool _adhanPlaying = false;
+  late final StreamSubscription<void> _adhanCompleteSubscription;
   bool _earlyAlertEnabled = false;
   int _earlyAlertMinutes = 5;
   Map<String, bool> _prayerEnabled = {
@@ -38,41 +41,42 @@ class _SettingsPageState extends State<SettingsPage> {
     MapEntry('maghrib', 'المغرب'),
     MapEntry('isha', 'العشاء'),
   ];
-  AudioPlayer? _adhanPlayer;
-  StreamSubscription<void>? _adhanCompleteSubscription;
-  bool _isPlayingAdhan = false;
 
-  @override void initState() { super.initState(); _load(); }
+  @override
+  void initState() {
+    super.initState();
+    _adhanCompleteSubscription = _adhanPlayer.onPlayerComplete.listen((_) {
+      if (mounted) setState(() => _adhanPlaying = false);
+    });
+    _load();
+  }
 
   @override
   void dispose() {
-    _adhanCompleteSubscription?.cancel();
-    final player = _adhanPlayer;
-    if (player != null) unawaited(player.dispose());
+    unawaited(_adhanCompleteSubscription.cancel());
+    unawaited(_adhanPlayer.dispose());
     super.dispose();
   }
 
-  Future<void> _toggleAdhanPlayback() async {
-    final existing = _adhanPlayer;
-    if (_isPlayingAdhan) {
-      try {
-        await existing?.stop();
-      } catch (_) { /* The local notification feature remains available. */ }
-      if (mounted) setState(() => _isPlayingAdhan = false);
-      return;
-    }
+  Future<void> _toggleAdhanPreview() async {
     try {
-      final player = _adhanPlayer ??= AudioPlayer(playerId: 'mithaq-adhan-preview');
-      _adhanCompleteSubscription ??= player.onPlayerComplete.listen((_) {
-        if (mounted) setState(() => _isPlayingAdhan = false);
-      });
-      await player.stop();
-      await player.play(AssetSource('audio/adhan_persian.ogg'));
-      if (mounted) setState(() => _isPlayingAdhan = true);
-    } catch (error) {
-      if (mounted) _message('تعذّر تشغيل التسجيل الصوتي. جرّب إعادة فتح التطبيق أو تحقق من الملف المرفق.');
+      if (_adhanPlaying) {
+        await _adhanPlayer.pause();
+        if (mounted) setState(() => _adhanPlaying = false);
+        return;
+      }
+      await _adhanPlayer.stop();
+      await _adhanPlayer.play(
+        AssetSource('audio/adhan_shabbar_maalla.mp3'),
+      );
+      if (mounted) setState(() => _adhanPlaying = true);
+    } catch (_) {
+      if (mounted) {
+        _message('تعذّر تشغيل تسجيل الأذان. أغلق الصفحة وافتحها ثم جرّب مرة ثانية.');
+      }
     }
   }
+
   Future<void> _load() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -174,8 +178,8 @@ class _SettingsPageState extends State<SettingsPage> {
     if (!mounted) return;
     setState(() => _notificationsEnabled = ok);
     _message(ok
-      ? 'تمت جدولة تذكيرات الصلوات المختارة للأيام الثلاثين القادمة'
-      : 'تعذّر التفعيل. تحقق من إذن الإشعارات وإعدادات الجهاز.');
+      ? 'تمت جدولة تذكيرات الصلوات المختارة للأيام الثلاثين القادمة. إذا لم تسمح بالمنبّهات الدقيقة فقد يتأخر التنبيه.'
+      : 'تعذّر جدولة التذكيرات. تأكد من إذن الإشعارات، ثم اسمح بالمنبّهات الدقيقة حتى تصل أقرب للموعد.');
   }
 
   Future<void> _refreshReminderSchedule() async {
@@ -295,7 +299,7 @@ class _SettingsPageState extends State<SettingsPage> {
             child: SwitchListTile(
               contentPadding: EdgeInsets.zero,
               title: const Text('إشعارات الصلاة'),
-              subtitle: const Text('تذكيرات محلية للأيام الثلاثين القادمة وفق حساب فلكي تقديري. التسجيل الصوتي المرفق فارسي بنمط ماهور، ولم نتحقق من مطابقته للصيغة الجعفرية. قد تتأخر التنبيهات بسبب توفير الطاقة.', style: TextStyle(color: _settingsMuted, height: 1.5, fontSize: 12)),
+              subtitle: const Text('تذكيرات محلية للأيام الثلاثين القادمة وفق حساب فلكي تقديري. تستخدم إشعارات الصلاة تسجيل الشيخ شبّر معلة. يلزم السماح بالمنبّهات الدقيقة حتى لا يُستبدل وقت الصلاة بتنبيه متأخر. وقد تؤثر قيود البطارية في بعض الأجهزة.', style: TextStyle(color: _settingsMuted, height: 1.5, fontSize: 12)),
               value: _notificationsEnabled,
               onChanged: _loaded ? _toggleNotifications : null,
               activeThumbColor: _settingsGold,
@@ -360,9 +364,17 @@ class _SettingsPageState extends State<SettingsPage> {
           SizedBox(
             width: double.infinity,
             child: OutlinedButton.icon(
-              onPressed: _loaded ? _toggleAdhanPlayback : null,
-              icon: Icon(_isPlayingAdhan ? Icons.stop_circle_outlined : Icons.play_circle_outline_rounded),
-              label: Text(_isPlayingAdhan ? 'إيقاف التسجيل الصوتي' : 'استماع إلى تسجيل الأذان'),
+              onPressed: _loaded ? _toggleAdhanPreview : null,
+              icon: Icon(
+                _adhanPlaying
+                    ? Icons.pause_circle_outline_rounded
+                    : Icons.play_circle_outline_rounded,
+              ),
+              label: Text(
+                _adhanPlaying
+                    ? 'إيقاف معاينة الأذان'
+                    : 'تشغيل أذان الشيخ شبّر معلة',
+              ),
             ),
           ),
           const SizedBox(height: 8),
@@ -374,9 +386,9 @@ class _SettingsPageState extends State<SettingsPage> {
               label: const Text('تجربة إشعار الأذان'),
             ),
           ),
-          const Text('التسجيل: Saeed Hatamzadeh-Varmazyar، أذان بنمط ماهور، ترخيص CC BY-SA 4.0. وصف الملف لا يؤكد ألفاظه الجعفرية؛ لذلك لا نعرضه كأذان جعفري موثّق.', style: TextStyle(color: _settingsMuted, fontSize: 11, height: 1.5)),
+          const Text('تُشغّل المعاينة من التسجيل المضمّن داخل التطبيق، ويمكن سماعه من دون اتصال بالإنترنت.', style: TextStyle(color: _settingsMuted, fontSize: 11, height: 1.5)),
           const SizedBox(height: 4),
-          const SelectableText('https://commons.wikimedia.org/wiki/File:AzaanMaahur.ogg', style: TextStyle(color: _settingsGold, fontSize: 11)),
+          const SelectableText('https://www.youtube.com/watch?v=lKK4cOnIitg', style: TextStyle(color: _settingsGold, fontSize: 11)),
           const SizedBox(height: 4),
           const Text('يلزم السماح بإشعارات التطبيق من أندرويد. إذا وصل الإشعار بلا صوت، ارفع صوت التنبيهات وافحص إعداد قناة «أذان الصلاة».', style: TextStyle(color: _settingsMuted, fontSize: 11, height: 1.5)),
         ],

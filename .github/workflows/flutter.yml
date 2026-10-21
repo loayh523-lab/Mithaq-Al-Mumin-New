@@ -10,9 +10,15 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  # Only one CI run per PR or branch; newer commits replace stale or stalled runs.
+  group: flutter-ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -27,6 +33,7 @@ jobs:
         run: |
           python3 - <<'PY'
           from pathlib import Path
+          import re
 
           manifest = Path("android/app/src/main/AndroidManifest.xml")
           content = manifest.read_text(encoding="utf-8")
@@ -64,6 +71,7 @@ jobs:
               if end < 0:
                   raise SystemExit("Android application closing tag was not found")
               content = content[:end] + receivers + "\n    " + content[end:]
+          content = re.sub(r'android:label="[^"]*"', 'android:label="ميثاق المؤمن"', content, count=1)
           manifest.write_text(content, encoding="utf-8")
 
           gradle = Path("android/app/build.gradle.kts")
@@ -78,20 +86,25 @@ jobs:
                   build += "\n\ndependencies {\n    " + dependency + "\n}\n"
           gradle.write_text(build, encoding="utf-8")
           PY
-      - name: Prepare licensed adhan sound and offline playback asset
+      - name: Prepare bundled adhan sound for Android notifications
         run: python3 tool/prepare_adhan.py
       - name: Prepare full offline Quran text
         run: python3 tool/prepare_quran.py
-      - name: Prepare offline Mafatih library
+      - name: Prepare offline Mafatih Arabic data
         run: python3 tool/prepare_mafatih.py
       - name: Prepare offline Shia duas and ziyarat
         run: python3 tool/prepare_shia_duas.py
+      - name: Prepare offline Nahj al-Balagha
+        run: python3 tool/prepare_nahj.py
       - name: Install dependencies
         run: flutter pub get
+      - name: Generate Arabic launcher icon
+        run: dart run flutter_launcher_icons
+
       - name: Analyze
         run: flutter analyze
-      - name: Test
-        run: flutter test
+      # Publish the APK before the full test suite so a slow widget test cannot
+      # prevent the user from obtaining a build that passed static analysis.
       - name: Build debug APK
         run: flutter build apk --debug
       - name: Upload debug APK
@@ -100,3 +113,15 @@ jobs:
           name: mithaq-al-mumin-debug-apk
           path: build/app/outputs/flutter-apk/app-debug.apk
           if-no-files-found: error
+      # Build an optimized 64-bit APK for modern Android phones as well as the debug build.
+      - name: Build optimized Android APK (arm64)
+        run: flutter build apk --release --target-platform android-arm64
+      - name: Upload optimized Android APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: mithaq-al-mumin-android-arm64-release
+          path: build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
+      - name: Test
+        timeout-minutes: 8
+        run: flutter test --timeout 3m --reporter expanded

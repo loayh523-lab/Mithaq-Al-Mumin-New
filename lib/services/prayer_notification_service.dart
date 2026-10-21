@@ -55,6 +55,41 @@ class PrayerNotificationService {
     }
   }
 
+  /// Keeps an existing healthy schedule instead of rebuilding up to 30 days of
+  /// notifications on every app launch. Settings changes still call configure().
+  static Future<bool> ensureScheduled({required PrayerCity city}) async {
+    try {
+      await _initialize();
+      final prefs = await SharedPreferences.getInstance();
+      if (defaultTargetPlatform == TargetPlatform.android) {
+        final android = _plugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+        final enabled = await android?.areNotificationsEnabled();
+        if (enabled == false) {
+          return configure(enabled: true, city: city);
+        }
+      }
+
+      const prayerKeys = ['fajr', 'noon', 'asr', 'maghrib', 'isha'];
+      final selectedCount = prayerKeys
+          .where((key) => prefs.getBool('prayer_enabled_$key') ?? true)
+          .length;
+      if (selectedCount == 0) {
+        return configure(enabled: true, city: city);
+      }
+      final hasEarlyAlerts = prefs.getBool('prayer_early_alert_enabled') ?? false;
+      final minimumHealthyCount = selectedCount * 20 * (hasEarlyAlerts ? 2 : 1);
+      final pending = await _plugin.pendingNotificationRequests();
+      final activeCount = pending.where((request) =>
+        request.id >= _idStart &&
+        request.id < _idStart + _daysToSchedule * 10).length;
+      if (activeCount >= minimumHealthyCount) return true;
+      return configure(enabled: true, city: city);
+    } catch (error, stackTrace) {
+      debugPrint('Checking scheduled prayer reminders failed: $error\\n$stackTrace');
+      return configure(enabled: true, city: city);
+    }
+  }
+
   /// Schedules local reminders for the next 30 days. Prayer times are estimates;
   /// the bundled recording is Persian-style and is not verified as Ja'fari adhan.
   static Future<bool> configure({

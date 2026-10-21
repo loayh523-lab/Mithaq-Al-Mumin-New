@@ -73,6 +73,49 @@ void main() {
     }
   });
 
+  test('Sahifa texts remain in the full collection and appear in relevant topical sections', () {
+    const friday = ShiaTextEntry(
+      slug: 'sahifa-sajjadiya-the-supplication-for-friday',
+      title: 'دعاء يوم الجمعة',
+      alternateName: 'دعاء يوم الجمعة',
+      type: 'dua',
+      sourceUrl: 'https://thaqalayn.net/duas/sahifa-sajjadiya-the-supplication-for-friday',
+      sourceLabel: 'مكتبة ثقلين الإلكترونية',
+      lines: <ShiaTextLine>[
+        ShiaTextLine(index: 1, kind: 'arabic', text: 'اللهم صل على محمد وآل محمد'),
+      ],
+    );
+    const ramadan = ShiaTextEntry(
+      slug: 'sahifa-sajjadiya-for-the-coming-of-the-month-of-ramadan',
+      title: 'دعاؤه لدخول شهر رمضان',
+      alternateName: 'دعاؤه لدخول شهر رمضان',
+      type: 'dua',
+      sourceUrl: 'https://thaqalayn.net/duas/sahifa-sajjadiya-for-the-coming-of-the-month-of-ramadan',
+      sourceLabel: 'مكتبة ثقلين الإلكترونية',
+      lines: <ShiaTextLine>[
+        ShiaTextLine(index: 1, kind: 'arabic', text: 'اللهم صل على محمد وآل محمد'),
+      ],
+    );
+    const hajat = ShiaTextEntry(
+      slug: 'sahifa-sajjadiya-his-supplication-in-seeking-needs-from-god',
+      title: 'دعاؤه في طلب الحوائج إلى الله',
+      alternateName: 'دعاؤه في طلب الحوائج إلى الله',
+      type: 'dua',
+      sourceUrl: 'https://thaqalayn.net/duas/sahifa-sajjadiya-his-supplication-in-seeking-needs-from-god',
+      sourceLabel: 'مكتبة ثقلين الإلكترونية',
+      lines: <ShiaTextLine>[
+        ShiaTextLine(index: 1, kind: 'arabic', text: 'اللهم صل على محمد وآل محمد'),
+      ],
+    );
+
+    expect(friday.categories, contains('الصحيفة السجادية'));
+    expect(friday.categories, contains('أدعية الأيام'));
+    expect(ramadan.categories, contains('الصحيفة السجادية'));
+    expect(ramadan.categories, contains('الأعمال الشهرية والمناسبات'));
+    expect(hajat.categories, contains('الصحيفة السجادية'));
+    expect(hajat.categories, contains('أدعية الحاجات والشفاء'));
+  });
+
   test('morning-only, shared, and sunset-only invocations stay distinct', () {
     const morning = ShiaTextEntry(
       slug: 'dua-sabah',

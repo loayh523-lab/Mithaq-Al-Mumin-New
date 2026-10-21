@@ -4,7 +4,6 @@
 Upstream dataset: https://github.com/adeeb10abbas/shia-library-json
 It declares CC0 1.0 Universal and records source URLs to Thaqalayn public pages.
 """
-import html
 import json
 import os
 import re
@@ -99,100 +98,35 @@ def main() -> None:
             "lines": normalized_lines,
         })
 
-    # Merge Arabic recitation entries from the already-prepared Mafatih corpus
-    # at build time. This keeps the app's first library screen fast: it loads one
-    # combined asset instead of parsing the full Mafatih JSON on the UI isolate.
-    mafatih_path = Path("assets/mafatih/mafatih.json")
-    imported_mafatih = 0
-    title_keys = set()
-    text_keys = set()
-
+    # Remove exact duplicate prayer texts while retaining distinct entries that
+    # happen to share a title. This makes the displayed count reflect unique text.
     def text_key(value: str) -> str:
-        value = re.sub(r"[\u064B-\u065F\u0670\u0640]", "", value)
+        value = re.sub(r"[\\u064B-\\u065F\\u0670\\u0640]", "", value)
         value = value.replace("أ", "ا").replace("إ", "ا").replace("آ", "ا").replace("ى", "ي")
-        return re.sub(r"[^\u0600-\u06FF0-9]", "", value).lower()
+        return re.sub(r"[^\\u0600-\\u06FF0-9]", "", value).lower()
 
-    def clean_mafatih_text(value: str) -> str:
-        value = html.unescape(re.sub(r"<[^>]*>", " ", value))
-        return (value.replace("ک", "ك").replace("ی", "ي").replace("ے", "ي").replace("ہ", "ه")
-                     .replace("\xa0", " ").strip())
-
-    def is_arabic_recitation(value: str) -> bool:
-        return (re.search(r"[\u0600-\u06FF]", value) is not None
-                and re.search(r"[A-Za-z]", value) is None
-                and re.search(r"[پچژگ]", value) is None
-                and re.search(r"دعای|روزهای|هفته|فارسی|برای|میباشد|می شود|خواهد شد|نمی", value) is None)
-
+    before_dedupe = len(prepared)
+    unique_entries = []
+    seen_texts = set()
     for entry in prepared:
-        for title_candidate in (entry.get("title", ""), entry.get("alternateName", "")):
-            key = text_key(title_candidate)
-            if key:
-                title_keys.add(key)
-        joined = text_key(" ".join(line["text"] for line in entry["lines"]))
-        if joined:
-            text_keys.add(joined)
-
-    if mafatih_path.exists():
-        with mafatih_path.open("r", encoding="utf-8") as handle:
-            mafatih_data = json.load(handle)
-        chapters = mafatih_data.get("chapters", []) if isinstance(mafatih_data, dict) else []
-        if isinstance(chapters, list):
-            for chapter in chapters:
-                if not isinstance(chapter, dict):
-                    continue
-                for section in chapter.get("sections", []) if isinstance(chapter.get("sections"), list) else []:
-                    if not isinstance(section, dict):
-                        continue
-                    articles = section.get("articles", [])
-                    if not isinstance(articles, list):
-                        continue
-                    for article in articles:
-                        if not isinstance(article, dict):
-                            continue
-                        title = clean_mafatih_text(str(article.get("title") or ""))
-                        title_key = text_key(title)
-                        if not title or not title_key or title_key in title_keys:
-                            continue
-                        lines = []
-                        for item in article.get("items", []) if isinstance(article.get("items"), list) else []:
-                            if not isinstance(item, dict) or not isinstance(item.get("content"), str):
-                                continue
-                            text_value = clean_mafatih_text(item["content"])
-                            if not text_value or not is_arabic_recitation(text_value):
-                                continue
-                            lines.append({
-                                "index": len(lines) + 1,
-                                "kind": "arabic",
-                                "text": text_value,
-                            })
-                        if not lines:
-                            continue
-                        joined_key = text_key(" ".join(line["text"] for line in lines))
-                        if joined_key and joined_key in text_keys:
-                            continue
-                        prepared.append({
-                            "slug": f"mafatih-{chapter.get('id', 'x')}-{section.get('id', 'x')}-{article.get('id', 'x')}",
-                            "title": title,
-                            "alternateName": "",
-                            "type": "dua",
-                            "sourceUrl": article.get("href") or "https://github.com/aminpaydar/Mafatih",
-                            "lines": lines,
-                        })
-                        title_keys.add(title_key)
-                        if joined_key:
-                            text_keys.add(joined_key)
-                        imported_mafatih += 1
-                        total_arabic_lines += len(lines)
+        joined_text = text_key(" ".join(line["text"] for line in entry["lines"]))
+        if not joined_text or joined_text in seen_texts:
+            continue
+        seen_texts.add(joined_text)
+        unique_entries.append(entry)
+    prepared = unique_entries
+    duplicate_texts_removed = before_dedupe - len(prepared)
+    total_arabic_lines = sum(len(entry["lines"]) for entry in prepared)
 
     result = {
         "metadata": {
-            "sourceProject": "adeeb10abbas/shia-library-json + aminpaydar/Mafatih",
+            "sourceProject": "adeeb10abbas/shia-library-json",
             "sourceIndex": INDEX_URL,
             "contentSource": "Thaqalayn public pages as recorded in source metadata",
-            "license": "CC0 1.0 Universal + Apache-2.0; see licenses/SHIA_LIBRARY_CC0_1.0.txt and licenses/MAFATIH_APACHE_2.0.txt",
+            "license": "CC0 1.0 Universal; see licenses/SHIA_LIBRARY_CC0_1.0.txt",
             "count": len(prepared),
-            "mafatihImported": imported_mafatih,
-            "note": "Arabic text from the CC0 Shia library and Apache-2.0 Mafatih corpus is combined at build time. Each entry retains sourceUrl; verify wording against a trusted edition.",
+            "duplicateTextsRemoved": duplicate_texts_removed,
+            "note": "Arabic text from the selected CC0 Shia library only. Each entry retains sourceUrl; verify wording against a trusted edition. No additional compilation is merged.",
         },
         "entries": prepared,
     }
@@ -208,8 +142,8 @@ def main() -> None:
             os.remove(temporary)
 
     print(
-        f"Prepared offline Shia library: {len(prepared)} texts "
-        f"({imported_mafatih} imported from Mafatih), "
+        f"Prepared offline Shia library: {len(prepared)} unique texts "
+        f"({duplicate_texts_removed} duplicate texts removed), "
         f"{total_arabic_lines} Arabic lines, {total_lines} source lines"
     )
 

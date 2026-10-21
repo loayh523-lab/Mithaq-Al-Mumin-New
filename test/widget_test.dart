@@ -19,7 +19,24 @@ import 'package:mithaq_al_mumin/services/qibla_calculation.dart';
 
 void main() {
   setUp(() {
+    // Most widget tests exercise the app after the first-run reminder choice.
+    SharedPreferences.setMockInitialValues({
+      'prayer_notifications_enabled': false,
+    });
+  });
+
+  testWidgets('first launch asks before enabling prayer notifications', (tester) async {
     SharedPreferences.setMockInitialValues({});
+    await tester.pumpWidget(const MithaqApp());
+    // Let the first-frame callback and SharedPreferences future complete.
+    await tester.pump();
+    await tester.pump();
+    expect(find.text('أذان الصلاة'), findsOneWidget);
+    expect(find.text('تفعيل الأذان'), findsOneWidget);
+    await tester.tap(find.text('لاحقاً'));
+    await tester.pumpAndSettle();
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getBool('prayer_notifications_enabled'), isFalse);
   });
 
   testWidgets('home screen shows the agreed dashboard and drawer navigation opens tasbeeh', (tester) async {

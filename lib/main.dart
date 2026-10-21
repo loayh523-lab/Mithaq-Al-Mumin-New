@@ -144,7 +144,7 @@ class _MainShellState extends State<MainShell> {
       if (!mounted) return;
       setState(() {
         _prayerCity = city;
-        _hijriCorrection = prefs.getInt('hijri_correction') ?? 0;
+        _hijriCorrection = (prefs.getInt('hijri_correction') ?? 0).clamp(-1, 2).toInt();
         _dailyTaskKey = key;
         _dailyTaskDone = prefs.getBool('daily_task_done_$key') ?? false;
       });

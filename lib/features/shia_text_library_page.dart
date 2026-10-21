@@ -231,7 +231,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
                         onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
                           builder: (_) => Directionality(
                             textDirection: TextDirection.rtl,
-                            child: const MafatihCategoryPage(),
+                            child: const MafatihLibraryPage(),
                           ),
                         )),
                         icon: const Icon(Icons.menu_book_rounded),

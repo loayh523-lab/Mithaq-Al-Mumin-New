@@ -108,17 +108,17 @@ def main() -> None:
     text_keys = set()
 
     def text_key(value: str) -> str:
-        value = re.sub(r"[\\u064B-\\u065F\\u0670\\u0640]", "", value)
+        value = re.sub(r"[\u064B-\u065F\u0670\u0640]", "", value)
         value = value.replace("أ", "ا").replace("إ", "ا").replace("آ", "ا").replace("ى", "ي")
-        return re.sub(r"[^\\u0600-\\u06FF0-9]", "", value).lower()
+        return re.sub(r"[^\u0600-\u06FF0-9]", "", value).lower()
 
     def clean_mafatih_text(value: str) -> str:
         value = html.unescape(re.sub(r"<[^>]*>", " ", value))
         return (value.replace("ک", "ك").replace("ی", "ي").replace("ے", "ي").replace("ہ", "ه")
-                     .replace("\\xa0", " ").strip())
+                     .replace("\xa0", " ").strip())
 
     def is_arabic_recitation(value: str) -> bool:
-        return (re.search(r"[\\u0600-\\u06FF]", value) is not None
+        return (re.search(r"[\u0600-\u06FF]", value) is not None
                 and re.search(r"[A-Za-z]", value) is None
                 and re.search(r"[پچژگ]", value) is None
                 and re.search(r"دعای|روزهای|هفته|فارسی|برای|میباشد|می شود|خواهد شد|نمی", value) is None)

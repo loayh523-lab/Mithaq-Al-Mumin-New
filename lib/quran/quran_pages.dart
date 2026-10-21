@@ -167,7 +167,14 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
         padding: const EdgeInsets.fromLTRB(18, 16, 18, 8),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(children: [
-            const Expanded(child: Text('فهرس السور', style: TextStyle(fontSize: 25, fontWeight: FontWeight.w800))),
+            Expanded(child: Text(
+              _indexMode == _QuranIndexMode.surah
+                  ? 'فهرس السور'
+                  : _indexMode == _QuranIndexMode.juz
+                      ? 'فهرس الأجزاء'
+                      : 'فهرس الأحزاب',
+              style: const TextStyle(fontSize: 25, fontWeight: FontWeight.w800),
+            )),
             IconButton(
               tooltip: 'البحث داخل الآيات',
               onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
@@ -217,7 +224,13 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
       Expanded(child: indexContent),
       const Padding(
         padding: EdgeInsets.fromLTRB(18, 0, 18, 8),
-        child: Text('فهرس السور محلي. نص الآيات العثماني مضمّن داخل نسخة التطبيق ويعمل دون إنترنت.', textAlign: TextAlign.center, style: TextStyle(color: _muted, fontSize: 10)),
+        child: Text(
+          _indexMode == _QuranIndexMode.surah
+              ? 'فهرس السور محلي. نص الآيات العثماني مضمّن داخل نسخة التطبيق ويعمل دون إنترنت.'
+              : 'حدود الأجزاء والأحزاب مرتبة بحسب رواية حفص عن عاصم. النص يعمل دون إنترنت.',
+          textAlign: TextAlign.center,
+          style: const TextStyle(color: _muted, fontSize: 10),
+        ),
       ),
     ]);
   }

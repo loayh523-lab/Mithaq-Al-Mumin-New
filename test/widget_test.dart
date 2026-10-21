@@ -378,7 +378,9 @@ void main() {
         .toSet();
 
     await tester.tap(find.text('أذكار المساء'));
-    await tester.pumpAndSettle();
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 300)));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
 
     final eveningTexts = tester.widgetList<SelectableText>(find.byType(SelectableText))
         .map((widget) => widget.data)
@@ -539,7 +541,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('مصدر نص القرآن — Tanzil'), findsOneWidget);
     await tester.scrollUntilVisible(
-      find.textContaining('لم نتحقق من مطابقته لألفاظ الأذان الجعفري'),
+      find.textContaining('يُستخدم صوتاً لإشعارات أوقات الصلاة'),
       250,
       scrollable: find.byType(Scrollable).first,
     );

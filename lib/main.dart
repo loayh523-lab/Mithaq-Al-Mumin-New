@@ -599,7 +599,10 @@ class _MainShellState extends State<MainShell> {
   /// A complete, readable daily verse shown directly on the home dashboard.
   /// This is intentionally not a navigation tile: the reflection itself is the feature.
   Widget _homeQabasCard(({String text, String source}) inspiration) {
-    return Container(
+    return InkWell(
+      borderRadius: BorderRadius.circular(22),
+      onTap: () => _pushPage(QabasTodayPage(text: inspiration.text, source: inspiration.source)),
+      child: Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(18, 17, 18, 18),
       decoration: BoxDecoration(
@@ -676,6 +679,7 @@ class _MainShellState extends State<MainShell> {
             style: const TextStyle(color: _gold, fontSize: 12, fontWeight: FontWeight.w700),
           ),
         ],
+      ),
       ),
     );
   }

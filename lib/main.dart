@@ -233,6 +233,48 @@ class _MainShellState extends State<MainShell> {
           ],
         ),
       ),
+      bottomNavigationBar: DecoratedBox(
+        decoration: BoxDecoration(
+          color: _ink,
+          border: Border(top: BorderSide(color: _gold.withValues(alpha: .18))),
+        ),
+        child: NavigationBar(
+          height: 68,
+          backgroundColor: _ink,
+          surfaceTintColor: Colors.transparent,
+          indicatorColor: _emerald.withValues(alpha: .25),
+          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+          selectedIndex: _selected,
+          onDestinationSelected: (index) => setState(() => _selected = index),
+          destinations: const [
+            NavigationDestination(
+              icon: Icon(Icons.home_outlined),
+              selectedIcon: Icon(Icons.home_rounded, color: _gold),
+              label: 'الرئيسية',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.menu_book_outlined),
+              selectedIcon: Icon(Icons.menu_book_rounded, color: _gold),
+              label: 'القرآن',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.auto_awesome_outlined),
+              selectedIcon: Icon(Icons.auto_awesome_rounded, color: _gold),
+              label: 'الأدعية',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.fingerprint_outlined),
+              selectedIcon: Icon(Icons.fingerprint_rounded, color: _gold),
+              label: 'التسبيح',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.settings_outlined),
+              selectedIcon: Icon(Icons.settings_rounded, color: _gold),
+              label: 'الإعدادات',
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -946,14 +988,42 @@ class _DuaLibraryState extends State<_DuaLibrary> {
     required VoidCallback onTap,
   }) => Card(
     color: _panel,
+    margin: const EdgeInsets.symmetric(vertical: 5),
+    elevation: 0,
+    clipBehavior: Clip.antiAlias,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(18),
+      side: BorderSide(color: Colors.white.withValues(alpha: .055)),
+    ),
     child: ListTile(
-      leading: CircleAvatar(
-        backgroundColor: _gold.withValues(alpha: .13),
-        child: Icon(icon, color: _gold),
+      contentPadding: const EdgeInsetsDirectional.fromSTEB(14, 8, 16, 8),
+      minLeadingWidth: 46,
+      leading: Container(
+        width: 46,
+        height: 46,
+        decoration: BoxDecoration(
+          color: _gold.withValues(alpha: .10),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: _gold.withValues(alpha: .12)),
+        ),
+        child: Icon(icon, color: _gold, size: 23),
       ),
-      title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-      subtitle: Text(subtitle, style: const TextStyle(color: _muted, height: 1.5)),
-      trailing: const Icon(Icons.chevron_left_rounded, color: _gold),
+      title: Text(
+        title,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+        style: const TextStyle(fontWeight: FontWeight.w800, height: 1.45),
+      ),
+      subtitle: Padding(
+        padding: const EdgeInsets.only(top: 3),
+        child: Text(
+          subtitle,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(color: _muted, height: 1.45, fontSize: 12),
+        ),
+      ),
+      trailing: const Icon(Icons.chevron_left_rounded, color: _gold, size: 23),
       onTap: onTap,
     ),
   );

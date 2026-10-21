@@ -291,6 +291,39 @@ class _MainShellState extends State<MainShell> {
           children: List<Widget>.generate(5, _tabChild),
         ),
       ),
+      bottomNavigationBar: _selected == 0
+          ? SafeArea(
+              top: false,
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(12, 7, 12, 7),
+                decoration: const BoxDecoration(
+                  color: _ink,
+                  border: Border(top: BorderSide(color: Color(0x33D9B66D))),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(child: _homeBottomItem(
+                      icon: Icons.menu_book_rounded,
+                      label: 'المكتبة',
+                      onTap: () => setState(() => _selected = 2),
+                    )),
+                    const SizedBox(width: 8),
+                    Expanded(child: _homeBottomItem(
+                      icon: Icons.info_outline_rounded,
+                      label: 'معلومات',
+                      onTap: () => _pushPage(const AboutSupportPage()),
+                    )),
+                    const SizedBox(width: 8),
+                    Expanded(child: _homeBottomItem(
+                      icon: Icons.settings_rounded,
+                      label: 'الإعدادات',
+                      onTap: () => setState(() => _selected = 4),
+                    )),
+                  ],
+                ),
+              ),
+            )
+          : null,
     );
   }
 
@@ -489,6 +522,36 @@ class _MainShellState extends State<MainShell> {
       'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر',
     ];
     return '${date.day} ${months[date.month - 1]} ${date.year}';
+  }
+
+  Widget _homeBottomItem({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: onTap,
+        child: Container(
+          height: 58,
+          decoration: BoxDecoration(
+            color: _panel,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: _gold.withValues(alpha: .38)),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, color: _gold, size: 22),
+              const SizedBox(height: 2),
+              Text(label, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700)),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _homeQuickTile({
@@ -773,43 +836,6 @@ class _MainShellState extends State<MainShell> {
           child: Text(
             'المواقيت هنا فلكية تقديرية، وقد تختلف عن جدول مكتب مرجعك؛ اعتمد الجدول الشرعي المعتمد في منطقتك.',
             style: TextStyle(color: _muted, fontSize: 11, height: 1.6),
-          ),
-        ),
-        Material(
-          color: Colors.transparent,
-          child: InkWell(
-            borderRadius: BorderRadius.circular(22),
-            onTap: () => setState(() => _selected = 1),
-            child: Ink(
-              padding: const EdgeInsets.all(17),
-              decoration: BoxDecoration(
-                color: _panel,
-                borderRadius: BorderRadius.circular(22),
-                border: Border.all(color: _gold.withValues(alpha: .2)),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(color: Color(0x223CB58B), borderRadius: BorderRadius.all(Radius.circular(15))),
-                    child: Icon(Icons.menu_book_outlined, color: _gold, size: 26),
-                  ),
-                  SizedBox(width: 13),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('القرآن الكريم', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 17)),
-                        SizedBox(height: 4),
-                        Text('افتح المصحف وتابع قراءتك', style: TextStyle(color: _muted, fontSize: 12)),
-                      ],
-                    ),
-                  ),
-                  Icon(Icons.chevron_left_rounded, color: _gold, size: 25),
-                ],
-              ),
-            ),
           ),
         ),
       ],

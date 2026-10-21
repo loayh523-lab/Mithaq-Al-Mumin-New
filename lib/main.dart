@@ -679,6 +679,95 @@ class _MainShellState extends State<MainShell> {
     );
   }
 
+  /// Compact home preview for the core daily adhkar; the full page remains available.
+  Widget _homeWardPreviewCard() {
+    const order = <String>[
+      'الاستغفار',
+      'الحوقلة',
+      'الصلاة الإبراهيمية',
+      'دعاء نبي الله يونس عليه السلام',
+    ];
+    final entries = order
+        .map((title) => dailyDhikr.firstWhere((item) => item.title == title))
+        .toList(growable: false);
+
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 15, 16, 12),
+      decoration: BoxDecoration(
+        color: _panel,
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: _gold.withValues(alpha: .25)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: _gold.withValues(alpha: .12),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: const Icon(Icons.spa_outlined, color: _gold, size: 22),
+              ),
+              const SizedBox(width: 11),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('ورد اليوم', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w900)),
+                    SizedBox(height: 2),
+                    Text('أذكار مختارة مع مصادرها', style: TextStyle(fontSize: 11, color: _muted)),
+                  ],
+                ),
+              ),
+              IconButton(
+                tooltip: 'فتح الورد الكامل',
+                onPressed: () => _pushPage(const WardAlYawmPage()),
+                icon: const Icon(Icons.arrow_back_ios_new_rounded, color: _gold, size: 18),
+              ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          for (var i = 0; i < entries.length; i++) ...[
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(entries[i].title,
+                    style: const TextStyle(color: _gold, fontWeight: FontWeight.w800, fontSize: 13)),
+                  const SizedBox(height: 4),
+                  Text(entries[i].text,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(color: Colors.white, height: 1.65, fontSize: 13)),
+                  const SizedBox(height: 3),
+                  Text(entries[i].source,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(color: _muted, fontSize: 10)),
+                ],
+              ),
+            ),
+            if (i < entries.length - 1)
+              Divider(height: 1, color: Colors.white.withValues(alpha: .06)),
+          ],
+          const SizedBox(height: 4),
+          Align(
+            alignment: AlignmentDirectional.centerEnd,
+            child: TextButton(
+              onPressed: () => _pushPage(const WardAlYawmPage()),
+              child: const Text('الورد الكامل والعدادات'),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _homePage() {
     final times = SolarPrayerTimes.forDate(
       _now, _prayerCity.latitude, _prayerCity.longitude, 3.0,
@@ -822,10 +911,12 @@ class _MainShellState extends State<MainShell> {
         const SizedBox(height: 12),
         _homeQabasCard(inspiration),
         const SizedBox(height: 12),
+        _homeWardPreviewCard(),
+        const SizedBox(height: 10),
         Row(children: [
           Expanded(child: _homeQuickTile(
-            icon: Icons.spa_outlined, title: 'ورد اليوم', subtitle: 'أذكارك وأعمالك',
-            onTap: () => _pushPage(const WardAlYawmPage()),
+            icon: Icons.shield_moon_rounded, title: 'حصن الأذكار', subtitle: 'أذكار الصباح والمساء',
+            onTap: () => _pushPage(const DhikrFortressPage()),
           )),
           const SizedBox(width: 10),
           Expanded(child: _homeQuickTile(

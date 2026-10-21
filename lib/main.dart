@@ -585,7 +585,7 @@ class _MainShellState extends State<MainShell> {
                       'https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1c/Portrait_of_Ali_Khamenei.jpg/500px-Portrait_of_Ali_Khamenei.jpg',
                       fit: BoxFit.cover,
                       alignment: Alignment.topCenter,
-                      cacheWidth: 500,
+                      cacheWidth: 280,
                       loadingBuilder: (context, child, progress) => progress == null
                           ? child
                           : const DecoratedBox(

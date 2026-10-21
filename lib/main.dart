@@ -112,7 +112,14 @@ class _MainShellState extends State<MainShell> {
     _dashboardClock = Timer.periodic(const Duration(seconds: 30), (_) {
       if (!mounted) return;
       final current = DateTime.now();
-      setState(() => _now = current);
+      final dayChanged = _dayKey(current) != _dayKey(_now);
+      // Do not rebuild the entire dashboard every 30 seconds while the user
+      // is reading Quran, duas, or another feature tab.
+      if (_selected == 0 || dayChanged) {
+        setState(() => _now = current);
+      } else {
+        _now = current;
+      }
       if (_dayKey(current) != _dailyTaskKey) {
         _loadDailyTask(current);
       }

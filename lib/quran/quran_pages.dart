@@ -222,8 +222,8 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
         ]),
       ),
       Expanded(child: indexContent),
-      const Padding(
-        padding: EdgeInsets.fromLTRB(18, 0, 18, 8),
+      Padding(
+        padding: const EdgeInsets.fromLTRB(18, 0, 18, 8),
         child: Text(
           _indexMode == _QuranIndexMode.surah
               ? 'فهرس السور محلي. نص الآيات العثماني مضمّن داخل نسخة التطبيق ويعمل دون إنترنت.'

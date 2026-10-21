@@ -75,17 +75,17 @@ class ShiaTextEntry {
     return RegExp(r'eid|ramadan|arafah|mubahala|mubahilah|laylat|rajab|shaaban|dhul.hijja|dhul.qadah|مناسبة|العيد|رمضان|عرفة|مباهلة|رجب|شعبان|ذي الحجة|ذي القعدة|ليلة القدر').hasMatch(value);
   }
   String get category {
-    // Put specific collections first so broad date matches don't swallow them.
-    if (isZiyara) return 'الزيارات';
-    if (isSahifa) return 'الصحيفة السجادية';
-    if (isMunajat) return 'المناجيات الخمس عشرة';
-    if (isMahdiDua) return 'أدعية صاحب الزمان';
-    if (isMorningEveningDua) return 'أدعية الصباح والمساء';
-    if (isHajatDua) return 'أدعية الحاجات والشفاء';
-    if (isOccasionDua) return 'أدعية الأشهر والمناسبات';
-    if (isTaqibat) return 'تعقيبات';
-    if (isDayDua) return 'أدعية الأيام';
-    return 'أدعية عامة';
+    // The five agreed collections are exclusive: each source text belongs to
+    // exactly one section, so no prayer is duplicated across category lists.
+    if (isSahifa || isMunajat) return 'الصحيفة السجادية والمناجيات';
+    if (isZiyara) return 'الزيارات الشريفة';
+    if (isMorningEveningDua || isTaqibat || isDayDua) {
+      return 'الأدعية والأذكار اليومية';
+    }
+    if (isOccasionDua) return 'الأعمال والمناسبات';
+    // General supplications, needs, and Mahdi-related prayers share this
+    // collection as requested; their original title and source are retained.
+    return 'الأدعية العامة والفرج وصاحب الزمان';
   }
   String get arabicText => lines.where((line) => line.isArabic).map((line) => line.text).join('\n');
 
@@ -135,16 +135,11 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
   String _query = '';
   String _category = 'أدعية عامة';
   static const _categories = [
-    'أدعية عامة',
-    'أدعية صاحب الزمان',
-    'أدعية الصباح والمساء',
-    'أدعية الحاجات والشفاء',
-    'تعقيبات',
-    'أدعية الأيام',
-    'أدعية الأشهر والمناسبات',
-    'الزيارات',
-    'الصحيفة السجادية',
-    'المناجيات الخمس عشرة',
+    'الصحيفة السجادية والمناجيات',
+    'الأدعية والأذكار اليومية',
+    'الأدعية العامة والفرج وصاحب الزمان',
+    'الأعمال والمناسبات',
+    'الزيارات الشريفة',
   ];
 
   @override void initState() {

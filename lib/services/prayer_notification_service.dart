@@ -43,7 +43,7 @@ class PrayerNotificationService {
             'mithaq_prayer_adhan_v5', 'أذان الصلاة',
             channelDescription: 'أذان الشيخ شبّر معلة عند وقت الصلاة',
 
-            sound: const RawResourceAndroidNotificationSound('adhan_shabbar_maalla'),
+            sound: RawResourceAndroidNotificationSound('adhan_shabbar_maalla'),
             importance: Importance.high, priority: Priority.high,
             audioAttributesUsage: AudioAttributesUsage.alarm,
           ),
@@ -141,7 +141,7 @@ class PrayerNotificationService {
                   'أذان الصلاة',
                   channelDescription: 'أذان الشيخ شبّر معلة عند وقت الصلاة',
 
-                  sound: const RawResourceAndroidNotificationSound('adhan_shabbar_maalla'),
+                  sound: RawResourceAndroidNotificationSound('adhan_shabbar_maalla'),
                   importance: Importance.high,
                   priority: Priority.high,
                   audioAttributesUsage: AudioAttributesUsage.alarm,

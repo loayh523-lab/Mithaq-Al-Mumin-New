@@ -4,7 +4,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mithaq_al_mumin/main.dart';
 import 'package:mithaq_al_mumin/quran/quran_pages.dart';
 import 'package:mithaq_al_mumin/features/prayer_calendar_page.dart';
-import 'package:mithaq_al_mumin/features/mafatih_library_page.dart';
 import 'package:mithaq_al_mumin/features/shia_text_library_page.dart';
 import 'package:mithaq_al_mumin/features/good_deeds_page.dart';
 import 'package:mithaq_al_mumin/features/names_of_allah_page.dart';
@@ -120,21 +119,6 @@ void main() {
     expect(declination, inInclusiveRange(-180, 180));
   });
 
-  test('Mafatih Persian-only headings use distinct Arabic fallback titles', () {
-    final chapter = MafatihChapter.fromJson({
-      'id': 2,
-      'title': 'دعای روزهای هفته',
-      'sections': <dynamic>[],
-    });
-    final section = MafatihSection.fromJson({
-      'id': 4,
-      'title': 'دعای فارسی',
-      'articles': <dynamic>[],
-    });
-    expect(chapter.title, 'الباب 2 من مفاتيح الجنان');
-    expect(section.title, 'قسم رقم 4');
-  });
-
   test('Dua categories prioritize specific collections over broad date heuristics', () {
     const sahifaMunajat = ShiaTextEntry(
       slug: 'sahifa-sajjadiya-munajat',
@@ -163,15 +147,6 @@ void main() {
     expect(sahifaMunajat.category, 'الصحيفة السجادية والمناجيات');
     expect(fridayArafah.category, 'الأعمال والمناسبات');
     expect(munajat.category, 'الصحيفة السجادية والمناجيات');
-  });
-
-  test('Mafatih categories group named Arabic texts', () {
-    expect(mafatihCategoryFor('مناجاة التائبين'), 'المناجيات الخمس عشرة');
-    expect(mafatihCategoryFor('دعاء العهد للإمام المهدي'), 'أدعية صاحب الزمان');
-    expect(mafatihCategoryFor('تعقيبات الصلاة'), 'تعقيبات');
-    expect(mafatihCategoryFor('زيارة عاشوراء'), 'الزيارات');
-    expect(mafatihCategoryFor('دعاء شهر رمضان'), 'أدعية الأشهر والمناسبات');
-    expect(mafatihCategoryFor('دعاء الشفاء للمريض'), 'أدعية الحاجات والشفاء');
   });
 
   test('prayer times are displayed in a readable 12-hour Arabic format', () {
@@ -262,18 +237,6 @@ void main() {
     expect(find.textContaining('الفاتحة • الآية 2'), findsOneWidget);
   });
 
-  testWidgets('Mafatih library opens its bundled offline catalog', (tester) async {
-    await tester.pumpWidget(const MaterialApp(
-      home: Directionality(textDirection: TextDirection.rtl, child: MafatihLibraryPage()),
-    ));
-    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 400)));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 100));
-    expect(find.text('مفاتيح الجنان'), findsWidgets);
-    expect(find.text('ما قدرنا نحمّل مكتبة مفاتيح الجنان'), findsNothing);
-    expect(find.byType(CircularProgressIndicator), findsNothing);
-  });
-
   testWidgets('Quran bookmarks page shows a clear empty state', (tester) async {
     await tester.pumpWidget(const MaterialApp(
       home: Directionality(textDirection: TextDirection.rtl, child: QuranBookmarksPage()),
@@ -296,14 +259,6 @@ void main() {
     expect(find.text('الأدعية والزيارات'), findsWidgets);
     expect(find.textContaining('نصاً • منها'), findsOneWidget);
     expect(find.textContaining('ما قدرنا نحمّل مكتبة الأدعية'), findsNothing);
-    await tester.scrollUntilVisible(
-      find.text('زيارة عاشوراء'),
-      300,
-      scrollable: find.descendant(
-        of: find.byType(ListView),
-        matching: find.byType(Scrollable),
-      ).first,
-    );
     expect(find.text('زيارة عاشوراء'), findsWidgets);
   });
   testWidgets('good deeds checklist saves checked items locally', (tester) async {

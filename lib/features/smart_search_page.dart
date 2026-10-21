@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../quran/quran_pages.dart';
-import 'mafatih_library_page.dart';
 import 'shia_text_library_page.dart';
 
 const _searchPanel = Color(0xFF10251E);
@@ -72,8 +71,6 @@ class _SmartSearchPageState extends State<SmartSearchPage> {
 
   String _normalize(String value) => normalizeSmartSearchText(value);
 
-  String _plainText(String value) => stripSmartSearchMarkup(value);
-
   Future<void> _search() async {
     final query = _normalize(_controller.text.trim());
     if (query.length < 2) {
@@ -129,34 +126,6 @@ class _SmartSearchPageState extends State<SmartSearchPage> {
       // Other text libraries remain searchable if the Quran asset is unavailable.
     }
 
-    // Search all cached Mafatih chapters, sections, article titles and content.
-    try {
-      final data = await MafatihData.load();
-      for (final chapter in data.chapters) {
-        for (final section in chapter.sections) {
-          for (final article in section.articles) {
-            final text = article.items.map((item) => _plainText(item.content)).join(' ');
-            final searchable = _normalize('${chapter.title} ${section.title} ${article.title} $text');
-            if (!searchable.contains(query)) continue;
-            results.add(_SmartSearchHit(
-              title: article.title,
-              category: 'مفاتيح الجنان • ${section.title}',
-              preview: text,
-              openPage: () => Directionality(
-                textDirection: TextDirection.rtl,
-                child: MafatihArticlePage(article: article),
-              ),
-            ));
-            if (results.length >= 75) break;
-          }
-          if (results.length >= 75) break;
-        }
-        if (results.length >= 75) break;
-      }
-    } catch (_) {
-      // Keep results from sources that did load.
-    }
-
     // Search Arabic dua/ziyara and Sahifa text supplied with the app.
     try {
       final data = await ShiaTextData.load();
@@ -165,7 +134,7 @@ class _SmartSearchPageState extends State<SmartSearchPage> {
         if (!searchable.contains(query)) continue;
         results.add(_SmartSearchHit(
           title: entry.displayTitle,
-          category: entry.isSahifa ? 'الصحيفة السجادية' : (entry.isZiyara ? 'الزيارات' : 'الأدعية'),
+          category: entry.category,
           preview: entry.arabicText,
           openPage: () => Directionality(
             textDirection: TextDirection.rtl,

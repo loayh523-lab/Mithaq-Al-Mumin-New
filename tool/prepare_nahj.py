@@ -86,13 +86,14 @@ def main() -> None:
                     f"Unexpected Nahj schema. Required columns missing: {sorted(required - columns)}"
                 )
 
+            # Upstream forks differ in their category numbering and schema data.
+            # Export all non-empty records, then map categories conservatively below.
             rows = connection.execute(
                 """
                 SELECT id, cat, num, title, cnt
                 FROM nahj
-                WHERE cat IN (1, 2, 3)
-                  AND TRIM(COALESCE(cnt, '')) <> ''
-                ORDER BY cat ASC, CAST(num AS INTEGER) ASC, id ASC
+                WHERE TRIM(COALESCE(cnt, '')) <> ''
+                ORDER BY CAST(cat AS INTEGER) ASC, CAST(num AS INTEGER) ASC, id ASC
                 """
             ).fetchall()
         finally:

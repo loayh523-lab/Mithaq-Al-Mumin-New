@@ -144,6 +144,17 @@ def _mafatih_category(chapter_index: int, chapter_title: str, section_title: str
     if re.search(r"صاحب الزمان|الإمام المهدي|الامام المهدي|المهدي|الحجة|الاستغاثة|دعاء العهد|دعاء الندبة|دعاء الفرج|faraj|nudba|al-ahd", hint):
         return "أدعية صاحب الزمان"
 
+    # Preserve the book's explicit section meaning instead of forcing every
+    # common prayer into the generic prayer-taqibat bucket.
+    if re.search(r"التعقيبات المشتركة|تعقيبات مشتركة|common taqibat", hint):
+        return "الأذكار المشتركة"
+    if re.search(r"التعقيبات المختصة بالصلوات|التعقيبات الخاصة بالصلوات|تعقيبات الصلوات", hint):
+        return "تعقيبات الصلوات"
+    if re.search(r"أدعية أيام الأسبوع|دعاء يوم|دعای-روز-|روز-شنبه|روز-یکشنبه|روز-دوشنبه|روز-سه-شنبه|روز-چهارشنبه|روز-پنجشنبه|روز-جمعه", hint):
+        return "أدعية الأيام"
+    if re.search(r"المناجاة الخمس عشرة|مناجاة|munajat", hint):
+        return "المناجيات الخمس عشرة"
+
     # A record explicitly tied to both sunrise and sunset belongs only to shared adhkar.
     combined = (
         ("طلوع" in hint and "غروب" in hint)

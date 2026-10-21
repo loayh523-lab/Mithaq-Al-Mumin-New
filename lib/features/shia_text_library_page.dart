@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'mafatih_library_page.dart';
 
 const _shiaPanel = Color(0xFF10251E);
 const _shiaGold = Color(0xFFD9B66D);
@@ -108,8 +107,7 @@ class ShiaTextData {
   static Future<ShiaTextData> load() => _cache ??= _load();
 
   static Future<ShiaTextData> _load() async {
-    // The build-time preparation step combines the CC0 Shia dataset and
-    // Arabic-only Mafatih items into this one asset for fast offline loading.
+    // The offline asset is prepared from the selected Arabic Shia text source only.
     final raw = await rootBundle.loadString('assets/shia_duas/shia_duas.json');
     final decoded = jsonDecode(raw) as Map<String, dynamic>;
     final rawEntries = decoded['entries'] as List<dynamic>;
@@ -121,8 +119,8 @@ class ShiaTextData {
       entries: entries,
       sourceProject: metadata['sourceProject'] is String
           ? metadata['sourceProject'] as String
-          : 'Shia library + Mafatih al-Jinan',
-      license: metadata['license'] is String ? metadata['license'] as String : 'CC0 1.0 + Apache-2.0',
+          : 'مكتبة الأدعية الشيعية',
+      license: metadata['license'] is String ? metadata['license'] as String : 'CC0 1.0 Universal',
     );
   }
 }
@@ -230,24 +228,11 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
                         textAlign: TextAlign.center,
                         style: TextStyle(color: _shiaMuted, height: 1.6),
                       ),
-                      const SizedBox(height: 12),
-                      FilledButton.icon(
-                        onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
-                          builder: (_) => Directionality(
-                            textDirection: TextDirection.rtl,
-                            child: const MafatihLibraryPage(),
-                          ),
-                        )),
-                        icon: const Icon(Icons.menu_book_rounded),
-                        label: Text('ابحث في هذا القسم داخل مفاتيح الجنان'),
-                      ),
                       const SizedBox(height: 8),
-                      OutlinedButton.icon(
-                        onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
-                          builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: MafatihLibraryPage()),
-                        )),
-                        icon: const Icon(Icons.auto_stories_rounded),
-                        label: const Text('تصفح جميع أبواب مفاتيح الجنان'),
+                      const Text(
+                        'جرّب البحث باسم الدعاء أو اختر قسماً آخر من الأقسام الخمسة.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: _shiaMuted, fontSize: 12, height: 1.6),
                       ),
                     ]),
                   ),

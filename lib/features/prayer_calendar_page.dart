@@ -71,10 +71,10 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
   }
   Future<void> _loadCorrection() async {
     final p = await SharedPreferences.getInstance();
-    if (mounted) setState(() => correction = p.getInt('hijri_correction') ?? 0);
+    if (mounted) setState(() => correction = (p.getInt('hijri_correction') ?? 0).clamp(-1, 2));
   }
   Future<void> _correct(int delta) async {
-    final next = (correction + delta).clamp(-3, 3);
+    final next = (correction + delta).clamp(-1, 2);
     final p = await SharedPreferences.getInstance();
     await p.setInt('hijri_correction', next);
     if (mounted) setState(() => correction = next);
@@ -101,10 +101,11 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
         const Text('التاريخ الهجري التقريبي', style: TextStyle(color: _muted)), const SizedBox(height: 8),
         Text('${hijri.day} ${hijri.monthName} ${hijri.year} هـ', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: _gold)),
         const SizedBox(height: 6), Text(_dateLabel(date), style: const TextStyle(color: _muted)),
-        Row(children: [const Expanded(child: Text('تصحيح يدوي للتاريخ')), IconButton(onPressed: () => _correct(-1), icon: const Icon(Icons.remove_circle_outline)), Text('$correction يوم'), IconButton(onPressed: () => _correct(1), icon: const Icon(Icons.add_circle_outline))]),
+        Row(children: [const Expanded(child: Text('تصحيح يدوي للتاريخ')), IconButton(tooltip: 'إنقاص يوم', onPressed: correction <= -1 ? null : () => _correct(-1), icon: const Icon(Icons.remove_circle_outline)), Text('$correction يوم'), IconButton(tooltip: 'زيادة يوم', onPressed: correction >= 2 ? null : () => _correct(1), icon: const Icon(Icons.add_circle_outline))]),
         const Text('التاريخ محسوب بالتقويم الهجري الجدولي وقد يختلف يوماً عن إعلان ثبوت الهلال في العراق. يمكنك ضبطه إذا اعتمد مكتب مرجعك تاريخاً مختلفاً.', style: TextStyle(color: _muted, fontSize: 11, height: 1.5)),
       ])),
       if (_occasion(hijri) != null) Card(color: _panel, child: ListTile(leading: const Icon(Icons.event, color: _gold), title: const Text('مناسبة دينية'), subtitle: Text(_occasion(hijri)!, style: const TextStyle(height: 1.5)))),
+      CalendarDayNote(date: date),
       const SizedBox(height: 14),
       SegmentedButton<int>(segments: const [ButtonSegment(value: 0, label: Text('مواقيت الصلاة'), icon: Icon(Icons.access_time)), ButtonSegment(value: 1, label: Text('إمساكية رمضان'), icon: Icon(Icons.nights_stay_outlined)), ButtonSegment(value: 2, label: Text('التقويم السنوي'), icon: Icon(Icons.calendar_month_rounded))], selected: {tab}, onSelectionChanged: (v) => setState(() => tab = v.first)),
       const SizedBox(height: 12),
@@ -415,4 +416,117 @@ String? _occasion(_Hijri h) {
     '25-12': 'نزول سورة هل أتى في شأن أهل البيت عليهم السلام (يُذكر في بعض كتب المناسبات)',
   };
   return events['${h.day}-${h.month}'];
+}
+
+
+/// A private note saved on this device for the selected calendar date.
+class CalendarDayNote extends StatefulWidget {
+  const CalendarDayNote({super.key, required this.date});
+
+  final DateTime date;
+
+  @override
+  State<CalendarDayNote> createState() => _CalendarDayNoteState();
+}
+
+class _CalendarDayNoteState extends State<CalendarDayNote> {
+  String _note = '';
+  bool _loading = true;
+
+  String get _storageKey {
+    final y = widget.date.year.toString().padLeft(4, '0');
+    final m = widget.date.month.toString().padLeft(2, '0');
+    final d = widget.date.day.toString().padLeft(2, '0');
+    return 'mithaq_calendar_note_${y}_${m}_${d}';
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  @override
+  void didUpdateWidget(covariant CalendarDayNote oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.date.year != widget.date.year ||
+        oldWidget.date.month != widget.date.month ||
+        oldWidget.date.day != widget.date.day) {
+      _load();
+    }
+  }
+
+  Future<void> _load() async {
+    setState(() => _loading = true);
+    final prefs = await SharedPreferences.getInstance();
+    final value = prefs.getString(_storageKey) ?? '';
+    if (!mounted) return;
+    setState(() {
+      _note = value;
+      _loading = false;
+    });
+  }
+
+  Future<void> _edit() async {
+    final controller = TextEditingController(text: _note);
+    final shouldSave = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('ملاحظة اليوم'),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          maxLines: 5,
+          minLines: 2,
+          textDirection: TextDirection.rtl,
+          decoration: const InputDecoration(
+            hintText: 'اكتب ملاحظتك أو ما تريد تذكّره في هذا اليوم',
+            border: OutlineInputBorder(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: const Text('إلغاء'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: const Text('حفظ'),
+          ),
+        ],
+      ),
+    );
+    if (shouldSave == true) {
+      final value = controller.text.trim();
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_storageKey, value);
+      if (mounted) setState(() => _note = value);
+    }
+    controller.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => Card(
+    color: _panel,
+    child: ListTile(
+      leading: const Icon(Icons.edit_note_rounded, color: _gold),
+      title: const Text('ملاحظة هذا اليوم'),
+      subtitle: Text(
+        _loading
+            ? 'جارٍ تحميل الملاحظة...'
+            : _note.isEmpty
+                ? 'احفظ ملاحظة مرتبطة بهذا التاريخ على جهازك'
+                : _note,
+        maxLines: 4,
+        overflow: TextOverflow.ellipsis,
+        style: const TextStyle(color: _muted, height: 1.5),
+      ),
+      trailing: IconButton(
+        tooltip: 'إضافة أو تعديل الملاحظة',
+        onPressed: _loading ? null : _edit,
+        icon: const Icon(Icons.edit_rounded),
+      ),
+      onTap: _loading ? null : _edit,
+    ),
+  );
 }

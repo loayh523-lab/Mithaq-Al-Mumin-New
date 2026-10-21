@@ -95,6 +95,15 @@ class _AboutSupportPageState extends State<AboutSupportPage> {
                     'درب العبادة والطمأنينة',
                     style: TextStyle(color: _aboutMuted),
                   ),
+                  SizedBox(height: 10),
+                  Text(
+                    'تنفيذ وتطوير حسين لؤي',
+                    style: TextStyle(
+                      color: _aboutGold,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
                   SizedBox(height: 12),
                   Text(
                     'الإصدار 0.1.0+1 • نسخة تطويرية',

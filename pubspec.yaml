@@ -35,7 +35,6 @@ flutter:
     - assets/quran/uthmani_surahs.json
     - assets/shia_duas/shia_duas.json
     - assets/nahj/nahj.json
-    - assets/audio/adhan_persian.ogg
     - assets/branding/mithaq_logo.png
 
 flutter_launcher_icons:

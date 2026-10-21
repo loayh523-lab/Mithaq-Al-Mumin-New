@@ -207,7 +207,9 @@ class _GoodDeedsPageState extends State<GoodDeedsPage> {
     _load();
     _dayWatcher = Timer.periodic(const Duration(minutes: 1), (_) {
       if (!mounted) return;
-      if (_key != _loadedDayKey) _load();
+      if (_key != _loadedDayKey) {
+        _load();
+      }
     });
   }
 

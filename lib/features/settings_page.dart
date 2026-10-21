@@ -179,7 +179,7 @@ class _SettingsPageState extends State<SettingsPage> {
     setState(() => _notificationsEnabled = ok);
     _message(ok
       ? 'تمت جدولة تذكيرات الصلوات المختارة للأيام الثلاثين القادمة'
-      : 'تعذّر التفعيل. تحقق من إذن الإشعارات وإعدادات الجهاز.');
+      : 'تعذّر التفعيل. اسمح بإشعارات التطبيق والمنبّهات الدقيقة من إعدادات أندرويد.');
   }
 
   Future<void> _refreshReminderSchedule() async {
@@ -299,7 +299,7 @@ class _SettingsPageState extends State<SettingsPage> {
             child: SwitchListTile(
               contentPadding: EdgeInsets.zero,
               title: const Text('إشعارات الصلاة'),
-              subtitle: const Text('تذكيرات محلية للأيام الثلاثين القادمة وفق حساب فلكي تقديري. تستخدم إشعارات الصلاة تسجيل الشيخ شبّر معلة المضمّن داخل التطبيق. قد تتأخر التنبيهات بسبب توفير الطاقة.', style: TextStyle(color: _settingsMuted, height: 1.5, fontSize: 12)),
+              subtitle: const Text('تذكيرات محلية للأيام الثلاثين القادمة وفق حساب فلكي تقديري. تستخدم إشعارات الصلاة تسجيل الشيخ شبّر معلة. يلزم السماح بالمنبّهات الدقيقة حتى لا يُستبدل وقت الصلاة بتنبيه متأخر. وقد تؤثر قيود البطارية في بعض الأجهزة.', style: TextStyle(color: _settingsMuted, height: 1.5, fontSize: 12)),
               value: _notificationsEnabled,
               onChanged: _loaded ? _toggleNotifications : null,
               activeThumbColor: _settingsGold,

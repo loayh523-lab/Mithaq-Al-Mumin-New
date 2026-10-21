@@ -189,7 +189,7 @@ def main() -> None:
             "sourceProject": "adeeb10abbas/shia-library-json + aminpaydar/Mafatih",
             "sourceIndex": INDEX_URL,
             "contentSource": "Thaqalayn public pages as recorded in source metadata",
-            "license": "CC0 1.0 Universal; see licenses/SHIA_LIBRARY_CC0_1.0.txt",
+            "license": "CC0 1.0 Universal + Apache-2.0; see licenses/SHIA_LIBRARY_CC0_1.0.txt and licenses/MAFATIH_APACHE_2.0.txt",
             "count": len(prepared),
             "mafatihImported": imported_mafatih,
             "note": "Arabic text from the CC0 Shia library and Apache-2.0 Mafatih corpus is combined at build time. Each entry retains sourceUrl; verify wording against a trusted edition.",

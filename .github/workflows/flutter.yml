@@ -11,8 +11,8 @@ permissions:
   contents: read
 
 concurrency:
-  # Keep separate commits independently buildable; a stalled test run must not block a newer APK build.
-  group: flutter-ci-${{ github.ref }}-${{ github.sha }}
+  # Only one CI run per PR or branch; newer commits replace stale or stalled runs.
+  group: flutter-ci-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:

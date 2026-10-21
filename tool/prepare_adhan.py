@@ -1,19 +1,24 @@
 #!/usr/bin/env python3
-"""Do not bundle an unrelated adhan recording.
+"""Prepare the bundled Sheikh Shabbar Maalla adhan as an Android notification sound."""
 
-The selected Alawi Shrine recording is linked from the app's source page. The public
-YouTube page is not a direct audio download URL and does not itself grant redistribution
-permission. Until a direct, reuse-authorized audio asset is supplied, prayer reminders
-use Android's default notification sound rather than a different recording.
-"""
+from pathlib import Path
+import shutil
+
+
+ROOT = Path(__file__).resolve().parents[1]
+SOURCE = ROOT / "assets" / "audio" / "adhan_shabbar_maalla.mp3"
+DESTINATION = (
+    ROOT / "android" / "app" / "src" / "main" / "res" / "raw"
+    / "adhan_shabbar_maalla.mp3"
+)
 
 
 def main() -> None:
-    print(
-        "No third-party adhan audio bundled. The selected Alawi Shrine recording "
-        "is linked in-app; notifications use the device default sound until an "
-        "official downloadable asset with reuse permission is available."
-    )
+    if not SOURCE.is_file():
+        raise SystemExit(f"Required adhan asset is missing: {SOURCE}")
+    DESTINATION.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(SOURCE, DESTINATION)
+    print(f"Prepared Android adhan resource: {DESTINATION}")
 
 
 if __name__ == "__main__":

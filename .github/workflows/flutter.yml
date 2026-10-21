@@ -85,7 +85,7 @@ jobs:
                   build += "\n\ndependencies {\n    " + dependency + "\n}\n"
           gradle.write_text(build, encoding="utf-8")
           PY
-      - name: Prepare licensed adhan sound and offline playback asset
+      - name: Prepare bundled adhan sound for Android notifications
         run: python3 tool/prepare_adhan.py
       - name: Prepare full offline Quran text
         run: python3 tool/prepare_quran.py

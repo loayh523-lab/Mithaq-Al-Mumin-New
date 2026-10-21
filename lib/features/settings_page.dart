@@ -1,6 +1,7 @@
+import 'dart:async';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../services/prayer_locations.dart';
 import '../services/prayer_notification_service.dart';
 
@@ -21,6 +22,9 @@ class _SettingsPageState extends State<SettingsPage> {
   bool _loaded = false;
   bool _notificationsEnabled = false;
   bool _gpsBusy = false;
+  final AudioPlayer _adhanPlayer = AudioPlayer();
+  bool _adhanPlaying = false;
+  late final StreamSubscription<void> _adhanCompleteSubscription;
   bool _earlyAlertEnabled = false;
   int _earlyAlertMinutes = 5;
   Map<String, bool> _prayerEnabled = {
@@ -38,30 +42,41 @@ class _SettingsPageState extends State<SettingsPage> {
     MapEntry('isha', 'العشاء'),
   ];
 
-  @override void initState() { super.initState(); _load(); }
+  @override
+  void initState() {
+    super.initState();
+    _adhanCompleteSubscription = _adhanPlayer.onPlayerComplete.listen((_) {
+      if (mounted) setState(() => _adhanPlaying = false);
+    });
+    _load();
+  }
 
   @override
   void dispose() {
+    unawaited(_adhanCompleteSubscription.cancel());
+    unawaited(_adhanPlayer.dispose());
     super.dispose();
   }
 
-  Future<void> _openSelectedAdhan() async {
-    const sourceUrl = 'https://www.youtube.com/watch?v=lKK4cOnIitg';
+  Future<void> _toggleAdhanPreview() async {
     try {
-      final opened = await launchUrl(
-        Uri.parse(sourceUrl),
-        mode: LaunchMode.externalApplication,
-      );
-      if (!mounted) return;
-      if (!opened) {
-        _message('تعذّر فتح مصدر الأذان. تحقق من اتصال الإنترنت وحاول مجدداً.');
+      if (_adhanPlaying) {
+        await _adhanPlayer.pause();
+        if (mounted) setState(() => _adhanPlaying = false);
+        return;
       }
+      await _adhanPlayer.stop();
+      await _adhanPlayer.play(
+        AssetSource('audio/adhan_shabbar_maalla.mp3'),
+      );
+      if (mounted) setState(() => _adhanPlaying = true);
     } catch (_) {
       if (mounted) {
-        _message('تعذّر فتح مصدر الأذان. تحقق من اتصال الإنترنت وحاول مجدداً.');
+        _message('تعذّر تشغيل تسجيل الأذان. أغلق الصفحة وافتحها ثم جرّب مرة ثانية.');
       }
     }
   }
+
   Future<void> _load() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -284,7 +299,7 @@ class _SettingsPageState extends State<SettingsPage> {
             child: SwitchListTile(
               contentPadding: EdgeInsets.zero,
               title: const Text('إشعارات الصلاة'),
-              subtitle: const Text('تذكيرات محلية للأيام الثلاثين القادمة وفق حساب فلكي تقديري. صوت الشيخ شبّر معلة غير مدمج داخل الإشعارات بعد؛ يستخدم أندرويد صوت الجهاز الافتراضي حالياً. قد تتأخر التنبيهات بسبب توفير الطاقة.', style: TextStyle(color: _settingsMuted, height: 1.5, fontSize: 12)),
+              subtitle: const Text('تذكيرات محلية للأيام الثلاثين القادمة وفق حساب فلكي تقديري. تستخدم إشعارات الصلاة تسجيل الشيخ شبّر معلة المضمّن داخل التطبيق. قد تتأخر التنبيهات بسبب توفير الطاقة.', style: TextStyle(color: _settingsMuted, height: 1.5, fontSize: 12)),
               value: _notificationsEnabled,
               onChanged: _loaded ? _toggleNotifications : null,
               activeThumbColor: _settingsGold,
@@ -349,9 +364,17 @@ class _SettingsPageState extends State<SettingsPage> {
           SizedBox(
             width: double.infinity,
             child: OutlinedButton.icon(
-              onPressed: _loaded ? _openSelectedAdhan : null,
-              icon: const Icon(Icons.open_in_new_rounded),
-              label: const Text('فتح أذان الشيخ شبّر معلة من المصدر'),
+              onPressed: _loaded ? _toggleAdhanPreview : null,
+              icon: Icon(
+                _adhanPlaying
+                    ? Icons.pause_circle_outline_rounded
+                    : Icons.play_circle_outline_rounded,
+              ),
+              label: Text(
+                _adhanPlaying
+                    ? 'إيقاف معاينة الأذان'
+                    : 'تشغيل أذان الشيخ شبّر معلة',
+              ),
             ),
           ),
           const SizedBox(height: 8),
@@ -363,7 +386,7 @@ class _SettingsPageState extends State<SettingsPage> {
               label: const Text('تجربة إشعار الأذان'),
             ),
           ),
-          const Text('المقطع المختار منشور من دار القرآن الكريم في العتبة العلوية المقدسة بصوت الشيخ شبّر معلة. يُفتح من المصدر عبر الإنترنت ولا يُخزَّن داخل التطبيق.', style: TextStyle(color: _settingsMuted, fontSize: 11, height: 1.5)),
+          const Text('تُشغّل المعاينة من التسجيل المضمّن داخل التطبيق، ويمكن سماعه من دون اتصال بالإنترنت.', style: TextStyle(color: _settingsMuted, fontSize: 11, height: 1.5)),
           const SizedBox(height: 4),
           const SelectableText('https://www.youtube.com/watch?v=lKK4cOnIitg', style: TextStyle(color: _settingsGold, fontSize: 11)),
           const SizedBox(height: 4),

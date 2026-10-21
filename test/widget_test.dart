@@ -546,7 +546,7 @@ void main() {
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    expect(find.textContaining('لم نتحقق من مطابقته لألفاظ الأذان الجعفري'), findsOneWidget);
+    expect(find.textContaining('قد يحدّ أندرويد مدة صوت الإشعار أو يؤخره'), findsOneWidget);
   });
 
   testWidgets('smart search screen offers cross-library offline search', (tester) async {

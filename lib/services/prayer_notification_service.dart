@@ -40,7 +40,7 @@ class PrayerNotificationService {
         'إذا ظهر هذا التنبيه فقد وصل الإشعار التجريبي. افحص مستوى صوت التنبيهات إذا لم تسمع الأذان.',
         const NotificationDetails(
           android: AndroidNotificationDetails(
-            'mithaq_prayer_adhan_v6', 'أذان الصلاة',
+            'mithaq_prayer_adhan_v7', 'أذان الصلاة',
             channelDescription: 'أذان الشيخ شبّر معلة عند وقت الصلاة',
 
             sound: RawResourceAndroidNotificationSound('adhan_shabbar_maalla'),
@@ -96,18 +96,9 @@ class PrayerNotificationService {
         }
       }
 
-      // Prayer-time alerts must not quietly fall back to inexact alarms on
-      // Android: those can be delayed by the operating system until the app is
-      // opened, which makes the user think the adhan did not fire on time.
-      if (enabled &&
-          defaultTargetPlatform == TargetPlatform.android &&
-          !canScheduleExact) {
-        await _cancelScheduledReminders();
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setBool('prayer_notifications_enabled', false);
-        return false;
-      }
-
+      // Use exact alarms when Android grants special access. If the user has
+      // not granted it, still schedule reminders instead of silently disabling
+      // every prayer notification. Android may delay these fallback alarms.
       if (canScheduleExact) {
         scheduleMode = AndroidScheduleMode.exactAllowWhileIdle;
       }
@@ -152,7 +143,7 @@ class PrayerNotificationService {
               scheduled,
               const NotificationDetails(
                 android: AndroidNotificationDetails(
-                  'mithaq_prayer_adhan_v6',
+                  'mithaq_prayer_adhan_v7',
                   'أذان الصلاة',
                   channelDescription: 'أذان الشيخ شبّر معلة عند وقت الصلاة',
 

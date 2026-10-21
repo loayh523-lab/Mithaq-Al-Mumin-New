@@ -82,6 +82,9 @@ class MainShell extends StatefulWidget {
 class _MainShellState extends State<MainShell> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _selected = 0;
+  // Lazily create feature tabs so large offline libraries and their loading
+  // animations do not start on the home screen. Cached tabs keep their state.
+  final Map<int, Widget> _tabCache = <int, Widget>{};
   PrayerCity _prayerCity = PrayerLocations.cities.first;
   DateTime _now = DateTime.now();
   Timer? _dashboardClock;
@@ -252,6 +255,24 @@ class _MainShellState extends State<MainShell> {
     }
   }
 
+  Widget _tabChild(int index) {
+    if (index == 0) return _homePage();
+
+    // Keep the IndexedStack's shape stable, but do not create heavy pages
+    // until selected. Preserve state after the first visit.
+    if (!_tabCache.containsKey(index)) {
+      if (index != _selected) return const SizedBox.shrink();
+      _tabCache[index] = switch (index) {
+        1 => const QuranIndexPage(),
+        2 => _duaPage(),
+        3 => _tasbeehPage(),
+        4 => SettingsPage(onLocationChanged: _loadDashboardData),
+        _ => const SizedBox.shrink(),
+      };
+    }
+    return _tabCache[index]!;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -260,13 +281,7 @@ class _MainShellState extends State<MainShell> {
       body: SafeArea(
         child: IndexedStack(
           index: _selected,
-          children: [
-            _homePage(),
-            _selected == 1 ? const QuranIndexPage() : const SizedBox.shrink(),
-            _duaPage(),
-            _tasbeehPage(),
-            SettingsPage(onLocationChanged: _loadDashboardData),
-          ],
+          children: List<Widget>.generate(5, _tabChild),
         ),
       ),
     );

@@ -1979,7 +1979,8 @@ class _WardAlYawmPageState extends State<WardAlYawmPage> {
             break;
           }
         }
-        if (entry == null || entry!.arabicText.trim().isEmpty) {
+        final selectedEntry = entry;
+        if (selectedEntry == null || selectedEntry.arabicText.trim().isEmpty) {
           return Card(
             color: _panel,
             child: ListTile(
@@ -1989,8 +1990,6 @@ class _WardAlYawmPageState extends State<WardAlYawmPage> {
             ),
           );
         }
-
-        final selectedEntry = entry!;
         return Card(
           color: _panel,
           shape: RoundedRectangleBorder(

@@ -96,40 +96,40 @@ class ShiaTextEntry {
       title.contains('مناجاة') ||
       alternateName.contains('مناجاة');
   bool get isMahdiDua {
-    final value = '${slug.toLowerCase()} $title $alternateName';
+    final value = '${slug.toLowerCase()} $title $alternateName $sourceLabel';
     return RegExp(r'mahdi|hujja|hujjah|sahib.al.zaman|imam.al.zaman|istighatha|ghayba|ghaib|nudba|al.ahd|faraj|صاحب الزمان|الإمام المهدي|الامام المهدي|الحجة|اللهم كن لوليك|دعاء العهد|دعاء الندبة|الاستغاثة بالحجة', caseSensitive: false).hasMatch(value);
   }
   bool get isSharedDua {
-    final value = '${slug.toLowerCase()} $title $alternateName';
+    final value = '${slug.toLowerCase()} $title $alternateName $sourceLabel';
     return RegExp(
       r'morning.{0,24}evening|evening.{0,24}morning|صباح.{0,24}مساء|مساء.{0,24}صباح|صباحاً ومساءً|صباحا ومساء|أذكار مشتركة|both periods',
       caseSensitive: false,
     ).hasMatch(value);
   }
   bool get isMorningDua {
-    final value = '${slug.toLowerCase()} $title $alternateName';
+    final value = '${slug.toLowerCase()} $title $alternateName $sourceLabel';
     return !isSharedDua &&
         RegExp(r'morning|sabah|asbah|أذكار الصباح|الصباح|الصبح|دعاء الصباح|قبل طلوع الشمس', caseSensitive: false).hasMatch(value);
   }
   bool get isEveningDua {
-    final value = '${slug.toLowerCase()} $title $alternateName';
+    final value = '${slug.toLowerCase()} $title $alternateName $sourceLabel';
     return !isSharedDua &&
         RegExp(r'evening|masa|amsa|أذكار المساء|المساء|عند الغروب|قبل الغروب|دعاء المساء', caseSensitive: false).hasMatch(value);
   }
   bool get isDailyDeed {
-    final value = '${slug.toLowerCase()} $title $alternateName';
+    final value = '${slug.toLowerCase()} $title $alternateName $sourceLabel';
     return RegExp(r'daily deeds|أعمال اليوم|أعمال ليلة|أعمال يوم|أعمال الليلة|الأعمال اليومية|العمل اليومي').hasMatch(value);
   }
   bool get isMonthlyDeed {
-    final value = '${slug.toLowerCase()} $title $alternateName';
+    final value = '${slug.toLowerCase()} $title $alternateName $sourceLabel';
     return RegExp(r'monthly deeds|أعمال الأشهر|أعمال شهر|أعمال الشهر|الأعمال الشهرية|دخول شهر رمضان|وداع شهر رمضان|شهر رمضان|رؤية الهلال|يوم عرفة|عيد الفطر|يوم الأضحى').hasMatch(value);
   }
   bool get isHajatDua {
-    final value = '${slug.toLowerCase()} $title $alternateName';
+    final value = '${slug.toLowerCase()} $title $alternateName $sourceLabel';
     return RegExp(r'hajat|hawaij|rizq|shifa|healing|tawfiq|success|الكرب|الحوائج|قضاء الدين|سعة الرزق|الشفاء|العافية|طلب العلم|تفريج الهم|الحزن').hasMatch(value);
   }
   bool get isOccasionDua {
-    final value = '${slug.toLowerCase()} $title $alternateName';
+    final value = '${slug.toLowerCase()} $title $alternateName $sourceLabel';
     return RegExp(r'eid|ramadan|arafah|mubahala|mubahilah|laylat|rajab|shaaban|dhul.hijja|dhul.qadah|مناسبة|العيد|رمضان|عرفة|مباهلة|رجب|شعبان|ذي الحجة|ذي القعدة|ليلة القدر').hasMatch(value);
   }
   String get category {

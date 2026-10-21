@@ -42,6 +42,7 @@ void main() {
   testWidgets('home screen shows the agreed dashboard and drawer navigation opens tasbeeh', (tester) async {
     await tester.pumpWidget(const MithaqApp());
     expect(find.text('ميثاق المؤمن'), findsOneWidget);
+    expect(find.text('ورد اليوم'), findsOneWidget);
     expect(find.textContaining('هـ'), findsOneWidget);
     await tester.scrollUntilVisible(
       find.text('عمل اليوم'),

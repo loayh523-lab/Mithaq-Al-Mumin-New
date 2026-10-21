@@ -40,10 +40,9 @@ class PrayerNotificationService {
         'إذا ظهر هذا التنبيه فقد وصل الإشعار التجريبي. افحص مستوى صوت التنبيهات إذا لم تسمع الأذان.',
         const NotificationDetails(
           android: AndroidNotificationDetails(
-            'mithaq_adhan_v3', 'أذان الصلاة',
+            'mithaq_prayer_default_v4', 'أذان الصلاة',
             channelDescription: 'تنبيهات الأذان — قناة صوت جديدة',
             importance: Importance.high, priority: Priority.high,
-            sound: RawResourceAndroidNotificationSound('adhan_persian'),
             audioAttributesUsage: AudioAttributesUsage.alarm,
           ),
         ),
@@ -55,9 +54,10 @@ class PrayerNotificationService {
     }
   }
 
-  /// Schedules named prayer notifications for the next 30 days. Prayer times are estimates;
-  /// the current bundled recording remains a placeholder until the approved official
-  /// Alawi Shrine recording is added and its use is verified.
+  /// Schedules prayer-time reminders for the next 30 days. Times are estimates.
+  /// Until a directly downloadable, reuse-authorized official Alawi Shrine audio file
+  /// is available, Android uses the device's default notification sound rather than
+  /// mislabeling an unrelated recording as the shrine's adhan.
   static Future<bool> configure({
     required bool enabled,
     required PrayerCity city,
@@ -136,12 +136,11 @@ class PrayerNotificationService {
               scheduled,
               const NotificationDetails(
                 android: AndroidNotificationDetails(
-                  'mithaq_adhan_v3',
+                  'mithaq_prayer_default_v4',
                   'أذان الصلاة',
                   channelDescription: 'تنبيهات الأذان — قناة صوت جديدة',
                   importance: Importance.high,
                   priority: Priority.high,
-                  sound: RawResourceAndroidNotificationSound('adhan_persian'),
                   audioAttributesUsage: AudioAttributesUsage.alarm,
                 ),
               ),

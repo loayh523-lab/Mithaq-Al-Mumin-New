@@ -107,7 +107,10 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
       if (_occasion(hijri) != null) Card(color: _panel, child: ListTile(leading: const Icon(Icons.event, color: _gold), title: const Text('مناسبة دينية'), subtitle: Text(_occasion(hijri)!, style: const TextStyle(height: 1.5)))),
       CalendarDayNote(date: date),
       const SizedBox(height: 14),
-      SegmentedButton<int>(segments: const [ButtonSegment(value: 0, label: Text('مواقيت الصلاة'), icon: Icon(Icons.access_time)), ButtonSegment(value: 1, label: Text('إمساكية رمضان'), icon: Icon(Icons.nights_stay_outlined)), ButtonSegment(value: 2, label: Text('التقويم السنوي'), icon: Icon(Icons.calendar_month_rounded)), ButtonSegment(value: 3, label: Text('تقويم شهري'), icon: Icon(Icons.calendar_view_month_rounded))], selected: {tab}, onSelectionChanged: (v) => setState(() => tab = v.first)),
+      SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: SegmentedButton<int>(segments: const [ButtonSegment(value: 0, label: Text('مواقيت الصلاة'), icon: Icon(Icons.access_time)), ButtonSegment(value: 1, label: Text('إمساكية رمضان'), icon: Icon(Icons.nights_stay_outlined)), ButtonSegment(value: 2, label: Text('التقويم السنوي'), icon: Icon(Icons.calendar_month_rounded)), ButtonSegment(value: 3, label: Text('تقويم شهري'), icon: Icon(Icons.calendar_view_month_rounded))], selected: {tab}, onSelectionChanged: (v) => setState(() => tab = v.first)),
+      ),
       const SizedBox(height: 12),
       if (tab == 0) ...[
         Row(children: [Expanded(child: Text('مواقيت ${_dateLabel(date)}', style: const TextStyle(fontWeight: FontWeight.bold))), IconButton(onPressed: () => setState(() => date = date.subtract(const Duration(days: 1))), icon: const Icon(Icons.chevron_right)), IconButton(onPressed: () => setState(() => date = date.add(const Duration(days: 1))), icon: const Icon(Icons.chevron_left)), IconButton(onPressed: () => setState(() => date = DateTime.now()), icon: const Icon(Icons.today))]),

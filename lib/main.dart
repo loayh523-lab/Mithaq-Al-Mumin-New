@@ -609,20 +609,16 @@ class _MainShellState extends State<MainShell> {
           child: Stack(
             fit: StackFit.expand,
             children: [
-              Positioned.fill(
-                child: Image.asset(
-                  'assets/branding/home_portraits.jpg',
-                  fit: BoxFit.cover,
-                  alignment: Alignment.center,
-                  filterQuality: FilterQuality.low,
-                  errorBuilder: (context, error, stackTrace) => const DecoratedBox(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topRight,
-                        end: Alignment.bottomLeft,
-                        colors: [Color(0xFF245B42), Color(0xFF071713)],
-                      ),
-                    ),
+              const DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: [
+                      Color(0xFF245B42),
+                      Color(0xFF102D22),
+                      Color(0xFF071713),
+                    ],
                   ),
                 ),
               ),

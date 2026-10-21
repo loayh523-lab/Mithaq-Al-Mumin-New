@@ -232,10 +232,12 @@ class _GoodDeedsPageState extends State<GoodDeedsPage> {
         _loading = false;
       });
     } catch (_) {
-      if (mounted) setState(() {
-        _loadedDayKey = _key;
-        _loading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _loadedDayKey = _key;
+          _loading = false;
+        });
+      }
     }
   }
 

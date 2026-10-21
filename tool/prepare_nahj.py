@@ -29,9 +29,9 @@ DEST = Path("assets/nahj/nahj.json")
 USER_AGENT = "Mithaq-Al-Mumin/1.0 (Arabic-only Nahj preparation)"
 EXPECTED_COUNTS = {1: 241, 2: 79, 3: 480}
 CATEGORY_TITLES = {1: "خطبة", 2: "رسالة", 3: "حكمة"}
-# These are distinct Persian-script letters, not Arabic letters.
+# Distinct Persian-script letters do not belong in Arabic original text.
 PERSIAN_ONLY_LETTERS = set("پچژگ")
-# Strong linguistic indicators only; common Arabic words are deliberately excluded.
+# Strong language indicators only. Common words shared with Arabic are excluded.
 PERSIAN_MARKERS = (
     "برای", "میباشد", "می شود", "ميشود", "نمی توان", "نميتوان",
     "متن فارسی", "زبان فارسی", "متن فارسي", "زبان فارسي",
@@ -59,10 +59,21 @@ def fetch_json(url: str) -> Any:
     return json.loads(fetch_bytes(url).decode("utf-8"))
 
 
+def remove_non_arabic_glyphs(text: str) -> tuple[str, int]:
+    """Remove stray Persian-only glyphs embedded accidentally in Arabic source lines."""
+    cleaned_chars = [char for char in text if char not in PERSIAN_ONLY_LETTERS]
+    removed = len(text) - len(cleaned_chars)
+    cleaned = "".join(cleaned_chars)
+    # Keep Arabic punctuation neat when an accidental foreign glyph touched a mark.
+    cleaned = re.sub(r"\s+([،؛:,.!?؟])", r"\1", cleaned)
+    cleaned = re.sub(r"([،؛:,.!?؟])(?=\S)", r"\1 ", cleaned)
+    cleaned = re.sub(r"[ \t]{2,}", " ", cleaned)
+    return cleaned.strip(), removed
+
+
 def looks_persian(text: str) -> bool:
-    return any(ch in PERSIAN_ONLY_LETTERS for ch in text) or any(
-        marker in text for marker in PERSIAN_MARKERS
-    )
+    # Only strong Persian-language markers are tested here; Arabic vocabulary can overlap.
+    return any(marker in text for marker in PERSIAN_MARKERS)
 
 
 def list_chapters(volume: int) -> list[int]:
@@ -117,9 +128,12 @@ def prepare_chapter(args: tuple[int, int]) -> dict[str, Any]:
     text = "\n\n".join(arabic_parts).strip()
     if not text:
         raise RuntimeError(f"Arabic text missing from Nahj chapter {volume}/{number}")
+    text, removed_glyphs = remove_non_arabic_glyphs(text)
+    if not text:
+        raise RuntimeError(f"Arabic text became empty after cleanup in {volume}/{number}")
     if looks_persian(text):
         raise RuntimeError(
-            f"Persian-script or Persian-language marker detected in source chapter {volume}/{number}; "
+            f"Persian-language marker detected in source chapter {volume}/{number}; "
             "refusing to bundle it."
         )
 
@@ -131,6 +145,7 @@ def prepare_chapter(args: tuple[int, int]) -> dict[str, Any]:
         "text": text,
         "sourceUrl": source_urls,
         "sourceLicense": "CC0-1.0",
+        "_removedPersianOnlyGlyphs": removed_glyphs,
     }
 
 
@@ -146,6 +161,9 @@ def main() -> None:
             entries.append(entry)
 
     entries.sort(key=lambda item: (item["category"], int(item["number"])))
+    removed_glyphs = sum(
+        int(item.pop("_removedPersianOnlyGlyphs", 0)) for item in entries
+    )
     counts = {
         category: sum(1 for item in entries if item["category"] == category)
         for category in EXPECTED_COUNTS
@@ -155,10 +173,10 @@ def main() -> None:
             f"Nahj source count mismatch: total={len(entries)}, category_counts={counts}"
         )
 
-    # Audit every visible title and text; no translations or English titles are copied.
+    # Audit every field users can see. The Arabic dataset is never translated.
     for entry in entries:
         for field in ("title", "text"):
-            if looks_persian(entry[field]):
+            if any(char in PERSIAN_ONLY_LETTERS for char in entry[field]) or looks_persian(entry[field]):
                 raise RuntimeError(
                     f"Persian content detected after preparation in {entry['category']}:{entry['number']}"
                 )
@@ -172,6 +190,7 @@ def main() -> None:
             "license": "CC0-1.0; source records identify ThaqalaynData content as CC0-1.0",
             "contentNote": (
                 "Arabic original only. English translation and non-Arabic fields are excluded. "
+                "Accidental Persian-only glyphs embedded in Arabic lines are removed. "
                 "Chapter numbering follows the selected ThaqalaynData edition and may differ "
                 "from other printed editions."
             ),
@@ -199,7 +218,7 @@ def main() -> None:
     print(
         f"Prepared complete Arabic-only Nahj al-Balagha: {len(entries)} entries; "
         f"sermons={counts[1]}, letters={counts[2]}, wisdoms={counts[3]}; "
-        "Persian-content audit passed."
+        f"Persian-language audit passed; removed {removed_glyphs} stray Persian-only glyphs."
     )
 
 

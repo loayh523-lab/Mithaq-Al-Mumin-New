@@ -1847,7 +1847,7 @@ class _WardAlYawmPageState extends State<WardAlYawmPage> {
     final now = DateTime.now();
     final month = now.month.toString().padLeft(2, '0');
     final day = now.day.toString().padLeft(2, '0');
-    return '${now.year}_${month}_${day}';
+    return [now.year.toString(), month, day].join('_');
   }
 
   @override

@@ -21,10 +21,6 @@ SOURCE_BASE = (
     f"https://raw.githubusercontent.com/{SOURCE_REPO}/"
     f"{SOURCE_REVISION}/db/hadith/nahj-al-balagha/chapters"
 )
-API_BASE = (
-    f"https://api.github.com/repos/{SOURCE_REPO}/contents/"
-    "db/hadith/nahj-al-balagha/chapters"
-)
 DEST = Path("assets/nahj/nahj.json")
 USER_AGENT = "Mithaq-Al-Mumin/1.0 (Arabic-only Nahj preparation)"
 EXPECTED_COUNTS = {1: 241, 2: 79, 3: 480}
@@ -77,25 +73,17 @@ def looks_persian(text: str) -> bool:
 
 
 def list_chapters(volume: int) -> list[int]:
-    url = f"{API_BASE}/{volume}?ref={SOURCE_REVISION}"
-    data = fetch_json(url)
-    if not isinstance(data, list):
-        raise RuntimeError(f"Unexpected GitHub directory listing for volume {volume}")
-    numbers = []
-    for item in data:
-        if item.get("type") != "file" or not str(item.get("name", "")).endswith(".json"):
-            continue
-        match = re.fullmatch(r"(\d+)\.json", str(item["name"]))
-        if match:
-            numbers.append(int(match.group(1)))
-    numbers.sort()
-    expected = EXPECTED_COUNTS[volume]
-    if len(numbers) != expected or numbers != list(range(1, expected + 1)):
-        raise RuntimeError(
-            f"Nahj volume {volume} is incomplete: found {len(numbers)} chapters; "
-            f"expected {expected} numbered chapters."
-        )
-    return numbers
+    """Return the expected chapter numbers for the pinned source revision.
+
+    Avoid GitHub's unauthenticated Contents API: CI runners can exhaust its
+    rate limit before the build starts. Every numbered chapter is fetched
+    directly from the pinned raw URL in prepare_chapter(); a missing or
+    malformed chapter still fails the job, and the final count audit verifies
+    the complete 800-entry collection.
+    """
+    if volume not in EXPECTED_COUNTS:
+        raise ValueError(f"Unsupported Nahj volume: {volume}")
+    return list(range(1, EXPECTED_COUNTS[volume] + 1))
 
 
 def prepare_chapter(args: tuple[int, int]) -> dict[str, Any]:

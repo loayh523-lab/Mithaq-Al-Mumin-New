@@ -418,9 +418,37 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Widget _section({required IconData icon, required String title, required List<Widget> children}) => Container(
     padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(color: _settingsPanel, borderRadius: BorderRadius.circular(20), border: Border.all(color: Colors.white.withValues(alpha: .05))),
+    decoration: BoxDecoration(
+      color: _settingsPanel,
+      borderRadius: BorderRadius.circular(20),
+      border: Border.all(color: _settingsGold.withValues(alpha: .13)),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withValues(alpha: .10),
+          blurRadius: 12,
+          offset: const Offset(0, 4),
+        ),
+      ],
+    ),
     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Row(children: [Icon(icon, color: _settingsGold), const SizedBox(width: 10), Expanded(child: Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)))]),
+      Row(children: [
+        Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+            color: _settingsGold.withValues(alpha: .10),
+            borderRadius: BorderRadius.circular(13),
+          ),
+          child: Icon(icon, color: _settingsGold, size: 22),
+        ),
+        const SizedBox(width: 12),
+        Expanded(child: Text(
+          title,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800, height: 1.4),
+        )),
+      ]),
+      const SizedBox(height: 14),
+      Divider(height: 1, color: _settingsGold.withValues(alpha: .10)),
       const SizedBox(height: 14),
       ...children,
     ]),

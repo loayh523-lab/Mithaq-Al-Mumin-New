@@ -641,7 +641,7 @@ class _MainShellState extends State<MainShell> {
           ),
           const SizedBox(height: 16),
           Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
                 width: 3,

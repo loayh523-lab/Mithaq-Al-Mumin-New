@@ -1,152 +1,180 @@
 #!/usr/bin/env python3
-"""Prepare an offline Arabic Nahj al-Balagha collection from a MIT-licensed SQLite source.
+"""Prepare a complete Arabic-only Nahj al-Balagha collection from CC0 ThaqalaynData.
 
-Upstream: https://github.com/saber13812002/application-nahj-al-balaghah
-The application database stores entries in table 'nahj': id, cat, num, title, cnt, fav.
-Categories 1, 2, and 3 are sermons, letters, and maxims respectively.
+Source repository: https://github.com/adeeb10abbas/shia-library-json
+The selected revision is pinned so upstream changes cannot silently alter the build.
+Only the Arabic original is included; English translation fields are never read.
 """
+import concurrent.futures
 import json
 import os
-import sqlite3
-import tempfile
+import re
+import time
 import urllib.error
 import urllib.request
 from pathlib import Path
+from typing import Any
 
-SOURCE_URL = (
-    "https://raw.githubusercontent.com/"
-    "saber13812002/application-nahj-al-balaghah/master/nahj-sqlite.db"
+SOURCE_REPO = "adeeb10abbas/shia-library-json"
+SOURCE_REVISION = "075fe2e9d050bb40bd8147ed516d3592046ebc33"
+SOURCE_BASE = (
+    f"https://raw.githubusercontent.com/{SOURCE_REPO}/"
+    f"{SOURCE_REVISION}/db/hadith/nahj-al-balagha/chapters"
+)
+API_BASE = (
+    f"https://api.github.com/repos/{SOURCE_REPO}/contents/"
+    "db/hadith/nahj-al-balagha/chapters"
 )
 DEST = Path("assets/nahj/nahj.json")
-USER_AGENT = "Mithaq-Al-Mumin/1.0 (offline Nahj al-Balagha preparation)"
+USER_AGENT = "Mithaq-Al-Mumin/1.0 (Arabic-only Nahj preparation)"
+EXPECTED_COUNTS = {1: 241, 2: 79, 3: 480}
+CATEGORY_TITLES = {1: "خطبة", 2: "رسالة", 3: "حكمة"}
+# These are distinct Persian-script letters, not Arabic letters.
+PERSIAN_ONLY_LETTERS = set("پچژگ")
+# Strong linguistic indicators only; common Arabic words are deliberately excluded.
+PERSIAN_MARKERS = (
+    "برای", "میباشد", "می شود", "ميشود", "نمی توان", "نميتوان",
+    "متن فارسی", "زبان فارسی", "متن فارسي", "زبان فارسي",
+)
 
 
-def normalize_arabic(value: str) -> str:
-    """Normalize Persian keyboard forms found in Arabic text without translating or rewriting it."""
-    return (
-        value.replace("ک", "ك")
-        .replace("ی", "ي")
-        .replace("ے", "ي")
-        .replace("ہ", "ه")
-        .strip()
+def fetch_bytes(url: str, *, accept: str = "application/json") -> bytes:
+    last_error: Exception | None = None
+    for attempt in range(4):
+        request = urllib.request.Request(
+            url,
+            headers={"User-Agent": USER_AGENT, "Accept": accept},
+        )
+        try:
+            with urllib.request.urlopen(request, timeout=45) as response:
+                return response.read()
+        except (urllib.error.URLError, TimeoutError, OSError) as exc:
+            last_error = exc
+            if attempt < 3:
+                time.sleep(1.0 * (attempt + 1))
+    raise RuntimeError(f"Could not fetch {url}: {last_error}") from last_error
+
+
+def fetch_json(url: str) -> Any:
+    return json.loads(fetch_bytes(url).decode("utf-8"))
+
+
+def looks_persian(text: str) -> bool:
+    return any(ch in PERSIAN_ONLY_LETTERS for ch in text) or any(
+        marker in text for marker in PERSIAN_MARKERS
     )
 
 
-# Keep only strong Persian-language indicators here. Words such as "زیارت"
-# and "هفته" can occur in Arabic metadata or quotations and must not cause
-# wholesale rejection of valid Arabic Nahj entries.
-PERSIAN_MARKERS = (
-    "برای", "میباشد", "می شود", "ميشود", "نمی توان", "نميتوان",
-    "دعای روز", "دعاهای روز", "روزهای هفته", "متن فارسی", "زبان فارسی",
-)
-PERSIAN_ONLY_LETTERS = set("پچژگ")
+def list_chapters(volume: int) -> list[int]:
+    url = f"{API_BASE}/{volume}?ref={SOURCE_REVISION}"
+    data = fetch_json(url)
+    if not isinstance(data, list):
+        raise RuntimeError(f"Unexpected GitHub directory listing for volume {volume}")
+    numbers = []
+    for item in data:
+        if item.get("type") != "file" or not str(item.get("name", "")).endswith(".json"):
+            continue
+        match = re.fullmatch(r"(\d+)\.json", str(item["name"]))
+        if match:
+            numbers.append(int(match.group(1)))
+    numbers.sort()
+    expected = EXPECTED_COUNTS[volume]
+    if len(numbers) != expected or numbers != list(range(1, expected + 1)):
+        raise RuntimeError(
+            f"Nahj volume {volume} is incomplete: found {len(numbers)} chapters; "
+            f"expected {expected} numbered chapters."
+        )
+    return numbers
 
 
-def looks_persian(value: str) -> bool:
-    normalized = normalize_arabic(value)
-    if any(char in PERSIAN_ONLY_LETTERS for char in normalized):
-        return True
-    return any(marker in normalized for marker in PERSIAN_MARKERS)
+def prepare_chapter(args: tuple[int, int]) -> dict[str, Any]:
+    volume, number = args
+    url = f"{SOURCE_BASE}/{volume}/{number}.json"
+    page = fetch_json(url)
+    if page.get("book") != "nahj-al-balagha":
+        raise RuntimeError(f"Unexpected book slug in {url}")
+
+    raw_records = page.get("records")
+    if not isinstance(raw_records, list) or not raw_records:
+        raise RuntimeError(f"No records found in Arabic Nahj chapter {volume}/{number}")
+
+    arabic_parts = []
+    source_urls = []
+    for record in raw_records:
+        arabic = record.get("arabic") if isinstance(record, dict) else None
+        text = arabic.get("text", "") if isinstance(arabic, dict) else ""
+        if not isinstance(text, str):
+            continue
+        text = text.strip()
+        if text:
+            arabic_parts.append(text)
+        source = record.get("source", {}) if isinstance(record, dict) else {}
+        source_url = source.get("sourceUrl") if isinstance(source, dict) else None
+        if isinstance(source_url, str) and source_url.startswith("https://thaqalayn.net/"):
+            if source_url not in source_urls:
+                source_urls.append(source_url)
+
+    text = "\n\n".join(arabic_parts).strip()
+    if not text:
+        raise RuntimeError(f"Arabic text missing from Nahj chapter {volume}/{number}")
+    if looks_persian(text):
+        raise RuntimeError(
+            f"Persian-script or Persian-language marker detected in source chapter {volume}/{number}; "
+            "refusing to bundle it."
+        )
+
+    return {
+        "id": (volume * 1000) + number,
+        "category": volume,
+        "number": str(number),
+        "title": f"{CATEGORY_TITLES[volume]} رقم {number}",
+        "text": text,
+        "sourceUrl": source_urls,
+        "sourceLicense": "CC0-1.0",
+    }
 
 
 def main() -> None:
-    request = urllib.request.Request(SOURCE_URL, headers={"User-Agent": USER_AGENT})
-    try:
-        with urllib.request.urlopen(request, timeout=90) as response:
-            database_bytes = response.read()
-    except (urllib.error.URLError, TimeoutError) as exc:
-        raise SystemExit(f"Could not download the Nahj source database: {exc}") from exc
+    chapter_tasks = [
+        (volume, number)
+        for volume in (1, 2, 3)
+        for number in list_chapters(volume)
+    ]
+    entries: list[dict[str, Any]] = []
+    with concurrent.futures.ThreadPoolExecutor(max_workers=16) as executor:
+        for entry in executor.map(prepare_chapter, chapter_tasks):
+            entries.append(entry)
 
-    if not database_bytes.startswith(b"SQLite format 3\x00"):
-        raise SystemExit("Nahj source did not return a valid SQLite database.")
-
-    fd, database_path = tempfile.mkstemp(prefix="nahj-source-", suffix=".db")
-    try:
-        with os.fdopen(fd, "wb") as handle:
-            handle.write(database_bytes)
-
-        connection = sqlite3.connect(database_path)
-        connection.row_factory = sqlite3.Row
-        try:
-            tables = {
-                row["name"]
-                for row in connection.execute(
-                    "SELECT name FROM sqlite_master WHERE type='table'"
-                )
-            }
-            if "nahj" not in tables:
-                raise SystemExit("The upstream database has no 'nahj' table.")
-
-            columns = {
-                row["name"] for row in connection.execute("PRAGMA table_info(nahj)")
-            }
-            required = {"id", "cat", "num", "title", "cnt"}
-            if not required.issubset(columns):
-                raise SystemExit(
-                    f"Unexpected Nahj schema. Required columns missing: {sorted(required - columns)}"
-                )
-
-            # Upstream forks differ in their category numbering and schema data.
-            # Export all non-empty records, then map categories conservatively below.
-            rows = connection.execute(
-                """
-                SELECT id, cat, num, title, cnt
-                FROM nahj
-                WHERE TRIM(COALESCE(cnt, '')) <> ''
-                ORDER BY CAST(cat AS INTEGER) ASC, CAST(num AS INTEGER) ASC, id ASC
-                """
-            ).fetchall()
-        finally:
-            connection.close()
-    finally:
-        if os.path.exists(database_path):
-            os.remove(database_path)
-
-    entries = []
-    counts = {1: 0, 2: 0, 3: 0}
-    rejected_persian = 0
-    for row in rows:
-        raw_category = int(row["cat"])
-        # The upstream database currently exposes only category 3 (49 rows).
-        # Preserve those records without pretending the missing sermons and
-        # letters exist; allow the APK build to proceed while recording the gap.
-        category = raw_category if raw_category in (1, 2, 3) else 3
-        title = normalize_arabic(str(row["title"] or ""))
-        text = normalize_arabic(str(row["cnt"] or ""))
-        number = normalize_arabic(str(row["num"] or "")).strip()
-        if not text or not title:
-            continue
-        # Never bundle records that show Persian-script or Persian-language markers.
-        if looks_persian(title) or looks_persian(text):
-            rejected_persian += 1
-            continue
-        # Preserve Arabic source wording; only normalize keyboard variants.
-        entries.append(
-            {
-                "id": int(row["id"]),
-                "category": category,
-                "number": number,
-                "title": title,
-                "text": text,
-            }
+    entries.sort(key=lambda item: (item["category"], int(item["number"])))
+    counts = {
+        category: sum(1 for item in entries if item["category"] == category)
+        for category in EXPECTED_COUNTS
+    }
+    if counts != EXPECTED_COUNTS or len(entries) != sum(EXPECTED_COUNTS.values()):
+        raise RuntimeError(
+            f"Nahj source count mismatch: total={len(entries)}, category_counts={counts}"
         )
-        counts[category] += 1
 
-    if not entries:
-        raise SystemExit("Nahj export contains no usable Arabic entries.")
-    if len(entries) < 500 or any(counts[category] < 50 for category in (1, 2, 3)):
-        print(
-            "WARNING: Nahj source is incomplete; continuing the build without "
-            f"claiming a complete library. total={len(entries)}, category_counts={counts}"
-        )
+    # Audit every visible title and text; no translations or English titles are copied.
+    for entry in entries:
+        for field in ("title", "text"):
+            if looks_persian(entry[field]):
+                raise RuntimeError(
+                    f"Persian content detected after preparation in {entry['category']}:{entry['number']}"
+                )
 
     result = {
         "metadata": {
             "title": "نهج البلاغة",
-            "sourceProject": "saber13812002/application-nahj-al-balagha",
-            "sourceUrl": SOURCE_URL,
-            "license": "MIT; see licenses/NAHJ_MIT_LICENSE.txt",
-            "contentNote": "Arabic text preserved from the upstream database. Numbering may vary across editions; verify quotations against a trusted printed edition.",
+            "sourceProject": SOURCE_REPO,
+            "sourceRevision": SOURCE_REVISION,
+            "sourceUrl": "https://github.com/adeeb10abbas/shia-library-json",
+            "license": "CC0-1.0; source records identify ThaqalaynData content as CC0-1.0",
+            "contentNote": (
+                "Arabic original only. English translation and non-Arabic fields are excluded. "
+                "Chapter numbering follows the selected ThaqalaynData edition and may differ "
+                "from other printed editions."
+            ),
             "counts": {
                 "sermons": counts[1],
                 "letters": counts[2],
@@ -158,20 +186,20 @@ def main() -> None:
     }
 
     DEST.parent.mkdir(parents=True, exist_ok=True)
-    fd, temporary = tempfile.mkstemp(prefix="nahj-", suffix=".json", dir=DEST.parent)
+    temporary = DEST.with_suffix(".json.tmp")
     try:
-        with os.fdopen(fd, "w", encoding="utf-8", newline="\n") as handle:
+        with temporary.open("w", encoding="utf-8", newline="\n") as handle:
             json.dump(result, handle, ensure_ascii=False, separators=(",", ":"))
             handle.write("\n")
         os.replace(temporary, DEST)
     finally:
-        if os.path.exists(temporary):
-            os.remove(temporary)
+        if temporary.exists():
+            temporary.unlink()
 
     print(
-        f"Prepared offline Nahj al-Balagha: {len(entries)} Arabic entries; "
-        f"rejected {rejected_persian} records with Persian indicators; "
-        f"category counts={counts}"
+        f"Prepared complete Arabic-only Nahj al-Balagha: {len(entries)} entries; "
+        f"sermons={counts[1]}, letters={counts[2]}, wisdoms={counts[3]}; "
+        "Persian-content audit passed."
     )
 
 

@@ -554,20 +554,35 @@ class _MainShellState extends State<MainShell> {
     required VoidCallback onTap,
   }) => Material(
     color: const Color(0xCC071D16),
-    borderRadius: BorderRadius.circular(16),
+    borderRadius: BorderRadius.circular(20),
     child: InkWell(
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(20),
       onTap: onTap,
       child: Container(
-        constraints: const BoxConstraints(minHeight: 108),
-        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+        constraints: const BoxConstraints(minHeight: 116),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: _emerald.withValues(alpha: .62)),
+          borderRadius: BorderRadius.circular(20),
+          gradient: const LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [Color(0xFF142D23), Color(0xFF0B1D16)],
+          ),
+          border: Border.all(color: _emerald.withValues(alpha: .38)),
+          boxShadow: const [BoxShadow(color: Color(0x16000000), blurRadius: 12, offset: Offset(0, 5))],
         ),
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Icon(icon, color: _gold, size: 27),
-          const SizedBox(height: 8),
+          Container(
+            width: 42,
+            height: 42,
+            decoration: BoxDecoration(
+              color: _gold.withValues(alpha: .09),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: _gold.withValues(alpha: .18)),
+            ),
+            child: Icon(icon, color: _gold, size: 23),
+          ),
+          const SizedBox(height: 9),
           Text(title, textAlign: TextAlign.center, maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 11)),
@@ -685,7 +700,7 @@ class _MainShellState extends State<MainShell> {
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
       children: [
         Container(
-          height: 278,
+          height: 230,
           clipBehavior: Clip.antiAlias,
           decoration: const BoxDecoration(
             borderRadius: BorderRadius.vertical(bottom: Radius.circular(28)),
@@ -758,7 +773,7 @@ class _MainShellState extends State<MainShell> {
                 ),
               ),
               Positioned(
-                right: 16, left: 16, bottom: 20,
+                right: 16, left: 16, bottom: 14,
                 child: Column(children: [
                   const Text(
                     'التاريخ الهجري',

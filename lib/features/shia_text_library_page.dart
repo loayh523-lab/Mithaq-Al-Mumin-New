@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+Map<String, dynamic> _decodeShiaJson(String raw) =>
+    jsonDecode(raw) as Map<String, dynamic>;
+
 String normalizeArabicText(String value) => value
     .replaceAll('ک', 'ك')
     .replaceAll('ی', 'ي')
@@ -192,7 +195,8 @@ class ShiaTextData {
 
   static Future<ShiaTextData> _load() async {
     final raw = await rootBundle.loadString('assets/shia_duas/shia_duas.json');
-    final decoded = jsonDecode(raw) as Map<String, dynamic>;
+    // Decode the potentially large offline library away from Flutter's UI isolate.
+    final decoded = await compute(_decodeShiaJson, raw);
     final rawEntries = decoded['entries'] as List<dynamic>;
     final entries = rawEntries
         .whereType<Map<String, dynamic>>()

@@ -160,9 +160,9 @@ void main() {
       sourceUrl: '',
       lines: <ShiaTextLine>[],
     );
-    expect(sahifaMunajat.category, 'الصحيفة السجادية');
-    expect(fridayArafah.category, 'أدعية الأشهر والمناسبات');
-    expect(munajat.category, 'المناجيات الخمس عشرة');
+    expect(sahifaMunajat.category, 'الصحيفة السجادية والمناجيات');
+    expect(fridayArafah.category, 'الأعمال والمناسبات');
+    expect(munajat.category, 'الصحيفة السجادية والمناجيات');
   });
 
   test('Mafatih categories group named Arabic texts', () {
@@ -288,7 +288,7 @@ void main() {
 
   testWidgets('Shia dua library opens its offline collection', (tester) async {
     await tester.pumpWidget(const MaterialApp(
-      home: Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'الزيارات')),
+      home: Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'الزيارات الشريفة')),
     ));
     await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 700)));
     await tester.pump();

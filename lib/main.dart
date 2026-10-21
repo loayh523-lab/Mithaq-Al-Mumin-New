@@ -508,17 +508,6 @@ class _MainShellState extends State<MainShell> {
     );
   }
 
-  String _clockLabel(DateTime value) =>
-      '${value.hour.toString().padLeft(2, '0')}:${value.minute.toString().padLeft(2, '0')}';
-
-  String _countdownLabel(DateTime target, DateTime current) {
-    final minutes = target.difference(current).inMinutes.clamp(0, 999999);
-    final hours = minutes ~/ 60;
-    final remainder = minutes % 60;
-    if (hours > 0) return '$hours س $remainder د';
-    return '$remainder دقيقة';
-  }
-
   String _gregorianLabel(DateTime date) {
     const months = [
       'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو',

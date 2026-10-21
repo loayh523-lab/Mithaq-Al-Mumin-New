@@ -136,6 +136,7 @@ def main() -> None:
             "alternateName": alternate_name,
             "type": raw.get("type") or "dua",
             "sourceUrl": raw.get("url") or record.get("url") or "",
+            "sourceLabel": "مكتبة ثقلين الإلكترونية",
             "lines": normalized_lines,
         })
 

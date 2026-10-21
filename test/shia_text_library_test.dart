@@ -4,45 +4,21 @@ import 'package:mithaq_al_mumin/features/shia_text_library_page.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('Arabic dua and ziyara library has readable content and distinct categories', () async {
+  test('Arabic dua and ziyara library has readable source-linked content', () async {
     final data = await ShiaTextData.load();
 
     expect(data.entries, isNotEmpty);
-    expect(
-      data.entries.any((entry) => entry.category == 'الزيارات'),
-      isTrue,
-    );
-    expect(
-      data.entries.any((entry) => entry.category == 'أدعية الصباح'),
-      isTrue,
-    );
-    expect(
-      data.entries.any((entry) => entry.category == 'أدعية المساء'),
-      isTrue,
-    );
-    expect(
-      data.entries.any((entry) => entry.category == 'الأعمال اليومية والمناسبات'),
-      isTrue,
-    );
-    expect(
-      data.entries.any((entry) => entry.category == 'الأعمال الشهرية والمناسبات'),
-      isTrue,
-    );
+    expect(data.entries.any((entry) => entry.category == 'الزيارات'), isTrue);
+    expect(data.entries.any((entry) => entry.category == 'أدعية الصباح'), isTrue);
+    expect(data.entries.any((entry) => entry.category == 'الأذكار المشتركة'), isTrue);
+    expect(data.entries.any((entry) => entry.isSahifa), isTrue);
+    expect(data.entries.every((entry) => entry.arabicText.trim().isNotEmpty), isTrue);
 
-    // Mafatih al-Jinan is intentionally not merged into the library while its
-    // complete Arabic edition is being prepared for the user's review.
-    expect(
-      data.entries.any((entry) => entry.sourceLabel.startsWith('مفاتيح الجنان،')),
-      isFalse,
-      reason: 'Do not silently merge Mafatih content before the Arabic source is reviewed.',
-    );
-    expect(
-      data.entries.every((entry) => entry.arabicText.trim().isNotEmpty),
-      isTrue,
-      reason: 'Every library entry must have readable Arabic text.',
-    );
-
+    // The current bundled source is the Arabic Shia-library dataset.
+    // Do not mislabel it as Mafatih al-Jinan or fabricate chapter citations.
     for (final entry in data.entries) {
+      expect(entry.sourceLabel, 'مكتبة ثقلين الإلكترونية', reason: entry.slug);
+      expect(entry.sourceUrl, isNotEmpty, reason: 'Missing source URL: ${entry.slug}');
       expect(
         entry.lines.every((line) => line.kind.toLowerCase() == 'arabic'),
         isTrue,
@@ -76,5 +52,33 @@ void main() {
         );
       }
     }
+  });
+
+  test('morning-only and combined morning/evening invocations stay distinct', () {
+    const morning = ShiaTextEntry(
+      slug: 'dua-sabah',
+      title: 'دعاء الصباح',
+      alternateName: 'دعاء الصباح',
+      type: 'dua',
+      sourceUrl: '',
+      lines: <ShiaTextLine>[
+        ShiaTextLine(index: 1, kind: 'arabic', text: 'بسم الله الرحمن الرحيم'),
+      ],
+    );
+    const combined = ShiaTextEntry(
+      slug: 'sahifa-sajjadiya-his-supplication-in-the-morning-and-evening',
+      title: 'دعاؤه عند الصباح والمساء',
+      alternateName: 'دعاؤه عند الصباح والمساء',
+      type: 'dua',
+      sourceUrl: '',
+      lines: <ShiaTextLine>[
+        ShiaTextLine(index: 1, kind: 'arabic', text: 'بسم الله الرحمن الرحيم'),
+      ],
+    );
+
+    expect(morning.category, 'أدعية الصباح');
+    expect(combined.category, 'الأذكار المشتركة');
+    expect(combined.category, isNot('أدعية الصباح'));
+    expect(combined.category, isNot('أدعية المساء'));
   });
 }

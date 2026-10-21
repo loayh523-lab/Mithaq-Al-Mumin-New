@@ -25,7 +25,7 @@ void main() {
   testWidgets('home screen shows the agreed dashboard and drawer navigation opens tasbeeh', (tester) async {
     await tester.pumpWidget(const MithaqApp());
     expect(find.text('ميثاق المؤمن'), findsOneWidget);
-    expect(find.text('التاريخ الهجري'), findsOneWidget);
+    expect(find.textContaining('هـ'), findsOneWidget);
     expect(find.text('الصلاة القادمة'), findsOneWidget);
     expect(find.text('مواقيت الصلوات'), findsOneWidget);
 
@@ -36,7 +36,7 @@ void main() {
     );
     expect(find.text('عمل اليوم'), findsOneWidget);
 
-    await tester.tap(find.byIcon(Icons.menu));
+    await tester.tap(find.byTooltip('الأقسام'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('التسبيح'));
     await tester.pumpAndSettle();
@@ -62,7 +62,7 @@ void main() {
 
   testWidgets('prayer tracker records a checked prayer from the drawer', (tester) async {
     await tester.pumpWidget(const MithaqApp());
-    await tester.tap(find.byIcon(Icons.menu));
+    await tester.tap(find.byTooltip('الأقسام'));
     await tester.pumpAndSettle();
     await tester.scrollUntilVisible(
       find.text('متابعة الصلاة'),
@@ -80,7 +80,7 @@ void main() {
 
   testWidgets('khatma tracker opens and records completed juz from the drawer', (tester) async {
     await tester.pumpWidget(const MithaqApp());
-    await tester.tap(find.byIcon(Icons.menu));
+    await tester.tap(find.byTooltip('الأقسام'));
     await tester.pumpAndSettle();
     await tester.scrollUntilVisible(
       find.text('ختمة القرآن'),
@@ -253,9 +253,19 @@ void main() {
     await tester.pumpWidget(const MaterialApp(
       home: Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'الزيارات')),
     ));
-    await tester.runAsync(() => Future<void>.delayed(const Duration(seconds: 4)));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 100));
+    var libraryReady = false;
+    for (var attempt = 0; attempt < 40; attempt++) {
+      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 250)));
+      await tester.pump();
+      if (find.text('نصوص شيعية للقراءة دون إنترنت').evaluate().isNotEmpty) {
+        libraryReady = true;
+        break;
+      }
+      if (find.text('ما قدرنا نحمّل مكتبة الأدعية').evaluate().isNotEmpty) {
+        break;
+      }
+    }
+    expect(libraryReady, isTrue, reason: 'The bundled Arabic dua library did not finish loading.');
     expect(find.text('الأدعية والزيارات'), findsWidgets);
     expect(find.textContaining('نصاً • منها'), findsOneWidget);
     expect(find.textContaining('ما قدرنا نحمّل مكتبة الأدعية'), findsNothing);

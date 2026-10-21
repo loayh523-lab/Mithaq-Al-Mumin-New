@@ -131,10 +131,12 @@ class ShiaTextEntry {
     if (categoryOverride.trim().isNotEmpty) return categoryOverride;
     // Keep specific collections and distinct time periods before broad occasion matching.
     if (isZiyara) return 'الزيارات';
+    // A combined morning/evening invocation belongs in its own shared category,
+    // even if it is part of the Sahifa catalogue.
+    if (isSharedDua) return 'الأذكار المشتركة';
     if (isSahifa) return 'الصحيفة السجادية';
     if (isMunajat) return 'المناجيات الخمس عشرة';
     if (isMahdiDua) return 'أدعية صاحب الزمان';
-    if (isSharedDua) return 'الأذكار المشتركة';
     if (isMorningDua) return 'أدعية الصباح';
     if (isEveningDua) return 'أدعية المساء';
     if (isDailyDeed) return 'الأعمال اليومية والمناسبات';

@@ -295,7 +295,7 @@ class _SettingsPageState extends State<SettingsPage> {
             child: SwitchListTile(
               contentPadding: EdgeInsets.zero,
               title: const Text('إشعارات الصلاة'),
-              subtitle: const Text('تذكيرات محلية للأيام الثلاثين القادمة وفق حساب فلكي تقديري. التسجيل الصوتي المرفق فارسي بنمط ماهور، ولم نتحقق من مطابقته للصيغة الجعفرية. قد تتأخر التنبيهات بسبب توفير الطاقة.', style: TextStyle(color: _settingsMuted, height: 1.5, fontSize: 12)),
+              subtitle: const Text('تذكيرات محلية للأيام الثلاثين القادمة وفق حساب فلكي تقديري. التسجيل الحالي للتجربة فقط، ولم يُدمج بعد تسجيل الشيخ شبّر معلة المختار. قد تتأخر التنبيهات بسبب توفير الطاقة.', style: TextStyle(color: _settingsMuted, height: 1.5, fontSize: 12)),
               value: _notificationsEnabled,
               onChanged: _loaded ? _toggleNotifications : null,
               activeThumbColor: _settingsGold,
@@ -362,7 +362,7 @@ class _SettingsPageState extends State<SettingsPage> {
             child: OutlinedButton.icon(
               onPressed: _loaded ? _toggleAdhanPlayback : null,
               icon: Icon(_isPlayingAdhan ? Icons.stop_circle_outlined : Icons.play_circle_outline_rounded),
-              label: Text(_isPlayingAdhan ? 'إيقاف التسجيل الصوتي' : 'استماع إلى تسجيل الأذان'),
+              label: Text(_isPlayingAdhan ? 'إيقاف التسجيل الصوتي' : 'استماع إلى تسجيل الأذان التجريبي'),
             ),
           ),
           const SizedBox(height: 8),
@@ -374,7 +374,7 @@ class _SettingsPageState extends State<SettingsPage> {
               label: const Text('تجربة إشعار الأذان'),
             ),
           ),
-          const Text('التسجيل: Saeed Hatamzadeh-Varmazyar، أذان بنمط ماهور، ترخيص CC BY-SA 4.0. وصف الملف لا يؤكد ألفاظه الجعفرية؛ لذلك لا نعرضه كأذان جعفري موثّق.', style: TextStyle(color: _settingsMuted, fontSize: 11, height: 1.5)),
+          const Text('التسجيل الحالي تجريبي من Wikimedia Commons بترخيص CC BY-SA 4.0. ليس تسجيل العتبة العلوية المقدسة بصوت الشيخ شبّر معلة الذي اخترته.', style: TextStyle(color: _settingsMuted, fontSize: 11, height: 1.5)),
           const SizedBox(height: 4),
           const SelectableText('https://commons.wikimedia.org/wiki/File:AzaanMaahur.ogg', style: TextStyle(color: _settingsGold, fontSize: 11)),
           const SizedBox(height: 4),

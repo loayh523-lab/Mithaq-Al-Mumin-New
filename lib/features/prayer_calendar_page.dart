@@ -71,7 +71,10 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
   }
   Future<void> _loadCorrection() async {
     final p = await SharedPreferences.getInstance();
-    if (mounted) setState(() => correction = (p.getInt('hijri_correction') ?? 0).clamp(-1, 2));
+    final saved = p.getInt('hijri_correction') ?? 0;
+    final bounded = saved.clamp(-1, 2).toInt();
+    if (saved != bounded) await p.setInt('hijri_correction', bounded);
+    if (mounted) setState(() => correction = bounded);
   }
   Future<void> _correct(int delta) async {
     final next = (correction + delta).clamp(-1, 2);

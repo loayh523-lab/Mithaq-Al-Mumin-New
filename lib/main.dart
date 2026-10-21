@@ -540,8 +540,6 @@ class _MainShellState extends State<MainShell> {
         .difference(DateTime(_now.year, 1, 1)).inDays;
     final dailyTask = _dailyTasks[dayOfYear % _dailyTasks.length];
     final inspiration = _dailyInspirations[dayOfYear % _dailyInspirations.length];
-    const weekdayNames = <String>['الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت', 'الأحد'];
-    final todayName = weekdayNames[_now.weekday - 1];
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
@@ -660,100 +658,70 @@ class _MainShellState extends State<MainShell> {
         const SizedBox(height: 12),
         Row(children: [
           Expanded(child: _homeQuickTile(
-            icon: Icons.menu_book_rounded, title: 'القرآن الكريم', subtitle: 'اقرأ وتدبّر',
-            onTap: () => setState(() => _selected = 1),
-          )),
-          const SizedBox(width: 7),
-          Expanded(child: _homeQuickTile(
             icon: Icons.auto_awesome_rounded, title: 'قبس اليوم', subtitle: 'نور في القلب',
-            // Open a dedicated Qabas page; never route this tile to the dua tab.
             onTap: () => _pushPage(QabasTodayPage(
               text: inspiration.text,
               source: inspiration.source,
             )),
           )),
-          const SizedBox(width: 7),
+          const SizedBox(width: 8),
           Expanded(child: _homeQuickTile(
-            icon: Icons.checklist_rounded, title: 'أعمال اليوم', subtitle: todayName,
-            onTap: () => _pushPage(const GoodDeedsPage()),
-          )),
-          const SizedBox(width: 7),
-          Expanded(child: _homeQuickTile(
-            icon: Icons.volunteer_activism_outlined, title: 'الأدعية', subtitle: 'قربًا من الله',
+            icon: Icons.volunteer_activism_outlined, title: 'الأدعية والزيارات', subtitle: 'بين يديك',
             onTap: () => setState(() => _selected = 2),
+          )),
+          const SizedBox(width: 8),
+          Expanded(child: _homeQuickTile(
+            icon: Icons.menu_book_rounded, title: 'القرآن الكريم', subtitle: 'اقرأ وارتقِ',
+            onTap: () => setState(() => _selected = 1),
           )),
         ]),
         const SizedBox(height: 12),
+        const Text('عمل اليوم', style: TextStyle(fontSize: 19, fontWeight: FontWeight.w800)),
+        const SizedBox(height: 10),
         Container(
-          padding: const EdgeInsets.all(17),
+          padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 8),
           decoration: BoxDecoration(
             color: _panel,
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: _gold.withValues(alpha: .3)),
-          ),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            const Row(children: [
-              Icon(Icons.lightbulb_outline_rounded, color: _gold),
-              SizedBox(width: 8),
-              Text('قبس اليوم', style: TextStyle(color: _gold, fontWeight: FontWeight.w800, fontSize: 16)),
-            ]),
-            const SizedBox(height: 10),
-            Text(inspiration.text, textDirection: TextDirection.rtl, style: const TextStyle(fontSize: 20, height: 1.9, fontWeight: FontWeight.w700)),
-            const SizedBox(height: 5),
-            Text(inspiration.source, style: const TextStyle(color: _muted, fontSize: 12)),
-          ]),
-        ),
-        const SizedBox(height: 14),
-        Container(
-          padding: const EdgeInsets.all(18),
-          decoration: BoxDecoration(
-            color: _panel,
-            borderRadius: BorderRadius.circular(22),
-            border: Border.all(color: _gold.withValues(alpha: .38)),
-            boxShadow: [
-              BoxShadow(color: _emerald.withValues(alpha: .12), blurRadius: 18, offset: const Offset(0, 7)),
-            ],
+            border: Border.all(color: Colors.white.withValues(alpha: .06)),
           ),
           child: Row(
             children: [
               Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                  color: _emerald.withValues(alpha: .2),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: const Icon(Icons.hourglass_bottom_rounded, color: _gold, size: 27),
+                width: 43,
+                height: 43,
+                decoration: BoxDecoration(color: _gold.withValues(alpha: .12), borderRadius: BorderRadius.circular(14)),
+                child: const Icon(Icons.volunteer_activism_outlined, color: _gold),
               ),
-              const SizedBox(width: 13),
+              const SizedBox(width: 12),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text('الصلاة القادمة', style: TextStyle(color: _muted, fontSize: 12)),
-                    const SizedBox(height: 3),
-                    Text(next.name, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: _gold)),
-                    const SizedBox(height: 4),
-                    Text('موعدها ${_clockLabel(next.at)}', style: const TextStyle(color: Colors.white70, fontSize: 13)),
-                  ],
+                child: Text(
+                  dailyTask,
+                  style: TextStyle(
+                    height: 1.6,
+                    color: _dailyTaskDone ? _muted : Colors.white,
+                    decoration: _dailyTaskDone ? TextDecoration.lineThrough : TextDecoration.none,
+                  ),
                 ),
               ),
-              const SizedBox(width: 8),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  const Text('المتبقي', style: TextStyle(color: _muted, fontSize: 11)),
-                  const SizedBox(height: 5),
-                  Text(
-                    _countdownLabel(next.at, _now),
-                    style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15),
-                    textAlign: TextAlign.end,
-                  ),
-                ],
+              Checkbox(
+                value: _dailyTaskDone,
+                activeColor: _emerald,
+                checkColor: Colors.white,
+                onChanged: (value) => _toggleDailyTask(value ?? false),
               ),
             ],
           ),
         ),
+        Align(
+          alignment: AlignmentDirectional.centerStart,
+          child: TextButton.icon(
+            onPressed: () => _pushPage(const GoodDeedsPage()),
+            icon: const Icon(Icons.checklist_outlined),
+            label: const Text('عرض بقية صالح الأعمال'),
+          ),
+        ),
+        const SizedBox(height: 12),
         const SizedBox(height: 23),
         const Text('مواقيت الصلوات', style: TextStyle(fontSize: 19, fontWeight: FontWeight.w800)),
         const SizedBox(height: 10),
@@ -808,53 +776,6 @@ class _MainShellState extends State<MainShell> {
             style: TextStyle(color: _muted, fontSize: 11, height: 1.6),
           ),
         ),
-        const SizedBox(height: 22),
-        const Text('عمل اليوم', style: TextStyle(fontSize: 19, fontWeight: FontWeight.w800)),
-        const SizedBox(height: 10),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 8),
-          decoration: BoxDecoration(
-            color: _panel,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.white.withValues(alpha: .06)),
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 43,
-                height: 43,
-                decoration: BoxDecoration(color: _gold.withValues(alpha: .12), borderRadius: BorderRadius.circular(14)),
-                child: const Icon(Icons.volunteer_activism_outlined, color: _gold),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  dailyTask,
-                  style: TextStyle(
-                    height: 1.6,
-                    color: _dailyTaskDone ? _muted : Colors.white,
-                    decoration: _dailyTaskDone ? TextDecoration.lineThrough : TextDecoration.none,
-                  ),
-                ),
-              ),
-              Checkbox(
-                value: _dailyTaskDone,
-                activeColor: _emerald,
-                checkColor: Colors.white,
-                onChanged: (value) => _toggleDailyTask(value ?? false),
-              ),
-            ],
-          ),
-        ),
-        Align(
-          alignment: AlignmentDirectional.centerStart,
-          child: TextButton.icon(
-            onPressed: () => _pushPage(const GoodDeedsPage()),
-            icon: const Icon(Icons.checklist_outlined),
-            label: const Text('عرض بقية صالح الأعمال'),
-          ),
-        ),
-        const SizedBox(height: 12),
         Material(
           color: Colors.transparent,
           child: InkWell(

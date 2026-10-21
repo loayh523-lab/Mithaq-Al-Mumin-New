@@ -101,9 +101,9 @@ def main() -> None:
     # Remove exact duplicate prayer texts while retaining distinct entries that
     # happen to share a title. This makes the displayed count reflect unique text.
     def text_key(value: str) -> str:
-        value = re.sub(r"[\\u064B-\\u065F\\u0670\\u0640]", "", value)
+        value = re.sub(r"[\u064B-\u065F\u0670\u0640]", "", value)
         value = value.replace("أ", "ا").replace("إ", "ا").replace("آ", "ا").replace("ى", "ي")
-        return re.sub(r"[^\\u0600-\\u06FF0-9]", "", value).lower()
+        return re.sub(r"[^\u0600-\u06FF0-9]", "", value).lower()
 
     before_dedupe = len(prepared)
     unique_entries = []

@@ -122,7 +122,7 @@ class ShiaTextEntry {
   }
   bool get isMonthlyDeed {
     final value = '${slug.toLowerCase()} $title $alternateName';
-    return RegExp(r'monthly deeds|أعمال الأشهر|أعمال شهر|أعمال الشهر|الأعمال الشهرية').hasMatch(value);
+    return RegExp(r'monthly deeds|أعمال الأشهر|أعمال شهر|أعمال الشهر|الأعمال الشهرية|دخول شهر رمضان|وداع شهر رمضان|شهر رمضان|رؤية الهلال|يوم عرفة|عيد الفطر|يوم الأضحى').hasMatch(value);
   }
   bool get isHajatDua {
     final value = '${slug.toLowerCase()} $title $alternateName';

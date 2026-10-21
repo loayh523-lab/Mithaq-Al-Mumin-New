@@ -71,6 +71,17 @@ void main() {
     expect(find.text('0'), findsOneWidget);
   });
 
+  testWidgets('Qabas of the day opens its own reflection page, not the dua tab', (tester) async {
+    await tester.pumpWidget(const MithaqApp());
+    await tester.pump();
+    expect(find.text('نور في القلب'), findsOneWidget);
+    await tester.tap(find.text('نور في القلب'));
+    await tester.pumpAndSettle();
+    expect(find.text('نورٌ نتدبّره اليوم'), findsOneWidget);
+    expect(find.textContaining('سورة'), findsOneWidget);
+    expect(find.text('إغلاق'), findsNothing);
+  });
+
   testWidgets('Quran index loads the bundled 114-surah catalog', (tester) async {
     await tester.pumpWidget(const MaterialApp(
       home: Directionality(

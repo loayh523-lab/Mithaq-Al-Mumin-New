@@ -143,6 +143,12 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
     final widgets = <Widget>[
       Card(
         color: _panel,
+        margin: const EdgeInsets.symmetric(vertical: 5),
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18),
+          side: BorderSide(color: _gold.withValues(alpha: .16)),
+        ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           child: Row(children: [
@@ -161,7 +167,16 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
       final daysInMonth = DateUtils.getDaysInMonth(year, month);
       widgets.add(Card(
         color: _panel,
+        margin: const EdgeInsets.symmetric(vertical: 5),
+        elevation: 0,
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18),
+          side: BorderSide(color: Colors.white.withValues(alpha: .055)),
+        ),
         child: ExpansionTile(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+          collapsedShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
           leading: const Icon(Icons.calendar_month_rounded, color: _gold),
           title: Text(_gregorianMonthName(month), style: const TextStyle(fontWeight: FontWeight.bold)),
           subtitle: Text('$daysInMonth يوماً'),

@@ -700,7 +700,7 @@ class _MainShellState extends State<MainShell> {
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
       children: [
         Container(
-          height: 230,
+          height: 258,
           clipBehavior: Clip.antiAlias,
           decoration: const BoxDecoration(
             borderRadius: BorderRadius.vertical(bottom: Radius.circular(28)),
@@ -792,8 +792,22 @@ class _MainShellState extends State<MainShell> {
                       ),
                     )),
                   ]),
+                  Builder(builder: (context) {
+                    final occasion = hijriOccasionLabel(_now, correction: _hijriCorrection);
+                    if (occasion == null) return const SizedBox(height: 5);
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 7, left: 8, right: 8),
+                      child: Text(
+                        occasion,
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(color: Color(0xFFF0D9A0), fontSize: 11, height: 1.35, fontWeight: FontWeight.w700),
+                      ),
+                    );
+                  }),
                   Container(
-                    width: 150, height: 2, margin: const EdgeInsets.symmetric(vertical: 9),
+                    width: 150, height: 2, margin: const EdgeInsets.symmetric(vertical: 7),
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(colors: [Colors.transparent, _gold, Colors.transparent]),
                     ),

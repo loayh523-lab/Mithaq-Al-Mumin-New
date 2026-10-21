@@ -125,7 +125,7 @@ def _mafatih_title(raw_title: str, href: str, section_title: str, article_number
         ("مناجات-پانزدهم", "المناجاة الخامسة عشرة: مناجاة الزاهدين"),
     ]
     for marker, arabic_title in rules:
-        if marker.lower() in hint:
+        if _hint(marker) in hint:
             return arabic_title
     title = plain_arabic_text(str(raw_title or ""))
     if title and contains_arabic(title) and not re.search(r"[A-Za-zپچژگ]", title) and not contains_persian_language_markers(title):

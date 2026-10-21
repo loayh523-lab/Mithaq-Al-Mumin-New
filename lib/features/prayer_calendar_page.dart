@@ -411,6 +411,13 @@ String hijriDateLabel(DateTime date, {int correction = 0}) {
   return '${_arabicIndicDigits(hijri.day)} ${hijri.monthName} ${_arabicIndicDigits(hijri.year)} هـ';
 }
 
+/// Returns the commonly listed devotional occasion for a civil Hijri date.
+/// The tabular conversion is approximate; local moon-sighting calendars may differ.
+String? hijriOccasionLabel(DateTime date, {int correction = 0}) {
+  final hijri = _Hijri.fromGregorian(date.add(Duration(days: correction)));
+  return _occasion(hijri);
+}
+
 /// Structured tabular Hijri date for features that need month/day matching.
 /// Moon-sighting announcements can differ from this civil-calendar estimate.
 ({int day, int month, int year, String monthName}) hijriDateParts(

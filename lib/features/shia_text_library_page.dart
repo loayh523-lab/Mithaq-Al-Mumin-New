@@ -154,19 +154,33 @@ class ShiaTextEntry {
   /// Keep each prayer as one record while allowing it to be discovered from
   /// relevant topical sections. This reuses sourced Arabic content rather than
   /// duplicating the text or inventing new attributions.
+  /// One canonical entry may be discoverable in several genuinely relevant
+  /// sections. This does not duplicate the stored text or its source record.
   List<String> get categories {
-    final result = <String>[category];
-    void addIf(bool condition, String value) {
-      if (condition && !result.contains(value)) result.add(value);
+    final result = <String>[];
+
+    void add(String value) {
+      if (!result.contains(value)) result.add(value);
     }
 
-    addIf(isSahifa && isDayDua, 'أدعية الأيام');
-    addIf(isSahifa && isMonthlyDeed, 'الأعمال الشهرية والمناسبات');
-    addIf(isSahifa && isDailyDeed, 'الأعمال اليومية والمناسبات');
-    addIf(isSahifa && isHajatDua, 'أدعية الحاجات والشفاء');
-    addIf(isSahifa && isMorningDua, 'أدعية الصباح');
-    addIf(isSahifa && isEveningDua, 'أدعية المساء');
-    addIf(isSahifa && isMahdiDua, 'أدعية صاحب الزمان');
+    add(category);
+    if (isSahifa) add('الصحيفة السجادية');
+    if (isZiyara) add('الزيارات');
+    if (isMunajat) add('المناجيات الخمس عشرة');
+    if (isMahdiDua) add('أدعية صاحب الزمان');
+    if (isSharedDua) {
+      add('الأذكار المشتركة');
+    } else {
+      if (isMorningDua) add('أدعية الصباح');
+      if (isEveningDua) add('أدعية المساء');
+    }
+    if (isTaqibat) add('تعقيبات الصلوات');
+    if (isDayDua) add('أدعية الأيام');
+    if (isDailyDeed) add('الأعمال اليومية والمناسبات');
+    if (isMonthlyDeed) add('الأعمال الشهرية والمناسبات');
+    if (isHajatDua) add('أدعية الحاجات والشفاء');
+    if (isOccasionDua) add('أدعية الأشهر والمناسبات');
+
     return result;
   }
 

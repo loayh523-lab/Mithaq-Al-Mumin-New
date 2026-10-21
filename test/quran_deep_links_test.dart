@@ -5,6 +5,10 @@ import 'package:mithaq_al_mumin/quran/quran_pages.dart';
 import 'package:mithaq_al_mumin/quran/quran_parts.dart';
 
 void main() {
+  setUp(() {
+    SharedPreferences.setMockInitialValues({});
+  });
+
   test('Hafs Quran divisions have all 30 juz and 60 hizbs', () {
     expect(quranJuzStartAyahIds.length, 30);
     expect(quranHizbStartAyahIds.length, 60);
@@ -38,10 +42,6 @@ void main() {
     await tester.pump();
     expect(find.text('الحزب 1'), findsOneWidget);
     expect(find.textContaining('بداية القراءة: الفاتحة'), findsOneWidget);
-  });
-
-  setUp(() {
-    SharedPreferences.setMockInitialValues({});
   });
 
   testWidgets('reader opens at and highlights a requested Quran verse', (tester) async {

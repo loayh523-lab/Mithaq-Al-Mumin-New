@@ -142,7 +142,7 @@ class ShiaTextEntry {
     if (isDailyDeed) return 'الأعمال اليومية والمناسبات';
     if (isMonthlyDeed) return 'الأعمال الشهرية والمناسبات';
     if (isHajatDua) return 'أدعية الحاجات والشفاء';
-    if (isOccasionDua) return 'أدعية الأشهر والمناسبات';
+    if (isOccasionDua) return 'الأعمال الشهرية والمناسبات';
     if (isTaqibat) return 'تعقيبات الصلوات';
     if (isDayDua) return 'أدعية الأيام';
     return 'أدعية عامة';
@@ -252,7 +252,6 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
     'أدعية الأيام',
     'الأعمال اليومية والمناسبات',
     'الأعمال الشهرية والمناسبات',
-    'أدعية الأشهر والمناسبات',
     'الزيارات',
     'الصحيفة السجادية',
     'المناجيات الخمس عشرة',

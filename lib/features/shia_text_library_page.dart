@@ -133,7 +133,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
   final _controller = TextEditingController();
   late Future<ShiaTextData> _future;
   String _query = '';
-  String _category = 'أدعية عامة';
+  String _category = 'الصحيفة السجادية والمناجيات';
   static const _categories = [
     'الصحيفة السجادية والمناجيات',
     'الأدعية والأذكار اليومية',
@@ -144,7 +144,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
 
   @override void initState() {
     super.initState();
-    _category = widget.initialCategory ?? 'أدعية عامة';
+    _category = _categories.contains(widget.initialCategory) ? widget.initialCategory! : _categories.first;
     _future = ShiaTextData.load();
   }
   @override void dispose() { _controller.dispose(); super.dispose(); }
@@ -231,7 +231,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
                         onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
                           builder: (_) => Directionality(
                             textDirection: TextDirection.rtl,
-                            child: MafatihCategoryPage(initialCategory: _category),
+                            child: const MafatihCategoryPage(),
                           ),
                         )),
                         icon: const Icon(Icons.menu_book_rounded),

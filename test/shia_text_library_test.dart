@@ -141,12 +141,9 @@ void main() {
       ],
     );
 
-    expect(friday.categories, contains('الصحيفة السجادية'));
-    expect(friday.categories, contains('أدعية الأيام'));
-    expect(ramadan.categories, contains('الصحيفة السجادية'));
-    expect(ramadan.categories, contains('الأعمال الشهرية والمناسبات'));
-    expect(hajat.categories, contains('الصحيفة السجادية'));
-    expect(hajat.categories, contains('أدعية الحاجات والشفاء'));
+    expect(friday.categories, <String>['الصحيفة السجادية']);
+    expect(ramadan.categories, <String>['الصحيفة السجادية']);
+    expect(hajat.categories, <String>['الصحيفة السجادية']);
   });
 
   test('morning-only, shared, and sunset-only invocations stay distinct', () {

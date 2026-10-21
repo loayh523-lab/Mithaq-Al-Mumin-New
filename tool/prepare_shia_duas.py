@@ -81,9 +81,9 @@ def main() -> None:
         # source URL so the original attribution remains available.
         raw_title = str(raw.get("title") or record.get("title") or "").strip()
         raw_alt = str(raw.get("alternateName") or record.get("alternateName") or "").strip()
-        persian_script = re.compile(r"[پچژگکی]")
-        title = raw_title.replace("ک", "ك").replace("ی", "ي")
-        alternate_name = raw_alt.replace("ک", "ك").replace("ی", "ي")
+        persian_script = re.compile(r"[پچژگ]")
+        title = raw_title.replace("ک", "ك").replace("ی", "ي").replace("دعاي ", "دعاء ")
+        alternate_name = raw_alt.replace("ک", "ك").replace("ی", "ي").replace("دعاي ", "دعاء ")
         if persian_script.search(raw_title) or not title:
             kind_name = str(raw.get("type") or record.get("type") or "dua").lower()
             title = "زيارة" if "ziyar" in kind_name else ("مناجاة" if "munajat" in kind_name else "دعاء")

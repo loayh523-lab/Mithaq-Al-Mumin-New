@@ -107,7 +107,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
       if (_occasion(hijri) != null) Card(color: _panel, child: ListTile(leading: const Icon(Icons.event, color: _gold), title: const Text('مناسبة دينية'), subtitle: Text(_occasion(hijri)!, style: const TextStyle(height: 1.5)))),
       CalendarDayNote(date: date),
       const SizedBox(height: 14),
-      SegmentedButton<int>(segments: const [ButtonSegment(value: 0, label: Text('مواقيت الصلاة'), icon: Icon(Icons.access_time)), ButtonSegment(value: 1, label: Text('إمساكية رمضان'), icon: Icon(Icons.nights_stay_outlined)), ButtonSegment(value: 2, label: Text('التقويم السنوي'), icon: Icon(Icons.calendar_month_rounded))], selected: {tab}, onSelectionChanged: (v) => setState(() => tab = v.first)),
+      SegmentedButton<int>(segments: const [ButtonSegment(value: 0, label: Text('مواقيت الصلاة'), icon: Icon(Icons.access_time)), ButtonSegment(value: 1, label: Text('إمساكية رمضان'), icon: Icon(Icons.nights_stay_outlined)), ButtonSegment(value: 2, label: Text('التقويم السنوي'), icon: Icon(Icons.calendar_month_rounded)), ButtonSegment(value: 3, label: Text('تقويم شهري'), icon: Icon(Icons.calendar_view_month_rounded))], selected: {tab}, onSelectionChanged: (v) => setState(() => tab = v.first)),
       const SizedBox(height: 12),
       if (tab == 0) ...[
         Row(children: [Expanded(child: Text('مواقيت ${_dateLabel(date)}', style: const TextStyle(fontWeight: FontWeight.bold))), IconButton(onPressed: () => setState(() => date = date.subtract(const Duration(days: 1))), icon: const Icon(Icons.chevron_right)), IconButton(onPressed: () => setState(() => date = date.add(const Duration(days: 1))), icon: const Icon(Icons.chevron_left)), IconButton(onPressed: () => setState(() => date = DateTime.now()), icon: const Icon(Icons.today))]),
@@ -118,7 +118,8 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
         Text('إمساكية تقديرية — ${city.name} / العراق', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17)), const SizedBox(height: 5),
         const Text('يعرض الشهر كاملاً من اليوم الأول إلى آخر يوم من رمضان المحسوب تقويمياً. الأوقات فلكية تقديرية وليست بديلاً عن إمساكية مكتب مرجعك أو الجهة المحلية المعتمدة.', style: TextStyle(color: _muted, fontSize: 11, height: 1.5)),
         ..._ramadanRows(date, city.latitude, city.longitude),
-      ] else ..._annualCalendar(date.year, correction),
+      ] else if (tab == 2) ..._annualCalendar(date.year, correction)
+      else ..._monthlyCalendar(),
       const Divider(),
       const Text('الموقع الحالي للحساب', style: TextStyle(fontWeight: FontWeight.bold)),
       Text(
@@ -138,6 +139,150 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
     final year = date.year + delta;
     final maxDay = DateUtils.getDaysInMonth(year, date.month);
     setState(() => date = DateTime(year, date.month, date.day.clamp(1, maxDay).toInt()));
+  }
+
+  void _changeMonth(int delta) {
+    final targetMonth = DateTime(date.year, date.month + delta, 1);
+    final maxDay = DateUtils.getDaysInMonth(targetMonth.year, targetMonth.month);
+    setState(() => date = DateTime(
+      targetMonth.year,
+      targetMonth.month,
+      date.day.clamp(1, maxDay).toInt(),
+    ));
+  }
+
+  List<Widget> _monthlyCalendar() {
+    const weekdays = <String>['أحد', 'إثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة', 'سبت'];
+    final daysInMonth = DateUtils.getDaysInMonth(date.year, date.month);
+    final leadingEmptyDays = DateTime(date.year, date.month, 1).weekday % 7;
+    final selectedHijri = _Hijri.fromGregorian(date.add(Duration(days: correction)));
+    final cells = leadingEmptyDays + daysInMonth;
+
+    return [
+      Card(
+        color: _panel,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+          child: Row(
+            children: [
+              IconButton(
+                tooltip: 'الشهر السابق',
+                onPressed: () => _changeMonth(-1),
+                icon: const Icon(Icons.chevron_right_rounded, color: _gold),
+              ),
+              Expanded(
+                child: Column(
+                  children: [
+                    Text(
+                      '${_gregorianMonthName(date.month)} ${date.year} م',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(color: _gold, fontSize: 17, fontWeight: FontWeight.w800),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'الهجري المحدد: ${selectedHijri.day} ${selectedHijri.monthName} ${selectedHijri.year} هـ (تقريبي)',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(color: _muted, fontSize: 11, height: 1.5),
+                    ),
+                  ],
+                ),
+              ),
+              IconButton(
+                tooltip: 'الشهر التالي',
+                onPressed: () => _changeMonth(1),
+                icon: const Icon(Icons.chevron_left_rounded, color: _gold),
+              ),
+              IconButton(
+                tooltip: 'العودة إلى اليوم',
+                onPressed: () => setState(() => date = DateTime.now()),
+                icon: const Icon(Icons.today_rounded, color: _gold),
+              ),
+            ],
+          ),
+        ),
+      ),
+      const SizedBox(height: 10),
+      Row(
+        children: [
+          for (final dayName in weekdays)
+            Expanded(
+              child: Center(
+                child: Text(
+                  dayName,
+                  style: const TextStyle(color: _muted, fontSize: 10, fontWeight: FontWeight.w700),
+                ),
+              ),
+            ),
+        ],
+      ),
+      const SizedBox(height: 6),
+      GridView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: cells,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 7,
+          crossAxisSpacing: 4,
+          mainAxisSpacing: 4,
+          childAspectRatio: .78,
+        ),
+        itemBuilder: (context, index) {
+          if (index < leadingEmptyDays) return const SizedBox.shrink();
+          final day = index - leadingEmptyDays + 1;
+          final gregorian = DateTime(date.year, date.month, day);
+          final hijri = _Hijri.fromGregorian(gregorian.add(Duration(days: correction)));
+          final isSelected = _sameDay(gregorian, date);
+          final isToday = _sameDay(gregorian, now);
+          final occasion = _occasion(hijri);
+          return InkWell(
+            borderRadius: BorderRadius.circular(10),
+            onTap: () => setState(() => date = gregorian),
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 1),
+              decoration: BoxDecoration(
+                color: isSelected ? _gold.withValues(alpha: .2) : _panel,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: isSelected
+                      ? _gold
+                      : isToday
+                          ? _gold.withValues(alpha: .55)
+                          : Colors.white.withValues(alpha: .05),
+                  width: isSelected ? 1.5 : 1,
+                ),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '$day',
+                    style: TextStyle(
+                      color: isSelected || isToday ? _gold : null,
+                      fontWeight: isSelected || isToday ? FontWeight.w900 : FontWeight.w600,
+                      fontSize: 14,
+                    ),
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    '${hijri.day}',
+                    style: const TextStyle(color: _muted, fontSize: 10),
+                  ),
+                  if (occasion != null)
+                    const Icon(Icons.circle, color: _gold, size: 4),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+      const Padding(
+        padding: EdgeInsets.only(top: 8, bottom: 4),
+        child: Text(
+          'الرقم الكبير ميلادي والصغير هجري تقريبي. الإطار الذهبي يحدد اليوم المختار، والنقطة تشير إلى مناسبة مسجلة في بيانات التطبيق.',
+          style: TextStyle(color: _muted, fontSize: 11, height: 1.6),
+        ),
+      ),
+    ];
   }
 
   List<Widget> _annualCalendar(int year, int correction) {
@@ -178,6 +323,8 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
               title: Text('$day ${_gregorianMonthName(month)} $year م'),
               subtitle: Text(occasion == null ? hijriLabel : '$hijriLabel\n$occasion', style: const TextStyle(color: _muted, height: 1.5)),
               isThreeLine: occasion != null,
+              selected: _sameDay(gregorian, date),
+              selectedTileColor: _gold.withValues(alpha: .13),
               trailing: occasion == null ? null : const Icon(Icons.event_available_rounded, color: _gold, size: 18),
               onTap: () => setState(() { date = gregorian; tab = 0; }),
             );

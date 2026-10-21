@@ -67,14 +67,17 @@ class PrayerNotificationService {
     try {
       await _initialize();
       var scheduleMode = AndroidScheduleMode.inexactAllowWhileIdle;
+      var canScheduleExact = false;
       if (defaultTargetPlatform == TargetPlatform.android) {
         final android = _plugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
         final granted = await android?.requestNotificationsPermission();
         final notificationsEnabled = await android?.areNotificationsEnabled();
         if (enabled && (granted == false || notificationsEnabled == false)) {
+          await _cancelScheduledReminders();
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setBool('prayer_notifications_enabled', false);
           return false;
         }
-        var canScheduleExact = false;
         try {
           canScheduleExact = await android?.canScheduleExactNotifications() ?? false;
         } catch (_) {
@@ -82,22 +85,34 @@ class PrayerNotificationService {
         }
         if (enabled && requestExactPermission && !canScheduleExact) {
           try {
-            canScheduleExact = await android?.requestExactAlarmsPermission() ?? false;
+            // Opening Android's special-access screen may not return a usable
+            // result on every device, so query the permission again afterwards.
+            await android?.requestExactAlarmsPermission();
+            canScheduleExact = await android?.canScheduleExactNotifications() ?? false;
           } catch (_) {
-            // Exact alarms are optional; retain the inexact fallback if unavailable.
+            // A denied exact-alarm permission is handled below without a silent
+            // switch to inexact delivery.
           }
-        }
-        if (canScheduleExact) {
-          scheduleMode = AndroidScheduleMode.exactAllowWhileIdle;
         }
       }
 
-      final pending = await _plugin.pendingNotificationRequests();
-      for (final request in pending) {
-        if (request.id >= _idStart && request.id < _idStart + _daysToSchedule * 10) {
-          await _plugin.cancel(request.id);
-        }
+      // Prayer-time alerts must not quietly fall back to inexact alarms on
+      // Android: those can be delayed by the operating system until the app is
+      // opened, which makes the user think the adhan did not fire on time.
+      if (enabled &&
+          defaultTargetPlatform == TargetPlatform.android &&
+          !canScheduleExact) {
+        await _cancelScheduledReminders();
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('prayer_notifications_enabled', false);
+        return false;
       }
+
+      if (canScheduleExact) {
+        scheduleMode = AndroidScheduleMode.exactAllowWhileIdle;
+      }
+
+      await _cancelScheduledReminders();
       if (!enabled) return true;
 
       final prefs = await SharedPreferences.getInstance();
@@ -192,15 +207,20 @@ class PrayerNotificationService {
     }
   }
 
+  static Future<void> _cancelScheduledReminders() async {
+    final pending = await _plugin.pendingNotificationRequests();
+    for (final request in pending) {
+      if (request.id >= _idStart &&
+          request.id < _idStart + _daysToSchedule * 10) {
+        await _plugin.cancel(request.id);
+      }
+    }
+  }
+
   static Future<void> cancelAll() async {
     try {
       await _initialize();
-      final pending = await _plugin.pendingNotificationRequests();
-      for (final request in pending) {
-        if (request.id >= _idStart && request.id < _idStart + _daysToSchedule * 10) {
-          await _plugin.cancel(request.id);
-        }
-      }
+      await _cancelScheduledReminders();
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('prayer_notifications_enabled', false);
     } catch (_) {

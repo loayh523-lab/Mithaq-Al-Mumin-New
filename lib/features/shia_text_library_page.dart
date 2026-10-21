@@ -108,121 +108,23 @@ class ShiaTextData {
   static Future<ShiaTextData> load() => _cache ??= _load();
 
   static Future<ShiaTextData> _load() async {
+    // The build-time preparation step combines the CC0 Shia dataset and
+    // Arabic-only Mafatih items into this one asset for fast offline loading.
     final raw = await rootBundle.loadString('assets/shia_duas/shia_duas.json');
     final decoded = jsonDecode(raw) as Map<String, dynamic>;
     final rawEntries = decoded['entries'] as List<dynamic>;
     final entries = rawEntries.whereType<Map<String, dynamic>>()
         .map(ShiaTextEntry.fromJson).toList();
     if (entries.isEmpty) throw const FormatException('Shia text collection is empty.');
-
-    // Add the Arabic recitation items from the bundled Mafatih al-Jinan corpus
-    // to the same five-section library, instead of leaving them in a separate
-    // catalogue that users have to discover manually.
-    final mafatihRaw = await rootBundle.loadString('assets/mafatih/mafatih.json');
-    final mafatihDecoded = jsonDecode(mafatihRaw) as Map<String, dynamic>;
-    final chapters = mafatihDecoded['chapters'];
-    final titleKeys = entries.map((entry) => _textKey(entry.displayTitle)).toSet();
-    final textKeys = entries.map((entry) => _textKey(entry.arabicText)).where((key) => key.isNotEmpty).toSet();
-    var imported = 0;
-    if (chapters is List) {
-      for (final chapterValue in chapters.whereType<Map<String, dynamic>>()) {
-        final chapterId = chapterValue['id'] ?? 'x';
-        final sections = chapterValue['sections'];
-        if (sections is! List) continue;
-        for (final sectionValue in sections.whereType<Map<String, dynamic>>()) {
-          final sectionId = sectionValue['id'] ?? 'x';
-          final articles = sectionValue['articles'];
-          if (articles is! List) continue;
-          for (final article in articles.whereType<Map<String, dynamic>>()) {
-            final rawTitle = article['title'];
-            final title = rawTitle is String ? _cleanMafatihText(rawTitle) : '';
-            final titleKey = _textKey(title);
-            if (title.isEmpty || titleKey.isEmpty || titleKeys.contains(titleKey)) continue;
-            final rawItems = article['items'];
-            if (rawItems is! List) continue;
-            final lines = <ShiaTextLine>[];
-            for (final item in rawItems.whereType<Map<String, dynamic>>()) {
-              final rawText = item['content'];
-              if (rawText is! String) continue;
-              final text = _cleanMafatihText(rawText);
-              if (text.isEmpty || !_isArabicRecitation(text)) continue;
-              final key = _textKey(text);
-              if (key.isEmpty) continue;
-              lines.add(ShiaTextLine(
-                index: lines.length + 1,
-                kind: 'arabic',
-                text: text,
-              ));
-            }
-            if (lines.isEmpty) continue;
-            final joinedKey = _textKey(lines.map((line) => line.text).join(' '));
-            if (joinedKey.isNotEmpty && textKeys.contains(joinedKey)) continue;
-            final href = article['href'];
-            entries.add(ShiaTextEntry(
-              slug: 'mafatih-$chapterId-$sectionId-${article['id'] ?? 'x'}',
-              title: title,
-              alternateName: '',
-              type: 'dua',
-              sourceUrl: href is String && href.isNotEmpty
-                  ? href
-                  : 'https://github.com/aminpaydar/Mafatih',
-              lines: lines,
-            ));
-            titleKeys.add(titleKey);
-            if (joinedKey.isNotEmpty) textKeys.add(joinedKey);
-            imported++;
-          }
-        }
-      }
-    }
-    if (entries.isEmpty) throw const FormatException('Shia text collection is empty.');
     final metadata = decoded['metadata'] as Map<String, dynamic>? ?? const <String, dynamic>{};
-    final mafatihMetadata = mafatihDecoded['metadata'] as Map<String, dynamic>? ?? const <String, dynamic>{};
-    final baseSource = metadata['sourceProject'] is String
-        ? metadata['sourceProject'] as String
-        : 'Shia library JSON';
-    final mafatihSource = mafatihMetadata['upstream_project'] is String
-        ? mafatihMetadata['upstream_project'] as String
-        : 'Mafatih al-Jinan';
     return ShiaTextData(
       entries: entries,
-      sourceProject: '$baseSource + $mafatihSource ($imported Arabic texts added)',
-      license: 'CC0 1.0 + Apache-2.0',
+      sourceProject: metadata['sourceProject'] is String
+          ? metadata['sourceProject'] as String
+          : 'Shia library + Mafatih al-Jinan',
+      license: metadata['license'] is String ? metadata['license'] as String : 'CC0 1.0 + Apache-2.0',
     );
   }
-
-  static String _cleanMafatihText(String value) => value
-      .replaceAll(RegExp(r'<br\s*/?>', caseSensitive: false), '\n')
-      .replaceAll(RegExp(r'</p\s*>', caseSensitive: false), '\n')
-      .replaceAll(RegExp(r'<[^>]*>'), ' ')
-      .replaceAll('&nbsp;', ' ')
-      .replaceAll('&#160;', ' ')
-      .replaceAll('&amp;', '&')
-      .replaceAll('&quot;', '"')
-      .replaceAll('&#39;', "'")
-      .replaceAll('&lt;', '<')
-      .replaceAll('&gt;', '>')
-      .replaceAll('ک', 'ك')
-      .replaceAll('ی', 'ي')
-      .replaceAll('ے', 'ي')
-      .replaceAll('ہ', 'ه')
-      .replaceAll(RegExp(r'[ \t]+'), ' ')
-      .trim();
-
-  static bool _isArabicRecitation(String value) =>
-      RegExp(r'[\u0600-\u06FF]').hasMatch(value) &&
-      !RegExp(r'[A-Za-z]').hasMatch(value) &&
-      !RegExp(r'[پچژگ]').hasMatch(value) &&
-      !RegExp(r'دعای|روزهای|هفته|فارسی|برای|میباشد|می شود|خواهد شد|نمی').hasMatch(value);
-
-  static String _textKey(String value) => value
-      .replaceAll(RegExp(r'[\u064B-\u065F\u0670\u0640]'), '')
-      .replaceAll('أ', 'ا')
-      .replaceAll('إ', 'ا')
-      .replaceAll('آ', 'ا')
-      .replaceAll('ى', 'ي')
-      .replaceAll(RegExp(r'[^\u0600-\u06FF0-9]'), '')
-      .toLowerCase();
 }
 
 class ShiaTextLibraryPage extends StatefulWidget {

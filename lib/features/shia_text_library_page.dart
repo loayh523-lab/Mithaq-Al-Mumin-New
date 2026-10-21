@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 String normalizeArabicText(String value) => value
     .replaceAll('ک', 'ك')
@@ -255,6 +256,27 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
 
   void _submitSearch() => setState(() => _query = _normalize(_controller.text.trim()));
 
+  Future<void> _openMafatihSource() async {
+    const source = 'https://lib.rafed.net/view.php?b_id=1731&type=c_fbook';
+    try {
+      final opened = await launchUrl(
+        Uri.parse(source),
+        mode: LaunchMode.externalApplication,
+      );
+      if (!opened && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('تعذّر فتح مصدر مفاتيح الجنان. تحقق من اتصال الإنترنت.')),
+        );
+      }
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('تعذّر فتح مصدر مفاتيح الجنان. تحقق من اتصال الإنترنت.')),
+        );
+      }
+    }
+  }
+
   @override Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(title: const Text('الأدعية والزيارات')),
     body: FutureBuilder<ShiaTextData>(
@@ -299,6 +321,19 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
               Text('${data.entries.length} نصاً • منها $sahifaCount من الصحيفة السجادية', style: const TextStyle(color: _shiaMuted)),
               const SizedBox(height: 6),
               const Text('المكتبة مصنفة حسب نوع الدعاء والزيارة والعمل، ويظهر مصدر كل نص بوضوح في صفحة القراءة. قد تختلف العناوين أو الروايات بين الطبعات؛ العرض هنا عربي فقط.', style: TextStyle(color: _shiaMuted, fontSize: 11, height: 1.5)),
+              const SizedBox(height: 10),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: _openMafatihSource,
+                  icon: const Icon(Icons.open_in_new_rounded),
+                  label: const Text('مفاتيح الجنان — فتح النسخة العربية على الويب'),
+                ),
+              ),
+              const Text(
+                'تنبيه: النص الكامل لمفاتيح الجنان غير مضمّن دون اتصال في هذه النسخة؛ الزر يفتح المصدر الخارجي.',
+                style: TextStyle(color: _shiaMuted, fontSize: 10, height: 1.5),
+              ),
             ]),
           ),
           Padding(

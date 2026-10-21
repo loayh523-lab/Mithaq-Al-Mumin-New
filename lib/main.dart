@@ -291,8 +291,7 @@ class _MainShellState extends State<MainShell> {
           children: List<Widget>.generate(5, _tabChild),
         ),
       ),
-      bottomNavigationBar: _selected == 0
-          ? SafeArea(
+      bottomNavigationBar: SafeArea(
               top: false,
               child: Container(
                 padding: const EdgeInsets.fromLTRB(12, 7, 12, 7),
@@ -302,6 +301,12 @@ class _MainShellState extends State<MainShell> {
                 ),
                 child: Row(
                   children: [
+                    Expanded(child: _homeBottomItem(
+                      icon: Icons.home_rounded,
+                      label: 'الرئيسية',
+                      onTap: () => setState(() => _selected = 0),
+                    )),
+                    const SizedBox(width: 8),
                     Expanded(child: _homeBottomItem(
                       icon: Icons.menu_book_rounded,
                       label: 'المكتبة',
@@ -322,8 +327,6 @@ class _MainShellState extends State<MainShell> {
                   ],
                 ),
               ),
-            )
-          : null,
     );
   }
 

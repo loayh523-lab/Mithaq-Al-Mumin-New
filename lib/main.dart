@@ -176,7 +176,7 @@ class _MainShellState extends State<MainShell> {
       final prefs = await SharedPreferences.getInstance();
       if (prefs.getBool('prayer_notifications_enabled') ?? false) {
         final city = await PrayerLocations.load();
-        await PrayerNotificationService.configure(enabled: true, city: city);
+        await PrayerNotificationService.ensureScheduled(city: city);
       }
     } catch (_) {
       // Reminder issues must never prevent the app from opening.

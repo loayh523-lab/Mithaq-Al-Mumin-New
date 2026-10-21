@@ -580,6 +580,90 @@ class _MainShellState extends State<MainShell> {
     ),
   );
 
+  /// A complete, readable daily verse shown directly on the home dashboard.
+  /// This is intentionally not a navigation tile: the reflection itself is the feature.
+  Widget _homeQabasCard(({String text, String source}) inspiration) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(18, 17, 18, 18),
+      decoration: BoxDecoration(
+        color: const Color(0xFF10251E),
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: _gold.withValues(alpha: .42)),
+        gradient: const LinearGradient(
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          colors: [Color(0xFF173A2C), Color(0xFF0C1E17)],
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 34,
+                height: 34,
+                decoration: BoxDecoration(
+                  color: _gold.withValues(alpha: .12),
+                  borderRadius: BorderRadius.circular(11),
+                ),
+                child: const Icon(Icons.auto_awesome_rounded, color: _gold, size: 19),
+              ),
+              const SizedBox(width: 10),
+              const Expanded(
+                child: Text(
+                  'قبس اليوم',
+                  style: TextStyle(color: _gold, fontSize: 16, fontWeight: FontWeight.w900),
+                ),
+              ),
+              const Text(
+                'آية نتأمّلها',
+                style: TextStyle(color: _muted, fontSize: 11),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                width: 3,
+                margin: const EdgeInsets.symmetric(vertical: 4),
+                decoration: BoxDecoration(
+                  color: _gold.withValues(alpha: .8),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ),
+              const SizedBox(width: 13),
+              Expanded(
+                child: Text(
+                  inspiration.text,
+                  textDirection: TextDirection.rtl,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Color(0xFFF6F2E8),
+                    fontSize: 23,
+                    height: 1.9,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 13),
+          const Divider(height: 1, color: Color(0x33D9B66D)),
+          const SizedBox(height: 10),
+          Text(
+            inspiration.source,
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: _gold, fontSize: 12, fontWeight: FontWeight.w700),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _homePage() {
     final times = SolarPrayerTimes.forDate(
       _now, _prayerCity.latitude, _prayerCity.longitude, 3.0,
@@ -707,18 +791,20 @@ class _MainShellState extends State<MainShell> {
           ),
         ),
         const SizedBox(height: 12),
+        _homeQabasCard(inspiration),
+        const SizedBox(height: 12),
         Row(children: [
-          Expanded(child: _homeQuickTile(
-            icon: Icons.auto_awesome_rounded, title: 'قبس اليوم', subtitle: 'آية ومصدرها',
-            onTap: () => _pushPage(QabasTodayPage(
-              text: inspiration.text,
-              source: inspiration.source,
-            )),
-          )),
-          const SizedBox(width: 10),
           Expanded(child: _homeQuickTile(
             icon: Icons.spa_outlined, title: 'ورد اليوم', subtitle: 'أذكارك وأعمالك',
             onTap: () => _pushPage(const WardAlYawmPage()),
+          )),
+          const SizedBox(width: 10),
+          Expanded(child: _homeQuickTile(
+            icon: Icons.notifications_active_outlined, title: 'الصلاة والأذان', subtitle: 'المواقيت والتذكير',
+            onTap: () => _pushPage(PrayerCalendarPage(
+              onLocationChanged: _handleLocationChanged,
+              onHijriCorrectionChanged: _loadDashboardData,
+            )),
           )),
         ]),
         const SizedBox(height: 10),

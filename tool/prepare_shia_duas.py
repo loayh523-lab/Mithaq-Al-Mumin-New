@@ -6,6 +6,7 @@ It declares CC0 1.0 Universal and records source URLs to Thaqalayn public pages.
 """
 import json
 import os
+import re
 import tempfile
 import time
 import urllib.error
@@ -60,24 +61,38 @@ def main() -> None:
             text = line.get("text")
             if not isinstance(kind, str) or not isinstance(text, str):
                 raise SystemExit(f"Missing line type/text in {slug}.")
-            if not text.strip():
+            if not text.strip() or kind.lower() != "arabic":
+                # The app is Arabic-only: omit Persian translations and
+                # transliterations instead of merely hiding them in the UI.
                 continue
             normalized_lines.append({
                 "index": line.get("index", len(normalized_lines) + 1),
-                "kind": kind,
+                "kind": "arabic",
                 "text": text,
             })
             total_lines += 1
-            if kind.lower() == "arabic":
-                total_arabic_lines += 1
+            total_arabic_lines += 1
 
         if not any(item["kind"].lower() == "arabic" for item in normalized_lines):
             raise SystemExit(f"No Arabic lines found in {slug}.")
 
+        # Persian titles must not leak into the app. If the source title
+        # contains Persian-script letters, use a safe Arabic label; keep the
+        # source URL so the original attribution remains available.
+        raw_title = str(raw.get("title") or record.get("title") or "").strip()
+        raw_alt = str(raw.get("alternateName") or record.get("alternateName") or "").strip()
+        persian_script = re.compile(r"[پچژگکی]")
+        title = raw_title.replace("ک", "ك").replace("ی", "ي")
+        alternate_name = raw_alt.replace("ک", "ك").replace("ی", "ي")
+        if persian_script.search(raw_title) or not title:
+            kind_name = str(raw.get("type") or record.get("type") or "dua").lower()
+            title = "زيارة" if "ziyar" in kind_name else ("مناجاة" if "munajat" in kind_name else "دعاء")
+        if persian_script.search(raw_alt):
+            alternate_name = ""
         prepared.append({
             "slug": slug,
-            "title": raw.get("title") or record.get("title") or slug,
-            "alternateName": raw.get("alternateName") or record.get("alternateName") or "",
+            "title": title,
+            "alternateName": alternate_name,
             "type": raw.get("type") or "dua",
             "sourceUrl": raw.get("url") or record.get("url") or "",
             "lines": normalized_lines,

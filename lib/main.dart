@@ -410,6 +410,7 @@ class _MainShellState extends State<MainShell> {
         .difference(DateTime(_now.year, 1, 1)).inDays;
     final dailyTask = _dailyTasks[dayOfYear % _dailyTasks.length];
     final inspiration = _dailyInspirations[dayOfYear % _dailyInspirations.length];
+    final occasion = hijriOccasionLabel(_now, correction: _hijriCorrection);
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
@@ -450,6 +451,26 @@ class _MainShellState extends State<MainShell> {
                     ),
                     const SizedBox(height: 3),
                     Text(_gregorianLabel(_now), style: const TextStyle(color: Color(0xFFD0DED6), fontSize: 12)),
+                    if (occasion != null) ...[
+                      const SizedBox(height: 8),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Icon(Icons.event_note_rounded, color: _gold, size: 16),
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: Text(
+                              occasion,
+                              style: const TextStyle(
+                                color: Color(0xFFE5D7B8),
+                                fontSize: 12,
+                                height: 1.5,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ],
                 ),
               ),

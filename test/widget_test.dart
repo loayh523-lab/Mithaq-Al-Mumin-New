@@ -63,10 +63,14 @@ void main() {
     );
     expect(find.text('عمل اليوم'), findsOneWidget);
 
+    // The dashboard header scrolls with the home feed; return to its top before
+    // opening the menu so this test matches the real visible interaction.
+    await tester.drag(find.byType(ListView).first, const Offset(0, 2200));
+    await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('الأقسام'));
-    await tester.pump(const Duration(milliseconds: 400));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('التسبيح'));
-    await tester.pump(const Duration(milliseconds: 400));
+    await tester.pumpAndSettle();
     expect(find.text('اضغط على الدائرة للتسبيح'), findsOneWidget);
     expect(find.text('0'), findsOneWidget);
   });
@@ -109,7 +113,9 @@ void main() {
     );
     await tester.pump(const Duration(milliseconds: 400));
     await tester.tap(find.text('متابعة الصلاة'));
-    await tester.pump(const Duration(milliseconds: 400));
+    await tester.pumpAndSettle();
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 150)));
+    await tester.pump();
     expect(find.text('0/5'), findsOneWidget);
     await tester.tap(find.text('الفجر'));
     await tester.pump(const Duration(milliseconds: 400));
@@ -127,7 +133,7 @@ void main() {
     );
     await tester.pump(const Duration(milliseconds: 400));
     await tester.tap(find.text('ختمة القرآن'));
-    await tester.pump(const Duration(milliseconds: 400));
+    await tester.pumpAndSettle();
     expect(find.text('/ 30 جزءاً'), findsOneWidget);
     await tester.tap(find.text('إكمال جزء'));
     await tester.pump(const Duration(milliseconds: 400));
@@ -296,7 +302,9 @@ void main() {
     await tester.pumpWidget(const MaterialApp(
       home: Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'الزيارات')),
     ));
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 250)));
     await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
     expect(find.text('نصوص شيعية للقراءة دون إنترنت'), findsOneWidget);
     expect(find.text('الأدعية والزيارات'), findsWidgets);
     expect(find.textContaining('نصاً • منها'), findsOneWidget);
@@ -363,7 +371,9 @@ void main() {
     await tester.pumpWidget(const MaterialApp(
       home: Directionality(textDirection: TextDirection.rtl, child: DhikrFortressPage()),
     ));
-    await tester.pumpAndSettle();
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 300)));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
 
     expect(find.text('أذكار الصباح'), findsWidgets);
     expect(find.text('أذكار المساء'), findsOneWidget);

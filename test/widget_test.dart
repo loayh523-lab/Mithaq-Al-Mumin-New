@@ -43,7 +43,17 @@ void main() {
     await tester.pumpWidget(const MithaqApp());
     expect(find.text('ميثاق المؤمن'), findsOneWidget);
     expect(find.textContaining('هـ'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('الصلاة القادمة'),
+      250,
+      scrollable: find.byType(Scrollable).first,
+    );
     expect(find.text('الصلاة القادمة'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('مواقيت الصلوات'),
+      250,
+      scrollable: find.byType(Scrollable).first,
+    );
     expect(find.text('مواقيت الصلوات'), findsOneWidget);
 
     await tester.scrollUntilVisible(
@@ -267,22 +277,16 @@ void main() {
 
 
   testWidgets('Shia dua library opens its offline collection', (tester) async {
+    // The JSON library is large; complete asset I/O and isolate decoding outside
+    // the widget test's fake-async clock before mounting the reader.
+    final data = await tester.runAsync(() => ShiaTextData.load());
+    expect(data, isNotNull);
+    expect(data!.entries, isNotEmpty);
     await tester.pumpWidget(const MaterialApp(
       home: Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'الزيارات')),
     ));
-    var libraryReady = false;
-    for (var attempt = 0; attempt < 40; attempt++) {
-      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 250)));
-      await tester.pump();
-      if (find.text('نصوص شيعية للقراءة دون إنترنت').evaluate().isNotEmpty) {
-        libraryReady = true;
-        break;
-      }
-      if (find.text('ما قدرنا نحمّل مكتبة الأدعية').evaluate().isNotEmpty) {
-        break;
-      }
-    }
-    expect(libraryReady, isTrue, reason: 'The bundled Arabic dua library did not finish loading.');
+    await tester.pump();
+    expect(find.text('نصوص شيعية للقراءة دون إنترنت'), findsOneWidget);
     expect(find.text('الأدعية والزيارات'), findsWidgets);
     expect(find.textContaining('نصاً • منها'), findsOneWidget);
     expect(find.textContaining('ما قدرنا نحمّل مكتبة الأدعية'), findsNothing);

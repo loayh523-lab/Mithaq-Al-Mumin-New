@@ -174,9 +174,9 @@ def _mafatih_category(chapter_index: int, chapter_title: str, section_title: str
 def _dedupe_normalize(value: str) -> str:
     """Normalize Arabic spelling and punctuation for exact whole-entry comparisons."""
     value = plain_arabic_text(str(value or ""))
-    value = re.sub(r"[\\u064B-\\u065F\\u0670\\u0640]", "", value)
+    value = re.sub(r"[\u064B-\u065F\u0670\u0640]", "", value)
     value = re.sub(r"[أإآٱ]", "ا", value).replace("ى", "ي")
-    value = re.sub(r"[^\\w\\s]", " ", value, flags=re.UNICODE)
+    value = re.sub(r"[^\w\s]", " ", value, flags=re.UNICODE)
     return " ".join(value.split())
 
 

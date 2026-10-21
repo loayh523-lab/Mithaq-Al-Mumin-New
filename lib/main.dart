@@ -555,67 +555,22 @@ class _MainShellState extends State<MainShell> {
           child: Stack(
             fit: StackFit.expand,
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Expanded(
-                    child: Image.network(
-                      'https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3d/Portrait_of_Mojtaba_Khamenei_%282%29.jpg/500px-Portrait_of_Mojtaba_Khamenei_%282%29.jpg',
-                      fit: BoxFit.cover,
-                      alignment: Alignment.topCenter,
-                      cacheWidth: 280,
-                      loadingBuilder: (context, child, progress) => progress == null
-                          ? child
-                          : const DecoratedBox(
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topRight,
-                                  end: Alignment.bottomLeft,
-                                  colors: [Color(0xFF245B42), Color(0xFF071713)],
-                                ),
-                              ),
-                            ),
-                      errorBuilder: (context, error, stackTrace) => const DecoratedBox(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topRight,
-                            end: Alignment.bottomLeft,
-                            colors: [Color(0xFF245B42), Color(0xFF071713)],
-                          ),
-                        ),
+              Positioned.fill(
+                child: Image.asset(
+                  'assets/branding/home_portraits.jpg',
+                  fit: BoxFit.cover,
+                  alignment: Alignment.center,
+                  filterQuality: FilterQuality.low,
+                  errorBuilder: (context, error, stackTrace) => const DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                        colors: [Color(0xFF245B42), Color(0xFF071713)],
                       ),
                     ),
                   ),
-                  Container(width: 1, color: _gold.withValues(alpha: .35)),
-                  Expanded(
-                    child: Image.network(
-                      'https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1c/Portrait_of_Ali_Khamenei.jpg/500px-Portrait_of_Ali_Khamenei.jpg',
-                      fit: BoxFit.cover,
-                      alignment: Alignment.topCenter,
-                      cacheWidth: 280,
-                      loadingBuilder: (context, child, progress) => progress == null
-                          ? child
-                          : const DecoratedBox(
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topRight,
-                                  end: Alignment.bottomLeft,
-                                  colors: [Color(0xFF245B42), Color(0xFF071713)],
-                                ),
-                              ),
-                            ),
-                      errorBuilder: (context, error, stackTrace) => const DecoratedBox(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topRight,
-                            end: Alignment.bottomLeft,
-                            colors: [Color(0xFF245B42), Color(0xFF071713)],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
               const DecoratedBox(
                 decoration: BoxDecoration(

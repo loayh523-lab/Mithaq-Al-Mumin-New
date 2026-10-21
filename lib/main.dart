@@ -586,41 +586,40 @@ class _MainShellState extends State<MainShell> {
                 ),
               ),
               Positioned(
-                top: 16, right: 15, left: 15,
-                child: Row(children: [
-                  Container(
-                    width: 42, height: 42, padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: const Color(0xCC06140F),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: _gold.withValues(alpha: .7)),
+                top: 14, right: 12, left: 12,
+                child: Row(
+                  children: [
+                    IconButton(
+                      tooltip: 'الأقسام',
+                      onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+                      icon: const Icon(Icons.menu_rounded, color: _gold, size: 27),
                     ),
-                    child: Image.asset(
-                      'assets/branding/mithaq_logo.png',
-                      fit: BoxFit.contain,
-                      errorBuilder: (context, error, stackTrace) =>
-                        const Icon(Icons.auto_awesome_outlined, color: _gold),
+                    const Icon(Icons.account_balance_rounded, color: _gold, size: 27),
+                    const SizedBox(width: 8),
+                    const Expanded(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'ميثاق المؤمن',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: _gold, fontSize: 21, fontWeight: FontWeight.w900),
+                          ),
+                          Text(
+                            'طريقك إلى رضا الله',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Color(0xFFE0E9E2), fontSize: 10),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 10),
-                  const Expanded(child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('ميثاق المؤمن', style: TextStyle(color: _gold, fontSize: 20, fontWeight: FontWeight.w900)),
-                      Text('طريقك إلى رضا الله', style: TextStyle(color: Color(0xFFE0E9E2), fontSize: 11)),
-                    ],
-                  )),
-                  IconButton(
-                    tooltip: 'الأقسام',
-                    onPressed: () => _scaffoldKey.currentState?.openDrawer(),
-                    icon: const Icon(Icons.menu_rounded, color: _gold),
-                  ),
-                  IconButton(
-                    tooltip: 'الباحث الذكي',
-                    onPressed: () => _pushPage(const SmartSearchPage()),
-                    icon: const Icon(Icons.search_rounded, color: _gold),
-                  ),
-                ]),
+                    IconButton(
+                      tooltip: 'الباحث الذكي',
+                      onPressed: () => _pushPage(const SmartSearchPage()),
+                      icon: const Icon(Icons.search_rounded, color: _gold, size: 25),
+                    ),
+                  ],
+                ),
               ),
               Positioned(
                 right: 16, left: 16, bottom: 20,

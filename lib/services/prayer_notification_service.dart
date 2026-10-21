@@ -86,7 +86,7 @@ class PrayerNotificationService {
       return await configure(enabled: true, city: city);
     } catch (error, stackTrace) {
       debugPrint('Checking scheduled prayer reminders failed: $error\\n$stackTrace');
-      return configure(enabled: true, city: city);
+      return await configure(enabled: true, city: city);
     }
   }
 

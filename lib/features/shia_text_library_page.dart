@@ -192,8 +192,8 @@ class ShiaTextData {
   }
 
   static String _cleanMafatihText(String value) => value
-      .replaceAll(RegExp(r'<br\\s*/?>', caseSensitive: false), '\\n')
-      .replaceAll(RegExp(r'</p\\s*>', caseSensitive: false), '\\n')
+      .replaceAll(RegExp(r'<br\s*/?>', caseSensitive: false), '\n')
+      .replaceAll(RegExp(r'</p\s*>', caseSensitive: false), '\n')
       .replaceAll(RegExp(r'<[^>]*>'), ' ')
       .replaceAll('&nbsp;', ' ')
       .replaceAll('&#160;', ' ')
@@ -206,22 +206,22 @@ class ShiaTextData {
       .replaceAll('ی', 'ي')
       .replaceAll('ے', 'ي')
       .replaceAll('ہ', 'ه')
-      .replaceAll(RegExp(r'[ \\t]+'), ' ')
+      .replaceAll(RegExp(r'[ \t]+'), ' ')
       .trim();
 
   static bool _isArabicRecitation(String value) =>
-      RegExp(r'[\\u0600-\\u06FF]').hasMatch(value) &&
+      RegExp(r'[\u0600-\u06FF]').hasMatch(value) &&
       !RegExp(r'[A-Za-z]').hasMatch(value) &&
       !RegExp(r'[پچژگ]').hasMatch(value) &&
       !RegExp(r'دعای|روزهای|هفته|فارسی|برای|میباشد|می شود|خواهد شد|نمی').hasMatch(value);
 
   static String _textKey(String value) => value
-      .replaceAll(RegExp(r'[\\u064B-\\u065F\\u0670\\u0640]'), '')
+      .replaceAll(RegExp(r'[\u064B-\u065F\u0670\u0640]'), '')
       .replaceAll('أ', 'ا')
       .replaceAll('إ', 'ا')
       .replaceAll('آ', 'ا')
       .replaceAll('ى', 'ي')
-      .replaceAll(RegExp(r'[^\\u0600-\\u06FF0-9]'), '')
+      .replaceAll(RegExp(r'[^\u0600-\u06FF0-9]'), '')
       .toLowerCase();
 }
 

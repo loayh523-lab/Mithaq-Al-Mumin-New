@@ -75,16 +75,13 @@ class ShiaTextEntry {
     return RegExp(r'eid|ramadan|arafah|mubahala|mubahilah|laylat|rajab|shaaban|dhul.hijja|dhul.qadah|مناسبة|العيد|رمضان|عرفة|مباهلة|رجب|شعبان|ذي الحجة|ذي القعدة|ليلة القدر').hasMatch(value);
   }
   String get category {
-    // The five agreed collections are exclusive: each source text belongs to
-    // exactly one section, so no prayer is duplicated across category lists.
-    if (isSahifa || isMunajat) return 'الصحيفة السجادية والمناجيات';
+    // Keep weekday prayers and prayer taqibat in the daily collection even
+    // when the source slug also identifies them as part of the Sahifa.
+    if (isDayDua || isTaqibat) return 'الأدعية والأذكار اليومية';
     if (isZiyara) return 'الزيارات الشريفة';
-    if (isMorningEveningDua || isTaqibat || isDayDua) {
-      return 'الأدعية والأذكار اليومية';
-    }
+    if (isSahifa || isMunajat) return 'الصحيفة السجادية والمناجيات';
+    if (isMorningEveningDua) return 'الأدعية والأذكار اليومية';
     if (isOccasionDua) return 'الأعمال والمناسبات';
-    // General supplications, needs, and Mahdi-related prayers share this
-    // collection as requested; their original title and source are retained.
     return 'الأدعية العامة والفرج وصاحب الزمان';
   }
   String get arabicText => lines.where((line) => line.isArabic).map((line) => line.text).join('\n');
@@ -289,7 +286,6 @@ class ShiaTextReaderPage extends StatefulWidget {
 }
 
 class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
-  String _display = 'العربي';
   double _fontSize = 23;
   bool _focusMode = false;
   bool _isFavorite = false;
@@ -365,24 +361,13 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
     super.dispose();
   }
 
-  List<ShiaTextLine> get _visibleLines {
-    final source = widget.entry.lines;
-    if (_display == 'العربي') return source.where((line) => line.isArabic).toList();
-    if (_display == 'الفارسي') return source.where((line) => line.isPersian && !line.isArabic).toList();
-    if (_display == 'العربي والترجمة') {
-      return [
-        ...source.where((line) => line.isArabic),
-        ...source.where((line) => line.isTranslation && !line.isPersian),
-      ];
-    }
-    if (_display == 'العربي والفارسي') {
-      return [
-        ...source.where((line) => line.isArabic),
-        ...source.where((line) => line.isPersian && !line.isArabic),
-      ];
-    }
-    return source.toList();
-  }
+  List<ShiaTextLine> get _visibleLines => widget.entry.lines
+      .where((line) => line.isArabic && !_containsPersianOnlyText(line.text))
+      .toList();
+
+  bool _containsPersianOnlyText(String value) =>
+      RegExp(r'[پچژگ]').hasMatch(value) ||
+      RegExp(r'دعای|روزهای|هفته|فارسی|برای|میباشد|می شود|خواهد شد|نمی', caseSensitive: false).hasMatch(value);
 
   @override Widget build(BuildContext context) {
     final lines = _visibleLines;
@@ -420,18 +405,9 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
         if (!_focusMode) Padding(
           padding: const EdgeInsets.fromLTRB(14, 4, 14, 4),
           child: Column(children: [
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(children: [
-                'العربي', 'الفارسي', 'العربي والفارسي', 'العربي والترجمة', 'كل الأسطر'
-              ].map((choice) => Padding(
-                padding: const EdgeInsetsDirectional.only(end: 7),
-                child: ChoiceChip(
-                  label: Text(choice),
-                  selected: _display == choice,
-                  onSelected: (_) => setState(() => _display = choice),
-                ),
-              )).toList()),
+            const Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: Text('النص العربي', style: TextStyle(color: _shiaMuted, fontWeight: FontWeight.w600)),
             ),
             Row(children: [
               const Icon(Icons.text_fields_rounded, color: _shiaGold),

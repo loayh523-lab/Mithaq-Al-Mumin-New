@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
-"""Prepare the CC0 Shia supplication/ziyara and Sahifa dataset for offline use.
-
-Upstream dataset: https://github.com/adeeb10abbas/shia-library-json
-It declares CC0 1.0 Universal and records source URLs to Thaqalayn public pages.
-"""
+"""Prepare one Arabic-only offline collection from the CC0 Shia library and Mafatih al-Jinan."""
 import html
 import json
 import os
@@ -13,14 +9,18 @@ import time
 import urllib.error
 import urllib.request
 from pathlib import Path
+from urllib.parse import unquote
 
 BASE = "https://raw.githubusercontent.com/adeeb10abbas/shia-library-json/main"
 INDEX_URL = f"{BASE}/index/duas.json"
 DEST = Path("assets/shia_duas/shia_duas.json")
+MAFATIH_PATH = Path("assets/mafatih/mafatih.json")
+MAFATIH_BOOK_URL = "https://lib.rafed.net/view.php?b_id=1731&type=c_fbook"
+MAFATIH_SUNSET_URL = "https://lib.rafed.net/view.php?b_id=1731&page=757&type=c_fbook"
 
 
 def fetch_json(url: str, attempts: int = 3):
-    headers = {"User-Agent": "Mithaq-Al-Mumin/1.0 (offline Shia library preparation)"}
+    headers = {"User-Agent": "Mithaq-Al-Mumin/1.0 (offline Arabic Shia library preparation)"}
     for attempt in range(attempts):
         try:
             request = urllib.request.Request(url, headers=headers)
@@ -32,22 +32,8 @@ def fetch_json(url: str, attempts: int = 3):
             time.sleep(1.5 * (attempt + 1))
 
 
-CATEGORY_MAP = {
-    "أدعية عامة": "أدعية عامة",
-    "أدعية الصباح": "أدعية الصباح",
-    "أدعية المساء": "أدعية المساء",
-    "أذكار مشتركة": "الأذكار المشتركة",
-    "الزيارات": "الزيارات",
-    "تعقيبات": "تعقيبات الصلوات",
-    "أدعية الأيام": "أدعية الأيام",
-    "الأعمال اليومية والمناسبات": "الأعمال اليومية والمناسبات",
-    "الأعمال الشهرية والمناسبات": "الأعمال الشهرية والمناسبات",
-    "أدعية صاحب الزمان": "أدعية صاحب الزمان",
-    "أدعية الحاجات والشفاء": "أدعية الحاجات والشفاء",
-    "أدعية الأشهر والمناسبات": "أدعية الأشهر والمناسبات",
-    "المناجيات الخمس عشرة": "المناجيات الخمس عشرة",
-    "الصحيفة السجادية": "الصحيفة السجادية",
-}
+def normalize_script(value: str) -> str:
+    return value.replace("ک", "ك").replace("ی", "ي").replace("ے", "ي").replace("ہ", "ه")
 
 
 def plain_arabic_text(value: str) -> str:
@@ -55,24 +41,204 @@ def plain_arabic_text(value: str) -> str:
     value = re.sub(r"<br\s*/?>", "\n", value, flags=re.IGNORECASE)
     value = re.sub(r"</(p|div|li|h[1-6])\s*>", "\n\n", value, flags=re.IGNORECASE)
     value = re.sub(r"<[^>]*>", " ", value)
-    value = value.replace("ک", "ك").replace("ی", "ي").replace("ے", "ي").replace("ہ", "ه")
+    value = normalize_script(value)
     return re.sub(r"\n{3,}", "\n\n", value).strip()
+
+
+def contains_arabic(value: str) -> bool:
+    return any(0x0600 <= ord(char) <= 0x06FF for char in value)
+
+
+def contains_persian_language_markers(value: str) -> bool:
+    normalized = normalize_script(value)
+    return re.search(
+        r"دعای|دعاي|دعاهای|دعاهاي|روزهای|روزهاي|فارسی|فارسي|برای|براي|میباشد|می شود|ميشود|خواهد شد|نمی|نمي|هنگام|آفتاب|شامگاه|صبحگاه|هفته|هزار رکعت|هزار ركعت",
+        f"{value} {normalized}",
+    ) is not None
 
 
 def is_arabic_recitation(value: str) -> bool:
     value = plain_arabic_text(value)
-    if not any(0x0600 <= ord(char) <= 0x06FF for char in value):
+    if not contains_arabic(value) or re.search(r"[A-Za-zپچژگ]", value):
         return False
-    if re.search(r"[A-Za-zپچژگ]", value):
-        return False
-    # These are Persian-language markers even when every letter is shared with Arabic.
-    if re.search(
-        r"دعای|دعاي|دعاهای|دعاهاي|روزهای|روزهاي|روزها|هفته|فارسی|فارسي|برای|براي|میباشد|می شود|ميشود|خواهد شد|نمی|نمي|هنگام|آفتاب|شامگاه|صبحگاه|صبح و شام|صبح و مساء|زیارت|زيارت|زیارات|زيارات|مناجات|هر روز|ماه رجب|ماه شعبان|ماه رمضان|نیمه شعبان|نيمه شعبان|حضرت رسول|صلوات هر|هزار رکعت|هزار ركعت",
-        value,
-    ):
-        return False
-    return True
+    return not contains_persian_language_markers(value)
 
+
+def _hint(value: str) -> str:
+    return normalize_script(unquote(str(value or ""))).lower()
+
+
+def _mafatih_title(raw_title: str, href: str, section_title: str, article_number: int) -> str:
+    hint = _hint(href)
+    rules = [
+        ("دعای-وقت-طلوع-و-غروب-آفتاب", "دعاء وقت طلوع الشمس وغروبها"),
+        ("تعقیبات-مشترک", "التعقيبات المشتركة"),
+        ("تعقیب-نماز-ظهر", "تعقيب صلاة الظهر"),
+        ("تعقیب-نماز-عصر", "تعقيب صلاة العصر"),
+        ("تعقیب-نماز-مغرب", "تعقيب صلاة المغرب"),
+        ("تعقیب-نماز-عشاء", "تعقيب صلاة العشاء"),
+        ("تعقیب-نماز-صبح", "تعقيب صلاة الصبح"),
+        ("دعای-روز-شنبه", "دعاء يوم السبت"),
+        ("دعای-روز-یکشنبه", "دعاء يوم الأحد"),
+        ("دعای-روز-دوشنبه", "دعاء يوم الاثنين"),
+        ("دعای-روز-سه-شنبه", "دعاء يوم الثلاثاء"),
+        ("دعای-روز-چهارشنبه", "دعاء يوم الأربعاء"),
+        ("دعای-روز-پنجشنبه", "دعاء يوم الخميس"),
+        ("دعای-روز-جمعه", "دعاء يوم الجمعة"),
+        ("دعای-صباح", "دعاء الصباح"),
+        ("دعای-کمیل", "دعاء كميل"),
+        ("دعای-عشرات", "دعاء العشرات"),
+        ("دعای-سمات", "دعاء السمات"),
+        ("دعای-مشلول", "دعاء المشلول"),
+        ("دعای-توسل", "دعاء التوسل"),
+        ("دعای-فرج", "دعاء الفرج"),
+        ("دعای-ندبه", "دعاء الندبة"),
+        ("دعای-عهد", "دعاء العهد"),
+        ("زیارت-عاشورا", "زيارة عاشوراء"),
+        ("زیارت-اربعین", "زيارة الأربعين"),
+        ("زیارت-وارث", "زيارة وارث"),
+        ("زیارت-جامعه", "الزيارة الجامعة"),
+        ("زیارت-حضرت-امیرالمومنین", "زيارة أمير المؤمنين عليه السلام"),
+        ("زیارت-حضرت-زهرا", "زيارة السيدة فاطمة الزهراء عليها السلام"),
+        ("اعمال-شب-جمعه", "أعمال ليلة الجمعة"),
+        ("اعمال-روز-جمعه", "أعمال يوم الجمعة"),
+        ("اعمال-ماه-رجب", "أعمال شهر رجب"),
+        ("اعمال-ماه-شعبان", "أعمال شهر شعبان"),
+        ("اعمال-ماه-رمضان", "أعمال شهر رمضان"),
+        ("اعمال-ماه-شوال", "أعمال شهر شوال"),
+        ("اعمال-ماه-ذی-القعده", "أعمال شهر ذي القعدة"),
+        ("اعمال-ماه-ذی-الحجه", "أعمال شهر ذي الحجة"),
+        ("مناجات-اول", "المناجاة الأولى: مناجاة التائبين"),
+        ("مناجات-دوم", "المناجاة الثانية: مناجاة الشاكين"),
+        ("مناجات-سوم", "المناجاة الثالثة: مناجاة الخائفين"),
+        ("مناجات-چهارم", "المناجاة الرابعة: مناجاة الراجين"),
+        ("مناجات-پنجم", "المناجاة الخامسة: مناجاة الراغبين"),
+        ("مناجات-ششم", "المناجاة السادسة: مناجاة الشاكرين"),
+        ("مناجات-هفتم", "المناجاة السابعة: مناجاة المطيعين"),
+        ("مناجات-هشتم", "المناجاة الثامنة: مناجاة المريدين"),
+        ("مناجات-نهم", "المناجاة التاسعة: مناجاة المحبين"),
+        ("مناجات-دهم", "المناجاة العاشرة: مناجاة المتوسلين"),
+        ("مناجات-یازدهم", "المناجاة الحادية عشرة: مناجاة المفتقرين"),
+        ("مناجات-دوازدهم", "المناجاة الثانية عشرة: مناجاة العارفين"),
+        ("مناجات-سیزدهم", "المناجاة الثالثة عشرة: مناجاة الذاكرين"),
+        ("مناجات-چهاردهم", "المناجاة الرابعة عشرة: مناجاة المعتصمين"),
+        ("مناجات-پانزدهم", "المناجاة الخامسة عشرة: مناجاة الزاهدين"),
+    ]
+    for marker, arabic_title in rules:
+        if marker.lower() in hint:
+            return arabic_title
+    title = plain_arabic_text(str(raw_title or ""))
+    if title and contains_arabic(title) and not re.search(r"[A-Za-zپچژگ]", title) and not contains_persian_language_markers(title):
+        return title
+    return f"نص عربي رقم {article_number} ضمن {plain_arabic_text(section_title)}"
+
+
+def _mafatih_category(chapter_index: int, chapter_title: str, section_title: str, article_title: str, href: str) -> str:
+    context = " ".join([chapter_title, section_title, article_title, unquote(str(href or ""))])
+    hint = _hint(context)
+
+    if chapter_index == 2 or re.search(r"زيارة|زيارات|ziyarat|ziyarah", hint):
+        return "الزيارات"
+    if re.search(r"مناجاة|munajat", hint):
+        return "المناجيات الخمس عشرة"
+    if re.search(r"صاحب الزمان|الإمام المهدي|الامام المهدي|المهدي|الحجة|الاستغاثة|دعاء العهد|دعاء الندبة|دعاء الفرج|faraj|nudba|al-ahd", hint):
+        return "أدعية صاحب الزمان"
+
+    # A record explicitly tied to both sunrise and sunset belongs only to shared adhkar.
+    combined = (
+        ("طلوع" in hint and "غروب" in hint)
+        or ("صباح" in hint and "مساء" in hint)
+        or ("صبح" in hint and "غروب" in hint)
+        or ("morning" in hint and "evening" in hint)
+    )
+    if combined:
+        return "الأذكار المشتركة"
+
+    if chapter_index == 1 or re.search(r"أعمال أشهر السنة|أعمال شهر|اعمال-ماه-|ماه-رجب|ماه-شعبان|ماه-رمضان|ماه-ذي-القعدة|ماه-ذي-الحجة", hint):
+        return "الأعمال الشهرية والمناسبات"
+    if re.search(r"دعاء يوم|دعای-روز-|روز-شنبه|روز-یکشنبه|روز-دوشنبه|روز-سه-شنبه|روز-چهارشنبه|روز-پنجشنبه|روز-جمعه", hint):
+        return "أدعية الأيام"
+    if re.search(r"تعقيب|تعقيبات|تعقیب|تعقیبات|taqib", hint):
+        return "تعقيبات الصلوات"
+    if re.search(r"الصباح|دعاء الصباح|دعای-صباح|sabah|asbah|طلوع الصبح", hint):
+        return "أدعية الصباح"
+    if re.search(r"المساء|دعاء المساء|مساء|غروب|غروب الشمس|دعای-مساء|evening|masa|amsa|sunset", hint):
+        return "أدعية المساء"
+    if re.search(r"الحوائج|قضاء الدين|سعة الرزق|الشفاء|العافية|hajat|hawaij|rizq|shifa|healing", hint):
+        return "أدعية الحاجات والشفاء"
+    if re.search(r"أعمال ليلة|أعمال يوم|اعمال-شب-|اعمال-روز-|أعمال الجمعة|اعمال-جمعه|ليلة القدر", hint):
+        return "الأعمال اليومية والمناسبات"
+    return "أدعية عامة"
+
+
+def _append_mafatih(prepared: list[dict]) -> int:
+    if not MAFATIH_PATH.is_file():
+        raise SystemExit("Mafatih source JSON is missing. Run tool/prepare_mafatih.py first.")
+    data = json.loads(MAFATIH_PATH.read_text(encoding="utf-8"))
+    chapters = data.get("chapters") if isinstance(data, dict) else None
+    if not isinstance(chapters, list) or not chapters:
+        raise SystemExit("Mafatih source must contain a non-empty chapter list.")
+
+    added = 0
+    for cidx, chapter in enumerate(chapters):
+        if not isinstance(chapter, dict):
+            continue
+        chapter_title = plain_arabic_text(str(chapter.get("title") or ""))
+        for sidx, section in enumerate(chapter.get("sections", [])):
+            if not isinstance(section, dict):
+                continue
+            section_title = plain_arabic_text(str(section.get("title") or ""))
+            for aidx, article in enumerate(section.get("articles", [])):
+                if not isinstance(article, dict):
+                    continue
+                href = str(article.get("href") or "")
+                title = _mafatih_title(str(article.get("title") or ""), href, section_title, aidx + 1)
+                lines = []
+                for item in article.get("items", []):
+                    if not isinstance(item, dict):
+                        continue
+                    kind = str(item.get("type") or "").strip().lower()
+                    if kind not in {"text", "arabic", "arabictext", "arabic_text"}:
+                        continue
+                    content = plain_arabic_text(str(item.get("content") or ""))
+                    if not content or not is_arabic_recitation(content):
+                        continue
+                    lines.append({"index": len(lines) + 1, "kind": "arabic", "text": content})
+                if not lines:
+                    continue
+                category = _mafatih_category(cidx, chapter_title, section_title, title, href)
+                slug = f"mafatih-c{cidx + 1}-s{sidx + 1}-a{aidx + 1}"
+                prepared.append({
+                    "slug": slug,
+                    "title": title,
+                    "alternateName": title,
+                    "type": "ziyara" if category == "الزيارات" else "dua",
+                    "sourceUrl": MAFATIH_BOOK_URL,
+                    "sourceLabel": f"مفاتيح الجنان، {chapter_title}، {section_title}، {title}",
+                    "categoryOverride": category,
+                    "lines": lines,
+                })
+                added += 1
+
+    # Sourced solely from the Arabic Mafatih edition's appendix entry on sunset:
+    # it is evening-only and is never copied into morning or shared adhkar.
+    sunset = {
+        "slug": "mafatih-sunset-dua",
+        "title": "دعاء عند الغروب",
+        "alternateName": "دعاء عند الغروب",
+        "type": "dua",
+        "sourceUrl": MAFATIH_SUNSET_URL,
+        "sourceLabel": "مفاتيح الجنان، الملحق الثاني، العمل عند الغروب",
+        "categoryOverride": "أدعية المساء",
+        "lines": [{
+            "index": 1,
+            "kind": "arabic",
+            "text": "يا من ختم النبوة بمحمد صلى الله عليه وآله اختم لي في يومي هذا بخير وشهري بخير وسنتي بخير وعمري بخير",
+        }],
+    }
+    prepared.append(sunset)
+    added += 1
+    return added
 
 
 def main() -> None:
@@ -83,7 +249,7 @@ def main() -> None:
 
     prepared = []
     total_arabic_lines = 0
-    total_lines = 0
+    total_base_records = len(entries)
     slugs_seen = set()
     for record in entries:
         slug = record.get("slug")
@@ -105,29 +271,23 @@ def main() -> None:
             text = line.get("text")
             if not isinstance(kind, str) or not isinstance(text, str):
                 raise SystemExit(f"Missing line type/text in {slug}.")
-            if not text.strip():
-                continue
-            # Bundle only Arabic recitation text. This excludes translations,
-            # transliterations, and any Persian-language line from the app assets.
-            if kind.lower() != "arabic" or not is_arabic_recitation(text):
+            if not text.strip() or kind.lower() != "arabic" or not is_arabic_recitation(text):
                 continue
             normalized_lines.append({
                 "index": line.get("index", len(normalized_lines) + 1),
                 "kind": "arabic",
                 "text": plain_arabic_text(text),
             })
-            total_lines += 1
             total_arabic_lines += 1
 
         if not normalized_lines:
-            # An entry without verified Arabic recitation must not be bundled.
             continue
 
         title = plain_arabic_text(str(raw.get("title") or record.get("title") or ""))
         alternate_name = plain_arabic_text(str(raw.get("alternateName") or record.get("alternateName") or ""))
-        if not title or not any(0x0600 <= ord(char) <= 0x06FF for char in title) or re.search(r"[A-Za-zپچژگ]", title) or not is_arabic_recitation(title):
+        if not title or not contains_arabic(title) or re.search(r"[A-Za-zپچژگ]", title) or contains_persian_language_markers(title):
             title = ""
-        if not alternate_name or not any(0x0600 <= ord(char) <= 0x06FF for char in alternate_name) or re.search(r"[A-Za-zپچژگ]", alternate_name) or not is_arabic_recitation(alternate_name):
+        if not alternate_name or not contains_arabic(alternate_name) or re.search(r"[A-Za-zپچژگ]", alternate_name) or contains_persian_language_markers(alternate_name):
             alternate_name = ""
 
         prepared.append({
@@ -140,20 +300,25 @@ def main() -> None:
             "lines": normalized_lines,
         })
 
-    # Keep the unified library sourced only from the reviewed Arabic base dataset.
-
+    base_source_count = len(prepared)
+    mafatih_count = _append_mafatih(prepared)
     result = {
         "metadata": {
-            "sourceProject": "مكتبة الأدعية والزيارات العربية الموحدة",
+            "sourceProject": "مكتبة الأدعية والزيارات ومختارات مفاتيح الجنان العربية",
             "sourceIndex": INDEX_URL,
-            "contentSource": "Arabic entries from the reviewed Shia library dataset",
-            "license": "CC0 1.0 for the base dataset; see THIRD_PARTY_NOTICES.md.",
+            "mafatihSource": MAFATIH_BOOK_URL,
+            "contentSource": "Arabic entries from the Shia library dataset and filtered Mafatih al-Jinan records",
+            "license": "CC0 1.0 for the Shia-library dataset and Apache-2.0 for Mafatih source data; see THIRD_PARTY_NOTICES.md.",
             "count": len(prepared),
-            "baseSourceCount": len(entries),
-            "note": "Only Arabic recitation lines from the base dataset are included.",
+            "baseSourceCount": base_source_count,
+            "mafatihEntryCount": mafatih_count,
+            "baseSourceRecordCount": total_base_records,
+            "mafatihArabicLineCount": total_arabic_lines,
+            "note": "Only vetted Arabic recitation lines are included. Combined sunrise/sunset records remain shared; a separately sourced sunset-only invocation belongs in evening adhkar.",
         },
         "entries": prepared,
     }
+
     DEST.parent.mkdir(parents=True, exist_ok=True)
     fd, temporary = tempfile.mkstemp(prefix="shia-duas-", suffix=".json", dir=DEST.parent)
     try:
@@ -166,9 +331,9 @@ def main() -> None:
             os.remove(temporary)
 
     print(
-        f"Prepared offline Shia library: {len(prepared)} texts, "
-        f"{total_arabic_lines} Arabic lines, {total_lines} total lines, "
-        "Mafatih entries disabled pending review of an Arabic-only source"
+        f"Prepared merged offline Shia library: {base_source_count} base texts, "
+        f"{mafatih_count} Mafatih entries, {len(prepared)} total; "
+        f"{total_arabic_lines} Arabic base lines retained"
     )
 
 

@@ -30,10 +30,11 @@ Keep upstream notices with redistributed source/builds. This project does not cl
 - Source repository: [adeeb10abbas/shia-library-json](https://github.com/adeeb10abbas/shia-library-json).
 - The repository declares CC0 1.0 Universal for its dataset and notes its source data at Thaqalayn public pages.
 - Build step: `python3 tool/prepare_shia_duas.py`, run after `python3 tool/prepare_mafatih.py`.
-- The script prepares the source index's supplication/ziyara entries (currently 72 base records) and merges the filtered Arabic Mafatih records into the same `assets/shia_duas/shia_duas.json` asset.
-- Imported Mafatih entries receive their destination category, Arabic title, Arabic-only recitation lines, and a readable breadcrumb citation naming the book, chapter, section, and text heading.
-- The UI displays Arabic lines only. The base CC0 records may retain source-provided metadata/translations in the packaged data, but those lines are not shown in the Arabic reader.
-- The base collection includes listed Sahifa Sajjadiya entries from the source index; this is not a critical-edition verification of every variant. Source URLs remain available for the base entries.
+- The build runs `python3 tool/prepare_mafatih.py` first to validate and filter the upstream Mafatih chapter structure, then `python3 tool/prepare_shia_duas.py` to merge Arabic-only entries from both sources into `assets/shia_duas/shia_duas.json`.
+- Imported Mafatih entries appear inside the ordinary app categories, with an Arabic title, a category override, a link to the Arabic edition, and a breadcrumb naming the book, chapter, section, and entry.
+- Only vetted Arabic recitation lines are included in the unified library; translations, explanatory items, and entries without Arabic recitation are excluded from the packaged reading data.
+- A sunrise-and-sunset text remains in the shared adhkar category. A separately sourced sunset-only invocation is in the evening category, not copied into the morning list.
+- The base collection includes listed Sahifa Sajjadiya entries from the source index; this is not a critical-edition verification of every variant. Source URLs remain available for base entries.
 - The base source repository's CC0 notice is included at [licenses/SHIA_LIBRARY_CC0_1.0.txt](licenses/SHIA_LIBRARY_CC0_1.0.txt). The Mafatih source remains separately covered by [licenses/MAFATIH_APACHE_2.0.txt](licenses/MAFATIH_APACHE_2.0.txt).
 
  

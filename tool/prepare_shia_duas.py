@@ -171,6 +171,63 @@ def _mafatih_category(chapter_index: int, chapter_title: str, section_title: str
     return "أدعية عامة"
 
 
+def _dedupe_normalize(value: str) -> str:
+    """Normalize Arabic spelling and punctuation for exact whole-entry comparisons."""
+    value = plain_arabic_text(str(value or ""))
+    value = re.sub(r"[\\u064B-\\u065F\\u0670\\u0640]", "", value)
+    value = re.sub(r"[أإآٱ]", "ا", value).replace("ى", "ي")
+    value = re.sub(r"[^\\w\\s]", " ", value, flags=re.UNICODE)
+    return " ".join(value.split())
+
+
+def deduplicate_entries(entries: list[dict]) -> tuple[list[dict], int]:
+    """Drop duplicate complete entries, not repeated phrases inside different prayers.
+
+    Exact title+text duplicates are removed at any length. Identical long text under
+    different titles is also treated as a duplicate. When the Arabic Mafatih entry
+    is an exact duplicate of another source, keep Mafatih's more precise citation.
+    """
+    kept: list[dict] = []
+    by_title_text: dict[tuple[str, str], int] = {}
+    by_long_text: dict[str, int] = {}
+    removed = 0
+
+    def is_mafatih(entry: dict) -> bool:
+        return str(entry.get("sourceLabel", "")).startswith("مفاتيح الجنان،")
+
+    for entry in entries:
+        title = _dedupe_normalize(entry.get("title") or entry.get("alternateName") or "")
+        text = _dedupe_normalize(" ".join(
+            str(line.get("text", ""))
+            for line in entry.get("lines", [])
+            if isinstance(line, dict)
+        ))
+        if not text:
+            continue
+
+        key = (title, text)
+        duplicate_index = by_title_text.get(key)
+        if duplicate_index is None and len(text) >= 64:
+            duplicate_index = by_long_text.get(text)
+
+        if duplicate_index is not None:
+            removed += 1
+            if is_mafatih(entry) and not is_mafatih(kept[duplicate_index]):
+                kept[duplicate_index] = entry
+                by_title_text[key] = duplicate_index
+                if len(text) >= 64:
+                    by_long_text[text] = duplicate_index
+            continue
+
+        index = len(kept)
+        kept.append(entry)
+        by_title_text[key] = index
+        if len(text) >= 64:
+            by_long_text[text] = index
+
+    return kept, removed
+
+
 def _append_mafatih(prepared: list[dict]) -> int:
     if not MAFATIH_PATH.is_file():
         raise SystemExit("Mafatih source JSON is missing. Run tool/prepare_mafatih.py first.")
@@ -300,8 +357,15 @@ def main() -> None:
             "lines": normalized_lines,
         })
 
+    prepared, base_duplicates_removed = deduplicate_entries(prepared)
     base_source_count = len(prepared)
-    mafatih_count = _append_mafatih(prepared)
+    mafatih_raw_count = _append_mafatih(prepared)
+    prepared, merged_duplicates_removed = deduplicate_entries(prepared)
+    mafatih_count = sum(
+        1 for entry in prepared
+        if str(entry.get("slug", "")).startswith("mafatih-")
+    )
+    duplicates_removed = base_duplicates_removed + merged_duplicates_removed
     result = {
         "metadata": {
             "sourceProject": "مكتبة الأدعية والزيارات ومختارات مفاتيح الجنان العربية",
@@ -312,9 +376,11 @@ def main() -> None:
             "count": len(prepared),
             "baseSourceCount": base_source_count,
             "mafatihEntryCount": mafatih_count,
+            "mafatihRawEntryCount": mafatih_raw_count,
+            "duplicateEntriesRemoved": duplicates_removed,
             "baseSourceRecordCount": total_base_records,
             "mafatihArabicLineCount": total_arabic_lines,
-            "note": "Only vetted Arabic recitation lines are included. Combined sunrise/sunset records remain shared; a separately sourced sunset-only invocation belongs in evening adhkar.",
+            "note": "Only vetted Arabic recitation lines are included. Complete duplicate entries are removed after Arabic normalization; when duplicates match a Mafatih record, the entry with the precise Mafatih citation is preferred. Combined sunrise/sunset records remain shared; a separately sourced sunset-only invocation belongs in evening adhkar.",
         },
         "entries": prepared,
     }

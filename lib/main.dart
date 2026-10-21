@@ -709,18 +709,25 @@ class _MainShellState extends State<MainShell> {
         const SizedBox(height: 12),
         Row(children: [
           Expanded(child: _homeQuickTile(
-            icon: Icons.auto_awesome_rounded, title: 'قبس اليوم', subtitle: 'نور في القلب',
+            icon: Icons.auto_awesome_rounded, title: 'قبس اليوم', subtitle: 'آية ومصدرها',
             onTap: () => _pushPage(QabasTodayPage(
               text: inspiration.text,
               source: inspiration.source,
             )),
           )),
-          const SizedBox(width: 8),
+          const SizedBox(width: 10),
+          Expanded(child: _homeQuickTile(
+            icon: Icons.spa_outlined, title: 'ورد اليوم', subtitle: 'أذكارك وأعمالك',
+            onTap: () => _pushPage(const WardAlYawmPage()),
+          )),
+        ]),
+        const SizedBox(height: 10),
+        Row(children: [
           Expanded(child: _homeQuickTile(
             icon: Icons.volunteer_activism_outlined, title: 'الأدعية والزيارات', subtitle: 'بين يديك',
             onTap: () => setState(() => _selected = 2),
           )),
-          const SizedBox(width: 8),
+          const SizedBox(width: 10),
           Expanded(child: _homeQuickTile(
             icon: Icons.menu_book_rounded, title: 'القرآن الكريم', subtitle: 'اقرأ وارتقِ',
             onTap: () => setState(() => _selected = 1),
@@ -1821,6 +1828,162 @@ class _PrayerTrackerPageState extends State<PrayerTrackerPage> {
     );
   }
 }
+
+
+/// Daily collection of general adhkar with optional personal counters.
+/// Counters are stored separately per date and do not imply a religiously
+/// prescribed repetition count.
+class WardAlYawmPage extends StatefulWidget {
+  const WardAlYawmPage({super.key});
+
+  @override
+  State<WardAlYawmPage> createState() => _WardAlYawmPageState();
+}
+
+class _WardAlYawmPageState extends State<WardAlYawmPage> {
+  final Map<int, int> _counts = <int, int>{};
+
+  String get _dayKey {
+    final now = DateTime.now();
+    final month = now.month.toString().padLeft(2, '0');
+    final day = now.day.toString().padLeft(2, '0');
+    return '${now.year}_${month}_${day}';
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCounts();
+  }
+
+  Future<void> _loadCounts() async {
+    final prefs = await SharedPreferences.getInstance();
+    final loaded = <int, int>{};
+    for (var i = 0; i < dailyDhikr.length; i++) {
+      loaded[i] = prefs.getInt('ward_count_${_dayKey}_$i') ?? 0;
+    }
+    if (mounted) setState(() => _counts.addAll(loaded));
+  }
+
+  Future<void> _increment(int index) async {
+    final next = (_counts[index] ?? 0) + 1;
+    setState(() => _counts[index] = next);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('ward_count_${_dayKey}_$index', next);
+  }
+
+  Future<void> _reset(int index) async {
+    setState(() => _counts[index] = 0);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('ward_count_${_dayKey}_$index', 0);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final now = DateTime.now();
+    return Scaffold(
+      appBar: AppBar(title: const Text('ورد اليوم')),
+      body: ListView(
+        padding: const EdgeInsets.fromLTRB(16, 14, 16, 28),
+        children: [
+          Container(
+            padding: const EdgeInsets.all(18),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              gradient: const LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                colors: [Color(0xFF1B5139), Color(0xFF0C2118)],
+              ),
+              border: Border.all(color: _gold.withValues(alpha: .55)),
+            ),
+            child: const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(Icons.spa_outlined, color: _gold, size: 30),
+                SizedBox(height: 10),
+                Text('وردٌ يوميّ بهدوء وحضور',
+                  style: TextStyle(color: _gold, fontSize: 20, fontWeight: FontWeight.w900)),
+                SizedBox(height: 7),
+                Text('اختر ما تيسّر لك من الأذكار، واجعل العدّاد للتنظيم الشخصي فقط؛ لا يفرض التطبيق عدداً شرعياً.',
+                  style: TextStyle(color: Colors.white, height: 1.7)),
+              ],
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text('التاريخ: ${now.day}/${now.month}/${now.year}',
+            style: const TextStyle(color: _muted, fontSize: 12)),
+          const SizedBox(height: 12),
+          for (var i = 0; i < dailyDhikr.length; i++)
+            _wardItem(dailyDhikr[i], i),
+          const SizedBox(height: 10),
+          Card(
+            color: _panel,
+            child: ListTile(
+              leading: const Icon(Icons.checklist_rounded, color: _gold),
+              title: const Text('أعمال اليوم والمناسبات'),
+              subtitle: const Text('افتح الأعمال المرتبطة بالتاريخ الهجري'),
+              trailing: const Icon(Icons.chevron_left_rounded, color: _gold),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(builder: (_) => const GoodDeedsPage()),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _wardItem(ReligiousText item, int index) {
+    final count = _counts[index] ?? 0;
+    return Card(
+      margin: const EdgeInsets.only(bottom: 10),
+      color: _panel,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(18),
+        side: BorderSide(color: _emerald.withValues(alpha: .35)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(15, 14, 15, 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(item.title,
+              style: const TextStyle(color: _gold, fontSize: 16, fontWeight: FontWeight.w800)),
+            const SizedBox(height: 8),
+            SelectableText(item.text,
+              textDirection: TextDirection.rtl,
+              style: const TextStyle(fontSize: 19, height: 1.9)),
+            const SizedBox(height: 8),
+            Text('المصدر: ${item.source}',
+              style: const TextStyle(color: _muted, fontSize: 11, height: 1.6)),
+            if (item.note != null && item.note!.trim().isNotEmpty) ...[
+              const SizedBox(height: 4),
+              Text(item.note!,
+                style: const TextStyle(color: _muted, fontSize: 11, height: 1.5)),
+            ],
+            const Divider(color: Color(0x334FA782), height: 22),
+            Row(children: [
+              Expanded(child: Text('العدّاد الشخصي: $count',
+                style: const TextStyle(color: _muted, fontSize: 12))),
+              IconButton(
+                tooltip: 'تصفير العدّاد',
+                onPressed: count == 0 ? null : () => _reset(index),
+                icon: const Icon(Icons.restart_alt_rounded, color: _muted),
+              ),
+              FilledButton.tonalIcon(
+                onPressed: () => _increment(index),
+                icon: const Icon(Icons.add_rounded),
+                label: const Text('تسبيح'),
+              ),
+            ]),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 
 /// Dedicated destination for the daily reflection tile on the home screen.
 class QabasTodayPage extends StatelessWidget {

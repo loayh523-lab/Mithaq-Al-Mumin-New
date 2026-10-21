@@ -35,6 +35,60 @@ Future<void> openFaithSource(BuildContext context, String url) async {
   }
 }
 
+const _sistaniIstiftaatUrl = 'https://www.sistani.org/arabic/qa/';
+
+/// Separate, source-linked gateways: answers are opened on each marja's own
+/// official site and are never mixed or paraphrased as one shared ruling.
+class IstiftaatPage extends StatelessWidget {
+  const IstiftaatPage({super.key});
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: const Text('استفتاءات المراجع')),
+    body: ListView(
+      padding: const EdgeInsets.fromLTRB(16, 14, 16, 28),
+      children: [
+        Container(
+          padding: const EdgeInsets.all(18),
+          decoration: BoxDecoration(
+            color: _faithPanel,
+            borderRadius: BorderRadius.circular(22),
+            border: Border.all(color: _faithGold.withValues(alpha: .32)),
+          ),
+          child: const Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('اختر مرجع التقليد', style: TextStyle(
+                color: _faithGold, fontSize: 21, fontWeight: FontWeight.w900,
+              )),
+              SizedBox(height: 8),
+              Text(
+                'كل خيار يفتح الاستفتاءات في الموقع الرسمي لمكتب المرجع نفسه. الأجوبة خارجية وتحتاج الإنترنت؛ لا يخلط التطبيق بين فتاوى المراجع.',
+                style: TextStyle(color: _faithMuted, height: 1.7),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 12),
+        _ServiceTile(
+          icon: Icons.account_balance_outlined,
+          title: 'استفتاءات السيد علي الخامنئي',
+          description: 'افتح الموقع الرسمي لمكتب السيد القائد للوصول إلى المسائل والأجوبة الفقهية.',
+          actionLabel: 'فتح استفتاءات السيد الخامنئي',
+          onTap: () => openFaithSource(context, _officialFiqhUrl),
+        ),
+        _ServiceTile(
+          icon: Icons.menu_book_outlined,
+          title: 'استفتاءات السيد السيستاني',
+          description: 'افتح قسم الاستفتاءات المنشور على الموقع الرسمي لمكتب السيد السيستاني.',
+          actionLabel: 'فتح استفتاءات السيد السيستاني',
+          onTap: () => openFaithSource(context, _sistaniIstiftaatUrl),
+        ),
+      ],
+    ),
+  );
+}
+
 class FaithServicesPage extends StatelessWidget {
   const FaithServicesPage({super.key});
 

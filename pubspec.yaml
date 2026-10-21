@@ -36,7 +36,6 @@ flutter:
     - assets/shia_duas/shia_duas.json
     - assets/nahj/nahj.json
     - assets/branding/mithaq_logo.png
-    - assets/branding/home_portraits.jpg
     - assets/audio/adhan_shabbar_maalla.mp3
 
 flutter_launcher_icons:

@@ -409,6 +409,7 @@ class _MainShellState extends State<MainShell> {
                 ),
                 const Divider(color: Color(0x223CB58B)),
                 _drawerItem(Icons.manage_search_rounded, 'الباحث الذكي', () => _openDrawerPage(const SmartSearchPage())),
+                _drawerItem(Icons.fact_check_outlined, 'استفتاءات المراجع', () => _openDrawerPage(const IstiftaatPage())),
                 _drawerItem(Icons.auto_awesome_outlined, 'أسماء الله الحسنى', () => _openDrawerPage(const NamesOfAllahPage())),
                 _drawerItem(Icons.explore_rounded, 'اتجاه القبلة', () => _openDrawerPage(QiblaPage(onLocationChanged: _handleLocationChanged))),
                 _drawerItem(Icons.account_balance_outlined, 'نهج البلاغة', () => _openDrawerPage(const NahjAlBalaghaPage())),

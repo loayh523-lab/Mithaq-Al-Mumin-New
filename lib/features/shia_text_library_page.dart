@@ -136,8 +136,6 @@ class ShiaTextEntry {
     if (categoryOverride.trim().isNotEmpty) return categoryOverride;
     // Keep specific collections and distinct time periods before broad occasion matching.
     if (isZiyara) return 'الزيارات';
-    // A combined morning/evening invocation belongs in its own shared category,
-    // even if it is part of the Sahifa catalogue.
     if (isSharedDua) return 'الأذكار المشتركة';
     if (isSahifa) return 'الصحيفة السجادية';
     if (isMunajat) return 'المناجيات الخمس عشرة';
@@ -152,7 +150,27 @@ class ShiaTextEntry {
     if (isDayDua) return 'أدعية الأيام';
     return 'أدعية عامة';
   }
-  String get arabicText => lines.where((line) => line.isArabic).map((line) => line.text).join('\n');
+
+  /// Keep each prayer as one record while allowing it to be discovered from
+  /// relevant topical sections. This reuses sourced Arabic content rather than
+  /// duplicating the text or inventing new attributions.
+  List<String> get categories {
+    final result = <String>[category];
+    void addIf(bool condition, String value) {
+      if (condition && !result.contains(value)) result.add(value);
+    }
+
+    addIf(isSahifa && isDayDua, 'أدعية الأيام');
+    addIf(isSahifa && isMonthlyDeed, 'الأعمال الشهرية والمناسبات');
+    addIf(isSahifa && isDailyDeed, 'الأعمال اليومية والمناسبات');
+    addIf(isSahifa && isHajatDua, 'أدعية الحاجات والشفاء');
+    addIf(isSahifa && isMorningDua, 'أدعية الصباح');
+    addIf(isSahifa && isEveningDua, 'أدعية المساء');
+    addIf(isSahifa && isMahdiDua, 'أدعية صاحب الزمان');
+    return result;
+  }
+
+  String get arabicText => lines.where((line) => line.isArabic).map((line) => line.text).join('\\n');
 
   factory ShiaTextEntry.fromJson(Map<String, dynamic> json) => ShiaTextEntry(
     slug: json['slug'] is String ? json['slug'] as String : '',
@@ -280,13 +298,13 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
         final data = snapshot.data!;
         // Only show categories that actually contain readable Arabic entries.
         final availableCategories = _categories
-            .where((category) => data.entries.any((entry) => entry.category == category))
+            .where((category) => data.entries.any((entry) => entry.categories.contains(category)))
             .toList(growable: false);
         final activeCategory = availableCategories.contains(_category)
             ? _category
             : (availableCategories.isNotEmpty ? availableCategories.first : 'أدعية عامة');
         final filtered = data.entries.where((entry) {
-          if (entry.category != activeCategory) return false;
+          if (!entry.categories.contains(activeCategory)) return false;
           if (_query.isEmpty) return true;
           final header = _normalize('${entry.displayTitle} ${entry.title} ${entry.slug}');
           return header.contains(_query) ||

@@ -103,6 +103,9 @@ class _MainShellState extends State<MainShell> {
     super.initState();
     _refreshPrayerReminders();
     _loadDashboardData();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _offerPrayerReminderSetup();
+    });
     _dashboardClock = Timer.periodic(const Duration(seconds: 30), (_) {
       if (!mounted) return;
       final current = DateTime.now();
@@ -181,6 +184,52 @@ class _MainShellState extends State<MainShell> {
       }
     } catch (_) {
       // Reminder issues must never prevent the app from opening.
+    }
+  }
+
+  Future<void> _offerPrayerReminderSetup() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      if (prefs.containsKey('prayer_notifications_enabled')) return;
+
+      // Ask once on a fresh install; never enable notification audio without consent.
+      await prefs.setBool('prayer_notifications_enabled', false);
+      if (!mounted) return;
+      final enable = await showDialog<bool>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: const Text('أذان الصلاة'),
+          content: const Text(
+            'تحب نفعّل إشعارات أوقات الصلاة مع صوت الأذان؟ تقدر تغيّرها بأي وقت من الإعدادات.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: const Text('لاحقاً'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              child: const Text('تفعيل الأذان'),
+            ),
+          ],
+        ),
+      );
+      if (enable != true || !mounted) return;
+
+      final city = await PrayerLocations.load();
+      final ok = await PrayerNotificationService.configure(
+        enabled: true,
+        city: city,
+        requestExactPermission: true,
+      );
+      if (!mounted) return;
+      _notice(
+        ok
+            ? 'تم تفعيل أذان الصلاة وجدولة التذكيرات للأيام الثلاثين القادمة'
+            : 'تعذّر تفعيل الأذان. افتح الإعدادات واسمح بإشعارات التطبيق والمنبّهات الدقيقة.',
+      );
+    } catch (_) {
+      // Reminder setup must never prevent the app from opening.
     }
   }
 

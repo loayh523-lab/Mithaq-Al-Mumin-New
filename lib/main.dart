@@ -540,7 +540,7 @@ class _MainShellState extends State<MainShell> {
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
       children: [
         Container(
-          height: 320,
+          height: 278,
           clipBehavior: Clip.antiAlias,
           decoration: const BoxDecoration(
             borderRadius: BorderRadius.vertical(bottom: Radius.circular(28)),
@@ -556,7 +556,7 @@ class _MainShellState extends State<MainShell> {
                       'https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3d/Portrait_of_Mojtaba_Khamenei_%282%29.jpg/500px-Portrait_of_Mojtaba_Khamenei_%282%29.jpg',
                       fit: BoxFit.cover,
                       alignment: Alignment.topCenter,
-                      cacheWidth: 500,
+                      cacheWidth: 280,
                       loadingBuilder: (context, child, progress) => progress == null
                           ? child
                           : const DecoratedBox(
@@ -665,6 +665,11 @@ class _MainShellState extends State<MainShell> {
               Positioned(
                 right: 16, left: 16, bottom: 20,
                 child: Column(children: [
+                  const Text(
+                    'التاريخ الهجري',
+                    style: TextStyle(color: Color(0xFFE0E9E2), fontSize: 11, fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 4),
                   Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                     const Icon(Icons.calendar_month_outlined, color: _gold, size: 24),
                     const SizedBox(width: 8),
@@ -699,35 +704,11 @@ class _MainShellState extends State<MainShell> {
           const SizedBox(width: 7),
           Expanded(child: _homeQuickTile(
             icon: Icons.auto_awesome_rounded, title: 'قبس اليوم', subtitle: 'نور في القلب',
-            onTap: () => showDialog<void>(
-              context: context,
-              builder: (dialogContext) => AlertDialog(
-                title: const Text('قبس اليوم'),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      inspiration.text,
-                      textDirection: TextDirection.rtl,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(fontSize: 20, height: 1.8, fontWeight: FontWeight.w700),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      inspiration.source,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(color: _muted, fontSize: 12),
-                    ),
-                  ],
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.of(dialogContext).pop(),
-                    child: const Text('إغلاق'),
-                  ),
-                ],
-              ),
-            ),
+            // Open a dedicated Qabas page; never route this tile to the dua tab.
+            onTap: () => _pushPage(QabasTodayPage(
+              text: inspiration.text,
+              source: inspiration.source,
+            )),
           )),
           const SizedBox(width: 7),
           Expanded(child: _homeQuickTile(
@@ -1938,6 +1919,78 @@ class _PrayerTrackerPageState extends State<PrayerTrackerPage> {
             ))),
           const SizedBox(height: 8),
           const Text('هذا سجلّ شخصي فقط وليس جدولاً لمواقيت الصلاة. ستُضاف المواقيت بعد اعتماد طريقة حساب جعفرية موثّقة.', style: TextStyle(color: _muted, fontSize: 12, height: 1.7)),
+        ],
+      ),
+    );
+  }
+}
+
+/// Dedicated destination for the daily reflection tile on the home screen.
+class QabasTodayPage extends StatelessWidget {
+  const QabasTodayPage({
+    super.key,
+    required this.text,
+    required this.source,
+  });
+
+  final String text;
+  final String source;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('قبس اليوم'),
+        backgroundColor: _ink,
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(22),
+        children: [
+          Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: _panel,
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(color: _gold.withValues(alpha: .5)),
+              gradient: const LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                colors: [Color(0xFF173D2D), Color(0xFF0A1B15)],
+              ),
+            ),
+            child: Column(
+              children: [
+                const Icon(Icons.auto_awesome_rounded, color: _gold, size: 36),
+                const SizedBox(height: 18),
+                const Text(
+                  'نورٌ نتدبّره اليوم',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: _gold, fontSize: 15, fontWeight: FontWeight.w800),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  text,
+                  textDirection: TextDirection.rtl,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 25, height: 2, fontWeight: FontWeight.w800),
+                ),
+                const SizedBox(height: 18),
+                const Divider(color: Color(0x55D9B66D)),
+                const SizedBox(height: 10),
+                Text(
+                  source,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: _muted, fontSize: 13, height: 1.6),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          const Text(
+            'اقرأ الآية بتأنٍّ وخذ منها معنىً واحداً تطبّقه اليوم.',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: _muted, fontSize: 13, height: 1.8),
+          ),
         ],
       ),
     );

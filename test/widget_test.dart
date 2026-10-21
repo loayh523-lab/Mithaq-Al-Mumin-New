@@ -44,24 +44,17 @@ void main() {
     expect(find.text('ميثاق المؤمن'), findsOneWidget);
     expect(find.textContaining('هـ'), findsOneWidget);
     await tester.scrollUntilVisible(
-      find.text('الصلاة القادمة'),
+      find.text('عمل اليوم'),
       250,
       scrollable: find.byType(Scrollable).first,
     );
-    expect(find.text('الصلاة القادمة'), findsOneWidget);
+    expect(find.text('عمل اليوم'), findsOneWidget);
     await tester.scrollUntilVisible(
       find.text('مواقيت الصلوات'),
       250,
       scrollable: find.byType(Scrollable).first,
     );
     expect(find.text('مواقيت الصلوات'), findsOneWidget);
-
-    await tester.scrollUntilVisible(
-      find.text('عمل اليوم'),
-      250,
-      scrollable: find.byType(Scrollable).first,
-    );
-    expect(find.text('عمل اليوم'), findsOneWidget);
 
     // The dashboard header scrolls with the home feed; return to its top before
     // opening the menu so this test matches the real visible interaction.

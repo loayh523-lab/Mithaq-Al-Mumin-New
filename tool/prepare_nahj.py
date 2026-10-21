@@ -32,10 +32,12 @@ def normalize_arabic(value: str) -> str:
     )
 
 
+# Keep only strong Persian-language indicators here. Words such as "زیارت"
+# and "هفته" can occur in Arabic metadata or quotations and must not cause
+# wholesale rejection of valid Arabic Nahj entries.
 PERSIAN_MARKERS = (
-    "برای", "میباشد", "می شود", "ميشود", "نمی", "نمي",
-    "دعای", "دعاهای", "روزهای", "روزها", "هفته", "فارسی", "فارسي",
-    "زیارت", "زیارات", "نیمه شعبان", "هزار رکعت",
+    "برای", "میباشد", "می شود", "ميشود", "نمی توان", "نميتوان",
+    "دعای روز", "دعاهای روز", "روزهای هفته", "متن فارسی", "زبان فارسی",
 )
 PERSIAN_ONLY_LETTERS = set("پچژگ")
 

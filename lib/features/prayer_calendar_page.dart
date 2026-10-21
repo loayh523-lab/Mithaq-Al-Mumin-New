@@ -590,7 +590,7 @@ class _CalendarDayNoteState extends State<CalendarDayNote> {
     final y = widget.date.year.toString().padLeft(4, '0');
     final m = widget.date.month.toString().padLeft(2, '0');
     final d = widget.date.day.toString().padLeft(2, '0');
-    return 'mithaq_calendar_note_${y}_${m}_${d}';
+    return ['mithaq_calendar_note', y, m, d].join('_');
   }
 
   @override

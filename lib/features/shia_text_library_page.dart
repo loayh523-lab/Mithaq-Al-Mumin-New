@@ -75,13 +75,15 @@ class ShiaTextEntry {
     return RegExp(r'eid|ramadan|arafah|mubahala|mubahilah|laylat|rajab|shaaban|dhul.hijja|dhul.qadah|مناسبة|العيد|رمضان|عرفة|مباهلة|رجب|شعبان|ذي الحجة|ذي القعدة|ليلة القدر').hasMatch(value);
   }
   String get category {
-    // Keep weekday prayers and prayer taqibat in the daily collection even
-    // when the source slug also identifies them as part of the Sahifa.
+    // Specific religious occasions take precedence over weekday words in a
+    // title (for example, a supplication for Friday on the Day of Arafah).
+    if (isOccasionDua) return 'الأعمال والمناسبات';
+    // Weekday prayers and taqibat remain in the daily collection, including
+    // the weekday supplications that are part of the Sahifa source.
     if (isDayDua || isTaqibat) return 'الأدعية والأذكار اليومية';
     if (isZiyara) return 'الزيارات الشريفة';
     if (isSahifa || isMunajat) return 'الصحيفة السجادية والمناجيات';
     if (isMorningEveningDua) return 'الأدعية والأذكار اليومية';
-    if (isOccasionDua) return 'الأعمال والمناسبات';
     return 'الأدعية العامة والفرج وصاحب الزمان';
   }
   String get arabicText => lines.where((line) => line.isArabic).map((line) => line.text).join('\n');

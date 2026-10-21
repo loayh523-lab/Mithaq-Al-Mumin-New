@@ -1911,8 +1911,10 @@ class _WardAlYawmPageState extends State<WardAlYawmPage> {
             ),
           ),
           const SizedBox(height: 10),
-          Text('التاريخ: ${now.day}/${now.month}/${now.year}',
+          Text('اليوم: ${_arabicWeekday(now.weekday)} • ${now.day}/${now.month}/${now.year}',
             style: const TextStyle(color: _muted, fontSize: 12)),
+          const SizedBox(height: 12),
+          _weekdayDuaCard(now),
           const SizedBox(height: 12),
           for (var i = 0; i < dailyDhikr.length; i++)
             _wardItem(dailyDhikr[i], i),
@@ -1931,6 +1933,108 @@ class _WardAlYawmPageState extends State<WardAlYawmPage> {
           ),
         ],
       ),
+    );
+  }
+
+  String _arabicWeekday(int weekday) => const <String>[
+    'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت', 'الأحد',
+  ][weekday - 1];
+
+  Widget _weekdayDuaCard(DateTime now) {
+    const englishWeekdays = <String>[
+      'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday',
+    ];
+    final day = englishWeekdays[now.weekday - 1];
+    final arabicDay = _arabicWeekday(now.weekday);
+    final expectedSlug = 'sahifa-sajjadiya-the-supplication-for-$day';
+
+    return FutureBuilder<ShiaTextData>(
+      future: ShiaTextData.load(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Card(
+            color: _panel,
+            child: ListTile(
+              leading: const Icon(Icons.menu_book_rounded, color: _gold),
+              title: Text('دعاء يوم $arabicDay'),
+              subtitle: const Text('جارٍ تحميل النص العربي المحفوظ'),
+            ),
+          );
+        }
+        if (snapshot.hasError || !snapshot.hasData) {
+          return Card(
+            color: _panel,
+            child: ListTile(
+              leading: const Icon(Icons.info_outline_rounded, color: _gold),
+              title: Text('دعاء يوم $arabicDay'),
+              subtitle: const Text('تعذّر تحميل الدعاء الآن؛ يمكنك فتحه من مكتبة الأدعية والأيام.'),
+            ),
+          );
+        }
+
+        ShiaTextEntry? entry;
+        for (final candidate in snapshot.data!.entries) {
+          if (candidate.slug.toLowerCase() == expectedSlug) {
+            entry = candidate;
+            break;
+          }
+        }
+        if (entry == null || entry!.arabicText.trim().isEmpty) {
+          return Card(
+            color: _panel,
+            child: ListTile(
+              leading: const Icon(Icons.menu_book_rounded, color: _gold),
+              title: Text('دعاء يوم $arabicDay'),
+              subtitle: const Text('النص غير متوفر ضمن المكتبة المحلية الحالية.'),
+            ),
+          );
+        }
+
+        final selectedEntry = entry!;
+        return Card(
+          color: _panel,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18),
+            side: BorderSide(color: _gold.withValues(alpha: .35)),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(children: [
+                  const Icon(Icons.menu_book_rounded, color: _gold),
+                  const SizedBox(width: 8),
+                  Expanded(child: Text('دعاء يوم $arabicDay',
+                    style: const TextStyle(color: _gold, fontSize: 17, fontWeight: FontWeight.w800))),
+                ]),
+                const SizedBox(height: 8),
+                Text(selectedEntry.displayTitle,
+                  style: const TextStyle(fontWeight: FontWeight.w700)),
+                const SizedBox(height: 8),
+                SelectableText(selectedEntry.arabicText,
+                  textDirection: TextDirection.rtl,
+                  style: const TextStyle(fontSize: 17, height: 1.9)),
+                const SizedBox(height: 8),
+                Text('المصدر: ${selectedEntry.sourceLabel.isEmpty ? 'مكتبة الأدعية والزيارات' : selectedEntry.sourceLabel}',
+                  style: const TextStyle(color: _muted, fontSize: 11, height: 1.5)),
+                Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: TextButton.icon(
+                    onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => ShiaTextReaderPage(entry: selectedEntry),
+                      ),
+                    ),
+                    icon: const Icon(Icons.open_in_new_rounded, size: 18),
+                    label: const Text('فتح الدعاء في القارئ'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 

@@ -65,7 +65,7 @@ class PrayerNotificationService {
         final android = _plugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
         final enabled = await android?.areNotificationsEnabled();
         if (enabled == false) {
-          return configure(enabled: true, city: city);
+          return await configure(enabled: true, city: city);
         }
       }
 
@@ -74,7 +74,7 @@ class PrayerNotificationService {
           .where((key) => prefs.getBool('prayer_enabled_$key') ?? true)
           .length;
       if (selectedCount == 0) {
-        return configure(enabled: true, city: city);
+        return await configure(enabled: true, city: city);
       }
       final hasEarlyAlerts = prefs.getBool('prayer_early_alert_enabled') ?? false;
       final minimumHealthyCount = selectedCount * 20 * (hasEarlyAlerts ? 2 : 1);
@@ -83,7 +83,7 @@ class PrayerNotificationService {
         request.id >= _idStart &&
         request.id < _idStart + _daysToSchedule * 10).length;
       if (activeCount >= minimumHealthyCount) return true;
-      return configure(enabled: true, city: city);
+      return await configure(enabled: true, city: city);
     } catch (error, stackTrace) {
       debugPrint('Checking scheduled prayer reminders failed: $error\\n$stackTrace');
       return configure(enabled: true, city: city);

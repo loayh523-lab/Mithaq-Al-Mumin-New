@@ -230,7 +230,7 @@ class _GoodDeedsPageState extends State<GoodDeedsPage> {
         _completed
           ..clear()
           ..addAll(values);
-        _hijriCorrection = correction.clamp(-3, 3).toInt();
+        _hijriCorrection = correction.clamp(-1, 2).toInt();
         _loading = false;
       });
     } catch (_) {

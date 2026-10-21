@@ -34,7 +34,7 @@ void main() {
     expect(find.text('أذان الصلاة'), findsOneWidget);
     expect(find.text('تفعيل الأذان'), findsOneWidget);
     await tester.tap(find.text('لاحقاً'));
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 400));
     final prefs = await SharedPreferences.getInstance();
     expect(prefs.getBool('prayer_notifications_enabled'), isFalse);
   });
@@ -64,9 +64,9 @@ void main() {
     expect(find.text('عمل اليوم'), findsOneWidget);
 
     await tester.tap(find.byTooltip('الأقسام'));
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 400));
     await tester.tap(find.text('التسبيح'));
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 400));
     expect(find.text('اضغط على الدائرة للتسبيح'), findsOneWidget);
     expect(find.text('0'), findsOneWidget);
   });
@@ -90,36 +90,36 @@ void main() {
   testWidgets('prayer tracker records a checked prayer from the drawer', (tester) async {
     await tester.pumpWidget(const MithaqApp());
     await tester.tap(find.byTooltip('الأقسام'));
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 400));
     await tester.scrollUntilVisible(
       find.text('متابعة الصلاة'),
       250,
       scrollable: find.descendant(of: find.byType(Drawer), matching: find.byType(Scrollable)).first,
     );
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 400));
     await tester.tap(find.text('متابعة الصلاة'));
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 400));
     expect(find.text('0/5'), findsOneWidget);
     await tester.tap(find.text('الفجر'));
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 400));
     expect(find.text('1/5'), findsOneWidget);
   });
 
   testWidgets('khatma tracker opens and records completed juz from the drawer', (tester) async {
     await tester.pumpWidget(const MithaqApp());
     await tester.tap(find.byTooltip('الأقسام'));
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 400));
     await tester.scrollUntilVisible(
       find.text('ختمة القرآن'),
       250,
       scrollable: find.descendant(of: find.byType(Drawer), matching: find.byType(Scrollable)).first,
     );
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 400));
     await tester.tap(find.text('ختمة القرآن'));
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 400));
     expect(find.text('/ 30 جزءاً'), findsOneWidget);
     await tester.tap(find.text('إكمال جزء'));
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 400));
     expect(find.text('1'), findsOneWidget);
     expect(find.text('الخطوة التالية'), findsOneWidget);
   });

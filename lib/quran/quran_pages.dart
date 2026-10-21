@@ -148,6 +148,9 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
     final q = _search.text.trim().toLowerCase();
     final filtered = _chapters.where((s) => q.isEmpty || s.name.contains(q) || s.transliteration.toLowerCase().contains(q) || s.id.toString() == q).toList();
     final verseCount = _chapters.fold<int>(0, (n, s) => n + s.totalVerses);
+    final indexNote = _indexMode == _QuranIndexMode.surah
+        ? 'فهرس السور محلي. نص الآيات العثماني مضمّن داخل نسخة التطبيق ويعمل دون إنترنت.'
+        : 'حدود الأجزاء والأحزاب مرتبة بحسب رواية حفص عن عاصم. النص يعمل دون إنترنت.';
     final Widget indexContent;
     if (_loading) {
       indexContent = const Center(child: CircularProgressIndicator(color: _gold));
@@ -225,11 +228,9 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
       Padding(
         padding: const EdgeInsets.fromLTRB(18, 0, 18, 8),
         child: Text(
-          _indexMode == _QuranIndexMode.surah
-              ? 'فهرس السور محلي. نص الآيات العثماني مضمّن داخل نسخة التطبيق ويعمل دون إنترنت.'
-              : 'حدود الأجزاء والأحزاب مرتبة بحسب رواية حفص عن عاصم. النص يعمل دون إنترنت.',
+          indexNote,
           textAlign: TextAlign.center,
-          style: const TextStyle(color: _muted, fontSize: 10),
+          style: TextStyle(color: _muted, fontSize: 10),
         ),
       ),
     ]);

@@ -40,7 +40,7 @@ class PrayerNotificationService {
         'إذا ظهر هذا التنبيه فقد وصل الإشعار التجريبي. افحص مستوى صوت التنبيهات إذا لم تسمع الأذان.',
         const NotificationDetails(
           android: AndroidNotificationDetails(
-            'mithaq_prayer_adhan_v5', 'أذان الصلاة',
+            'mithaq_prayer_adhan_v6', 'أذان الصلاة',
             channelDescription: 'أذان الشيخ شبّر معلة عند وقت الصلاة',
 
             sound: RawResourceAndroidNotificationSound('adhan_shabbar_maalla'),
@@ -137,7 +137,7 @@ class PrayerNotificationService {
               scheduled,
               const NotificationDetails(
                 android: AndroidNotificationDetails(
-                  'mithaq_prayer_adhan_v5',
+                  'mithaq_prayer_adhan_v6',
                   'أذان الصلاة',
                   channelDescription: 'أذان الشيخ شبّر معلة عند وقت الصلاة',
 

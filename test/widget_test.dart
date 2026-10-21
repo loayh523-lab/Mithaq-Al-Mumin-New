@@ -38,7 +38,7 @@ void main() {
 
     await tester.tap(find.byIcon(Icons.menu));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('التسبيح'));
+    await tester.tap(find.descendant(of: find.byType(Drawer), matching: find.text('التسبيح')));
     await tester.pumpAndSettle();
     expect(find.text('اضغط على الدائرة للتسبيح'), findsOneWidget);
     expect(find.text('0'), findsOneWidget);

@@ -1,7 +1,6 @@
-import 'dart:async';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../services/prayer_locations.dart';
 import '../services/prayer_notification_service.dart';
 
@@ -38,39 +37,29 @@ class _SettingsPageState extends State<SettingsPage> {
     MapEntry('maghrib', 'المغرب'),
     MapEntry('isha', 'العشاء'),
   ];
-  AudioPlayer? _adhanPlayer;
-  StreamSubscription<void>? _adhanCompleteSubscription;
-  bool _isPlayingAdhan = false;
 
   @override void initState() { super.initState(); _load(); }
 
   @override
   void dispose() {
-    _adhanCompleteSubscription?.cancel();
-    final player = _adhanPlayer;
-    if (player != null) unawaited(player.dispose());
     super.dispose();
   }
 
-  Future<void> _toggleAdhanPlayback() async {
-    final existing = _adhanPlayer;
-    if (_isPlayingAdhan) {
-      try {
-        await existing?.stop();
-      } catch (_) { /* The local notification feature remains available. */ }
-      if (mounted) setState(() => _isPlayingAdhan = false);
-      return;
-    }
+  Future<void> _openSelectedAdhan() async {
+    const sourceUrl = 'https://www.youtube.com/watch?v=lKK4cOnIitg';
     try {
-      final player = _adhanPlayer ??= AudioPlayer(playerId: 'mithaq-adhan-preview');
-      _adhanCompleteSubscription ??= player.onPlayerComplete.listen((_) {
-        if (mounted) setState(() => _isPlayingAdhan = false);
-      });
-      await player.stop();
-      await player.play(AssetSource('audio/adhan_persian.ogg'));
-      if (mounted) setState(() => _isPlayingAdhan = true);
-    } catch (error) {
-      if (mounted) _message('تعذّر تشغيل التسجيل الصوتي. جرّب إعادة فتح التطبيق أو تحقق من الملف المرفق.');
+      final opened = await launchUrl(
+        Uri.parse(sourceUrl),
+        mode: LaunchMode.externalApplication,
+      );
+      if (!mounted) return;
+      if (!opened) {
+        _message('تعذّر فتح مصدر الأذان. تحقق من اتصال الإنترنت وحاول مجدداً.');
+      }
+    } catch (_) {
+      if (mounted) {
+        _message('تعذّر فتح مصدر الأذان. تحقق من اتصال الإنترنت وحاول مجدداً.');
+      }
     }
   }
   Future<void> _load() async {
@@ -295,7 +284,7 @@ class _SettingsPageState extends State<SettingsPage> {
             child: SwitchListTile(
               contentPadding: EdgeInsets.zero,
               title: const Text('إشعارات الصلاة'),
-              subtitle: const Text('تذكيرات محلية للأيام الثلاثين القادمة وفق حساب فلكي تقديري. التسجيل الحالي للتجربة فقط، ولم يُدمج بعد تسجيل الشيخ شبّر معلة المختار. قد تتأخر التنبيهات بسبب توفير الطاقة.', style: TextStyle(color: _settingsMuted, height: 1.5, fontSize: 12)),
+              subtitle: const Text('تذكيرات محلية للأيام الثلاثين القادمة وفق حساب فلكي تقديري. صوت الشيخ شبّر معلة غير مدمج داخل الإشعارات بعد؛ يستخدم أندرويد صوت الجهاز الافتراضي حالياً. قد تتأخر التنبيهات بسبب توفير الطاقة.', style: TextStyle(color: _settingsMuted, height: 1.5, fontSize: 12)),
               value: _notificationsEnabled,
               onChanged: _loaded ? _toggleNotifications : null,
               activeThumbColor: _settingsGold,
@@ -360,9 +349,9 @@ class _SettingsPageState extends State<SettingsPage> {
           SizedBox(
             width: double.infinity,
             child: OutlinedButton.icon(
-              onPressed: _loaded ? _toggleAdhanPlayback : null,
-              icon: Icon(_isPlayingAdhan ? Icons.stop_circle_outlined : Icons.play_circle_outline_rounded),
-              label: Text(_isPlayingAdhan ? 'إيقاف التسجيل الصوتي' : 'استماع إلى تسجيل الأذان التجريبي'),
+              onPressed: _loaded ? _openSelectedAdhan : null,
+              icon: const Icon(Icons.open_in_new_rounded),
+              label: const Text('فتح أذان الشيخ شبّر معلة من المصدر'),
             ),
           ),
           const SizedBox(height: 8),
@@ -374,9 +363,9 @@ class _SettingsPageState extends State<SettingsPage> {
               label: const Text('تجربة إشعار الأذان'),
             ),
           ),
-          const Text('التسجيل الحالي تجريبي من Wikimedia Commons بترخيص CC BY-SA 4.0. ليس تسجيل العتبة العلوية المقدسة بصوت الشيخ شبّر معلة الذي اخترته.', style: TextStyle(color: _settingsMuted, fontSize: 11, height: 1.5)),
+          const Text('المقطع المختار منشور من دار القرآن الكريم في العتبة العلوية المقدسة بصوت الشيخ شبّر معلة. يُفتح من المصدر عبر الإنترنت ولا يُخزَّن داخل التطبيق.', style: TextStyle(color: _settingsMuted, fontSize: 11, height: 1.5)),
           const SizedBox(height: 4),
-          const SelectableText('https://commons.wikimedia.org/wiki/File:AzaanMaahur.ogg', style: TextStyle(color: _settingsGold, fontSize: 11)),
+          const SelectableText('https://www.youtube.com/watch?v=lKK4cOnIitg', style: TextStyle(color: _settingsGold, fontSize: 11)),
           const SizedBox(height: 4),
           const Text('يلزم السماح بإشعارات التطبيق من أندرويد. إذا وصل الإشعار بلا صوت، ارفع صوت التنبيهات وافحص إعداد قناة «أذان الصلاة».', style: TextStyle(color: _settingsMuted, fontSize: 11, height: 1.5)),
         ],

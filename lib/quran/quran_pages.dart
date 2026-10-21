@@ -5,11 +5,14 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
+import 'quran_parts.dart';
 
 const _panel = Color(0xFF10251E);
 const _emerald = Color(0xFF1C8060);
 const _gold = Color(0xFFD9B66D);
 const _muted = Color(0xFF9EB5A9);
+
+enum _QuranIndexMode { surah, juz, hizb }
 
 class SurahInfo {
   const SurahInfo({required this.id, required this.name, required this.transliteration, required this.type, required this.totalVerses});
@@ -38,6 +41,7 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
   List<SurahInfo> _chapters = const [];
   bool _loading = true;
   String? _error;
+  _QuranIndexMode _indexMode = _QuranIndexMode.surah;
 
   @override
   void initState() { super.initState(); _loadCatalog(); }
@@ -59,11 +63,105 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
     }
   }
 
+  ({SurahInfo surah, int verseNumber})? _locationForGlobalAyah(int globalAyahId) {
+    var firstGlobalId = 1;
+    for (final surah in _chapters) {
+      final lastGlobalId = firstGlobalId + surah.totalVerses - 1;
+      if (globalAyahId >= firstGlobalId && globalAyahId <= lastGlobalId) {
+        return (surah: surah, verseNumber: globalAyahId - firstGlobalId + 1);
+      }
+      firstGlobalId = lastGlobalId + 1;
+    }
+    return null;
+  }
+
+  Widget _buildSurahList(List<SurahInfo> filtered) {
+    if (filtered.isEmpty) {
+      return const Center(child: Text('ماكو سورة تطابق البحث', style: TextStyle(color: _muted)));
+    }
+    return ListView.separated(
+      padding: const EdgeInsets.fromLTRB(18, 8, 18, 18),
+      itemCount: filtered.length,
+      separatorBuilder: (_, __) => const SizedBox(height: 8),
+      itemBuilder: (context, i) {
+        final surah = filtered[i];
+        return Card(
+          margin: EdgeInsets.zero,
+          color: _panel,
+          child: ListTile(
+            leading: CircleAvatar(
+              backgroundColor: _emerald.withValues(alpha: .24),
+              child: Text('${surah.id}', style: const TextStyle(color: _gold)),
+            ),
+            title: Text(surah.name, style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w700)),
+            subtitle: Text(
+              '${surah.type == 'meccan' ? 'مكية' : 'مدنية'} • ${surah.totalVerses} آية',
+              style: const TextStyle(color: _muted, fontSize: 12),
+            ),
+            trailing: const Icon(Icons.chevron_left_rounded, color: _gold),
+            onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+              builder: (_) => Directionality(textDirection: TextDirection.rtl, child: SurahReaderPage(surah: surah)),
+            )),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildDivisionList(List<int> starts, {required bool isJuz}) {
+    return ListView.separated(
+      padding: const EdgeInsets.fromLTRB(18, 8, 18, 18),
+      itemCount: starts.length,
+      separatorBuilder: (_, __) => const SizedBox(height: 8),
+      itemBuilder: (context, i) {
+        final location = _locationForGlobalAyah(starts[i]);
+        if (location == null) return const SizedBox.shrink();
+        final title = isJuz ? 'الجزء ${i + 1}' : 'الحزب ${i + 1}';
+        return Card(
+          margin: EdgeInsets.zero,
+          color: _panel,
+          child: ListTile(
+            leading: CircleAvatar(
+              backgroundColor: _emerald.withValues(alpha: .24),
+              child: Text('${i + 1}', style: const TextStyle(color: _gold)),
+            ),
+            title: Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+            subtitle: Text(
+              'بداية القراءة: ${location.surah.name} • الآية ${location.verseNumber}',
+              style: const TextStyle(color: _muted, fontSize: 12),
+            ),
+            trailing: const Icon(Icons.chevron_left_rounded, color: _gold),
+            onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+              builder: (_) => Directionality(
+                textDirection: TextDirection.rtl,
+                child: SurahReaderPage(surah: location.surah, initialVerse: location.verseNumber),
+              ),
+            )),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final q = _search.text.trim().toLowerCase();
     final filtered = _chapters.where((s) => q.isEmpty || s.name.contains(q) || s.transliteration.toLowerCase().contains(q) || s.id.toString() == q).toList();
     final verseCount = _chapters.fold<int>(0, (n, s) => n + s.totalVerses);
+    final Widget indexContent;
+    if (_loading) {
+      indexContent = const Center(child: CircularProgressIndicator(color: _gold));
+    } else if (_error != null) {
+      indexContent = _QuranError(message: _error!, onRetry: _loadCatalog);
+    } else if (_indexMode == _QuranIndexMode.surah) {
+      indexContent = _buildSurahList(filtered);
+    } else {
+      final isJuz = _indexMode == _QuranIndexMode.juz;
+      indexContent = _buildDivisionList(
+        isJuz ? quranJuzStartAyahIds : quranHizbStartAyahIds,
+        isJuz: isJuz,
+      );
+    }
     return Column(children: [
       Padding(
         padding: const EdgeInsets.fromLTRB(18, 16, 18, 8),
@@ -86,46 +184,37 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
             ),
           ]),
           const SizedBox(height: 5),
-          Text(_loading ? 'جارٍ تجهيز فهرس القرآن الكريم...' : '114 سورة • $verseCount آية', style: const TextStyle(color: _muted)),
-          const SizedBox(height: 14),
-          TextField(
-            controller: _search, onChanged: (_) => setState(() {}),
-            decoration: InputDecoration(
-              hintText: 'ابحث باسم السورة أو رقمها...', prefixIcon: const Icon(Icons.search_rounded),
-              filled: true, fillColor: _panel,
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
+          Text(_loading ? 'جارٍ تجهيز فهرس القرآن الكريم...' : '114 سورة • 30 جزءاً • 60 حزباً • $verseCount آية', style: const TextStyle(color: _muted)),
+          const SizedBox(height: 12),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: SegmentedButton<_QuranIndexMode>(
+              segments: const [
+                ButtonSegment(value: _QuranIndexMode.surah, label: Text('السور'), icon: Icon(Icons.menu_book_rounded)),
+                ButtonSegment(value: _QuranIndexMode.juz, label: Text('الأجزاء'), icon: Icon(Icons.auto_stories_rounded)),
+                ButtonSegment(value: _QuranIndexMode.hizb, label: Text('الأحزاب'), icon: Icon(Icons.bookmark_outline_rounded)),
+              ],
+              selected: {_indexMode},
+              onSelectionChanged: (selection) => setState(() => _indexMode = selection.first),
             ),
           ),
+          if (_indexMode == _QuranIndexMode.surah) ...[
+            const SizedBox(height: 14),
+            TextField(
+              controller: _search,
+              onChanged: (_) => setState(() {}),
+              decoration: InputDecoration(
+                hintText: 'ابحث باسم السورة أو رقمها...',
+                prefixIcon: const Icon(Icons.search_rounded),
+                filled: true,
+                fillColor: _panel,
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
+              ),
+            ),
+          ],
         ]),
       ),
-      Expanded(
-        child: _loading
-          ? const Center(child: CircularProgressIndicator(color: _gold))
-          : _error != null
-            ? _QuranError(message: _error!, onRetry: _loadCatalog)
-            : filtered.isEmpty
-              ? const Center(child: Text('ماكو سورة تطابق البحث', style: TextStyle(color: _muted)))
-              : ListView.separated(
-                  padding: const EdgeInsets.fromLTRB(18, 8, 18, 18),
-                  itemCount: filtered.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 8),
-                  itemBuilder: (context, i) {
-                    final s = filtered[i];
-                    return Card(
-                      margin: EdgeInsets.zero, color: _panel,
-                      child: ListTile(
-                        leading: CircleAvatar(backgroundColor: _emerald.withValues(alpha: .24), child: Text('${s.id}', style: const TextStyle(color: _gold))),
-                        title: Text(s.name, style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w700)),
-                        subtitle: Text('${s.type == 'meccan' ? 'مكية' : 'مدنية'} • ${s.totalVerses} آية', style: const TextStyle(color: _muted, fontSize: 12)),
-                        trailing: const Icon(Icons.chevron_left_rounded, color: _gold),
-                        onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-                          builder: (_) => Directionality(textDirection: TextDirection.rtl, child: SurahReaderPage(surah: s)),
-                        )),
-                      ),
-                    );
-                  },
-                ),
-      ),
+      Expanded(child: indexContent),
       const Padding(
         padding: EdgeInsets.fromLTRB(18, 0, 18, 8),
         child: Text('فهرس السور محلي. نص الآيات العثماني مضمّن داخل نسخة التطبيق ويعمل دون إنترنت.', textAlign: TextAlign.center, style: TextStyle(color: _muted, fontSize: 10)),

@@ -47,8 +47,8 @@ Keep upstream notices with redistributed source/builds. This project does not cl
 - The upstream project is licensed under MIT. A copy of the license and attribution is included at [licenses/NAHJ_MIT_LICENSE.txt](licenses/NAHJ_MIT_LICENSE.txt).
 - Numbering and wording can vary across editions; the app keeps the source's wording and flags the need to compare critical quotations against a named printed edition.
 
-## Home-screen portraits
+## Quran juz and hizb boundaries
 
-- Portrait of Sayyid Ali Khamenei: [Wikimedia Commons file page](https://commons.wikimedia.org/wiki/File:Portrait_of_Ali_Khamenei.jpg), source credited there to Khamenei.ir, licensed under CC BY 4.0.
-- Portrait of Sayyid Mojtaba Khamenei: [Wikimedia Commons file page](https://commons.wikimedia.org/wiki/File:Portrait_of_Mojtaba_Khamenei_(2).jpg), source credited there to Khamenei.ir, licensed under CC BY 4.0.
-- The app displays the portraits in separate cropped panels. The original image credits and the CC BY 4.0 terms remain applicable; the images do not imply endorsement of this app.
+- Metadata source: [quran-center/quran-meta](https://github.com/quran-center/quran-meta/blob/master/src/lists/HafsLists.ts), Hafs 'an Asim division boundaries.
+- The app derives the 30 juz starts and 60 hizb starts from the source's global ayah IDs; it does not copy Quran verse text from this package.
+- Upstream code is licensed under MIT; the source repository includes the license.

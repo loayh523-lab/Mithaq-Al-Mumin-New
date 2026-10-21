@@ -82,19 +82,16 @@ class ShiaTextEntry {
   bool get isSahifa => slug.startsWith('sahifa-sajjadiya-');
   bool get isDayDua =>
       RegExp(r'(sunday|monday|tuesday|wednesday|thursday|friday|saturday)', caseSensitive: false).hasMatch(slug) ||
-      RegExp(r'دعاء يوم|أدعية يوم|دعاء الأحد|دعاء الاثنين|دعاء الثلاثاء|دعاء الأربعاء|دعاء الخميس|دعاء الجمعة|دعاء السبت').hasMatch('$title $alternateName');
+      RegExp(r'دعاء يوم|أدعية يوم|دعاء الأحد|دعاء الاثنين|دعاء الثلاثاء|دعاء الأربعاء|دعاء الخميس|دعاء الجمعة|دعاء السبت|أدعية أيام الأسبوع').hasMatch('$title $alternateName $sourceLabel');
   bool get isZiyara =>
       slug.toLowerCase().contains('ziyarat') ||
-      title.contains('زيارة') ||
-      alternateName.contains('زيارة');
+      '$title $alternateName $sourceLabel'.contains('زيارة');
   bool get isTaqibat =>
       slug.toLowerCase().contains('taqib') ||
-      title.contains('تعقيب') ||
-      alternateName.contains('تعقيب');
+      '$title $alternateName $sourceLabel'.contains('تعقيب');
   bool get isMunajat =>
       slug.toLowerCase().contains('munajat') ||
-      title.contains('مناجاة') ||
-      alternateName.contains('مناجاة');
+      '$title $alternateName $sourceLabel'.contains('مناجاة');
   bool get isMahdiDua {
     final value = '${slug.toLowerCase()} $title $alternateName $sourceLabel';
     return RegExp(r'mahdi|hujja|hujjah|sahib.al.zaman|imam.al.zaman|istighatha|ghayba|ghaib|nudba|al.ahd|faraj|صاحب الزمان|الإمام المهدي|الامام المهدي|الحجة|اللهم كن لوليك|دعاء العهد|دعاء الندبة|الاستغاثة بالحجة', caseSensitive: false).hasMatch(value);
@@ -102,7 +99,7 @@ class ShiaTextEntry {
   bool get isSharedDua {
     final value = '${slug.toLowerCase()} $title $alternateName $sourceLabel';
     return RegExp(
-      r'morning.{0,24}evening|evening.{0,24}morning|صباح.{0,24}مساء|مساء.{0,24}صباح|صباحاً ومساءً|صباحا ومساء|أذكار مشتركة|both periods',
+      r'morning.{0,24}evening|evening.{0,24}morning|صباح.{0,24}مساء|مساء.{0,24}صباح|صباحاً ومساءً|صباحا ومساء|أذكار مشتركة|التعقيبات المشتركة|both periods',
       caseSensitive: false,
     ).hasMatch(value);
   }

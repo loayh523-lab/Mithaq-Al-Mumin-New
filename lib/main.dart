@@ -321,7 +321,7 @@ class _MainShellState extends State<MainShell> {
                 _drawerItem(Icons.fingerprint_rounded, 'التسبيح', () => _selectTab(3), selected: _selected == 3),
                 _drawerItem(Icons.settings_rounded, 'الإعدادات', () => _selectTab(4), selected: _selected == 4),
                 _drawerItem(Icons.search_rounded, 'الباحث الذكي', () => _openDrawerPage(const SmartSearchPage())),
-                _drawerItem(Icons.checklist_rounded, 'صالح الأعمال', () => _openDrawerPage(const GoodDeedsPage())),
+                _drawerItem(Icons.checklist_rounded, 'الأعمال الصالحة', () => _openDrawerPage(const GoodDeedsPage())),
                 _drawerItem(Icons.auto_awesome_rounded, 'أسماء الله الحسنى', () => _openDrawerPage(const NamesOfAllahPage())),
                 _drawerItem(Icons.calculate_outlined, 'سجل القضاء', () => _openDrawerPage(const QadaTrackerPage())),
                 _drawerItem(Icons.shield_moon_outlined, 'حصن الأذكار', () => _openDrawerPage(const DhikrFortressPage())),
@@ -685,7 +685,7 @@ class _MainShellState extends State<MainShell> {
           child: TextButton.icon(
             onPressed: () => _pushPage(const GoodDeedsPage()),
             icon: const Icon(Icons.checklist_rounded),
-            label: const Text('عرض بقية صالح الأعمال'),
+            label: const Text('عرض بقية الأعمال الصالحة'),
           ),
         ),
         const SizedBox(height: 12),

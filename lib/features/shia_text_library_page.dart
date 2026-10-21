@@ -17,8 +17,10 @@ bool containsPersianOnlyLetters(String value) =>
 
 bool containsPersianLanguageMarkers(String value) {
   final normalized = normalizeArabicText(value);
+  // Keep only unambiguous Persian-language markers. Some phrases that look
+  // Persian in isolation also occur in valid Arabic religious texts.
   return RegExp(
-    r'دعای|دعاي|دعاهای|دعاهاي|روزهای|روزهاي|روزها|هفته|فارسی|فارسي|برای|براي|میباشد|می شود|ميشود|خواهد شد|نمی|نمي|زیارت|زيارت|زیارات|زيارات|مناجات|هر روز|ماه رجب|ماه شعبان|ماه رمضان|نیمه شعبان|نيمه شعبان|حضرت رسول|صلوات هر|هزار رکعت|هزار ركعت',
+    r'دعای|دعاي|دعاهای|دعاهاي|روزهای|روزهاي|فارسی|فارسي|برای|براي|میباشد|می شود|ميشود|خواهد شد|نمی|نمي|هنگام|آفتاب|شامگاه|صبحگاه|هفته|هزار رکعت|هزار ركعت',
   ).hasMatch('$value $normalized');
 }
 

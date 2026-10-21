@@ -553,7 +553,7 @@ class _NahjAlBalaghaPageState extends State<NahjAlBalaghaPage> {
             const Padding(
               padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
               child: Text(
-                'المصدر: قاعدة بيانات مفتوحة بترخيص MIT. قد يختلف ترقيم بعض النصوص بين الطبعات.',
+                'المصدر: بيانات ثقالين المفتوحة بترخيص CC0-1.0. قد يختلف الترقيم بين الطبعات.',
                 textAlign: TextAlign.center,
                 style: TextStyle(color: _libraryMuted, fontSize: 10, height: 1.5),
               ),

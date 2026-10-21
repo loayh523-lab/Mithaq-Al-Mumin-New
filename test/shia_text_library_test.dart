@@ -20,6 +20,39 @@ void main() {
     expect(data.entries.any((entry) => entry.isSahifa), isTrue);
     expect(data.entries.every((entry) => entry.arabicText.trim().isNotEmpty), isTrue);
 
+    const requiredSections = <String>[
+      'أدعية عامة',
+      'أدعية صاحب الزمان',
+      'أدعية الصباح',
+      'أدعية المساء',
+      'الأذكار المشتركة',
+      'أدعية الحاجات والشفاء',
+      'تعقيبات الصلوات',
+      'أدعية الأيام',
+      'الأعمال اليومية والمناسبات',
+      'الأعمال الشهرية والمناسبات',
+      'أدعية الأشهر والمناسبات',
+      'الزيارات',
+      'الصحيفة السجادية',
+      'المناجيات الخمس عشرة',
+    ];
+    for (final section in requiredSections) {
+      final uniqueEntries = data.entries
+          .where((entry) => entry.categories.contains(section))
+          .map((entry) => entry.slug)
+          .toSet();
+      expect(
+        uniqueEntries.length,
+        greaterThanOrEqualTo(6),
+        reason: 'Section "$section" must have at least six distinct sourced entries',
+      );
+    }
+    expect(
+      data.entries.map((entry) => entry.slug).toSet().length,
+      data.entries.length,
+      reason: 'A sourced text must be stored once; sections may reference it without cloning',
+    );
+
     final mafatihEntries = data.entries
         .where((entry) => entry.sourceLabel.startsWith('مفاتيح الجنان،'))
         .toList(growable: false);

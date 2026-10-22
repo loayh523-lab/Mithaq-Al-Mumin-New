@@ -760,7 +760,7 @@ class _MainShellState extends State<MainShell> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Icon(icon, color: _gold, size: 29),
-              const Spacer(),
+              const SizedBox(height: 18),
               Text(title, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
               const SizedBox(height: 4),
               Text(subtitle, style: const TextStyle(color: _muted, fontSize: 11)),

@@ -24,7 +24,7 @@ EXPECTED_CATEGORY_COUNTS = {
     "الأعمال والمناسبات": 20,
     "الزيارات الشريفة": 25,
 }
-PERSIAN_RE = re.compile(r"[\u067e\u0686\u0698\u06af\u06a9\u06cc]")
+PERSIAN_RE = re.compile(r"[\u067e\u0686\u0698\u06af]")
 LATIN_RE = re.compile(r"[A-Za-z]")
 ARABIC_RE = re.compile(r"[\u0600-\u06ff]")
 
@@ -103,6 +103,7 @@ def main() -> None:
     slugs_seen, ids_seen, texts_seen = set(), set(), {}
     total_arabic_lines = 0
     sahifa_arabic_lines = 0
+    duplicate_texts = []
 
     for collection_name, collection_items in (("curated", items), ("sahifa", sahifa_items)):
         for item in collection_items:
@@ -150,7 +151,7 @@ def main() -> None:
                 value = row.get("arabic")
                 if not isinstance(value, str):
                     raise SystemExit(f"Missing Arabic field in {slug}.")
-                value = value.strip()
+                value = value.strip().replace('ک', 'ك').replace('ی', 'ي')
                 if not value:
                     continue
                 if PERSIAN_RE.search(value) or LATIN_RE.search(value):
@@ -169,8 +170,9 @@ def main() -> None:
             if not key:
                 raise SystemExit(f"Empty normalized text for {slug}.")
             if key in texts_seen:
-                raise SystemExit(f"Duplicate full texts: {slug} duplicates {texts_seen[key]}.")
-            texts_seen[key] = slug
+                duplicate_texts.append(f"{slug} duplicates {texts_seen[key]}")
+            else:
+                texts_seen[key] = slug
 
             slug_category = (
                 SAHIFA_CATEGORY if slug.startswith(("sahifa-sajjadiya-", "munajat-sahifa-")) else
@@ -214,6 +216,8 @@ def main() -> None:
             else:
                 prepared_sahifa.append(prepared_entry)
 
+    if duplicate_texts:
+        raise SystemExit("Duplicate full texts detected across collections:\\n" + "\\n".join(duplicate_texts))
     if len(prepared) != EXPECTED_COUNT or len(set(item["slug"] for item in prepared)) != EXPECTED_COUNT:
         raise SystemExit(f"Prepared {len(prepared)} unique curated items, expected {EXPECTED_COUNT}.")
     if dict(category_counter) != EXPECTED_CATEGORY_COUNTS:

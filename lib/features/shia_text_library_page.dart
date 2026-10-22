@@ -162,8 +162,9 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
   final _controller = TextEditingController();
   late Future<ShiaTextData> _future;
   String _query = '';
-  String _category = 'الصحيفة السجادية والمناجيات';
+  String _category = 'كل النصوص';
   static const _categories = [
+    'كل النصوص',
     'الصحيفة السجادية والمناجيات',
     'الأدعية والأذكار اليومية',
     'الأدعية العامة وأدعية الفرج وصاحب الزمان',
@@ -195,7 +196,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
         }
         final data = snapshot.data!;
         final filtered = data.entries.where((entry) {
-          if (entry.category != _category) return false;
+          if (_category != 'كل النصوص' && entry.category != _category) return false;
           if (_query.isEmpty) return true;
           final header = _normalize('${entry.displayTitle} ${entry.title} ${entry.slug}');
           return header.contains(_query) ||
@@ -243,7 +244,15 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
               ..._categories
             ].map((choice) => Padding(
               padding: const EdgeInsets.only(left: 8),
-              child: ChoiceChip(label: Text(choice), selected: _category == choice, onSelected: (_) => setState(() => _category = choice)),
+              child: ChoiceChip(
+                label: Text(
+                  choice == 'كل النصوص'
+                      ? 'كل النصوص (' + data.entries.length.toString() + ')'
+                      : choice + ' (' + data.entries.where((entry) => entry.category == choice).length.toString() + ')',
+                ),
+                selected: _category == choice,
+                onSelected: (_) => setState(() => _category = choice),
+              ),
             )).toList()),
           ),
           Expanded(

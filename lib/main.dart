@@ -665,7 +665,7 @@ class _MainShellState extends State<MainShell> {
               child: _homeShortcut(
                 icon: Icons.volunteer_activism_rounded,
                 title: 'الأدعية',
-                subtitle: '110 دعاء • 5 أقسام',
+                subtitle: 'أدعية وزيارات • 5 أقسام',
                 onTap: () => setState(() => _selected = 2),
               ),
             ),
@@ -715,15 +715,18 @@ class _MainShellState extends State<MainShell> {
               _dailyDhikrRow(Icons.favorite_border_rounded, 'الاستغفار', 'أستغفر الله وأتوب إليه'),
               _dailyDhikrRow(Icons.spa_outlined, 'الصلاة على محمد وآل محمد', 'اللهم صلِّ على محمد وآل محمد'),
               const Divider(height: 20, color: Color(0x224EB58B)),
-              CheckboxListTile(
-                contentPadding: EdgeInsets.zero,
-                value: _dailyTaskDone,
-                onChanged: (value) => _toggleDailyTask(value ?? false),
-                activeColor: _emerald,
-                checkColor: Colors.white,
-                controlAffinity: ListTileControlAffinity.leading,
-                title: const Text('عمل اليوم المختار', style: TextStyle(fontWeight: FontWeight.w800)),
-                subtitle: Text(dailyTask, style: const TextStyle(color: _muted, height: 1.6)),
+              Material(
+                type: MaterialType.transparency,
+                child: CheckboxListTile(
+                  contentPadding: EdgeInsets.zero,
+                  value: _dailyTaskDone,
+                  onChanged: (value) => _toggleDailyTask(value ?? false),
+                  activeColor: _emerald,
+                  checkColor: Colors.white,
+                  controlAffinity: ListTileControlAffinity.leading,
+                  title: const Text('عمل اليوم المختار', style: TextStyle(fontWeight: FontWeight.w800)),
+                  subtitle: Text(dailyTask, style: const TextStyle(color: _muted, height: 1.6)),
+                ),
               ),
               const SizedBox(height: 2),
               const Text(

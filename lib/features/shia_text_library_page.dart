@@ -252,8 +252,6 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
         }).toList();
         final sahifaCount = data.entries.where((entry) => entry.category == 'الصحيفة السجادية والمناجيات').length;
         final dailyCount = data.entries.where((entry) => entry.category == 'الأدعية والأذكار اليومية').length;
-        final generalCount = data.entries.where((entry) => entry.category == 'الأدعية العامة وأدعية الفرج وصاحب الزمان').length;
-        final occasionCount = data.entries.where((entry) => entry.category == 'الأعمال والمناسبات').length;
         final ziyaratCount = data.entries.where((entry) => entry.category == 'الزيارات الشريفة').length;
         return Column(children: [
           Container(

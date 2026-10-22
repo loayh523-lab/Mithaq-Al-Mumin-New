@@ -251,7 +251,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
               Text(
                 _sahifaOnly
                     ? '${data.entries.length} نصاً محفوظاً من الصحيفة السجادية والمناجيات'
-                    : '${data.entries.length} نصاً • ${ziyaratCount} زيارة • ${dailyCount} يومي • ${generalCount} عام • ${occasionCount} مناسبة',
+                    : '${data.entries.length} نصاً • $ziyaratCount زيارة • $dailyCount يومي • $generalCount عام • $occasionCount مناسبة',
                 style: const TextStyle(color: _shiaMuted, height: 1.5),
               ),
               const SizedBox(height: 6),

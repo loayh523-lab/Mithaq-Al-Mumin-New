@@ -33,8 +33,8 @@ def main():
     entries = {}
     for juz in range(1, 31):
         query = urllib.parse.urlencode({
-            "per_page": 300,
-            "fields": "juz_number,hizb_number,rub_el_hizb_number,page_number",
+            "per_page": 50,
+            "fields": "chapter_id,verse_number,verse_key,juz_number,hizb_number,rub_el_hizb_number,page_number",
         })
         payload = get_json(f"{BASE}{juz}?{query}")
         verses = payload.get("verses")
@@ -44,9 +44,9 @@ def main():
         total_pages = int(pagination.get("total_pages", 1))
         for page in range(2, total_pages + 1):
             page_query = urllib.parse.urlencode({
-                "per_page": 300,
+                "per_page": 50,
                 "page": page,
-                "fields": "juz_number,hizb_number,rub_el_hizb_number,page_number",
+                "fields": "chapter_id,verse_number,verse_key,juz_number,hizb_number,rub_el_hizb_number,page_number",
             })
             extra = get_json(f"{BASE}{juz}?{page_query}").get("verses", [])
             verses.extend(extra)

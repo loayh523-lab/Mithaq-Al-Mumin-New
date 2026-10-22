@@ -45,7 +45,7 @@ class ShiaTextEntry {
   final String? categoryOverride;
   final List<ShiaTextLine> lines;
   String get displayTitle => alternateName.trim().isNotEmpty ? alternateName : title;
-  bool get isSahifa => slug.startsWith('sahifa-sajjadiya-');
+  bool get isSahifa => slug.startsWith('sahifa-sajjadiya-') || slug.startsWith('munajat-sahifa-');
   bool get isDayDua =>
       RegExp(r'(sunday|monday|tuesday|wednesday|thursday|friday|saturday)', caseSensitive: false).hasMatch(slug) ||
       RegExp(r'دعاء يوم|أدعية يوم|دعاء الأحد|دعاء الاثنين|دعاء الثلاثاء|دعاء الأربعاء|دعاء الخميس|دعاء الجمعة|دعاء السبت').hasMatch('$title $alternateName');
@@ -119,28 +119,45 @@ class ShiaTextData {
   final String sourceProject;
   final String license;
   static Future<ShiaTextData>? _cache;
-  static Future<ShiaTextData> load() => _cache ??= _load();
+  static Future<ShiaTextData>? _sahifaCache;
 
-  static Future<ShiaTextData> _load() async {
-    // The offline asset is prepared from the selected Arabic Shia text source only.
-    final raw = await rootBundle.loadString('assets/shia_duas/shia_duas.json');
+  static Future<ShiaTextData> load() =>
+      _cache ??= _loadAsset('assets/shia_duas/shia_duas.json', expectedCount: 110, sahifaOnly: false);
+
+  static Future<ShiaTextData> loadSahifa() =>
+      _sahifaCache ??= _loadAsset('assets/shia_duas/sahifa_sajjadiya.json', expectedCount: 76, sahifaOnly: true);
+
+  static Future<ShiaTextData> _loadAsset(
+    String assetPath, {
+    required int expectedCount,
+    required bool sahifaOnly,
+  }) async {
+    final raw = await rootBundle.loadString(assetPath);
     final decoded = jsonDecode(raw) as Map<String, dynamic>;
     final rawEntries = decoded['entries'] as List<dynamic>;
     final entries = rawEntries.whereType<Map<String, dynamic>>()
         .map(ShiaTextEntry.fromJson).toList();
-    if (entries.length != 110) {
-      throw FormatException('Expected exactly 110 curated Arabic texts; found ${entries.length}.');
+
+    if (entries.length != expectedCount) {
+      throw FormatException('Expected exactly $expectedCount texts in $assetPath; found ${entries.length}.');
     }
     final slugs = entries.map((entry) => entry.slug).toSet();
-    if (slugs.length != 110 || entries.any((entry) => entry.slug.isEmpty)) {
-      throw const FormatException('The supplication library contains duplicate or empty identifiers.');
+    if (slugs.length != expectedCount || entries.any((entry) => entry.slug.isEmpty)) {
+      throw const FormatException('The religious text collection contains duplicate or empty identifiers.');
     }
     if (entries.any((entry) => entry.lines.isEmpty || entry.arabicText.trim().isEmpty)) {
-      throw const FormatException('The supplication library contains an empty text.');
+      throw const FormatException('The religious text collection contains an empty text.');
     }
     if (entries.any((entry) => entry.categoryOverride == null)) {
-      throw const FormatException('A library entry is missing its fixed category.');
+      throw const FormatException('A religious text is missing its fixed category.');
     }
+    if (sahifaOnly && entries.any((entry) => entry.categoryOverride != 'الصحيفة السجادية والمناجيات')) {
+      throw const FormatException('The separate Sahifa collection contains a text from another section.');
+    }
+    if (!sahifaOnly && entries.any((entry) => entry.categoryOverride == 'الصحيفة السجادية والمناجيات')) {
+      throw const FormatException('The 110-text collection must not duplicate the separate Sahifa archive.');
+    }
+
     final metadata = decoded['metadata'] as Map<String, dynamic>? ?? const <String, dynamic>{};
     return ShiaTextData(
       entries: entries,

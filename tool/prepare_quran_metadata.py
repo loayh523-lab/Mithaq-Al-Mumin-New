@@ -53,6 +53,11 @@ def main():
         for verse in verses:
             key = verse.get("verse_key")
             chapter = verse.get("chapter_id")
+            if not isinstance(chapter, int) and isinstance(key, str) and ":" in key:
+                try:
+                    chapter = int(key.split(":", 1)[0])
+                except ValueError:
+                    chapter = None
             number = verse.get("verse_number")
             juz_number = verse.get("juz_number")
             hizb_number = verse.get("hizb_number")

@@ -5,16 +5,15 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('Curated offline Arabic supplication library', () {
-    test('contains exactly 110 complete texts in the five agreed sections', () async {
+    test('contains exactly 110 complete texts in the four curated sections', () async {
       final data = await ShiaTextData.load();
       expect(data.entries, hasLength(110));
 
       const expectedCounts = <String, int>{
-        'الصحيفة السجادية والمناجيات': 76,
-        'الأدعية والأذكار اليومية': 11,
-        'الأدعية العامة وأدعية الفرج وصاحب الزمان': 10,
-        'الأعمال والمناسبات': 7,
-        'الزيارات الشريفة': 6,
+        'الأدعية والأذكار اليومية': 30,
+        'الأدعية العامة وأدعية الفرج وصاحب الزمان': 35,
+        'الأعمال والمناسبات': 20,
+        'الزيارات الشريفة': 25,
       };
       final counts = <String, int>{};
       final slugs = <String>{};
@@ -54,5 +53,15 @@ void main() {
       expect(slugs, hasLength(110));
       expect(completeTexts, hasLength(110));
     });
+    test('preserves Sahifa and Munajat separately without counting them among the 110', () async {
+      final data = await ShiaTextData.loadSahifa();
+      expect(data.entries, hasLength(76));
+      expect(
+        data.entries.every((entry) => entry.category == 'الصحيفة السجادية والمناجيات'),
+        isTrue,
+      );
+      expect(data.entries.map((entry) => entry.slug).toSet(), hasLength(76));
+    });
+
   });
 }

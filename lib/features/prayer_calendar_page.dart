@@ -447,6 +447,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
             IconButton(tooltip: 'السنة السابقة', onPressed: () => _changeAnnualYear(-1), icon: const Icon(Icons.chevron_right_rounded, color: _gold)),
             Expanded(child: Text('التقويم السنوي $year', textAlign: TextAlign.center, style: const TextStyle(color: _gold, fontWeight: FontWeight.w800, fontSize: 18))),
             IconButton(tooltip: 'السنة التالية', onPressed: () => _changeAnnualYear(1), icon: const Icon(Icons.chevron_left_rounded, color: _gold)),
+            IconButton(tooltip: 'العودة إلى التقويم الشهري', onPressed: () => setState(() => _showAnnualCalendar = false), icon: const Icon(Icons.calendar_view_month_rounded, color: _gold)),
           ]),
         ),
       ),

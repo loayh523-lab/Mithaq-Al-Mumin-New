@@ -121,8 +121,26 @@ class ShiaTextData {
   static Future<ShiaTextData>? _cache;
   static Future<ShiaTextData>? _sahifaCache;
 
-  static Future<ShiaTextData> load() =>
-      _cache ??= _loadAsset('assets/shia_duas/shia_duas.json', expectedCount: 110, sahifaOnly: false);
+  static Future<ShiaTextData> load() => _cache ??= _loadCombined();
+
+  static Future<ShiaTextData> _loadCombined() async {
+    final core = await _loadAsset(
+      'assets/shia_duas/shia_duas.json',
+      expectedCount: 110,
+      sahifaOnly: false,
+    );
+    final sahifa = await loadSahifa();
+    final entries = <ShiaTextEntry>[...sahifa.entries, ...core.entries];
+    final slugs = entries.map((entry) => entry.slug).toSet();
+    if (slugs.length != entries.length) {
+      throw const FormatException('The combined religious library contains duplicate identifiers.');
+    }
+    return ShiaTextData(
+      entries: List<ShiaTextEntry>.unmodifiable(entries),
+      sourceProject: core.sourceProject,
+      license: core.license,
+    );
+  }
 
   static Future<ShiaTextData> loadSahifa() =>
       _sahifaCache ??= _loadAsset('assets/shia_duas/sahifa_sajjadiya.json', expectedCount: 76, sahifaOnly: true);
@@ -184,7 +202,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
   String _category = 'كل النصوص';
   static const _categories = [
     'كل النصوص',
-
+    'الصحيفة السجادية والمناجيات',
     'الأدعية والأذكار اليومية',
     'الأدعية العامة وأدعية الفرج وصاحب الزمان',
     'الأعمال والمناسبات',
@@ -232,6 +250,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
           return header.contains(_query) ||
               entry.lines.where((line) => line.isArabic).any((line) => _normalize(line.text).contains(_query));
         }).toList();
+        final sahifaCount = data.entries.where((entry) => entry.category == 'الصحيفة السجادية والمناجيات').length;
         final dailyCount = data.entries.where((entry) => entry.category == 'الأدعية والأذكار اليومية').length;
         final generalCount = data.entries.where((entry) => entry.category == 'الأدعية العامة وأدعية الفرج وصاحب الزمان').length;
         final occasionCount = data.entries.where((entry) => entry.category == 'الأعمال والمناسبات').length;
@@ -246,19 +265,19 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
               border: Border.all(color: _shiaGold.withValues(alpha: .28)),
             ),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const Text('نصوص شيعية للقراءة دون إنترنت', style: TextStyle(color: _shiaGold, fontSize: 20, fontWeight: FontWeight.w800)),
+              const Text('مكتبة الأدعية والزيارات', style: TextStyle(color: _shiaGold, fontSize: 20, fontWeight: FontWeight.w800)),
               const SizedBox(height: 6),
               Text(
                 _sahifaOnly
                     ? '${data.entries.length} نصاً محفوظاً من الصحيفة السجادية والمناجيات'
-                    : '${data.entries.length} نصاً • $ziyaratCount زيارة • $dailyCount يومي • $generalCount عام • $occasionCount مناسبة',
+                    : '${data.entries.length} نصاً • $sahifaCount صحيفة ومناجاة • $ziyaratCount زيارة • $dailyCount يومي',
                 style: const TextStyle(color: _shiaMuted, height: 1.5),
               ),
               const SizedBox(height: 6),
               Text(
                 _sahifaOnly
                     ? 'الصحيفة السجادية والمناجيات محفوظة هنا بقسم مستقل ولا تدخل ضمن مجموعة الـ١١٠ المختارة.'
-                    : 'المجموعة الأساسية لا تكرر نصوص الصحيفة؛ تجد الصحيفة السجادية والمناجيات في قسم مستقل. العناوين والمصادر قابلة للمراجعة عند اختلاف الطبعات.',
+                    : 'تصفح الصحيفة والمناجيات والأدعية اليومية والعامة والزيارات وأعمال المناسبات من مكتبة واحدة.',
                 style: const TextStyle(color: _shiaMuted, fontSize: 11, height: 1.5),
               ),
             ]),

@@ -678,116 +678,320 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
     }
   }
 
+  String _arabicDigits(String value) => value.replaceAllMapped(
+    RegExp(r'[0-9]'),
+    (match) => '٠١٢٣٤٥٦٧٨٩'[int.parse(match.group(0)!)],
+  );
+
   @override
-  Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: Text(widget.surah.name),
-      actions: [
-        IconButton(
-          tooltip: _keepScreenOn ? 'إيقاف إبقاء الشاشة مفعّلة' : 'إبقاء الشاشة مفعّلة أثناء القراءة',
-          onPressed: () => _setKeepScreenOn(!_keepScreenOn),
-          icon: Icon(_keepScreenOn ? Icons.light_mode_rounded : Icons.light_mode_outlined,
-            color: _keepScreenOn ? _gold : _muted),
-        ),
-        IconButton(
-        tooltip: 'مصدر النص',
-        onPressed: () => showAboutDialog(
-          context: context, applicationName: 'ميثاق المؤمن', applicationVersion: '0.1.0',
-          children: const [Text('النص العثماني مضمّن داخل التطبيق من مشروع dotquran/corpus الذي ينسب النص إلى Tanzil. لا يغيّر التطبيق كلمات الآيات.')],
-        ),
-        icon: const Icon(Icons.info_outline_rounded),
-      )],
-    ),
-    body: _loading
-      ? const Center(child: Column(mainAxisSize: MainAxisSize.min, children: [
-          CircularProgressIndicator(color: _gold), SizedBox(height: 16), Text('جارٍ تحميل نص السورة...'),
-        ]))
-      : _error != null
-        ? _QuranError(message: _error!, onRetry: _loadVerses)
-        : ListView(padding: const EdgeInsets.all(16), children: [
-            Container(
-              padding: const EdgeInsets.all(18),
-              decoration: BoxDecoration(color: _panel, borderRadius: BorderRadius.circular(20), border: Border.all(color: _gold.withValues(alpha: .35))),
-              child: Column(children: [
-                Text(widget.surah.name, style: const TextStyle(color: _gold, fontSize: 27, fontWeight: FontWeight.w800)),
-                const SizedBox(height: 4),
-                Text('${widget.surah.type == 'meccan' ? 'مكية' : 'مدنية'} • ${_verses.length} آية', style: const TextStyle(color: _muted)),
-              ]),
+  Widget build(BuildContext context) {
+    final firstMeta = _verseMetadata['\${widget.surah.id}:1'];
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('القرآن الكريم'),
+        actions: [
+          IconButton(
+            tooltip: 'تصغير الخط',
+            onPressed: _fontSize <= 16
+                ? null
+                : () {
+                    final next = (_fontSize - 2).clamp(16, 34).toDouble();
+                    setState(() => _fontSize = next);
+                    unawaited(SharedPreferences.getInstance().then(
+                      (prefs) => prefs.setDouble('quran_font_size', next),
+                    ));
+                  },
+            icon: const Icon(Icons.text_decrease_rounded),
+          ),
+          IconButton(
+            tooltip: 'تكبير الخط',
+            onPressed: _fontSize >= 34
+                ? null
+                : () {
+                    final next = (_fontSize + 2).clamp(16, 34).toDouble();
+                    setState(() => _fontSize = next);
+                    unawaited(SharedPreferences.getInstance().then(
+                      (prefs) => prefs.setDouble('quran_font_size', next),
+                    ));
+                  },
+            icon: const Icon(Icons.text_increase_rounded),
+          ),
+          IconButton(
+            tooltip: _keepScreenOn
+                ? 'إيقاف إبقاء الشاشة مفعّلة'
+                : 'إبقاء الشاشة مفعّلة أثناء القراءة',
+            onPressed: () => _setKeepScreenOn(!_keepScreenOn),
+            icon: Icon(
+              _keepScreenOn ? Icons.light_mode_rounded : Icons.light_mode_outlined,
+              color: _keepScreenOn ? _gold : _muted,
             ),
-            if (widget.surah.id != 1 && widget.surah.id != 9)
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 16),
-                child: Center(child: Text('بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ', textAlign: TextAlign.center, style: TextStyle(fontSize: 25, color: _gold, height: 2))),
-              ),
-            ...List.generate(_verses.length, (i) {
-              final isInitialVerse = widget.initialVerse == i + 1;
-              return KeyedSubtree(
-                key: ValueKey('quran-verse-${widget.surah.id}-${i + 1}'),
-                child: Container(
-              key: isInitialVerse ? _initialVerseKey : null,
-              margin: const EdgeInsets.only(top: 10), padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: isInitialVerse ? _emerald.withValues(alpha: .18) : _panel,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: isInitialVerse ? _gold.withValues(alpha: .75) : Colors.white.withValues(alpha: .05),
-                  width: isInitialVerse ? 1.4 : 1,
+          ),
+          IconButton(
+            tooltip: 'مصدر النص',
+            onPressed: () => showAboutDialog(
+              context: context,
+              applicationName: 'ميثاق المؤمن',
+              applicationVersion: '0.1.0',
+              children: const [
+                Text(
+                  'النص العثماني مضمّن داخل التطبيق من مشروع dotquran/corpus الذي ينسب النص إلى Tanzil. لا يغيّر التطبيق كلمات الآيات.',
                 ),
+              ],
+            ),
+            icon: const Icon(Icons.info_outline_rounded),
+          ),
+        ],
+      ),
+      body: _loading
+          ? const Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircularProgressIndicator(color: _gold),
+                  SizedBox(height: 16),
+                  Text('جارٍ تحميل نص السورة...'),
+                ],
               ),
-              child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                Text(_verses[i], textAlign: TextAlign.right, textDirection: TextDirection.rtl, style: TextStyle(fontSize: _fontSize, height: 2.1)),
-                const SizedBox(height: 8),
-                Row(children: [
-                  CircleAvatar(radius: 16, backgroundColor: _emerald, child: Text('${i + 1}', style: const TextStyle(color: Colors.white, fontSize: 12))),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Builder(builder: (context) {
-                      final meta = _verseMetadata['${widget.surah.id}:${i + 1}'];
-                      return Text(
-                        meta == null ? 'بيانات التقسيم غير متاحة' : 'الجزء ${meta.juz} • الحزب ${meta.hizb} • الصفحة ${meta.page}',
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(color: _muted, fontSize: 10),
+            )
+          : _error != null
+              ? _QuranError(message: _error!, onRetry: _loadVerses)
+              : ListView(
+                  padding: const EdgeInsets.fromLTRB(18, 14, 18, 30),
+                  children: [
+                    if (firstMeta != null)
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 5,
+                          ),
+                          decoration: BoxDecoration(
+                            color: _panel,
+                            border: Border.all(
+                              color: _muted.withValues(alpha: .3),
+                            ),
+                          ),
+                          child: Text(
+                            'الجزء \${_arabicDigits('\${firstMeta.juz}')}',
+                            style: const TextStyle(
+                              color: _muted,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
+                      ),
+                    Container(
+                      margin: const EdgeInsets.only(top: 18, bottom: 28),
+                      height: 70,
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: const Color(0xFF8E8E8E).withValues(alpha: .7),
+                        ),
+                        borderRadius: BorderRadius.circular(22),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.auto_awesome_rounded,
+                            color: _muted.withValues(alpha: .75),
+                            size: 24,
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              'سورة \${widget.surah.name}',
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 25,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                                height: 1.6,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Icon(
+                            Icons.auto_awesome_rounded,
+                            color: _muted.withValues(alpha: .75),
+                            size: 24,
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (widget.surah.id != 1 && widget.surah.id != 9)
+                      const Padding(
+                        padding: EdgeInsets.only(bottom: 22),
+                        child: Center(
+                          child: Text(
+                            'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 27,
+                              color: Colors.white,
+                              height: 2,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ...List.generate(_verses.length, (i) {
+                      final isInitialVerse = widget.initialVerse == i + 1;
+                      final saved = _bookmarks.contains(
+                        '\${widget.surah.id}:\${i + 1}',
+                      );
+                      return KeyedSubtree(
+                        key: ValueKey('quran-verse-\${widget.surah.id}-\${i + 1}'),
+                        child: Container(
+                          key: isInitialVerse ? _initialVerseKey : null,
+                          margin: const EdgeInsets.only(bottom: 24),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 4,
+                            vertical: isInitialVerse ? 8 : 0,
+                          ),
+                          decoration: isInitialVerse
+                              ? BoxDecoration(
+                                  color: _emerald.withValues(alpha: .12),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: _gold.withValues(alpha: .5),
+                                  ),
+                                )
+                              : null,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              SelectableText(
+                                _verses[i],
+                                textAlign: TextAlign.right,
+                                textDirection: TextDirection.rtl,
+                                style: TextStyle(
+                                  fontSize: _fontSize,
+                                  height: 2.25,
+                                  color: Colors.white,
+                                  fontFamily: 'NotoNaskhArabic',
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    '۞ \${_arabicDigits('\${i + 1}')} ۞',
+                                    textDirection: TextDirection.rtl,
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      color: _gold,
+                                      height: 1.5,
+                                    ),
+                                  ),
+                                  PopupMenuButton<String>(
+                                    tooltip: 'خيارات الآية',
+                                    icon: Icon(
+                                      saved
+                                          ? Icons.bookmark_rounded
+                                          : Icons.more_horiz_rounded,
+                                      color: saved ? _gold : _muted,
+                                      size: 21,
+                                    ),
+                                    onSelected: (action) async {
+                                      switch (action) {
+                                        case 'save':
+                                          await _saveReadingPosition(i + 1);
+                                          break;
+                                        case 'bookmark':
+                                          await _toggleBookmark(i);
+                                          break;
+                                        case 'tafsir':
+                                          await _showTafsir(i);
+                                          break;
+                                        case 'copy':
+                                          await Clipboard.setData(
+                                            ClipboardData(text: _verses[i]),
+                                          );
+                                          if (!context.mounted) return;
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              content: Text('تم نسخ نص الآية'),
+                                              duration: Duration(seconds: 1),
+                                            ),
+                                          );
+                                          break;
+                                      }
+                                    },
+                                    itemBuilder: (context) => [
+                                      const PopupMenuItem(
+                                        value: 'save',
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.bookmark_add_outlined),
+                                            SizedBox(width: 10),
+                                            Text('حفظ موضع القراءة'),
+                                          ],
+                                        ),
+                                      ),
+                                      PopupMenuItem(
+                                        value: 'bookmark',
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              saved
+                                                  ? Icons.bookmark_remove_outlined
+                                                  : Icons.bookmark_add_outlined,
+                                            ),
+                                            const SizedBox(width: 10),
+                                            Text(
+                                              saved
+                                                  ? 'إزالة الآية من المحفوظات'
+                                                  : 'حفظ الآية في المفضلة',
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const PopupMenuItem(
+                                        value: 'tafsir',
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.menu_book_outlined),
+                                            SizedBox(width: 10),
+                                            Text('فتح مرجع التفسير'),
+                                          ],
+                                        ),
+                                      ),
+                                      const PopupMenuItem(
+                                        value: 'copy',
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.copy_rounded),
+                                            SizedBox(width: 10),
+                                            Text('نسخ الآية'),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
                       );
                     }),
-                  ),
-                  IconButton(
-                    tooltip: 'حفظ موضع القراءة',
-                    onPressed: () => _saveReadingPosition(i + 1),
-                    icon: const Icon(Icons.playlist_add_check_circle_rounded, color: _gold, size: 20),
-                  ),
-                  IconButton(
-                    tooltip: _bookmarks.contains('${widget.surah.id}:${i + 1}') ? 'إزالة من المحفوظات' : 'حفظ الآية',
-                    onPressed: () => _toggleBookmark(i),
-                    icon: Icon(
-                      _bookmarks.contains('${widget.surah.id}:${i + 1}') ? Icons.bookmark_rounded : Icons.bookmark_add_outlined,
-                      color: _bookmarks.contains('${widget.surah.id}:${i + 1}') ? _gold : _muted,
-                      size: 20,
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 18),
+                      child: Text(
+                        'المصدر: مشروع Tanzil عبر dotquran/corpus. نص الآيات لا يتغير. الجزء ظاهر أعلى القراءة فقط؛ أزلنا أرقام الصفحات والتقسيمات من تحت الآيات حتى تبقى القراءة واضحة.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: _muted,
+                          fontSize: 11,
+                          height: 1.7,
+                        ),
+                      ),
                     ),
-                  ),
-                  IconButton(
-                    tooltip: 'تفسير الآية',
-                    onPressed: () => _showTafsir(i),
-                    icon: const Icon(Icons.menu_book_outlined, color: _gold, size: 19),
-                  ),
-                  IconButton(
-                    tooltip: 'نسخ الآية',
-                    onPressed: () async {
-                      await Clipboard.setData(ClipboardData(text: _verses[i]));
-                      if (!context.mounted) return;
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('تم نسخ نص الآية')));
-                    },
-                    icon: const Icon(Icons.copy_rounded, color: _muted, size: 19),
-                  ),
-                ]),
-              ]),
+                  ],
                 ),
-              );
-            }),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 16),
-              child: Text('المصدر: Tanzil Project عبر dotquran/corpus. النص مضمّن في التطبيق للقراءة دون إنترنت؛ راجع التوثيق والترخيص في صفحة المشروع.', textAlign: TextAlign.center, style: TextStyle(color: _muted, fontSize: 11, height: 1.6)),
-            ),
-          ]),
-  );
+    );
+  }
 }

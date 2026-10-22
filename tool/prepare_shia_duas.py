@@ -21,11 +21,10 @@ MANIFEST_PATH = Path("tool/shia_dua_manifest.json")
 DEST = Path("assets/shia_duas/shia_duas.json")
 EXPECTED_COUNT = 110
 EXPECTED_CATEGORY_COUNTS = {
-    "الصحيفة السجادية والمناجيات": 76,
-    "الأدعية والأذكار اليومية": 11,
-    "الأدعية العامة وأدعية الفرج وصاحب الزمان": 10,
-    "الأعمال والمناسبات": 7,
-    "الزيارات الشريفة": 6,
+    "الأدعية والأذكار اليومية": 30,
+    "الأدعية العامة وأدعية الفرج وصاحب الزمان": 35,
+    "الأعمال والمناسبات": 20,
+    "الزيارات الشريفة": 25,
 }
 PERSIAN_RE = re.compile(r"[\u067e\u0686\u0698\u06af\u06a9\u06cc]")
 LATIN_RE = re.compile(r"[A-Za-z]")

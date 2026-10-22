@@ -253,8 +253,12 @@ class _MainShellState extends State<MainShell> {
             _homePage(),
             _selected == 1 ? const QuranIndexPage() : const SizedBox.shrink(),
             _duaPage(),
-            _tasbeehPage(),
-            SettingsPage(onLocationChanged: _loadDashboardData),
+            _selected == 3
+                ? PrayerCalendarPage(
+                    onLocationChanged: _handleLocationChanged,
+                    onHijriCorrectionChanged: _loadDashboardData,
+                  )
+                : const SizedBox.shrink(),
           ],
         ),
       ),
@@ -285,17 +289,12 @@ class _MainShellState extends State<MainShell> {
             NavigationDestination(
               icon: Icon(Icons.auto_awesome_outlined),
               selectedIcon: Icon(Icons.auto_awesome_rounded, color: _gold),
-              label: 'الأدعية',
+              label: 'المكتبة الإيمانية',
             ),
             NavigationDestination(
-              icon: Icon(Icons.fingerprint_outlined),
-              selectedIcon: Icon(Icons.fingerprint_rounded, color: _gold),
-              label: 'التسبيح',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.settings_outlined),
-              selectedIcon: Icon(Icons.settings_rounded, color: _gold),
-              label: 'الإعدادات',
+              icon: Icon(Icons.calendar_month_outlined),
+              selectedIcon: Icon(Icons.calendar_month_rounded, color: _gold),
+              label: 'المواقيت',
             ),
           ],
         ),
@@ -342,9 +341,10 @@ class _MainShellState extends State<MainShell> {
               children: [
                 _drawerItem(Icons.home_rounded, 'الرئيسية', () => _selectTab(0), selected: _selected == 0),
                 _drawerItem(Icons.menu_book_rounded, 'القرآن الكريم', () => _selectTab(1), selected: _selected == 1),
-                _drawerItem(Icons.auto_awesome_rounded, 'الأدعية والزيارات', () => _selectTab(2), selected: _selected == 2),
-                _drawerItem(Icons.fingerprint_rounded, 'التسبيح', () => _selectTab(3), selected: _selected == 3),
-                _drawerItem(Icons.settings_rounded, 'الإعدادات', () => _selectTab(4), selected: _selected == 4),
+                _drawerItem(Icons.auto_awesome_rounded, 'المكتبة الإيمانية', () => _selectTab(2), selected: _selected == 2),
+                _drawerItem(Icons.calendar_month_rounded, 'المواقيت والتقويم', () => _selectTab(3), selected: _selected == 3),
+                _drawerItem(Icons.fingerprint_rounded, 'التسبيح والعداد', () => _openDrawerPage(const TasbeehPage())),
+                _drawerItem(Icons.settings_rounded, 'الإعدادات', () => _openDrawerPage(SettingsPage(onLocationChanged: _handleLocationChanged))),
                 _drawerItem(Icons.search_rounded, 'الباحث الذكي', () => _openDrawerPage(const SmartSearchPage())),
                 _drawerItem(Icons.checklist_rounded, 'الأعمال الصالحة', () => _openDrawerPage(const GoodDeedsPage())),
                 _drawerItem(Icons.auto_awesome_rounded, 'أسماء الله الحسنى', () => _openDrawerPage(const NamesOfAllahPage())),

@@ -27,8 +27,8 @@ void main() {
     expect(find.text('ميثاق المؤمن'), findsWidgets);
     expect(find.text('التاريخ الهجري'), findsOneWidget);
     expect(find.text('قبس اليوم'), findsOneWidget);
-    expect(find.text('الصلاة القادمة'), findsNothing);
-    expect(find.text('مواقيت الصلوات'), findsNothing);
+    expect(find.text('الصلاة القادمة'), findsOneWidget);
+    expect(find.text('مواقيت الصلاة'), findsOneWidget);
 
     await tester.scrollUntilVisible(
       find.text('ابدأ وردك'),
@@ -199,7 +199,9 @@ void main() {
     expect(find.text('إمساكية تقديرية — قلعة سكر / العراق'), findsOneWidget);
     expect(find.textContaining('الإمساك/الفجر:'), findsWidgets);
 
-    await tester.tap(find.text('التقويم السنوي'));
+    await tester.tap(find.text('التقويم الهجري'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('عرض التقويم السنوي'));
     await tester.pumpAndSettle();
     expect(find.text('التقويم السنوي ${DateTime.now().year}'), findsOneWidget);
     await tester.tap(find.text('كانون الثاني'));
@@ -226,7 +228,9 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
     expect(find.text('الفاتحة'), findsWidgets);
-    expect(find.textContaining('7 آية'), findsOneWidget);
+    expect(find.textContaining('إِيَّاكَ نَعْبُدُ'), findsOneWidget);
+    expect(find.textContaining('الجزء 1'), findsOneWidget);
+    expect(find.textContaining('الصفحة'), findsNothing);
     expect(find.textContaining('تعذّر فتح نص القرآن'), findsNothing);
   });
 

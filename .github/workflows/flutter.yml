@@ -82,6 +82,8 @@ jobs:
         run: python3 tool/prepare_adhan.py
       - name: Prepare full offline Quran text
         run: python3 tool/prepare_quran.py
+      - name: Prepare offline Quran juz and hizb metadata
+        run: python3 tool/prepare_quran_metadata.py
       - name: Prepare offline Shia duas and ziyarat
         run: python3 tool/prepare_shia_duas.py
       - name: Install dependencies

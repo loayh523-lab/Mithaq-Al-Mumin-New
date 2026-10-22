@@ -67,7 +67,7 @@ class _SettingsPageState extends State<SettingsPage> {
         if (mounted) setState(() => _isPlayingAdhan = false);
       });
       await player.stop();
-      await player.play(AssetSource('audio/adhan_persian.ogg'));
+      await player.play(AssetSource('audio/adhan_shabbar_maalla.mp3'));
       if (mounted) setState(() => _isPlayingAdhan = true);
     } catch (error) {
       if (mounted) _message('تعذّر تشغيل التسجيل الصوتي. جرّب إعادة فتح التطبيق أو تحقق من الملف المرفق.');
@@ -295,7 +295,7 @@ class _SettingsPageState extends State<SettingsPage> {
             child: SwitchListTile(
               contentPadding: EdgeInsets.zero,
               title: const Text('إشعارات الصلاة'),
-              subtitle: const Text('تذكيرات محلية للأيام الثلاثين القادمة وفق حساب فلكي تقديري. التسجيل الصوتي المرفق فارسي بنمط ماهور، ولم نتحقق من مطابقته للصيغة الجعفرية. قد تتأخر التنبيهات بسبب توفير الطاقة.', style: TextStyle(color: _settingsMuted, height: 1.5, fontSize: 12)),
+              subtitle: const Text('تذكيرات محلية للأيام الثلاثين القادمة وفق حساب فلكي تقديري، باستخدام تسجيل الأذان المختار. قد تتأخر التنبيهات بسبب قيود توفير الطاقة أو أذونات أندرويد.', style: TextStyle(color: _settingsMuted, height: 1.5, fontSize: 12)),
               value: _notificationsEnabled,
               onChanged: _loaded ? _toggleNotifications : null,
               activeThumbColor: _settingsGold,
@@ -374,9 +374,7 @@ class _SettingsPageState extends State<SettingsPage> {
               label: const Text('تجربة إشعار الأذان'),
             ),
           ),
-          const Text('التسجيل: Saeed Hatamzadeh-Varmazyar، أذان بنمط ماهور، ترخيص CC BY-SA 4.0. وصف الملف لا يؤكد ألفاظه الجعفرية؛ لذلك لا نعرضه كأذان جعفري موثّق.', style: TextStyle(color: _settingsMuted, fontSize: 11, height: 1.5)),
-          const SizedBox(height: 4),
-          const SelectableText('https://commons.wikimedia.org/wiki/File:AzaanMaahur.ogg', style: TextStyle(color: _settingsGold, fontSize: 11)),
+          const Text('التسجيل المعتمد: الأذان من العتبة العلوية المقدسة بصوت القارئ الشيخ شبّر معلة.', style: TextStyle(color: _settingsMuted, fontSize: 11, height: 1.5)),
           const SizedBox(height: 4),
           const Text('يلزم السماح بإشعارات التطبيق من أندرويد. إذا وصل الإشعار بلا صوت، ارفع صوت التنبيهات وافحص إعداد قناة «أذان الصلاة».', style: TextStyle(color: _settingsMuted, fontSize: 11, height: 1.5)),
         ],

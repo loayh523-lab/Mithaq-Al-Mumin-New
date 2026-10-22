@@ -233,7 +233,7 @@ class _MainShellState extends State<MainShell> {
       appBar: AppBar(
         title: const Row(
           children: [
-            Icon(Icons.mosque_rounded, color: _gold, size: 27),
+            Icon(Icons.auto_awesome_rounded, color: _gold, size: 27),
             SizedBox(width: 10),
             Text('ميثاق المؤمن', style: TextStyle(fontWeight: FontWeight.w800)),
           ],
@@ -320,7 +320,7 @@ class _MainShellState extends State<MainShell> {
             ),
             child: const Row(
               children: [
-                Icon(Icons.mosque_rounded, color: _gold, size: 34),
+                Icon(Icons.auto_awesome_rounded, color: _gold, size: 34),
                 SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -353,7 +353,6 @@ class _MainShellState extends State<MainShell> {
                 _drawerItem(Icons.checklist_rounded, 'الأعمال الصالحة', () => _openDrawerPage(const GoodDeedsPage())),
                 _drawerItem(Icons.calculate_outlined, 'سجل القضاء', () => _openDrawerPage(const QadaTrackerPage())),
                 _drawerItem(Icons.shield_moon_outlined, 'حصن الأذكار', () => _openDrawerPage(const DhikrFortressPage())),
-                _drawerItem(Icons.menu_book_rounded, 'الصحيفة السجادية والمناجيات', () => _openDrawerPage(const ShiaTextLibraryPage(sahifaOnly: true))),
                 const Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(14, 18, 14, 8),
                   child: Text('الأدوات والخدمات', style: TextStyle(color: _gold, fontWeight: FontWeight.w800, fontSize: 13)),
@@ -362,7 +361,7 @@ class _MainShellState extends State<MainShell> {
                 _drawerItem(Icons.search_rounded, 'الباحث الذكي', () => _openDrawerPage(const SmartSearchPage())),
                 _drawerItem(Icons.auto_awesome_rounded, 'أسماء الله الحسنى', () => _openDrawerPage(const NamesOfAllahPage())),
                 _drawerItem(Icons.explore_rounded, 'اتجاه القبلة', () => _openDrawerPage(QiblaPage(onLocationChanged: _handleLocationChanged))),
-                _drawerItem(Icons.library_books_rounded, 'مكتبة الأدعية والزيارات', () => _openDrawerPage(const ShiaTextLibraryPage())),
+                _drawerItem(Icons.library_books_rounded, 'مكتبة الأدعية والزيارات والصحيفة', () => _openDrawerPage(const ShiaTextLibraryPage())),
                 _drawerItem(Icons.volunteer_activism_rounded, 'الخدمات الإيمانية', () => _openDrawerPage(const FaithServicesPage())),
                 _drawerItem(Icons.star_rounded, 'المفضلة المباركة', () => _openDrawerPage(const FavoritesPage())),
                 _drawerItem(Icons.calculate_outlined, 'حاسبة الركعات', () => _openDrawerPage(const RakahCounterPage())),
@@ -544,7 +543,7 @@ class _MainShellState extends State<MainShell> {
                           borderRadius: BorderRadius.circular(14),
                           border: Border.all(color: _gold.withValues(alpha: .25)),
                         ),
-                        child: const Icon(Icons.mosque_rounded, color: _gold, size: 24),
+                        child: const Icon(Icons.auto_awesome_rounded, color: _gold, size: 24),
                       ),
                       const SizedBox(width: 11),
                       const Expanded(

@@ -171,13 +171,15 @@ def main() -> None:
             "occasion" if slug.startswith("occasion-") else "dua"
         )
         prepared.append({
+            "sourceId": source_id,
+            "sourceName": expected_source_name,
             "slug": slug,
             "title": title.strip(),
             "alternateName": str(item.get("alternateName") or "").strip(),
-            "type": prayer_type,
             "category": category,
             "sourceReference": source_reference.strip(),
             "sourceUrl": source_url,
+            "type": prayer_type,
             "lines": lines,
         })
 

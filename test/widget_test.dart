@@ -280,6 +280,12 @@ void main() {
     expect(find.text('الأدعية والزيارات'), findsWidgets);
     expect(find.textContaining('نصاً • منها'), findsOneWidget);
     expect(find.textContaining('ما قدرنا نحمّل مكتبة الأدعية'), findsNothing);
+    await tester.scrollUntilVisible(
+      find.text('زيارة عاشوراء'),
+      250,
+      scrollable: find.byType(Scrollable).last,
+    );
+    await tester.pumpAndSettle();
     expect(find.text('زيارة عاشوراء'), findsWidgets);
   });
   testWidgets('good deeds checklist saves checked items locally', (tester) async {

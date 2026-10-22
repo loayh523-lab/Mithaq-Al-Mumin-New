@@ -12,7 +12,8 @@ const _muted = Color(0xFF9EB5A9);
 /// Approximate solar times for Qal'at Sukar using a configurable Jafari-style estimate.
 /// Local religious authority timetables take precedence.
 class PrayerCalendarPage extends StatefulWidget {
-  const PrayerCalendarPage({super.key, this.onLocationChanged, this.onHijriCorrectionChanged});
+  const PrayerCalendarPage({super.key, this.onLocationChanged, this.onHijriCorrectionChanged, this.initialTab = 0});
+  final int initialTab;
   final Future<void> Function()? onLocationChanged;
   final Future<void> Function()? onHijriCorrectionChanged;
   @override State<PrayerCalendarPage> createState() => _PrayerCalendarPageState();
@@ -31,6 +32,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
   String? _locationMessage;
   @override void initState() {
     super.initState();
+    tab = widget.initialTab.clamp(0, 2);
     _loadCorrection();
     _loadCity();
     _clockTimer = Timer.periodic(const Duration(seconds: 30), (_) {

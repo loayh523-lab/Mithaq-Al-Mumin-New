@@ -56,7 +56,7 @@ class MithaqApp extends StatelessWidget {
           primary: _emerald,
           secondary: _gold,
         ),
-        fontFamily: 'NotoNaskhArabic',
+        fontFamily: 'Amiri',
         appBarTheme: const AppBarTheme(
           backgroundColor: _ink,
           foregroundColor: Colors.white,

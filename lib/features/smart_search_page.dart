@@ -126,10 +126,11 @@ class _SmartSearchPageState extends State<SmartSearchPage> {
       // Other text libraries remain searchable if the Quran asset is unavailable.
     }
 
-    // Search Arabic dua/ziyara and Sahifa text supplied with the app.
+    // Search the curated Arabic collection and the separately bundled Sahifa/Munajat archive.
     try {
       final data = await ShiaTextData.load();
-      for (final entry in data.entries) {
+      final sahifa = await ShiaTextData.loadSahifa();
+      for (final entry in <ShiaTextEntry>[...data.entries, ...sahifa.entries]) {
         final searchable = _normalize('${entry.displayTitle} ${entry.title} ${entry.slug} ${entry.arabicText}');
         if (!searchable.contains(query)) continue;
         results.add(_SmartSearchHit(

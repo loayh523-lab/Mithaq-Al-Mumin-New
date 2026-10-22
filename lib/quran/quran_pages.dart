@@ -685,7 +685,7 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
 
   @override
   Widget build(BuildContext context) {
-    final firstMeta = _verseMetadata['\${widget.surah.id}:1'];
+    final firstMeta = _verseMetadata['${widget.surah.id}:1'];
     return Scaffold(
       appBar: AppBar(
         title: const Text('القرآن الكريم'),
@@ -773,7 +773,7 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
                             ),
                           ),
                           child: Text(
-                            'الجزء \${_arabicDigits('\${firstMeta.juz}')}',
+                            'الجزء ${_arabicDigits('${firstMeta.juz}')}',
                             style: const TextStyle(
                               color: _muted,
                               fontSize: 13,
@@ -801,7 +801,7 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
                           const SizedBox(width: 10),
                           Expanded(
                             child: Text(
-                              'سورة \${widget.surah.name}',
+                              'سورة ${widget.surah.name}',
                               textAlign: TextAlign.center,
                               style: const TextStyle(
                                 fontSize: 25,
@@ -838,10 +838,10 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
                     ...List.generate(_verses.length, (i) {
                       final isInitialVerse = widget.initialVerse == i + 1;
                       final saved = _bookmarks.contains(
-                        '\${widget.surah.id}:\${i + 1}',
+                        '${widget.surah.id}:${i + 1}',
                       );
                       return KeyedSubtree(
-                        key: ValueKey('quran-verse-\${widget.surah.id}-\${i + 1}'),
+                        key: ValueKey('quran-verse-${widget.surah.id}-${i + 1}'),
                         child: Container(
                           key: isInitialVerse ? _initialVerseKey : null,
                           margin: const EdgeInsets.only(bottom: 24),
@@ -877,7 +877,7 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   Text(
-                                    '۞ \${_arabicDigits('\${i + 1}')} ۞',
+                                    '۞ ${_arabicDigits('${i + 1}')} ۞',
                                     textDirection: TextDirection.rtl,
                                     style: const TextStyle(
                                       fontSize: 18,

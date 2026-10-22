@@ -27,12 +27,24 @@ void main() {
     expect(find.text('ميثاق المؤمن'), findsWidgets);
     expect(find.text('التاريخ الهجري'), findsOneWidget);
     expect(find.text('قبس اليوم'), findsOneWidget);
-    expect(find.text('ابدأ وردك'), findsOneWidget);
-    expect(find.text('وِرد اليوم'), findsOneWidget);
-    expect(find.text('القرآن الكريم'), findsOneWidget);
-    expect(find.text('الأدعية'), findsOneWidget);
     expect(find.text('الصلاة القادمة'), findsNothing);
     expect(find.text('مواقيت الصلوات'), findsNothing);
+
+    await tester.scrollUntilVisible(
+      find.text('ابدأ وردك'),
+      250,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(find.text('ابدأ وردك'), findsOneWidget);
+    expect(find.text('القرآن الكريم'), findsOneWidget);
+    expect(find.text('الأدعية'), findsOneWidget);
+
+    await tester.scrollUntilVisible(
+      find.text('وِرد اليوم'),
+      250,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(find.text('وِرد اليوم'), findsOneWidget);
 
     await tester.scrollUntilVisible(
       find.text('عمل اليوم'),

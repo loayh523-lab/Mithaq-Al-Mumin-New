@@ -252,7 +252,7 @@ class _MainShellState extends State<MainShell> {
           children: [
             _homePage(),
             _selected == 1 ? const QuranIndexPage() : const SizedBox.shrink(),
-            _duaPage(),
+            _selected == 2 ? _duaPage() : const SizedBox.shrink(),
             _selected == 3
                 ? PrayerCalendarPage(
                     onLocationChanged: _handleLocationChanged,
@@ -341,7 +341,7 @@ class _MainShellState extends State<MainShell> {
               children: [
                 _drawerItem(Icons.home_rounded, 'الرئيسية', () => _selectTab(0), selected: _selected == 0),
                 _drawerItem(Icons.menu_book_rounded, 'القرآن الكريم', () => _selectTab(1), selected: _selected == 1),
-                _drawerItem(Icons.auto_awesome_rounded, 'المكتبة الإيمانية', () => _selectTab(2), selected: _selected == 2),
+                _drawerItem(Icons.auto_awesome_rounded, 'الأدعية والزيارات', () => _selectTab(2), selected: _selected == 2),
                 _drawerItem(Icons.calendar_month_rounded, 'المواقيت والتقويم', () => _selectTab(3), selected: _selected == 3),
                 const Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(14, 18, 14, 8),

@@ -286,6 +286,12 @@ void main() {
       scrollable: find.byType(Scrollable).last,
     );
     await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.text('زيارة عاشوراء'),
+      250,
+      scrollable: find.byType(ListView).last,
+    );
+    await tester.pumpAndSettle();
     expect(find.text('زيارة عاشوراء'), findsWidgets);
   });
   testWidgets('good deeds checklist saves checked items locally', (tester) async {

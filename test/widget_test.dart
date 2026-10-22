@@ -289,7 +289,10 @@ void main() {
     await tester.scrollUntilVisible(
       find.text('زيارة عاشوراء'),
       250,
-      scrollable: find.byType(ListView).last,
+      scrollable: find.descendant(
+        of: find.byType(ListView).last,
+        matching: find.byType(Scrollable),
+      ).first,
     );
     await tester.pumpAndSettle();
     expect(find.text('زيارة عاشوراء'), findsWidgets);

@@ -91,7 +91,7 @@ class PrayerNotificationService {
   }
 
   /// Schedules local reminders for the next 30 days. Prayer times are estimates;
-  /// the notification sound is the bundled recording by Sheikh Shabbar Maalla.
+  /// the source and attribution of the bundled notification sound are unverified.
   static Future<bool> configure({
     required bool enabled,
     required PrayerCity city,

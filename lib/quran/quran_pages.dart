@@ -869,7 +869,7 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
                                   fontSize: _fontSize,
                                   height: 2.25,
                                   color: Colors.white,
-                                  fontFamily: 'NotoNaskhArabic',
+                                  fontFamily: 'AmiriQuran',
                                 ),
                               ),
                               const SizedBox(height: 6),

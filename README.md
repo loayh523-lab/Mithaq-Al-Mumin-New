@@ -20,6 +20,7 @@
 ## متطلبات التطوير
 
 - Flutter stable وDart المرفق معه.
+- خط Amiri العربي وخط AmiriQuran، ويُجلبان أثناء البناء من المشروع الأصلي مع حفظ رخصة SIL OFL في `licenses/Amiri-OFL.txt`.
 - اتصال بالإنترنت عند إعداد أصول المحتوى أول مرة، وتشغيل اختبارات GitHub Actions.
 - مساحة كافية لبناء Android؛ ملف APK التجريبي كبير لأن النصوص والأصول الصوتية مضمّنة.
 
@@ -27,6 +28,7 @@
 
 ```bash
 python3 tool/prepare_quran.py
+python3 tool/prepare_fonts.py
 flutter pub get
 flutter analyze
 flutter test

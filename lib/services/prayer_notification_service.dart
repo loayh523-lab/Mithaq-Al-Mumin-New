@@ -40,10 +40,10 @@ class PrayerNotificationService {
         'إذا ظهر هذا التنبيه فقد وصل الإشعار التجريبي. افحص مستوى صوت التنبيهات إذا لم تسمع الأذان.',
         const NotificationDetails(
           android: AndroidNotificationDetails(
-            'mithaq_adhan_v3', 'أذان الصلاة',
+            'mithaq_adhan_shabbar_v4', 'أذان الصلاة',
             channelDescription: 'تنبيهات الأذان — قناة صوت جديدة',
             importance: Importance.high, priority: Priority.high,
-            sound: RawResourceAndroidNotificationSound('adhan_persian'),
+            sound: RawResourceAndroidNotificationSound('adhan_shabbar_maalla'),
             audioAttributesUsage: AudioAttributesUsage.alarm,
           ),
         ),
@@ -91,7 +91,7 @@ class PrayerNotificationService {
   }
 
   /// Schedules local reminders for the next 30 days. Prayer times are estimates;
-  /// the bundled recording is Persian-style and is not verified as Ja'fari adhan.
+  /// the notification sound is the bundled recording by Sheikh Shabbar Maalla.
   static Future<bool> configure({
     required bool enabled,
     required PrayerCity city,
@@ -170,12 +170,12 @@ class PrayerNotificationService {
               scheduled,
               const NotificationDetails(
                 android: AndroidNotificationDetails(
-                  'mithaq_adhan_v3',
+                  'mithaq_adhan_shabbar_v4',
                   'أذان الصلاة',
                   channelDescription: 'تنبيهات الأذان — قناة صوت جديدة',
                   importance: Importance.high,
                   priority: Priority.high,
-                  sound: RawResourceAndroidNotificationSound('adhan_persian'),
+                  sound: RawResourceAndroidNotificationSound('adhan_shabbar_maalla'),
                   audioAttributesUsage: AudioAttributesUsage.alarm,
                 ),
               ),

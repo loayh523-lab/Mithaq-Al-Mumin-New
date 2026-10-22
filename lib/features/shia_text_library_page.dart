@@ -33,12 +33,16 @@ class ShiaTextEntry {
     required this.type,
     required this.sourceUrl,
     required this.lines,
+    this.sourceReference = '',
+    this.categoryOverride,
   });
   final String slug;
   final String title;
   final String alternateName;
   final String type;
   final String sourceUrl;
+  final String sourceReference;
+  final String? categoryOverride;
   final List<ShiaTextLine> lines;
   String get displayTitle => alternateName.trim().isNotEmpty ? alternateName : title;
   bool get isSahifa => slug.startsWith('sahifa-sajjadiya-');
@@ -74,8 +78,16 @@ class ShiaTextEntry {
     return RegExp(r'eid|ramadan|arafah|mubahala|mubahilah|laylat|rajab|shaaban|dhul.hijja|dhul.qadah|مناسبة|العيد|رمضان|عرفة|مباهلة|رجب|شعبان|ذي الحجة|ذي القعدة|ليلة القدر').hasMatch(value);
   }
   String get category {
-    // Keep the Sahifa's own supplications in its dedicated section, even
-    // when their titles mention a weekday or a religious occasion.
+    // Entries in the curated offline manifest specify their category directly.
+    final fixedCategory = categoryOverride;
+    if (fixedCategory == 'الصحيفة السجادية والمناجيات' ||
+        fixedCategory == 'الأدعية والأذكار اليومية' ||
+        fixedCategory == 'الأدعية العامة وأدعية الفرج وصاحب الزمان' ||
+        fixedCategory == 'الأعمال والمناسبات' ||
+        fixedCategory == 'الزيارات الشريفة') {
+      return fixedCategory!;
+    }
+    // Legacy/sample entries still use these fallbacks.
     if (isSahifa || isMunajat) return 'الصحيفة السجادية والمناجيات';
     if (isZiyara) return 'الزيارات الشريفة';
     if (isOccasionDua) return 'الأعمال والمناسبات';
@@ -92,6 +104,10 @@ class ShiaTextEntry {
     alternateName: json['alternateName'] is String ? json['alternateName'] as String : '',
     type: json['type'] is String ? json['type'] as String : 'dua',
     sourceUrl: json['sourceUrl'] is String ? json['sourceUrl'] as String : '',
+    sourceReference: json['sourceReference'] is String
+        ? json['sourceReference'] as String
+        : '',
+    categoryOverride: json['category'] is String ? json['category'] as String : null,
     lines: ((json['lines'] as List<dynamic>?) ?? const <dynamic>[])
       .whereType<Map<String, dynamic>>().map(ShiaTextLine.fromJson).toList(),
   );
@@ -112,7 +128,19 @@ class ShiaTextData {
     final rawEntries = decoded['entries'] as List<dynamic>;
     final entries = rawEntries.whereType<Map<String, dynamic>>()
         .map(ShiaTextEntry.fromJson).toList();
-    if (entries.isEmpty) throw const FormatException('Shia text collection is empty.');
+    if (entries.length != 110) {
+      throw FormatException('Expected exactly 110 curated Arabic texts; found ${entries.length}.');
+    }
+    final slugs = entries.map((entry) => entry.slug).toSet();
+    if (slugs.length != 110 || entries.any((entry) => entry.slug.isEmpty)) {
+      throw const FormatException('The supplication library contains duplicate or empty identifiers.');
+    }
+    if (entries.any((entry) => entry.lines.isEmpty || entry.arabicText.trim().isEmpty)) {
+      throw const FormatException('The supplication library contains an empty text.');
+    }
+    if (entries.any((entry) => entry.categoryOverride == null)) {
+      throw const FormatException('A library entry is missing its fixed category.');
+    }
     final metadata = decoded['metadata'] as Map<String, dynamic>? ?? const <String, dynamic>{};
     return ShiaTextData(
       entries: entries,
@@ -173,7 +201,9 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
           return header.contains(_query) ||
               entry.lines.where((line) => line.isArabic).any((line) => _normalize(line.text).contains(_query));
         }).toList();
-        final sahifaCount = data.entries.where((entry) => entry.isSahifa).length;
+        final sahifaCount = data.entries
+            .where((entry) => entry.category == 'الصحيفة السجادية والمناجيات')
+            .length;
         return Column(children: [
           Container(
             margin: const EdgeInsets.fromLTRB(16, 12, 16, 4),
@@ -186,7 +216,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               const Text('نصوص شيعية للقراءة دون إنترنت', style: TextStyle(color: _shiaGold, fontSize: 20, fontWeight: FontWeight.w800)),
               const SizedBox(height: 6),
-              Text('${data.entries.length} نصاً • منها $sahifaCount من الصحيفة السجادية', style: const TextStyle(color: _shiaMuted)),
+              Text('${data.entries.length} نصاً • منها $sahifaCount من الصحيفة السجادية والمناجيات', style: const TextStyle(color: _shiaMuted)),
               const SizedBox(height: 6),
               const Text('المكتبة مصنفة حسب نوع الدعاء مع إبقاء رابط المصدر لكل نص. قد تختلف العناوين أو الروايات بين الطبعات؛ لا نعرض النص غير العربي ضمن القراءة العربية.', style: TextStyle(color: _shiaMuted, fontSize: 11, height: 1.5)),
             ]),
@@ -439,9 +469,21 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
                 }),
                 const Divider(color: Color(0x334A7562)),
                 const Text('هذا النص منقول من سجلّ البيانات المشار إليه أدناه. قد تختلف الضبطات أو ترتيب الفقرات بين الطبعات.', style: TextStyle(color: _shiaMuted, height: 1.7, fontSize: 11)),
+                if (widget.entry.sourceReference.isNotEmpty) ...[
+                  const SizedBox(height: 6),
+                  SelectableText(
+                    'المرجع: ${widget.entry.sourceReference}',
+                    textDirection: TextDirection.rtl,
+                    style: const TextStyle(color: _shiaMuted, fontSize: 11, height: 1.6),
+                  ),
+                ],
                 if (widget.entry.sourceUrl.isNotEmpty) ...[
                   const SizedBox(height: 6),
-                  SelectableText('المصدر: ${widget.entry.sourceUrl}', textDirection: TextDirection.ltr, style: const TextStyle(color: _shiaMuted, fontSize: 10)),
+                  SelectableText(
+                    'رابط بيانات المصدر: ${widget.entry.sourceUrl}',
+                    textDirection: TextDirection.ltr,
+                    style: const TextStyle(color: _shiaMuted, fontSize: 10),
+                  ),
                 ],
               ],
             )),

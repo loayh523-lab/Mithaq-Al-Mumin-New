@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Prepare the CC0 Shia supplication/ziyara and Sahifa dataset for offline use.
+"""Build the fixed 110-text Arabic supplication library from its curated manifest.
 
-Upstream dataset: https://github.com/adeeb10abbas/shia-library-json
-It declares CC0 1.0 Universal and records source URLs to Thaqalayn public pages.
+Text dataset: KazTronics/AhlulBayt_Treasures (data metadata declares Public Domain).
+The source repository code is MIT-licensed; its license notice is copied to licenses/.
+The previous 72-item import is replaced rather than merged into this collection.
 """
 import json
 import os
@@ -11,125 +12,196 @@ import tempfile
 import time
 import urllib.error
 import urllib.request
+from collections import Counter
 from pathlib import Path
 
-BASE = "https://raw.githubusercontent.com/adeeb10abbas/shia-library-json/main"
-INDEX_URL = f"{BASE}/index/duas.json"
+SOURCE_URL = "https://raw.githubusercontent.com/KazTronics/AhlulBayt_Treasures/main/duas_data.json"
+SOURCE_PAGE = "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+MANIFEST_PATH = Path("tool/shia_dua_manifest.json")
 DEST = Path("assets/shia_duas/shia_duas.json")
+EXPECTED_COUNT = 110
+EXPECTED_CATEGORY_COUNTS = {
+    "الصحيفة السجادية والمناجيات": 76,
+    "الأدعية والأذكار اليومية": 11,
+    "الأدعية العامة وأدعية الفرج وصاحب الزمان": 10,
+    "الأعمال والمناسبات": 7,
+    "الزيارات الشريفة": 6,
+}
+PERSIAN_RE = re.compile(r"[\u067e\u0686\u0698\u06af\u06a9\u06cc]")
+LATIN_RE = re.compile(r"[A-Za-z]")
+ARABIC_RE = re.compile(r"[\u0600-\u06ff]")
 
 
 def fetch_json(url: str, attempts: int = 3):
-    headers = {"User-Agent": "Mithaq-Al-Mumin/1.0 (offline Shia library preparation)"}
+    headers = {"User-Agent": "Mithaq-Al-Mumin/1.0 (offline Arabic text preparation)"}
     for attempt in range(attempts):
         try:
             request = urllib.request.Request(url, headers=headers)
-            with urllib.request.urlopen(request, timeout=45) as response:
+            with urllib.request.urlopen(request, timeout=60) as response:
                 return json.loads(response.read().decode("utf-8"))
-        except (urllib.error.URLError, TimeoutError) as exc:
+        except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as exc:
             if attempt + 1 >= attempts:
-                raise SystemExit(f"Unable to download source JSON: {url} ({exc})") from exc
+                raise SystemExit(f"Unable to download/parse source JSON: {url} ({exc})") from exc
             time.sleep(1.5 * (attempt + 1))
 
 
+def normalize_text(value: str) -> str:
+    value = re.sub(r"[\u064b-\u065f\u0670\u0640]", "", value)
+    value = value.replace("أ", "ا").replace("إ", "ا").replace("آ", "ا")
+    value = value.replace("ٱ", "ا").replace("ى", "ي")
+    return re.sub(r"[^\u0600-\u06ff0-9]", "", value).lower()
+
+
 def main() -> None:
-    index = fetch_json(INDEX_URL)
-    entries = index.get("duas") if isinstance(index, dict) else None
-    if not isinstance(entries, list) or not entries:
-        raise SystemExit("Shia dua source index is empty or has an unexpected shape.")
+    manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+    items = manifest.get("entries")
+    if not isinstance(items, list) or len(items) != EXPECTED_COUNT:
+        raise SystemExit(f"Manifest must contain exactly {EXPECTED_COUNT} items.")
+    if manifest.get("downloadUrl") != SOURCE_URL or manifest.get("sourceUrl") != SOURCE_PAGE:
+        raise SystemExit("Manifest source URL does not match the pinned dataset.")
+    if manifest.get("expectedCategoryCounts") != EXPECTED_CATEGORY_COUNTS:
+        raise SystemExit("Manifest category counts differ from the agreed five sections.")
+
+    source = fetch_json(SOURCE_URL)
+    source_meta = source.get("metadata") if isinstance(source, dict) else None
+    records = source.get("duas") if isinstance(source, dict) else None
+    if not isinstance(source_meta, dict) or not isinstance(records, list) or not records:
+        raise SystemExit("Source dataset metadata or 'duas' list is missing.")
+    if str(source_meta.get("license", "")).strip().lower() != "public domain":
+        raise SystemExit("Source data no longer declares Public Domain; review its license.")
+
+    records_by_id = {}
+    for record in records:
+        try:
+            source_id = int(record.get("id"))
+        except (AttributeError, TypeError, ValueError):
+            continue
+        if source_id in records_by_id:
+            raise SystemExit(f"Duplicate source record ID {source_id}.")
+        records_by_id[source_id] = record
 
     prepared = []
+    category_counter = Counter()
+    slugs_seen, ids_seen, texts_seen = set(), set(), {}
     total_arabic_lines = 0
-    total_lines = 0
-    slugs_seen = set()
-    for record in entries:
-        slug = record.get("slug")
+
+    for item in items:
+        if not isinstance(item, dict):
+            raise SystemExit("Malformed item in the curated manifest.")
+        source_id = item.get("sourceId")
+        slug = item.get("slug")
+        title = item.get("title")
+        category = item.get("category")
+        source_reference = item.get("sourceReference")
+        source_url = item.get("sourceUrl")
+        expected_source_name = item.get("sourceName")
+
+        if not isinstance(source_id, int) or source_id in ids_seen:
+            raise SystemExit(f"Invalid or duplicate source ID: {source_id!r}")
         if not isinstance(slug, str) or not slug or slug in slugs_seen:
-            raise SystemExit("Invalid or duplicate slug in the Shia dua index.")
-        slugs_seen.add(slug)
-        raw = fetch_json(f"{BASE}/db/duas/{slug}.json")
-        if raw.get("slug") != slug:
-            raise SystemExit(f"Slug mismatch for {slug}.")
-        lines = raw.get("lines")
-        if not isinstance(lines, list) or not lines:
-            raise SystemExit(f"Missing line-by-line content for {slug}.")
+            raise SystemExit(f"Invalid or duplicate slug: {slug!r}")
+        if not isinstance(title, str) or not title.strip():
+            raise SystemExit(f"Missing Arabic title for {slug}.")
+        if PERSIAN_RE.search(title) or LATIN_RE.search(title) or not ARABIC_RE.search(title):
+            raise SystemExit(f"Title must be Arabic-only: {slug}.")
+        if category not in EXPECTED_CATEGORY_COUNTS:
+            raise SystemExit(f"Unknown category on {slug}: {category!r}")
+        if not isinstance(source_reference, str) or not source_reference.strip():
+            raise SystemExit(f"Missing exact source reference for {slug}.")
+        if source_url != SOURCE_PAGE:
+            raise SystemExit(f"Wrong source URL for {slug}.")
 
-        normalized_lines = []
-        for line in lines:
-            if not isinstance(line, dict):
-                raise SystemExit(f"Invalid line in {slug}.")
-            kind = line.get("kind")
-            text = line.get("text")
-            if not isinstance(kind, str) or not isinstance(text, str):
-                raise SystemExit(f"Missing line type/text in {slug}.")
-            if not text.strip() or kind.lower() != "arabic":
-                # The app is Arabic-only: omit Persian translations and
-                # transliterations instead of merely hiding them in the UI.
+        raw = records_by_id.get(source_id)
+        if not isinstance(raw, dict):
+            raise SystemExit(f"Source record {source_id} is missing for {slug}.")
+        if raw.get("name") != expected_source_name:
+            raise SystemExit(f"Source identity changed for {slug}: {raw.get('name')!r}.")
+        rows = raw.get("rows")
+        if not isinstance(rows, list) or not rows:
+            raise SystemExit(f"Missing full rows for {slug}.")
+
+        lines = []
+        for row in rows:
+            if not isinstance(row, dict):
+                raise SystemExit(f"Malformed row for {slug}.")
+            value = row.get("arabic")
+            if not isinstance(value, str):
+                raise SystemExit(f"Missing Arabic field in {slug}.")
+            value = value.strip()
+            if not value:
                 continue
-            normalized_lines.append({
-                "index": line.get("index", len(normalized_lines) + 1),
+            if PERSIAN_RE.search(value) or LATIN_RE.search(value):
+                raise SystemExit(f"Persian/Latin characters found in supposed Arabic text: {slug}.")
+            if not ARABIC_RE.search(value):
+                raise SystemExit(f"Non-Arabic content found in {slug}.")
+            lines.append({
+                "index": row.get("index") if isinstance(row.get("index"), int) else len(lines) + 1,
                 "kind": "arabic",
-                "text": text,
+                "text": value,
             })
-            total_lines += 1
-            total_arabic_lines += 1
+        if not lines:
+            raise SystemExit(f"No Arabic text found in {slug}.")
 
-        if not any(item["kind"].lower() == "arabic" for item in normalized_lines):
-            raise SystemExit(f"No Arabic lines found in {slug}.")
+        key = normalize_text(" ".join(line["text"] for line in lines))
+        if not key:
+            raise SystemExit(f"Empty normalized text for {slug}.")
+        if key in texts_seen:
+            raise SystemExit(f"Duplicate full texts: {slug} duplicates {texts_seen[key]}.")
+        texts_seen[key] = slug
 
-        # Persian titles must not leak into the app. If the source title
-        # contains Persian-script letters, use a safe Arabic label; keep the
-        # source URL so the original attribution remains available.
-        raw_title = str(raw.get("title") or record.get("title") or "").strip()
-        raw_alt = str(raw.get("alternateName") or record.get("alternateName") or "").strip()
-        persian_script = re.compile(r"[پچژگ]")
-        title = raw_title.replace("ک", "ك").replace("ی", "ي").replace("دعاي ", "دعاء ")
-        alternate_name = raw_alt.replace("ک", "ك").replace("ی", "ي").replace("دعاي ", "دعاء ")
-        if persian_script.search(raw_title) or not title:
-            kind_name = str(raw.get("type") or record.get("type") or "dua").lower()
-            title = "زيارة" if "ziyar" in kind_name else ("مناجاة" if "munajat" in kind_name else "دعاء")
-        if persian_script.search(raw_alt):
-            alternate_name = ""
+        slug_category = (
+            "الصحيفة السجادية والمناجيات" if slug.startswith(("sahifa-sajjadiya-", "munajat-sahifa-")) else
+            "الزيارات الشريفة" if slug.startswith("ziyarat-") else
+            "الأعمال والمناسبات" if slug.startswith("occasion-") else
+            "الأدعية والأذكار اليومية" if slug.startswith(("daily-", "taqib-")) else
+            "الأدعية العامة وأدعية الفرج وصاحب الزمان" if slug.startswith("general-") else None
+        )
+        if slug_category != category:
+            raise SystemExit(f"Slug/category mismatch for {slug}.")
+
+        category_counter[category] += 1
+        total_arabic_lines += len(lines)
+        slugs_seen.add(slug)
+        ids_seen.add(source_id)
+        prayer_type = (
+            "sahifa" if slug.startswith("sahifa-sajjadiya-") else
+            "munajat" if slug.startswith("munajat-sahifa-") else
+            "ziyarat" if slug.startswith("ziyarat-") else
+            "daily" if slug.startswith(("daily-", "taqib-")) else
+            "occasion" if slug.startswith("occasion-") else "dua"
+        )
         prepared.append({
             "slug": slug,
-            "title": title,
-            "alternateName": alternate_name,
-            "type": raw.get("type") or "dua",
-            "sourceUrl": raw.get("url") or record.get("url") or "",
-            "lines": normalized_lines,
+            "title": title.strip(),
+            "alternateName": str(item.get("alternateName") or "").strip(),
+            "type": prayer_type,
+            "category": category,
+            "sourceReference": source_reference.strip(),
+            "sourceUrl": source_url,
+            "lines": lines,
         })
 
-    # Remove exact duplicate prayer texts while retaining distinct entries that
-    # happen to share a title. This makes the displayed count reflect unique text.
-    def text_key(value: str) -> str:
-        value = re.sub(r"[\u064B-\u065F\u0670\u0640]", "", value)
-        value = value.replace("أ", "ا").replace("إ", "ا").replace("آ", "ا").replace("ى", "ي")
-        return re.sub(r"[^\u0600-\u06FF0-9]", "", value).lower()
-
-    before_dedupe = len(prepared)
-    unique_entries = []
-    seen_texts = set()
-    for entry in prepared:
-        joined_text = text_key(" ".join(line["text"] for line in entry["lines"]))
-        if not joined_text or joined_text in seen_texts:
-            continue
-        seen_texts.add(joined_text)
-        unique_entries.append(entry)
-    prepared = unique_entries
-    duplicate_texts_removed = before_dedupe - len(prepared)
-    total_arabic_lines = sum(len(entry["lines"]) for entry in prepared)
+    if len(prepared) != EXPECTED_COUNT or len(slugs_seen) != EXPECTED_COUNT:
+        raise SystemExit(f"Prepared {len(prepared)} unique items, expected {EXPECTED_COUNT}.")
+    if dict(category_counter) != EXPECTED_CATEGORY_COUNTS:
+        raise SystemExit(f"Wrong section counts: {dict(category_counter)!r}.")
+    if len(texts_seen) != EXPECTED_COUNT:
+        raise SystemExit("Full-text uniqueness validation failed.")
 
     result = {
         "metadata": {
-            "sourceProject": "adeeb10abbas/shia-library-json",
-            "sourceIndex": INDEX_URL,
-            "contentSource": "Thaqalayn public pages as recorded in source metadata",
-            "license": "CC0 1.0 Universal; see licenses/SHIA_LIBRARY_CC0_1.0.txt",
-            "count": len(prepared),
-            "duplicateTextsRemoved": duplicate_texts_removed,
-            "note": "Arabic text from the selected CC0 Shia library only. Each entry retains sourceUrl; verify wording against a trusted edition. No additional compilation is merged.",
+            "sourceProject": "KazTronics/AhlulBayt_Treasures",
+            "sourceIndex": SOURCE_URL,
+            "contentSource": "Shia Devotions dataset; source record IDs are retained in each entry's reference",
+            "license": "Text data declared Public Domain in source metadata; source repository code is MIT",
+            "count": EXPECTED_COUNT,
+            "categoryCounts": EXPECTED_CATEGORY_COUNTS,
+            "duplicateTextsRemoved": 0,
+            "note": "Curated 110-item offline Arabic collection. The build stops on missing, changed, incomplete, duplicated or non-Arabic content.",
         },
         "entries": prepared,
     }
+
     DEST.parent.mkdir(parents=True, exist_ok=True)
     fd, temporary = tempfile.mkstemp(prefix="shia-duas-", suffix=".json", dir=DEST.parent)
     try:
@@ -142,9 +214,8 @@ def main() -> None:
             os.remove(temporary)
 
     print(
-        f"Prepared offline Shia library: {len(prepared)} unique texts "
-        f"({duplicate_texts_removed} duplicate texts removed), "
-        f"{total_arabic_lines} Arabic lines, {total_lines} source lines"
+        f"Prepared {len(prepared)} complete Arabic texts in five categories; "
+        f"{total_arabic_lines} Arabic lines; no duplicate full texts, Persian or Latin."
     )
 
 

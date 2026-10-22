@@ -165,7 +165,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
   String _category = 'كل النصوص';
   static const _categories = [
     'كل النصوص',
-    'الصحيفة السجادية والمناجيات',
+
     'الأدعية والأذكار اليومية',
     'الأدعية العامة وأدعية الفرج وصاحب الزمان',
     'الأعمال والمناسبات',

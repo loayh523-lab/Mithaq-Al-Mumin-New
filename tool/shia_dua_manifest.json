@@ -6,773 +6,12 @@
   "repositoryLicense": "MIT",
   "expectedCount": 110,
   "expectedCategoryCounts": {
-    "الصحيفة السجادية والمناجيات": 76,
-    "الأدعية والأذكار اليومية": 11,
-    "الأدعية العامة وأدعية الفرج وصاحب الزمان": 10,
-    "الأعمال والمناسبات": 7,
-    "الزيارات الشريفة": 6
+    "الأدعية والأذكار اليومية": 30,
+    "الأدعية العامة وأدعية الفرج وصاحب الزمان": 35,
+    "الأعمال والمناسبات": 20,
+    "الزيارات الشريفة": 25
   },
   "entries": [
-    {
-      "sourceId": 203,
-      "sourceName": "Dua 1 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-01",
-      "title": "الصحيفة السجادية — الدعاء 01: الدعاء في التحميد لله عز وجل",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 1",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 204,
-      "sourceName": "Dua 2 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-02",
-      "title": "الصحيفة السجادية — الدعاء 02: الصلاة على محمد وآله",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 2",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 205,
-      "sourceName": "Dua 3 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-03",
-      "title": "الصحيفة السجادية — الدعاء 03: الصلاة على حملة العرش",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 3",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 206,
-      "sourceName": "Dua 4 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-04",
-      "title": "الصحيفة السجادية — الدعاء 04: الصلاة على مصدقي الرسل",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 4",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 207,
-      "sourceName": "Dua 5 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-05",
-      "title": "الصحيفة السجادية — الدعاء 05: الدعاء لنفسه وخاصته",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 5",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 208,
-      "sourceName": "Dua 6 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-06",
-      "title": "الصحيفة السجادية — الدعاء 06: الدعاء عند الصباح والمساء",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 6",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 209,
-      "sourceName": "Dua 7 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-07",
-      "title": "الصحيفة السجادية — الدعاء 07: الدعاء عند المهمات",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 7",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 210,
-      "sourceName": "Dua 8 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-08",
-      "title": "الصحيفة السجادية — الدعاء 08: الاستعاذة من المكاره",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 8",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 211,
-      "sourceName": "Dua 9 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-09",
-      "title": "الصحيفة السجادية — الدعاء 09: الشوق إلى طلب المغفرة",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 9",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 212,
-      "sourceName": "Dua 10 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-10",
-      "title": "الصحيفة السجادية — الدعاء 10: الالتجاء إلى الله تعالى",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 10",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 213,
-      "sourceName": "Dua 11 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-11",
-      "title": "الصحيفة السجادية — الدعاء 11: طلب حسن العواقب",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 11",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 214,
-      "sourceName": "Dua 12 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-12",
-      "title": "الصحيفة السجادية — الدعاء 12: الاعتراف وطلب التوبة",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 12",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 215,
-      "sourceName": "Dua 13 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-13",
-      "title": "الصحيفة السجادية — الدعاء 13: طلب الحوائج",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 13",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 216,
-      "sourceName": "Dua 14 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-14",
-      "title": "الصحيفة السجادية — الدعاء 14: الاعتذار من ظلامات العباد",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 14",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 217,
-      "sourceName": "Dua 15 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-15",
-      "title": "الصحيفة السجادية — الدعاء 15: عند المرض",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 15",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 218,
-      "sourceName": "Dua 16 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-16",
-      "title": "الصحيفة السجادية — الدعاء 16: طلب العفو من الذنوب",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 16",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 219,
-      "sourceName": "Dua 17 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-17",
-      "title": "الصحيفة السجادية — الدعاء 17: على الشيطان",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 17",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 220,
-      "sourceName": "Dua 18 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-18",
-      "title": "الصحيفة السجادية — الدعاء 18: عند دفع المكاره",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 18",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 221,
-      "sourceName": "Dua 19 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-19",
-      "title": "الصحيفة السجادية — الدعاء 19: الاستسقاء",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 19",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 125,
-      "sourceName": "Dua 20 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-20",
-      "title": "الصحيفة السجادية — الدعاء 20: مكارم الأخلاق ومرضي الأفعال",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 20",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 222,
-      "sourceName": "Dua 21 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-21",
-      "title": "الصحيفة السجادية — الدعاء 21: عند الهم والكرب",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 21",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 223,
-      "sourceName": "Dua 22 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-22",
-      "title": "الصحيفة السجادية — الدعاء 22: عند الشدائد",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 22",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 224,
-      "sourceName": "Dua 23 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-23",
-      "title": "الصحيفة السجادية — الدعاء 23: طلب العافية",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 23",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 225,
-      "sourceName": "Dua 24 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-24",
-      "title": "الصحيفة السجادية — الدعاء 24: للوالدين",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 24",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 226,
-      "sourceName": "Dua 25 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-25",
-      "title": "الصحيفة السجادية — الدعاء 25: للولد",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 25",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 227,
-      "sourceName": "Dua 26 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-26",
-      "title": "الصحيفة السجادية — الدعاء 26: للجيران والأولياء",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 26",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 228,
-      "sourceName": "Dua 27 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-27",
-      "title": "الصحيفة السجادية — الدعاء 27: لأهل الثغور",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 27",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 229,
-      "sourceName": "Dua 28 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-28",
-      "title": "الصحيفة السجادية — الدعاء 28: الالتجاء إلى الله",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 28",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 230,
-      "sourceName": "Dua 29 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-29",
-      "title": "الصحيفة السجادية — الدعاء 29: عند ضيق الرزق",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 29",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 231,
-      "sourceName": "Dua 30 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-30",
-      "title": "الصحيفة السجادية — الدعاء 30: قضاء الدين",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 30",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 232,
-      "sourceName": "Dua 31 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-31",
-      "title": "الصحيفة السجادية — الدعاء 31: التوبة",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 31",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 233,
-      "sourceName": "Dua 32 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-32",
-      "title": "الصحيفة السجادية — الدعاء 32: بعد صلاة الليل",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 32",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 234,
-      "sourceName": "Dua 33 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-33",
-      "title": "الصحيفة السجادية — الدعاء 33: طلب الخير",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 33",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 235,
-      "sourceName": "Dua 34 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-34",
-      "title": "الصحيفة السجادية — الدعاء 34: عند البلاء أو رؤية المبتلى",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 34",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 236,
-      "sourceName": "Dua 35 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-35",
-      "title": "الصحيفة السجادية — الدعاء 35: الرضا عند النظر إلى أهل الدنيا",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 35",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 237,
-      "sourceName": "Dua 36 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-36",
-      "title": "الصحيفة السجادية — الدعاء 36: عند الرعد",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 36",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 238,
-      "sourceName": "Dua 37 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-37",
-      "title": "الصحيفة السجادية — الدعاء 37: الشكر",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 37",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 239,
-      "sourceName": "Dua 38 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-38",
-      "title": "الصحيفة السجادية — الدعاء 38: الاعتذار والتقصير في الشكر",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 38",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 240,
-      "sourceName": "Dua 39 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-39",
-      "title": "الصحيفة السجادية — الدعاء 39: طلب العفو والرحمة",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 39",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 241,
-      "sourceName": "Dua 40 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-40",
-      "title": "الصحيفة السجادية — الدعاء 40: ذكر الموت",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 40",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 242,
-      "sourceName": "Dua 41 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-41",
-      "title": "الصحيفة السجادية — الدعاء 41: الستر والوقاية",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 41",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 243,
-      "sourceName": "Dua 42 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-42",
-      "title": "الصحيفة السجادية — الدعاء 42: عند ختم القرآن",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 42",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 244,
-      "sourceName": "Dua 43 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-43",
-      "title": "الصحيفة السجادية — الدعاء 43: عند رؤية الهلال",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 43",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 245,
-      "sourceName": "Dua 44 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-44",
-      "title": "الصحيفة السجادية — الدعاء 44: استقبال شهر رمضان",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 44",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 246,
-      "sourceName": "Dua 45 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-45",
-      "title": "الصحيفة السجادية — الدعاء 45: وداع شهر رمضان",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 45",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 247,
-      "sourceName": "Dua 46 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-46",
-      "title": "الصحيفة السجادية — الدعاء 46: يوم الفطر",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 46",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 130,
-      "sourceName": "Dua 47 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-47",
-      "title": "الصحيفة السجادية — الدعاء 47: يوم عرفة",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 47",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 190,
-      "sourceName": "Dua 48 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-48",
-      "title": "الصحيفة السجادية — الدعاء 48: يوم الأضحى والجمعة",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 48",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 248,
-      "sourceName": "Dua 49 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-49",
-      "title": "الصحيفة السجادية — الدعاء 49: دفع كيد الأعداء",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 49",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 249,
-      "sourceName": "Dua 50 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-50",
-      "title": "الصحيفة السجادية — الدعاء 50: عند الخوف",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 50",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 250,
-      "sourceName": "Dua 51 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-51",
-      "title": "الصحيفة السجادية — الدعاء 51: التضرع",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 51",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 251,
-      "sourceName": "Dua 52 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-52",
-      "title": "الصحيفة السجادية — الدعاء 52: الاستكانة",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 52",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 252,
-      "sourceName": "Dua 53 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-53",
-      "title": "الصحيفة السجادية — الدعاء 53: التذلل لله",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 53",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 253,
-      "sourceName": "Dua 54 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-54",
-      "title": "الصحيفة السجادية — الدعاء 54: إزالة الهموم",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 54",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 254,
-      "sourceName": "Dua 55 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-55",
-      "title": "الصحيفة السجادية — الدعاء 55: دعاء يوم الأحد",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 55",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 255,
-      "sourceName": "Dua 56 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-56",
-      "title": "الصحيفة السجادية — الدعاء 56: دعاء يوم الاثنين",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 56",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 256,
-      "sourceName": "Dua 57 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-57",
-      "title": "الصحيفة السجادية — الدعاء 57: دعاء يوم الثلاثاء",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 57",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 257,
-      "sourceName": "Dua 58 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-58",
-      "title": "الصحيفة السجادية — الدعاء 58: دعاء يوم الأربعاء",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 58",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 258,
-      "sourceName": "Dua 59 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-59",
-      "title": "الصحيفة السجادية — الدعاء 59: دعاء يوم الخميس",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 59",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 259,
-      "sourceName": "Dua 60 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-60",
-      "title": "الصحيفة السجادية — الدعاء 60: دعاء يوم الجمعة",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 60",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 260,
-      "sourceName": "Dua 61 - Sahifat Sajjadiyyah",
-      "slug": "sahifa-sajjadiya-61",
-      "title": "الصحيفة السجادية — الدعاء 61: دعاء يوم السبت",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، الدعاء رقم 61",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 264,
-      "sourceName": "Munajat 1 - Sahifat Sajjadiyyah",
-      "slug": "munajat-sahifa-01",
-      "title": "مناجاة التائبين",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، المناجاة رقم 1",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 265,
-      "sourceName": "Munajat 2 - Sahifat Sajjadiyyah",
-      "slug": "munajat-sahifa-02",
-      "title": "مناجاة الشاكين",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، المناجاة رقم 2",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 266,
-      "sourceName": "Munajat 3 - Sahifat Sajjadiyyah",
-      "slug": "munajat-sahifa-03",
-      "title": "مناجاة الخائفين",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، المناجاة رقم 3",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 267,
-      "sourceName": "Munajat 4 - Sahifat Sajjadiyyah",
-      "slug": "munajat-sahifa-04",
-      "title": "مناجاة الراجين",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، المناجاة رقم 4",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 268,
-      "sourceName": "Munajat 5 - Sahifat Sajjadiyyah",
-      "slug": "munajat-sahifa-05",
-      "title": "مناجاة الراغبين",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، المناجاة رقم 5",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 269,
-      "sourceName": "Munajat 6 - Sahifat Sajjadiyyah",
-      "slug": "munajat-sahifa-06",
-      "title": "مناجاة الشاكرين",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، المناجاة رقم 6",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 270,
-      "sourceName": "Munajat 7 - Sahifat Sajjadiyyah",
-      "slug": "munajat-sahifa-07",
-      "title": "مناجاة المطيعين لله",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، المناجاة رقم 7",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 271,
-      "sourceName": "Munajat 8 - Sahifat Sajjadiyyah",
-      "slug": "munajat-sahifa-08",
-      "title": "مناجاة المريدين",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، المناجاة رقم 8",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 272,
-      "sourceName": "Munajat 9 - Sahifat Sajjadiyyah",
-      "slug": "munajat-sahifa-09",
-      "title": "مناجاة المحبين",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، المناجاة رقم 9",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 273,
-      "sourceName": "Munajat 10 - Sahifat Sajjadiyyah",
-      "slug": "munajat-sahifa-10",
-      "title": "مناجاة المتوسلين",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، المناجاة رقم 10",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 274,
-      "sourceName": "Munajat 11 - Sahifat Sajjadiyyah",
-      "slug": "munajat-sahifa-11",
-      "title": "مناجاة المفتقرين",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، المناجاة رقم 11",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 275,
-      "sourceName": "Munajat 12 - Sahifat Sajjadiyyah",
-      "slug": "munajat-sahifa-12",
-      "title": "مناجاة العارفين",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، المناجاة رقم 12",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 276,
-      "sourceName": "Munajat 13 - Sahifat Sajjadiyyah",
-      "slug": "munajat-sahifa-13",
-      "title": "مناجاة الذاكرين",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، المناجاة رقم 13",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 277,
-      "sourceName": "Munajat 14 - Sahifat Sajjadiyyah",
-      "slug": "munajat-sahifa-14",
-      "title": "مناجاة المعتصمين",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، المناجاة رقم 14",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
-    {
-      "sourceId": 278,
-      "sourceName": "Munajat 15 - Sahifat Sajjadiyyah",
-      "slug": "munajat-sahifa-15",
-      "title": "مناجاة الزاهدين",
-      "alternateName": "",
-      "category": "الصحيفة السجادية والمناجيات",
-      "sourceReference": "الصحيفة السجادية، المناجاة رقم 15",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
-    },
     {
       "sourceId": 11,
       "sourceName": "Dua Sabah",
@@ -1111,6 +350,766 @@
       "alternateName": "",
       "category": "الزيارات الشريفة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 113",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 15,
+      "sourceName": "Ziarat Waritha",
+      "slug": "ziyarat-warith",
+      "title": "زيارة وارث",
+      "alternateName": "",
+      "category": "الزيارات الشريفة",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 15",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 24,
+      "sourceName": "Ziarat Jamia Sagheera",
+      "slug": "ziyarat-jamia-sagheera",
+      "title": "الزيارة الجامعة الصغيرة",
+      "alternateName": "",
+      "category": "الزيارات الشريفة",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 24",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 42,
+      "sourceName": "Ziarat Nahiya",
+      "slug": "ziyarat-nahiya",
+      "title": "زيارة الناحية المقدسة",
+      "alternateName": "",
+      "category": "الزيارات الشريفة",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 42",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 98,
+      "sourceName": "Ziarat of Bibi Khadija",
+      "slug": "ziyarat-bibi-khadija",
+      "title": "زيارة السيدة خديجة عليها السلام",
+      "alternateName": "",
+      "category": "الزيارات الشريفة",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 98",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 114,
+      "sourceName": "Ziarat 1 Holy Prophet",
+      "slug": "ziyarat-prophet-01",
+      "title": "زيارة النبي محمد صلى الله عليه وآله (١)",
+      "alternateName": "",
+      "category": "الزيارات الشريفة",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 114",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 116,
+      "sourceName": "6th Imam Ziarat",
+      "slug": "ziyarat-imam-sadiq",
+      "title": "زيارة الإمام جعفر الصادق عليه السلام",
+      "alternateName": "",
+      "category": "الزيارات الشريفة",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 116",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 120,
+      "sourceName": "Ziarat Bibi Zainab",
+      "slug": "ziyarat-bibi-zainab",
+      "title": "زيارة السيدة زينب عليها السلام",
+      "alternateName": "",
+      "category": "الزيارات الشريفة",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 120",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 121,
+      "sourceName": "Ziarat Bibi Fatema",
+      "slug": "ziyarat-fatima-zahra",
+      "title": "زيارة السيدة فاطمة الزهراء عليها السلام",
+      "alternateName": "",
+      "category": "الزيارات الشريفة",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 121",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 127,
+      "sourceName": "Ziarat Muslim bin Aqeel",
+      "slug": "ziyarat-muslim-aqeel",
+      "title": "زيارة مسلم بن عقيل عليه السلام",
+      "alternateName": "",
+      "category": "الزيارات الشريفة",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 127",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 152,
+      "sourceName": "10th Imam Ziarat",
+      "slug": "ziyarat-imam-hadi",
+      "title": "زيارة الإمام علي الهادي عليه السلام",
+      "alternateName": "",
+      "category": "الزيارات الشريفة",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 152",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 192,
+      "sourceName": "Ghadeer Long Ziarat",
+      "slug": "ziyarat-ghadeer-long",
+      "title": "زيارة الغدير المطولة",
+      "alternateName": "",
+      "category": "الزيارات الشريفة",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 192",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 193,
+      "sourceName": "Ghadeer Short Ziarat",
+      "slug": "ziyarat-ghadeer-short",
+      "title": "زيارة الغدير المختصرة",
+      "alternateName": "",
+      "category": "الزيارات الشريفة",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 193",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 304,
+      "sourceName": "Ziarat for Saturday",
+      "slug": "ziyarat-saturday",
+      "title": "زيارة يوم السبت",
+      "alternateName": "",
+      "category": "الزيارات الشريفة",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 304",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 316,
+      "sourceName": "Ziarat for Friday",
+      "slug": "ziyarat-friday",
+      "title": "زيارة يوم الجمعة",
+      "alternateName": "",
+      "category": "الزيارات الشريفة",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 316",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 363,
+      "sourceName": "General Ziarat",
+      "slug": "ziyarat-general",
+      "title": "زيارة عامة",
+      "alternateName": "",
+      "category": "الزيارات الشريفة",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 363",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 421,
+      "sourceName": "Ziarat of Imam Hussain in Karbala",
+      "slug": "ziyarat-husayn-karbala",
+      "title": "زيارة الإمام الحسين عليه السلام في كربلاء",
+      "alternateName": "",
+      "category": "الزيارات الشريفة",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 421",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 425,
+      "sourceName": "Ziarat of Hazrat Abbas in Karbala",
+      "slug": "ziyarat-abbas-karbala",
+      "title": "زيارة أبي الفضل العباس عليه السلام في كربلاء",
+      "alternateName": "",
+      "category": "الزيارات الشريفة",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 425",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 432,
+      "sourceName": "Ziarat of Imam Rida in Mashhad",
+      "slug": "ziyarat-imam-ridha-mashhad",
+      "title": "زيارة الإمام علي بن موسى الرضا عليه السلام في مشهد",
+      "alternateName": "",
+      "category": "الزيارات الشريفة",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 432",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 436,
+      "sourceName": "Ziarat of Bibi Masumah in Qom",
+      "slug": "ziyarat-masuma-qom",
+      "title": "زيارة السيدة فاطمة المعصومة عليها السلام في قم",
+      "alternateName": "",
+      "category": "الزيارات الشريفة",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 436",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 297,
+      "sourceName": "Dua after Dhuhr - 1",
+      "slug": "daily-after-dhuhr-01",
+      "title": "دعاء بعد صلاة الظهر (١)",
+      "alternateName": "",
+      "category": "الأدعية والأذكار اليومية",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 297",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 299,
+      "sourceName": "Dua after Dhuhr - 2",
+      "slug": "daily-after-dhuhr-02",
+      "title": "دعاء التعقيب بعد صلاة الظهر (٢)",
+      "alternateName": "",
+      "category": "الأدعية والأذكار اليومية",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 299",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 303,
+      "sourceName": "Dua for Saturday",
+      "slug": "daily-saturday",
+      "title": "دعاء يوم السبت",
+      "alternateName": "",
+      "category": "الأدعية والأذكار اليومية",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 303",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 305,
+      "sourceName": "Dua for Sunday",
+      "slug": "daily-sunday",
+      "title": "دعاء يوم الأحد",
+      "alternateName": "",
+      "category": "الأدعية والأذكار اليومية",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 305",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 307,
+      "sourceName": "Dua for Monday",
+      "slug": "daily-monday",
+      "title": "دعاء يوم الاثنين",
+      "alternateName": "",
+      "category": "الأدعية والأذكار اليومية",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 307",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 309,
+      "sourceName": "Dua for Tuesday",
+      "slug": "daily-tuesday",
+      "title": "دعاء يوم الثلاثاء",
+      "alternateName": "",
+      "category": "الأدعية والأذكار اليومية",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 309",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 311,
+      "sourceName": "Dua for Wednesday",
+      "slug": "daily-wednesday",
+      "title": "دعاء يوم الأربعاء",
+      "alternateName": "",
+      "category": "الأدعية والأذكار اليومية",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 311",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 313,
+      "sourceName": "Dua for Thursday",
+      "slug": "daily-thursday",
+      "title": "دعاء يوم الخميس",
+      "alternateName": "",
+      "category": "الأدعية والأذكار اليومية",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 313",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 315,
+      "sourceName": "Dua for Friday",
+      "slug": "daily-friday",
+      "title": "دعاء يوم الجمعة",
+      "alternateName": "",
+      "category": "الأدعية والأذكار اليومية",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 315",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 317,
+      "sourceName": "Salatul Ghufayla - First Unit Ayahs",
+      "slug": "daily-ghufayla-first-unit",
+      "title": "آيات الركعة الأولى من صلاة الغفيلة",
+      "alternateName": "",
+      "category": "الأدعية والأذكار اليومية",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 317",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 318,
+      "sourceName": "Salatul Ghufayla - Second Unit Ayah",
+      "slug": "daily-ghufayla-second-unit",
+      "title": "آية الركعة الثانية من صلاة الغفيلة",
+      "alternateName": "",
+      "category": "الأدعية والأذكار اليومية",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 318",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 319,
+      "sourceName": "Salatul Ghufayla - Qunoot",
+      "slug": "daily-ghufayla-qunut",
+      "title": "دعاء القنوت في صلاة الغفيلة",
+      "alternateName": "",
+      "category": "الأدعية والأذكار اليومية",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 319",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 365,
+      "sourceName": "Dua upon waking up",
+      "slug": "daily-waking",
+      "title": "دعاء عند الاستيقاظ",
+      "alternateName": "",
+      "category": "الأدعية والأذكار اليومية",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 365",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 366,
+      "sourceName": "Dua after rising from your bed",
+      "slug": "daily-rising-from-bed",
+      "title": "دعاء بعد النهوض من الفراش",
+      "alternateName": "",
+      "category": "الأدعية والأذكار اليومية",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 366",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 368,
+      "sourceName": "Dua for dawn and dusk",
+      "slug": "daily-dawn-dusk",
+      "title": "دعاء الصباح والمساء",
+      "alternateName": "",
+      "category": "الأدعية والأذكار اليومية",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 368",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 369,
+      "sourceName": "Dua when in the washroom",
+      "slug": "daily-washroom",
+      "title": "دعاء دخول الخلاء",
+      "alternateName": "",
+      "category": "الأدعية والأذكار اليومية",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 369",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 375,
+      "sourceName": "Dua before meals",
+      "slug": "daily-before-meals",
+      "title": "دعاء قبل الطعام",
+      "alternateName": "",
+      "category": "الأدعية والأذكار اليومية",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 375",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 376,
+      "sourceName": "Dua after meals",
+      "slug": "daily-after-meals",
+      "title": "دعاء بعد الطعام",
+      "alternateName": "",
+      "category": "الأدعية والأذكار اليومية",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 376",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 378,
+      "sourceName": "Dua  1 when leaving home",
+      "slug": "daily-leaving-home",
+      "title": "دعاء الخروج من المنزل",
+      "alternateName": "",
+      "category": "الأدعية والأذكار اليومية",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 378",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 16,
+      "sourceName": "Hadith e Kisa",
+      "slug": "general-hadith-kisa",
+      "title": "حديث الكساء",
+      "alternateName": "",
+      "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 16",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 18,
+      "sourceName": "Dua Mashlool",
+      "slug": "general-mashlool",
+      "title": "دعاء المشلول",
+      "alternateName": "",
+      "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 18",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 19,
+      "sourceName": "Dua Adeelah",
+      "slug": "general-adeelah",
+      "title": "دعاء العديلة",
+      "alternateName": "",
+      "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 19",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 20,
+      "sourceName": "Dua Yastashir",
+      "slug": "general-yastasheer",
+      "title": "دعاء يستشير",
+      "alternateName": "",
+      "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 20",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 109,
+      "sourceName": "Dua at-Tawbah",
+      "slug": "general-tawbah",
+      "title": "دعاء التوبة",
+      "alternateName": "",
+      "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 109",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 110,
+      "sourceName": "Dua Makarimul Akhlaq",
+      "slug": "general-makarim-akhlaq",
+      "title": "دعاء مكارم الأخلاق",
+      "alternateName": "",
+      "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 110",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 131,
+      "sourceName": "Dua Alqama",
+      "slug": "general-alqama",
+      "title": "دعاء علقمة",
+      "alternateName": "",
+      "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 131",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 159,
+      "sourceName": "Dua of Imam Hussain",
+      "slug": "general-imam-husayn",
+      "title": "دعاء الإمام الحسين عليه السلام",
+      "alternateName": "",
+      "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 159",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 355,
+      "sourceName": "A Gift from Imam Hussain",
+      "slug": "general-gift-husayn",
+      "title": "هديّة من الإمام الحسين عليه السلام",
+      "alternateName": "",
+      "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 355",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 356,
+      "sourceName": "Dua Asharaat",
+      "slug": "general-asharaat",
+      "title": "دعاء العشرات",
+      "alternateName": "",
+      "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 356",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 357,
+      "sourceName": "Dua Saif Al Sagheer-Al Qamoos",
+      "slug": "general-saif-sagheer",
+      "title": "دعاء السيف الصغير والقاموس",
+      "alternateName": "",
+      "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 357",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 358,
+      "sourceName": "Dua Hujjat",
+      "slug": "general-hujjat",
+      "title": "دعاء الحجة",
+      "alternateName": "",
+      "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 358",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 362,
+      "sourceName": "Dua Wahdah",
+      "slug": "general-wahdah",
+      "title": "دعاء الوحدة",
+      "alternateName": "",
+      "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 362",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 329,
+      "sourceName": "Salatul Wahshat",
+      "slug": "general-salat-wahshat",
+      "title": "صلاة الوحشة",
+      "alternateName": "",
+      "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 329",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 330,
+      "sourceName": "Namaz Jafare Tayyar - Dua in Sajdah",
+      "slug": "general-jafar-tayyar-sajda",
+      "title": "دعاء السجود في صلاة جعفر الطيار",
+      "alternateName": "",
+      "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 330",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 332,
+      "sourceName": "Namaz Jafare Tayyar - Dua after",
+      "slug": "general-jafar-tayyar-after",
+      "title": "الدعاء بعد صلاة جعفر الطيار",
+      "alternateName": "",
+      "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 332",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 352,
+      "sourceName": "Dua for entering the cemetary - I.  Ali",
+      "slug": "general-cemetery-dua-ali",
+      "title": "دعاء دخول المقبرة عن الإمام علي عليه السلام",
+      "alternateName": "",
+      "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 352",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 353,
+      "sourceName": "Dua for entering the cemetary - I.  Hussain",
+      "slug": "general-cemetery-dua-husayn",
+      "title": "دعاء دخول المقبرة عن الإمام الحسين عليه السلام",
+      "alternateName": "",
+      "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 353",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 354,
+      "sourceName": "Dua for entering the cemetary - I.  Sadiq",
+      "slug": "general-cemetery-dua-sadiq",
+      "title": "دعاء دخول المقبرة عن الإمام جعفر الصادق عليه السلام",
+      "alternateName": "",
+      "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 354",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 395,
+      "sourceName": "Praising Allah",
+      "slug": "general-praising-allah",
+      "title": "حمد الله تعالى",
+      "alternateName": "",
+      "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 395",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 398,
+      "sourceName": "Dua in Sajdah after Adhan",
+      "slug": "general-after-adhan-sajda",
+      "title": "دعاء السجود بعد الأذان",
+      "alternateName": "",
+      "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 398",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 405,
+      "sourceName": "Dua in Qunoot",
+      "slug": "general-qunut",
+      "title": "دعاء القنوت",
+      "alternateName": "",
+      "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 405",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 410,
+      "sourceName": "Dua of Maqatil bin Sulayman",
+      "slug": "general-maqatil-sulayman",
+      "title": "دعاء مقاتل بن سليمان",
+      "alternateName": "",
+      "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 410",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 411,
+      "sourceName": "Dua for the betterment of society",
+      "slug": "general-betterment-society",
+      "title": "دعاء صلاح المجتمع",
+      "alternateName": "",
+      "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 411",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 415,
+      "sourceName": "Jafare Tayyar",
+      "slug": "general-jafar-tayyar",
+      "title": "صلاة جعفر الطيار",
+      "alternateName": "",
+      "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 415",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 26,
+      "sourceName": "Dua on sighting new Muharram Moon",
+      "slug": "occasion-muharram-moon",
+      "title": "دعاء رؤية هلال شهر محرم",
+      "alternateName": "",
+      "category": "الأعمال والمناسبات",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 26",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 27,
+      "sourceName": "Dua on first day of Muharram",
+      "slug": "occasion-first-muharram",
+      "title": "دعاء أول يوم من شهر محرم",
+      "alternateName": "",
+      "category": "الأعمال والمناسبات",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 27",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 35,
+      "sourceName": "Eid Salat Qunut",
+      "slug": "occasion-eid-qunut",
+      "title": "دعاء القنوت في صلاة العيد",
+      "alternateName": "",
+      "category": "الأعمال والمناسبات",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 35",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 45,
+      "sourceName": "Safar Daily Dua",
+      "slug": "occasion-safar",
+      "title": "دعاء شهر صفر",
+      "alternateName": "",
+      "category": "الأعمال والمناسبات",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 45",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 48,
+      "sourceName": "Rajab Daily Dua 1",
+      "slug": "occasion-rajab-daily-01",
+      "title": "دعاء يوم من شهر رجب (١)",
+      "alternateName": "",
+      "category": "الأعمال والمناسبات",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 48",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 101,
+      "sourceName": "Dua 2 on the night of Qadr",
+      "slug": "occasion-qadr-02",
+      "title": "دعاء ليلة القدر (٢)",
+      "alternateName": "",
+      "category": "الأعمال والمناسبات",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 101",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 102,
+      "sourceName": "Dua 3 on the night of Qadr",
+      "slug": "occasion-qadr-03",
+      "title": "دعاء ليلة القدر (٣)",
+      "alternateName": "",
+      "category": "الأعمال والمناسبات",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 102",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 103,
+      "sourceName": "Dua 4 on the night of Qadr",
+      "slug": "occasion-qadr-04",
+      "title": "دعاء ليلة القدر (٤)",
+      "alternateName": "",
+      "category": "الأعمال والمناسبات",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 103",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 134,
+      "sourceName": "Rajab General Dua",
+      "slug": "occasion-rajab-general",
+      "title": "دعاء عام في شهر رجب",
+      "alternateName": "",
+      "category": "الأعمال والمناسبات",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 134",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 140,
+      "sourceName": "Rajab Daily Dua 2",
+      "slug": "occasion-rajab-daily-02",
+      "title": "دعاء يوم من شهر رجب (٢)",
+      "alternateName": "",
+      "category": "الأعمال والمناسبات",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 140",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 162,
+      "sourceName": "Dua 1 - 15th Shabaan",
+      "slug": "occasion-shaban-15-01",
+      "title": "دعاء ليلة النصف من شعبان (١)",
+      "alternateName": "",
+      "category": "الأعمال والمناسبات",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 162",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 172,
+      "sourceName": "Last night of Shabaan",
+      "slug": "occasion-last-shaban-night",
+      "title": "دعاء الليلة الأخيرة من شهر شعبان",
+      "alternateName": "",
+      "category": "الأعمال والمناسبات",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 172",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+    },
+    {
+      "sourceId": 183,
+      "sourceName": "Dua 2 Arafah",
+      "slug": "occasion-arafah-02",
+      "title": "دعاء يوم عرفة (٢)",
+      "alternateName": "",
+      "category": "الأعمال والمناسبات",
+      "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 183",
       "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
     }
   ]

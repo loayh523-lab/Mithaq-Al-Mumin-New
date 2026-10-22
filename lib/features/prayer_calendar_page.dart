@@ -32,7 +32,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
   String? _locationMessage;
   @override void initState() {
     super.initState();
-    tab = widget.initialTab.clamp(0, 2);
+    tab = widget.initialTab.clamp(0, 2).toInt();
     _loadCorrection();
     _loadCity();
     _clockTimer = Timer.periodic(const Duration(seconds: 30), (_) {

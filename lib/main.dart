@@ -406,6 +406,7 @@ class _MainShellState extends State<MainShell> {
     ));
   }
 
+  // ignore: unused_element
   ({String name, DateTime at}) _nextPrayer(SolarPrayerTimes times, DateTime clock) {
     final prayers = <({String name, String value})>[
       (name: 'الفجر', value: times.fajr),
@@ -440,9 +441,11 @@ class _MainShellState extends State<MainShell> {
     );
   }
 
+  // ignore: unused_element
   String _clockLabel(DateTime value) =>
       '${value.hour.toString().padLeft(2, '0')}:${value.minute.toString().padLeft(2, '0')}';
 
+  // ignore: unused_element
   String _countdownLabel(DateTime target, DateTime current) {
     final minutes = target.difference(current).inMinutes.clamp(0, 999999);
     final hours = minutes ~/ 60;

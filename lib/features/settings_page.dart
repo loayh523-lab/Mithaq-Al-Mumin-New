@@ -295,7 +295,7 @@ class _SettingsPageState extends State<SettingsPage> {
             child: SwitchListTile(
               contentPadding: EdgeInsets.zero,
               title: const Text('إشعارات الصلاة'),
-              subtitle: const Text('تذكيرات محلية للأيام الثلاثين القادمة وفق حساب فلكي تقديري، باستخدام تسجيل الأذان المختار. قد تتأخر التنبيهات بسبب قيود توفير الطاقة أو أذونات أندرويد.', style: TextStyle(color: _settingsMuted, height: 1.5, fontSize: 12)),
+              subtitle: const Text('تذكيرات محلية للأيام الثلاثين القادمة وفق حساب فلكي تقديري. التسجيل الصوتي المرفق لم يُتحقّق من مصدره، وقد تتأخر التنبيهات بسبب قيود توفير الطاقة أو أذونات أندرويد.', style: TextStyle(color: _settingsMuted, height: 1.5, fontSize: 12)),
               value: _notificationsEnabled,
               onChanged: _loaded ? _toggleNotifications : null,
               activeThumbColor: _settingsGold,

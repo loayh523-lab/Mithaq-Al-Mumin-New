@@ -40,6 +40,9 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.descendant(of: find.byType(Drawer), matching: find.text('التسبيح والعداد')));
     await tester.pumpAndSettle();
+    expect(find.text('التسبيح'), findsOneWidget);
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 100)));
+    await tester.pump();
     expect(find.text('اضغط على الدائرة للتسبيح'), findsOneWidget);
     expect(find.text('0'), findsOneWidget);
   });

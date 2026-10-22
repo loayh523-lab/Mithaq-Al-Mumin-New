@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../services/prayer_locations.dart';
 
 const _panel = Color(0xFF10251E);
+const _calendarInk = Color(0xFF071713);
 const _gold = Color(0xFFD9B66D);
 const _muted = Color(0xFF9EB5A9);
 
@@ -223,7 +224,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
                 child: Column(
                   children: [
                     Text(
-                      selectedHijri.monthName + ' ' + _arabicIndicDigits(selectedHijri.year) + ' هـ',
+                      '${selectedHijri.monthName} ${_arabicIndicDigits(selectedHijri.year)} هـ',
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         color: _gold,
@@ -233,7 +234,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
                     ),
                     const SizedBox(height: 3),
                     Text(
-                      _gregorianMonthName(firstDay.month) + ' ' + firstDay.year.toString(),
+                      '${_gregorianMonthName(firstDay.month)} ${firstDay.year}',
                       style: const TextStyle(color: _muted, fontSize: 11),
                     ),
                   ],
@@ -322,7 +323,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
                       Text(
                         _arabicIndicDigits(hijri.day),
                         style: TextStyle(
-                          color: selected ? _ink : Colors.white,
+                          color: selected ? _calendarInk : Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w900,
                         ),
@@ -331,7 +332,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
                       Text(
                         day.day.toString(),
                         style: TextStyle(
-                          color: selected ? _ink.withValues(alpha: .7) : _muted,
+                          color: selected ? _calendarInk.withValues(alpha: .7) : _muted,
                           fontSize: 9,
                         ),
                       ),
@@ -339,7 +340,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
                         Icon(
                           Icons.circle,
                           size: 4,
-                          color: selected ? _ink : _gold,
+                          color: selected ? _calendarInk : _gold,
                         ),
                     ],
                   ),
@@ -364,9 +365,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      _arabicIndicDigits(selectedHijri.day.toInt()) + ' ' +
-                          selectedHijri.monthName + ' ' +
-                          _arabicIndicDigits(selectedHijri.year) + ' هـ',
+                      '${_arabicIndicDigits(selectedHijri.day)} ${selectedHijri.monthName} ${_arabicIndicDigits(selectedHijri.year)} هـ',
                       style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w900),
                     ),
                   ),
@@ -374,7 +373,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
               ),
               const SizedBox(height: 5),
               Text(
-                _dateLabel(selectedDate) + ' م',
+                '${_dateLabel(selectedDate)} م',
                 style: const TextStyle(color: _muted, fontSize: 12),
               ),
               if (selectedOccasion != null) ...[

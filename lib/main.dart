@@ -757,8 +757,6 @@ class _MainShellState extends State<MainShell> {
 
   Widget _duaPage() => _DuaLibrary(onNotice: _notice);
 
-  Widget _tasbeehPage() => const TasbeehPage();
-
   void _notice(String message) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   }

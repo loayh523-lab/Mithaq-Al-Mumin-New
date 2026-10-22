@@ -65,14 +65,18 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
       final surahId = prefs.getInt('last_quran_surah');
       final verseNumber = prefs.getInt('last_quran_verse');
       if (surahId == null || verseNumber == null) {
-        if (mounted) ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('بعدك ما حفظت موضع قراءة. افتح سورة واضغط حفظ موضع القراءة عند الآية.')),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('بعدك ما حفظت موضع قراءة. افتح سورة واضغط حفظ موضع القراءة عند الآية.')),
+          );
+        }
         return;
       }
       final chapters = await _readSurahCatalog();
       final matches = chapters.where((chapter) => chapter.id == surahId);
-      if (matches.isEmpty || !mounted) return;
+      if (matches.isEmpty || !mounted) {
+        return;
+      }
       Navigator.of(context).push(MaterialPageRoute<void>(
         builder: (_) => Directionality(
           textDirection: TextDirection.rtl,
@@ -80,9 +84,11 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
         ),
       ));
     } catch (_) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('تعذّر استرجاع موضع القراءة المحفوظ.')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('تعذّر استرجاع موضع القراءة المحفوظ.')),
+        );
+      }
     }
   }
 
@@ -622,15 +628,19 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setInt('last_quran_surah', widget.surah.id);
       await prefs.setInt('last_quran_verse', verseNumber);
-      if (!mounted) return;
+      if (!mounted) {
+        return;
+      }
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('حُفظ موضع القراءة: ${widget.surah.name}، الآية $verseNumber'),
         duration: const Duration(seconds: 1),
       ));
     } catch (_) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('تعذّر حفظ موضع القراءة.')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('تعذّر حفظ موضع القراءة.')),
+        );
+      }
     }
   }
 

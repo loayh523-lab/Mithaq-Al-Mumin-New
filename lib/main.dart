@@ -558,6 +558,11 @@ class _MainShellState extends State<MainShell> {
                     ],
                   ),
                   const SizedBox(height: 26),
+                  const Text(
+                    'التاريخ الهجري',
+                    style: TextStyle(color: _muted, fontSize: 11, fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 4),
                   Text(
                     hijriDateLabel(_now, correction: _hijriCorrection),
                     style: const TextStyle(

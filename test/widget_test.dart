@@ -26,8 +26,13 @@ void main() {
     await tester.pumpWidget(const MithaqApp());
     expect(find.text('ميثاق المؤمن'), findsWidgets);
     expect(find.text('التاريخ الهجري'), findsOneWidget);
-    expect(find.text('الصلاة القادمة'), findsOneWidget);
-    expect(find.text('مواقيت الصلوات'), findsOneWidget);
+    expect(find.text('قبس اليوم'), findsOneWidget);
+    expect(find.text('ابدأ وردك'), findsOneWidget);
+    expect(find.text('وِرد اليوم'), findsOneWidget);
+    expect(find.text('القرآن الكريم'), findsOneWidget);
+    expect(find.text('الأدعية'), findsOneWidget);
+    expect(find.text('الصلاة القادمة'), findsNothing);
+    expect(find.text('مواقيت الصلوات'), findsNothing);
 
     await tester.scrollUntilVisible(
       find.text('عمل اليوم'),

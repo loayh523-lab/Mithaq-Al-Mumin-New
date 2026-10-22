@@ -502,6 +502,7 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
   bool _loading = true;
   String? _error;
   List<String> _verses = const [];
+  List<SurahInfo> _catalog = const [];
   Map<String, _QuranVerseMeta> _verseMetadata = const {};
   double _fontSize = 24;
   Set<String> _bookmarks = <String>{};
@@ -649,12 +650,13 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
     try {
       final chapters = await _loadOfflineQuran();
       final metadata = await _loadQuranVerseMetadata();
+      final catalog = await _readSurahCatalog();
       final verses = chapters[widget.surah.id];
       if (verses == null || verses.length != widget.surah.totalVerses) {
         throw FormatException('Quran asset is missing surah ${widget.surah.id}.');
       }
       if (!mounted) return;
-      setState(() { _verses = verses; _verseMetadata = metadata; _loading = false; _error = null; });
+      setState(() { _verses = verses; _catalog = catalog; _verseMetadata = metadata; _loading = false; _error = null; });
       final targetVerse = widget.initialVerse;
       if (targetVerse != null && targetVerse >= 1 && targetVerse <= verses.length) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -685,7 +687,9 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
 
   @override
   Widget build(BuildContext context) {
-    final firstMeta = _verseMetadata['${widget.surah.id}:1'];
+    final startVerse = widget.initialVerse ?? 1;
+    final firstMeta = _verseMetadata['${widget.surah.id}:$startVerse'];
+    final nextSurah = widget.surah.id < 114 ? _catalog[widget.surah.id] : null;
     return Scaffold(
       appBar: AppBar(
         title: const Text('القرآن الكريم'),
@@ -978,6 +982,46 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
                         ),
                       );
                     }),
+                    if (nextSurah != null) ...[
+                      const SizedBox(height: 12),
+                      Material(
+                        color: const Color(0xFF505256),
+                        borderRadius: BorderRadius.circular(18),
+                        clipBehavior: Clip.antiAlias,
+                        child: InkWell(
+                          onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute<void>(
+                              builder: (_) => Directionality(
+                                textDirection: TextDirection.rtl,
+                                child: SurahReaderPage(surah: nextSurah),
+                              ),
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsetsDirectional.fromSTEB(18, 17, 20, 17),
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.chevron_left_rounded,
+                                  color: _emerald,
+                                  size: 30,
+                                ),
+                                const Spacer(),
+                                Text(
+                                  'سورة ${nextSurah.name}',
+                                  textAlign: TextAlign.right,
+                                  style: const TextStyle(
+                                    fontSize: 24,
+                                    height: 1.5,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 18),
                       child: Text(

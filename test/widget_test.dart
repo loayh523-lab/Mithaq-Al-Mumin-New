@@ -235,7 +235,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 100));
     expect(find.text('الفاتحة'), findsWidgets);
     expect(find.byKey(const ValueKey('quran-verse-1-1')), findsOneWidget);
-    expect(find.textContaining('الجزء 1'), findsOneWidget);
+    expect(find.textContaining('الجزء ١'), findsOneWidget);
     expect(find.textContaining('الصفحة'), findsNothing);
     expect(find.textContaining('تعذّر فتح نص القرآن'), findsNothing);
   });

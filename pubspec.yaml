@@ -34,6 +34,7 @@ flutter:
     - assets/quran/uthmani_surahs.json
     - assets/quran/verse_metadata.json
     - assets/shia_duas/shia_duas.json
+    - assets/shia_duas/sahifa_sajjadiya.json
     - assets/audio/adhan_shabbar_maalla.mp3
     - assets/fonts/OFL.txt
   fonts:

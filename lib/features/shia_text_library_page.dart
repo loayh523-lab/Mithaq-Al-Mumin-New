@@ -83,7 +83,7 @@ class ShiaTextEntry {
     if (isZiyara) return 'الزيارات الشريفة';
     if (isSahifa || isMunajat) return 'الصحيفة السجادية والمناجيات';
     if (isMorningEveningDua) return 'الأدعية والأذكار اليومية';
-    return 'الأدعية العامة والفرج وصاحب الزمان';
+    return 'الأدعية العامة وأدعية الفرج وصاحب الزمان';
   }
   String get arabicText => lines.where((line) => line.isArabic).map((line) => line.text).join('\n');
 
@@ -139,7 +139,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
   static const _categories = [
     'الصحيفة السجادية والمناجيات',
     'الأدعية والأذكار اليومية',
-    'الأدعية العامة والفرج وصاحب الزمان',
+    'الأدعية العامة وأدعية الفرج وصاحب الزمان',
     'الأعمال والمناسبات',
     'الزيارات الشريفة',
   ];

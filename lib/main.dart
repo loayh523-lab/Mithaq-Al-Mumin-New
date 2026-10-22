@@ -810,8 +810,12 @@ class _MainShellState extends State<MainShell> {
               () => _pushPage(const KhatmaPage()),
             ),
             _homeMiniShortcut(
-              Icons.calendar_month_rounded, 'المناسبات',
-              () => setState(() => _selected = 3),
+              Icons.calendar_month_rounded, 'التقويم الهجري',
+              () => _pushPage(PrayerCalendarPage(
+                initialTab: 2,
+                onLocationChanged: _handleLocationChanged,
+                onHijriCorrectionChanged: _loadDashboardData,
+              )),
             ),
           ],
         ),

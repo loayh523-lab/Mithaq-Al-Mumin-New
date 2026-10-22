@@ -41,7 +41,7 @@ class PrayerNotificationService {
         const NotificationDetails(
           android: AndroidNotificationDetails(
             'mithaq_adhan_shabbar_v5', 'أذان الصلاة',
-            channelDescription: 'تسجيل الأذان المختار من العتبة العلوية المقدسة',
+            channelDescription: 'صوت تنبيه الصلاة المرفق بالتطبيق؛ لم يتم التحقق من نسبته إلى جهة أو قارئ معين',
             importance: Importance.high, priority: Priority.high,
             sound: RawResourceAndroidNotificationSound('adhan_shabbar_maalla'),
             audioAttributesUsage: AudioAttributesUsage.alarm,
@@ -172,7 +172,7 @@ class PrayerNotificationService {
                 android: AndroidNotificationDetails(
                   'mithaq_adhan_shabbar_v5',
                   'أذان الصلاة',
-                  channelDescription: 'تسجيل الأذان المختار من العتبة العلوية المقدسة',
+                  channelDescription: 'صوت تنبيه الصلاة المرفق بالتطبيق؛ لم يتم التحقق من نسبته إلى جهة أو قارئ معين',
                   importance: Importance.high,
                   priority: Priority.high,
                   sound: RawResourceAndroidNotificationSound('adhan_shabbar_maalla'),

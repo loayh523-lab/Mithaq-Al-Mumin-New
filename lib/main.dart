@@ -647,7 +647,7 @@ class _MainShellState extends State<MainShell> {
                     ),
                   ),
                   Text(
-                    _prayerCity.name + ' • تقديري',
+                    '${_prayerCity.name} • تقديري',
                     style: const TextStyle(color: _muted, fontSize: 10),
                   ),
                 ],
@@ -676,7 +676,7 @@ class _MainShellState extends State<MainShell> {
                           ),
                           const SizedBox(height: 3),
                           Text(
-                            'المتبقي ' + _countdownLabel(nextPrayer.at, _now),
+                            'المتبقي ${_countdownLabel(nextPrayer.at, _now)}',
                             style: const TextStyle(color: _gold, fontSize: 12),
                           ),
                         ],

@@ -692,7 +692,7 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
     final nextSurah = widget.surah.id < 114 ? _catalog[widget.surah.id] : null;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('القرآن الكريم'),
+        title: Text(widget.surah.name),
         actions: [
           IconButton(
             tooltip: 'تصغير الخط',

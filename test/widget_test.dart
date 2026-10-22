@@ -26,9 +26,15 @@ void main() {
     await tester.pumpWidget(const MithaqApp());
     expect(find.text('ميثاق المؤمن'), findsWidgets);
     expect(find.text('التاريخ الهجري'), findsOneWidget);
-    expect(find.text('قبس اليوم'), findsOneWidget);
     expect(find.text('الصلاة القادمة'), findsOneWidget);
     expect(find.text('مواقيت الصلاة'), findsOneWidget);
+
+    await tester.scrollUntilVisible(
+      find.text('قبس اليوم'),
+      250,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(find.text('قبس اليوم'), findsOneWidget);
 
     await tester.scrollUntilVisible(
       find.text('ابدأ وردك'),
@@ -278,7 +284,7 @@ void main() {
     await tester.pumpWidget(const MaterialApp(
       home: Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'الزيارات الشريفة')),
     ));
-    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 700)));
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 1400)));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
     expect(find.text('الأدعية والزيارات'), findsWidgets);

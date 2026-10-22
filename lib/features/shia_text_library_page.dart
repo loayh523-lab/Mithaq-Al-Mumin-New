@@ -247,8 +247,8 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
               child: ChoiceChip(
                 label: Text(
                   choice == 'كل النصوص'
-                      ? 'كل النصوص (' + data.entries.length.toString() + ')'
-                      : choice + ' (' + data.entries.where((entry) => entry.category == choice).length.toString() + ')',
+                      ? 'كل النصوص (${data.entries.length})'
+                      : '$choice (${data.entries.where((entry) => entry.category == choice).length})',
                 ),
                 selected: _category == choice,
                 onSelected: (_) => setState(() => _category = choice),

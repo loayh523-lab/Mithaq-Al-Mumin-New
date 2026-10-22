@@ -25,6 +25,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
   Timer? _clockTimer;
   int correction = 0, tab = 0;
   bool _gpsBusy = false;
+  bool _showAnnualCalendar = false;
   double? _gpsAccuracy;
   String? _locationMessage;
   @override void initState() {
@@ -106,7 +107,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
       ])),
       if (_occasion(hijri) != null) Card(color: _panel, child: ListTile(leading: const Icon(Icons.event, color: _gold), title: const Text('مناسبة دينية'), subtitle: Text(_occasion(hijri)!, style: const TextStyle(height: 1.5)))),
       const SizedBox(height: 14),
-      SegmentedButton<int>(segments: const [ButtonSegment(value: 0, label: Text('مواقيت الصلاة'), icon: Icon(Icons.access_time)), ButtonSegment(value: 1, label: Text('إمساكية رمضان'), icon: Icon(Icons.nights_stay_outlined)), ButtonSegment(value: 2, label: Text('التقويم السنوي'), icon: Icon(Icons.calendar_month_rounded))], selected: {tab}, onSelectionChanged: (v) => setState(() => tab = v.first)),
+      SegmentedButton<int>(segments: const [ButtonSegment(value: 0, label: Text('مواقيت الصلاة'), icon: Icon(Icons.access_time)), ButtonSegment(value: 1, label: Text('إمساكية رمضان'), icon: Icon(Icons.nights_stay_outlined)), ButtonSegment(value: 2, label: Text('التقويم الهجري'), icon: Icon(Icons.calendar_month_rounded))], selected: {tab}, onSelectionChanged: (v) => setState(() => tab = v.first)),
       const SizedBox(height: 12),
       if (tab == 0) ...[
         Row(children: [Expanded(child: Text('مواقيت ${_dateLabel(date)}', style: const TextStyle(fontWeight: FontWeight.bold))), IconButton(onPressed: () => setState(() => date = date.subtract(const Duration(days: 1))), icon: const Icon(Icons.chevron_right)), IconButton(onPressed: () => setState(() => date = date.add(const Duration(days: 1))), icon: const Icon(Icons.chevron_left)), IconButton(onPressed: () => setState(() => date = DateTime.now()), icon: const Icon(Icons.today))]),
@@ -117,7 +118,8 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
         Text('إمساكية تقديرية — ${city.name} / العراق', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17)), const SizedBox(height: 5),
         const Text('يعرض الشهر كاملاً من اليوم الأول إلى آخر يوم من رمضان المحسوب تقويمياً. الأوقات فلكية تقديرية وليست بديلاً عن إمساكية مكتب مرجعك أو الجهة المحلية المعتمدة.', style: TextStyle(color: _muted, fontSize: 11, height: 1.5)),
         ..._ramadanRows(date, city.latitude, city.longitude),
-      ] else ..._annualCalendar(date.year, correction),
+      ] else if (_showAnnualCalendar) ..._annualCalendar(date.year, correction)
+      else ..._monthCalendar(date, correction),
       const Divider(),
       const Text('الموقع الحالي للحساب', style: TextStyle(fontWeight: FontWeight.bold)),
       Text(
@@ -137,6 +139,297 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
     final year = date.year + delta;
     final maxDay = DateUtils.getDaysInMonth(year, date.month);
     setState(() => date = DateTime(year, date.month, date.day.clamp(1, maxDay).toInt()));
+  }
+
+
+  void _moveHijriMonth(int delta) {
+    final current = _Hijri.fromGregorian(date.add(Duration(days: correction)));
+    var candidate = date;
+    for (var step = 0; step < 35; step++) {
+      candidate = candidate.add(Duration(days: delta.sign));
+      final next = _Hijri.fromGregorian(candidate.add(Duration(days: correction)));
+      if (next.month != current.month || next.year != current.year) {
+        setState(() {
+          date = candidate;
+          _showAnnualCalendar = false;
+        });
+        return;
+      }
+    }
+  }
+
+  List<Widget> _monthCalendar(DateTime selectedDate, int correction) {
+    final selectedHijri = _Hijri.fromGregorian(
+      selectedDate.add(Duration(days: correction)),
+    );
+    var firstDay = DateTime(
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day,
+    );
+    for (var step = 0; step < 31; step++) {
+      final previous = firstDay.subtract(const Duration(days: 1));
+      final previousHijri = _Hijri.fromGregorian(
+        previous.add(Duration(days: correction)),
+      );
+      if (previousHijri.month != selectedHijri.month ||
+          previousHijri.year != selectedHijri.year) {
+        break;
+      }
+      firstDay = previous;
+    }
+
+    final days = <DateTime>[];
+    for (var step = 0; step < 31; step++) {
+      final candidate = firstDay.add(Duration(days: step));
+      final candidateHijri = _Hijri.fromGregorian(
+        candidate.add(Duration(days: correction)),
+      );
+      if (candidateHijri.month != selectedHijri.month ||
+          candidateHijri.year != selectedHijri.year) {
+        break;
+      }
+      days.add(candidate);
+    }
+    final cells = <DateTime?>[
+      ...List<DateTime?>.filled(firstDay.weekday % 7, null),
+      ...days,
+    ];
+    while (cells.length % 7 != 0) {
+      cells.add(null);
+    }
+    final selectedOccasion = _occasion(selectedHijri);
+    const weekdays = <String>['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+
+    return [
+      Card(
+        color: _panel,
+        margin: const EdgeInsets.symmetric(vertical: 5),
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+          side: BorderSide(color: _gold.withValues(alpha: .24)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+          child: Row(
+            children: [
+              IconButton(
+                tooltip: 'الشهر الهجري السابق',
+                onPressed: () => _moveHijriMonth(-1),
+                icon: const Icon(Icons.chevron_right_rounded, color: _gold),
+              ),
+              Expanded(
+                child: Column(
+                  children: [
+                    Text(
+                      selectedHijri.monthName + ' ' + _arabicIndicDigits(selectedHijri.year) + ' هـ',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: _gold,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      _gregorianMonthName(firstDay.month) + ' ' + firstDay.year.toString(),
+                      style: const TextStyle(color: _muted, fontSize: 11),
+                    ),
+                  ],
+                ),
+              ),
+              IconButton(
+                tooltip: 'الشهر الهجري التالي',
+                onPressed: () => _moveHijriMonth(1),
+                icon: const Icon(Icons.chevron_left_rounded, color: _gold),
+              ),
+              IconButton(
+                tooltip: 'عرض التقويم السنوي',
+                onPressed: () => setState(() => _showAnnualCalendar = true),
+                icon: const Icon(Icons.calendar_view_month_rounded, color: _muted),
+              ),
+            ],
+          ),
+        ),
+      ),
+      const Padding(
+        padding: EdgeInsets.fromLTRB(4, 4, 4, 8),
+        child: Text(
+          'اختر يوماً لعرض مناسبته وتاريخه. التقويم حسابي وقد يختلف عن إعلان ثبوت الهلال.',
+          style: TextStyle(color: _muted, height: 1.5, fontSize: 11),
+        ),
+      ),
+      Row(
+        children: weekdays.map((day) => Expanded(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5),
+              child: Text(
+                day,
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: _muted, fontSize: 9, fontWeight: FontWeight.w700),
+              ),
+            ),
+          ),
+        )).toList(),
+      ),
+      GridView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: cells.length,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 7,
+          childAspectRatio: .78,
+        ),
+        itemBuilder: (context, index) {
+          final day = cells[index];
+          if (day == null) return const SizedBox.shrink();
+          final hijri = _Hijri.fromGregorian(day.add(Duration(days: correction)));
+          final occasion = _occasion(hijri);
+          final selected = day.year == selectedDate.year &&
+              day.month == selectedDate.month &&
+              day.day == selectedDate.day;
+          return Padding(
+            padding: const EdgeInsets.all(2),
+            child: Material(
+              color: selected
+                  ? _gold
+                  : occasion != null
+                      ? _gold.withValues(alpha: .10)
+                      : _panel,
+              borderRadius: BorderRadius.circular(12),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(12),
+                onTap: () => setState(() {
+                  date = day;
+                  _showAnnualCalendar = false;
+                }),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: selected
+                          ? _gold
+                          : occasion != null
+                              ? _gold.withValues(alpha: .5)
+                              : Colors.white.withValues(alpha: .04),
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        _arabicIndicDigits(hijri.day),
+                        style: TextStyle(
+                          color: selected ? _ink : Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                      const SizedBox(height: 3),
+                      Text(
+                        day.day.toString(),
+                        style: TextStyle(
+                          color: selected ? _ink.withValues(alpha: .7) : _muted,
+                          fontSize: 9,
+                        ),
+                      ),
+                      if (occasion != null)
+                        Icon(
+                          Icons.circle,
+                          size: 4,
+                          color: selected ? _ink : _gold,
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+      Card(
+        color: _panel,
+        margin: const EdgeInsets.only(top: 10, bottom: 6),
+        elevation: 0,
+        child: Padding(
+          padding: const EdgeInsets.all(14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.event_available_rounded, color: _gold, size: 21),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      _arabicIndicDigits(selectedHijri.day.toInt()) + ' ' +
+                          selectedHijri.monthName + ' ' +
+                          _arabicIndicDigits(selectedHijri.year) + ' هـ',
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w900),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 5),
+              Text(
+                _dateLabel(selectedDate) + ' م',
+                style: const TextStyle(color: _muted, fontSize: 12),
+              ),
+              if (selectedOccasion != null) ...[
+                const SizedBox(height: 10),
+                Text(
+                  selectedOccasion,
+                  style: const TextStyle(color: _gold, fontSize: 15, height: 1.5, fontWeight: FontWeight.w800),
+                ),
+              ] else ...[
+                const SizedBox(height: 8),
+                const Text(
+                  'لا توجد مناسبة مسجلة لهذا اليوم في قائمة المناسبات الحالية.',
+                  style: TextStyle(color: _muted, fontSize: 11, height: 1.5),
+                ),
+              ],
+              const SizedBox(height: 12),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  OutlinedButton.icon(
+                    onPressed: () async {
+                      final chosen = await showDatePicker(
+                        context: context,
+                        initialDate: selectedDate,
+                        firstDate: DateTime(1900),
+                        lastDate: DateTime(2100),
+                        helpText: 'اختر التاريخ الميلادي',
+                      );
+                      if (chosen != null && mounted) {
+                        setState(() {
+                          date = chosen;
+                          _showAnnualCalendar = false;
+                        });
+                      }
+                    },
+                    icon: const Icon(Icons.sync_alt_rounded),
+                    label: const Text('تحويل تاريخ ميلادي'),
+                  ),
+                  TextButton.icon(
+                    onPressed: () => setState(() {
+                      date = DateTime.now();
+                      _showAnnualCalendar = false;
+                    }),
+                    icon: const Icon(Icons.today_rounded),
+                    label: const Text('اليوم'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+      const SizedBox(height: 8),
+    ];
   }
 
   List<Widget> _annualCalendar(int year, int correction) {

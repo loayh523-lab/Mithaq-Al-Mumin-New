@@ -288,7 +288,8 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
     expect(find.text('الأدعية والزيارات'), findsWidgets);
-    expect(find.textContaining('نصاً • منها'), findsOneWidget);
+    expect(find.textContaining('110 نصاً'), findsOneWidget);
+    expect(find.textContaining('25 زيارة'), findsOneWidget);
     expect(find.textContaining('ما قدرنا نحمّل مكتبة الأدعية'), findsNothing);
     await tester.scrollUntilVisible(
       find.text('زيارة عاشوراء'),
@@ -307,6 +308,21 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('زيارة عاشوراء'), findsWidgets);
   });
+  testWidgets('Sahifa and Munajat remain accessible in their own section', (tester) async {
+    await tester.pumpWidget(const MaterialApp(
+      home: Directionality(
+        textDirection: TextDirection.rtl,
+        child: ShiaTextLibraryPage(sahifaOnly: true),
+      ),
+    ));
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 1400)));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(find.text('الصحيفة السجادية والمناجيات'), findsWidgets);
+    expect(find.textContaining('76 نصاً محفوظاً'), findsOneWidget);
+    expect(find.textContaining('ما قدرنا نحمّل مكتبة الأدعية'), findsNothing);
+  });
+
   testWidgets('good deeds checklist saves checked items locally', (tester) async {
     await tester.pumpWidget(const MaterialApp(
       home: Directionality(textDirection: TextDirection.rtl, child: GoodDeedsPage()),

@@ -35,9 +35,9 @@ void main() {
 
     test('general and Mahdi-related prayers share one section', () {
       expect(entry(slug: 'dua-kumayl', title: 'دعاء كميل').category,
-          'الأدعية العامة والفرج وصاحب الزمان');
+          'الأدعية العامة وأدعية الفرج وصاحب الزمان');
       expect(entry(slug: 'dua-al-ahd', title: 'دعاء العهد').category,
-          'الأدعية العامة والفرج وصاحب الزمان');
+          'الأدعية العامة وأدعية الفرج وصاحب الزمان');
     });
 
     test('occasions and ziyarat have their own sections', () {

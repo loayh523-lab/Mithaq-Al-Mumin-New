@@ -59,7 +59,8 @@ def main() -> None:
     if b"SIL OPEN FONT LICENSE" not in license_text.upper():
         raise SystemExit("The Amiri font license could not be verified.")
     atomic_write(LICENSE_DEST, license_text)
-    print(f"Prepared {LICENSE_DEST}")
+    atomic_write(DEST / "OFL.txt", license_text)
+    print(f"Prepared {LICENSE_DEST} and {DEST / 'OFL.txt'}")
 
 
 if __name__ == "__main__":

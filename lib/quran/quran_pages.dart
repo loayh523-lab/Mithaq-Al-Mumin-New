@@ -689,7 +689,7 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
   Widget build(BuildContext context) {
     final startVerse = widget.initialVerse ?? 1;
     final firstMeta = _verseMetadata['${widget.surah.id}:$startVerse'];
-    final nextSurah = widget.surah.id < 114 ? _catalog[widget.surah.id] : null;
+    final nextSurah = _catalog.length > widget.surah.id ? _catalog[widget.surah.id] : null;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.surah.name),

@@ -170,14 +170,16 @@ class ShiaTextData {
 }
 
 class ShiaTextLibraryPage extends StatefulWidget {
-  const ShiaTextLibraryPage({super.key, this.initialCategory});
+  const ShiaTextLibraryPage({super.key, this.initialCategory, this.sahifaOnly = false});
   final String? initialCategory;
+  final bool sahifaOnly;
   @override State<ShiaTextLibraryPage> createState() => _ShiaTextLibraryPageState();
 }
 
 class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
   final _controller = TextEditingController();
   late Future<ShiaTextData> _future;
+  late bool _sahifaOnly;
   String _query = '';
   String _category = 'كل النصوص';
   static const _categories = [
@@ -191,21 +193,32 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
 
   @override void initState() {
     super.initState();
-    _category = _categories.contains(widget.initialCategory) ? widget.initialCategory! : _categories.first;
-    _future = ShiaTextData.load();
+    _sahifaOnly = widget.sahifaOnly;
+    _category = _sahifaOnly
+        ? 'الصحيفة السجادية والمناجيات'
+        : (_categories.contains(widget.initialCategory) ? widget.initialCategory! : _categories.first);
+    _future = _sahifaOnly ? ShiaTextData.loadSahifa() : ShiaTextData.load();
   }
   @override void dispose() { _controller.dispose(); super.dispose(); }
 
   void _submitSearch() => setState(() => _query = _normalize(_controller.text.trim()));
 
   @override Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('الأدعية والزيارات')),
+    appBar: AppBar(title: Text(_sahifaOnly ? 'الصحيفة السجادية والمناجيات' : 'الأدعية والزيارات')),
     body: FutureBuilder<ShiaTextData>(
       future: _future,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return _shiaError(() {
-            setState(() { ShiaTextData._cache = null; _future = ShiaTextData.load(); });
+            setState(() {
+              if (_sahifaOnly) {
+                ShiaTextData._sahifaCache = null;
+                _future = ShiaTextData.loadSahifa();
+              } else {
+                ShiaTextData._cache = null;
+                _future = ShiaTextData.load();
+              }
+            });
           });
         }
         if (!snapshot.hasData) {
@@ -219,9 +232,10 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
           return header.contains(_query) ||
               entry.lines.where((line) => line.isArabic).any((line) => _normalize(line.text).contains(_query));
         }).toList();
-        final sahifaCount = data.entries
-            .where((entry) => entry.category == 'الصحيفة السجادية والمناجيات')
-            .length;
+        final dailyCount = data.entries.where((entry) => entry.category == 'الأدعية والأذكار اليومية').length;
+        final generalCount = data.entries.where((entry) => entry.category == 'الأدعية العامة وأدعية الفرج وصاحب الزمان').length;
+        final occasionCount = data.entries.where((entry) => entry.category == 'الأعمال والمناسبات').length;
+        final ziyaratCount = data.entries.where((entry) => entry.category == 'الزيارات الشريفة').length;
         return Column(children: [
           Container(
             margin: const EdgeInsets.fromLTRB(16, 12, 16, 4),
@@ -234,9 +248,19 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               const Text('نصوص شيعية للقراءة دون إنترنت', style: TextStyle(color: _shiaGold, fontSize: 20, fontWeight: FontWeight.w800)),
               const SizedBox(height: 6),
-              Text('${data.entries.length} نصاً • منها $sahifaCount من الصحيفة السجادية والمناجيات', style: const TextStyle(color: _shiaMuted)),
+              Text(
+                _sahifaOnly
+                    ? '${data.entries.length} نصاً محفوظاً من الصحيفة السجادية والمناجيات'
+                    : '${data.entries.length} نصاً • ${ziyaratCount} زيارة • ${dailyCount} يومي • ${generalCount} عام • ${occasionCount} مناسبة',
+                style: const TextStyle(color: _shiaMuted, height: 1.5),
+              ),
               const SizedBox(height: 6),
-              const Text('المكتبة مصنفة حسب نوع الدعاء مع إبقاء رابط المصدر لكل نص. قد تختلف العناوين أو الروايات بين الطبعات؛ لا نعرض النص غير العربي ضمن القراءة العربية.', style: TextStyle(color: _shiaMuted, fontSize: 11, height: 1.5)),
+              Text(
+                _sahifaOnly
+                    ? 'الصحيفة السجادية والمناجيات محفوظة هنا بقسم مستقل ولا تدخل ضمن مجموعة الـ١١٠ المختارة.'
+                    : 'المجموعة الأساسية لا تكرر نصوص الصحيفة؛ تجد الصحيفة السجادية والمناجيات في قسم مستقل. العناوين والمصادر قابلة للمراجعة عند اختلاف الطبعات.',
+                style: const TextStyle(color: _shiaMuted, fontSize: 11, height: 1.5),
+              ),
             ]),
           ),
           Padding(
@@ -258,7 +282,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 3),
             child: Row(children: [
-              ..._categories
+              ...(_sahifaOnly ? const <String>['الصحيفة السجادية والمناجيات'] : _categories)
             ].map((choice) => Padding(
               padding: const EdgeInsets.only(left: 8),
               child: ChoiceChip(

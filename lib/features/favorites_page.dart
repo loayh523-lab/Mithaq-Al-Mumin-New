@@ -41,9 +41,11 @@ class _FavoritesPageState extends State<FavoritesPage> {
       }
 
       final data = await ShiaTextData.load();
-      final entries = data.entries
-          .where((entry) => saved.contains(entry.slug))
-          .toList(growable: false);
+      final sahifa = await ShiaTextData.loadSahifa();
+      final entries = <ShiaTextEntry>[
+        ...data.entries,
+        ...sahifa.entries,
+      ].where((entry) => saved.contains(entry.slug)).toList(growable: false);
       if (!mounted) return;
       setState(() {
         _entries = entries;

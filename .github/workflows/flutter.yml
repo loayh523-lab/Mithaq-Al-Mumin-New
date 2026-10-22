@@ -23,6 +23,18 @@ jobs:
           cache: true
       - name: Generate Android project files
         run: flutter create --platforms=android --project-name=mithaq_al_mumin .
+      - name: Set Arabic Android application label
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          manifest = Path("android/app/src/main/AndroidManifest.xml")
+          content = manifest.read_text(encoding="utf-8")
+          import re
+          content, count = re.subn(r'android:label="[^"]*"', 'android:label="ميثاق المؤمن"', content, count=1)
+          if count == 0:
+              content = content.replace("<application", '<application android:label="ميثاق المؤمن"', 1)
+          manifest.write_text(content, encoding="utf-8")
+          PY
       - name: Configure Android notification scheduling
         run: |
           python3 - <<'PY'

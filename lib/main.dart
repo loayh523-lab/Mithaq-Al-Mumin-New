@@ -353,6 +353,7 @@ class _MainShellState extends State<MainShell> {
                 _drawerItem(Icons.checklist_rounded, 'الأعمال الصالحة', () => _openDrawerPage(const GoodDeedsPage())),
                 _drawerItem(Icons.calculate_outlined, 'سجل القضاء', () => _openDrawerPage(const QadaTrackerPage())),
                 _drawerItem(Icons.shield_moon_outlined, 'حصن الأذكار', () => _openDrawerPage(const DhikrFortressPage())),
+                _drawerItem(Icons.menu_book_rounded, 'الصحيفة السجادية والمناجيات', () => _openDrawerPage(const ShiaTextLibraryPage(sahifaOnly: true))),
                 const Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(14, 18, 14, 8),
                   child: Text('الأدوات والخدمات', style: TextStyle(color: _gold, fontWeight: FontWeight.w800, fontSize: 13)),

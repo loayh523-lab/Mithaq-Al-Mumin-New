@@ -222,7 +222,7 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
                     const SizedBox(height: 12),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(16),
-                      child: LinearProgressIndicator(value: (count / target).clamp(0, 1).toDouble(), minHeight: 7, backgroundColor: Colors.black26, color: _dhikrGold),
+                      child: LinearProgressIndicator(value: (count / target).clamp(0, 1).toDouble(), minHeight: 7, backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest, color: _dhikrGold),
                     ),
                   ],
                   const SizedBox(height: 8),

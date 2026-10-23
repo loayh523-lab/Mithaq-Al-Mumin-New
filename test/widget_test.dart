@@ -284,7 +284,8 @@ void main() {
 
 
   testWidgets('Shia dua library opens its offline collection', (tester) async {
-    await tester.runAsync(() => ShiaTextData.load());
+    final preloaded = await tester.runAsync(() => ShiaTextData.load());
+    debugPrint('LIB_DEBUG preload entries: ${preloaded?.entries.length ?? -1}');
     await tester.pumpWidget(const MaterialApp(
       home: Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'الزيارات الشريفة')),
     ));
@@ -292,6 +293,8 @@ void main() {
     await tester.pump(const Duration(milliseconds: 100));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
+    debugPrint('LIB_DEBUG spinner=${find.byType(CircularProgressIndicator).evaluate().length} error=${find.textContaining('ما قدرنا نحمّل مكتبة الأدعية').evaluate().length} count=${find.textContaining('186 نصاً').evaluate().length}');
+    debugPrint('LIB_DEBUG text widgets: ${find.byType(Text).evaluate().map((e) => (e.widget as Text).data).whereType<String>().take(25).join(' | ')}');
     expect(find.text('الأدعية والزيارات'), findsWidgets);
     expect(find.textContaining('186 نصاً'), findsOneWidget);
     expect(find.textContaining('76 صحيفة ومناجاة'), findsOneWidget);

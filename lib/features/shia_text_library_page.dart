@@ -58,13 +58,24 @@ class ShiaTextEntry {
         .where((line) => line.isArabic && line.text.trim().isNotEmpty)
         .map((line) => line.text.trim())
         .toList();
-    String normalizeForTitle(String value) =>
-        value.replaceAll('  ', ' ').replaceAll('  ', ' ').trim();
+    String normalizeForTitle(String value) {
+      final compact = StringBuffer();
+      for (final rune in value.runes) {
+        if ((rune >= 0x064B && rune <= 0x065F) ||
+            rune == 0x0670 ||
+            rune == 0x0640 ||
+            rune == 0x0020) {
+          continue;
+        }
+        compact.writeCharCode(rune);
+      }
+      return compact.toString().replaceAll('ٱ', 'ا');
+    }
     final meaningfulLines = arabicLines.where((line) {
       final normalized = normalizeForTitle(line);
       return normalized.isNotEmpty &&
-          !normalized.startsWith('بسم الله الرحمن الرحيم') &&
-          !normalized.startsWith('اعوذ بالله من الشيطان الرجيم');
+          !normalized.startsWith('بسماللهالرحمنالرحيم') &&
+          !normalized.startsWith('اعوذباللهمنالشيطانالرجيم');
     }).toList();
     final sourceLine = meaningfulLines.isNotEmpty
         ? meaningfulLines.first

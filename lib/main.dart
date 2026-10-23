@@ -258,11 +258,11 @@ class _MainShellState extends State<MainShell> {
     return Scaffold(
       drawer: _navigationDrawer(),
       appBar: AppBar(
-        title: const Row(
+        title: Row(
           children: [
-            Icon(Icons.auto_awesome_rounded, color: _gold, size: 27),
-            SizedBox(width: 10),
-            Text('ميثاق المؤمن', style: TextStyle(fontWeight: FontWeight.w800)),
+            Image.asset('assets/images/mithaq_logo.jpg', width: 34, height: 42, fit: BoxFit.contain),
+            const SizedBox(width: 10),
+            const Text('ميثاق المؤمن', style: TextStyle(fontWeight: FontWeight.w800)),
           ],
         ),
         actions: [
@@ -345,10 +345,10 @@ class _MainShellState extends State<MainShell> {
               ),
               border: Border(bottom: BorderSide(color: _gold.withValues(alpha: .3))),
             ),
-            child: const Row(
+            child: Row(
               children: [
-                Icon(Icons.auto_awesome_rounded, color: _gold, size: 34),
-                SizedBox(width: 12),
+                Image.asset('assets/images/mithaq_logo.jpg', width: 42, height: 50, fit: BoxFit.contain),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -627,7 +627,8 @@ class _MainShellState extends State<MainShell> {
                           borderRadius: BorderRadius.circular(14),
                           border: Border.all(color: _gold.withValues(alpha: .25)),
                         ),
-                        child: const Icon(Icons.auto_awesome_rounded, color: _gold, size: 24),
+                        clipBehavior: Clip.antiAlias,
+                        child: Image.asset('assets/images/mithaq_logo.jpg', fit: BoxFit.contain),
                       ),
                       const SizedBox(width: 11),
                       const Expanded(

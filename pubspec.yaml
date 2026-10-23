@@ -36,6 +36,7 @@ flutter:
     - assets/shia_duas/shia_duas.json
     - assets/shia_duas/sahifa_sajjadiya.json
     - assets/audio/adhan_shabbar_maalla.mp3
+    - assets/images/mithaq_logo.jpg
     - assets/fonts/OFL.txt
   fonts:
     - family: Amiri

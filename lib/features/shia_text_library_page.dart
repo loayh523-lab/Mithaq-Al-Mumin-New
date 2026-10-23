@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-const _shiaPanel = Color(0xFF10251E);
 const _shiaGold = Color(0xFFD9B66D);
-const _shiaMuted = Color(0xFF9EB5A9);
+const _shiaMuted = Color(0xFF697A70);
 
 class ShiaTextLine {
   const ShiaTextLine({required this.index, required this.kind, required this.text});
@@ -357,7 +356,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
             margin: const EdgeInsets.fromLTRB(16, 12, 16, 4),
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: _shiaPanel,
+              color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(20),
               border: Border.all(color: _shiaGold.withValues(alpha: .28)),
             ),
@@ -389,7 +388,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
                 hintText: 'ابحث بعنوان أو عبارة عربية...',
                 prefixIcon: const Icon(Icons.search_rounded),
                 suffixIcon: IconButton(onPressed: _submitSearch, icon: const Icon(Icons.arrow_forward_rounded)),
-                filled: true, fillColor: _shiaPanel,
+                filled: true, fillColor: Theme.of(context).colorScheme.surface,
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
               ),
             ),
@@ -439,7 +438,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
                     final entry = filtered[index];
                     final arabicLineCount = entry.lines.where((line) => line.isArabic).length;
                     return Card(
-                      color: _shiaPanel,
+                      color: Theme.of(context).colorScheme.surface,
                       child: ListTile(
                         leading: CircleAvatar(
                           backgroundColor: _shiaGold.withValues(alpha: .15),
@@ -611,7 +610,7 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
                 Container(
                   margin: const EdgeInsets.only(bottom: 14),
                   padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(color: _shiaPanel, borderRadius: BorderRadius.circular(18), border: Border.all(color: _shiaGold.withValues(alpha: .28))),
+                  decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface, borderRadius: BorderRadius.circular(18), border: Border.all(color: _shiaGold.withValues(alpha: .28))),
                   child: Text(widget.entry.displayTitle, textAlign: TextAlign.center, style: const TextStyle(color: _shiaGold, fontSize: 22, fontWeight: FontWeight.w800, height: 1.6)),
                 ),
                 ...lines.map((line) {
@@ -628,7 +627,7 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
                       style: TextStyle(
                         fontSize: rtl ? _fontSize : _fontSize * .75,
                         height: rtl ? 2.0 : 1.6,
-                        color: rtl ? Colors.white : (translation ? _shiaMuted : Colors.white70),
+                        color: translation ? Theme.of(context).colorScheme.onSurfaceVariant : Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                   );

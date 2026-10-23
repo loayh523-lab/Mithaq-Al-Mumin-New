@@ -285,16 +285,18 @@ void main() {
 
   testWidgets('Shia dua library opens its offline collection', (tester) async {
     final preloaded = await tester.runAsync(() => ShiaTextData.load());
-    debugPrint('LIB_DEBUG preload entries: ${preloaded?.entries.length ?? -1}');
-    await tester.pumpWidget(const MaterialApp(
-      home: Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'الزيارات الشريفة')),
+    expect(preloaded, isNotNull);
+    await tester.pumpWidget(MaterialApp(
+      home: Directionality(
+        textDirection: TextDirection.rtl,
+        child: ShiaTextLibraryPage(
+          initialCategory: 'الزيارات الشريفة',
+          dataFuture: Future<ShiaTextData>.value(preloaded!),
+        ),
+      ),
     ));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 100));
-    debugPrint('LIB_DEBUG spinner=${find.byType(CircularProgressIndicator).evaluate().length} error=${find.textContaining('ما قدرنا نحمّل مكتبة الأدعية').evaluate().length} count=${find.textContaining('186 نصاً').evaluate().length}');
-    debugPrint('LIB_DEBUG text widgets: ${find.byType(Text).evaluate().map((e) => (e.widget as Text).data).whereType<String>().take(25).join(' | ')}');
     expect(find.text('الأدعية والزيارات'), findsWidgets);
     expect(find.textContaining('186 نصاً'), findsOneWidget);
     expect(find.textContaining('76 صحيفة ومناجاة'), findsOneWidget);
@@ -318,13 +320,16 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('زيارة عاشوراء'), findsWidgets);
   });
+
   testWidgets('combined dua library lets readers filter into Sahifa and Munajat', (tester) async {
-    await tester.runAsync(() => ShiaTextData.load());
-    await tester.pumpWidget(const MaterialApp(
-      home: Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage()),
+    final preloaded = await tester.runAsync(() => ShiaTextData.load());
+    expect(preloaded, isNotNull);
+    await tester.pumpWidget(MaterialApp(
+      home: Directionality(
+        textDirection: TextDirection.rtl,
+        child: ShiaTextLibraryPage(dataFuture: Future<ShiaTextData>.value(preloaded!)),
+      ),
     ));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 100));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
     expect(find.textContaining('186 نصاً'), findsOneWidget);
@@ -334,15 +339,17 @@ void main() {
   });
 
   testWidgets('Sahifa and Munajat remain accessible in their own section', (tester) async {
-    await tester.runAsync(() => ShiaTextData.loadSahifa());
-    await tester.pumpWidget(const MaterialApp(
+    final preloaded = await tester.runAsync(() => ShiaTextData.loadSahifa());
+    expect(preloaded, isNotNull);
+    await tester.pumpWidget(MaterialApp(
       home: Directionality(
         textDirection: TextDirection.rtl,
-        child: ShiaTextLibraryPage(sahifaOnly: true),
+        child: ShiaTextLibraryPage(
+          sahifaOnly: true,
+          dataFuture: Future<ShiaTextData>.value(preloaded!),
+        ),
       ),
     ));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 100));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
     expect(find.text('الصحيفة السجادية والمناجيات'), findsWidgets);

@@ -17,20 +17,6 @@ import 'package:mithaq_al_mumin/features/rakah_counter_page.dart';
 import 'package:mithaq_al_mumin/features/about_support_page.dart';
 import 'package:mithaq_al_mumin/services/qibla_calculation.dart';
 
-Future<void> waitForLibraryContent(WidgetTester tester, String expectedText) async {
-  for (var attempt = 0; attempt < 20; attempt++) {
-    await tester.runAsync(
-      () => Future<void>.delayed(const Duration(milliseconds: 400)),
-    );
-    await tester.pump();
-    if (find.textContaining(expectedText).evaluate().isNotEmpty) return;
-    if (find.textContaining('ما قدرنا نحمّل مكتبة الأدعية').evaluate().isNotEmpty) {
-      fail('The supplication library displayed its content-load error.');
-    }
-  }
-  fail('The supplication library did not finish loading "$expectedText" within 8 seconds.');
-}
-
 void main() {
   setUp(() {
     SharedPreferences.setMockInitialValues({});
@@ -295,10 +281,12 @@ void main() {
 
 
   testWidgets('Shia dua library opens its offline collection', (tester) async {
+    await tester.runAsync(() => ShiaTextData.load());
     await tester.pumpWidget(const MaterialApp(
       home: Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage(initialCategory: 'الزيارات الشريفة')),
     ));
-    await waitForLibraryContent(tester, '186 نصاً');
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
     expect(find.text('الأدعية والزيارات'), findsWidgets);
@@ -325,10 +313,12 @@ void main() {
     expect(find.text('زيارة عاشوراء'), findsWidgets);
   });
   testWidgets('combined dua library lets readers filter into Sahifa and Munajat', (tester) async {
+    await tester.runAsync(() => ShiaTextData.load());
     await tester.pumpWidget(const MaterialApp(
       home: Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage()),
     ));
-    await waitForLibraryContent(tester, '186 نصاً');
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
     expect(find.textContaining('186 نصاً'), findsOneWidget);
@@ -338,13 +328,15 @@ void main() {
   });
 
   testWidgets('Sahifa and Munajat remain accessible in their own section', (tester) async {
+    await tester.runAsync(() => ShiaTextData.loadSahifa());
     await tester.pumpWidget(const MaterialApp(
       home: Directionality(
         textDirection: TextDirection.rtl,
         child: ShiaTextLibraryPage(sahifaOnly: true),
       ),
     ));
-    await waitForLibraryContent(tester, '76 نصاً محفوظاً');
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
     expect(find.text('الصحيفة السجادية والمناجيات'), findsWidgets);

@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const _dhikrGold = Color(0xFFD9B66D);
-const _dhikrMuted = Color(0xFF697A70);
 const _dhikrSourceUrl = 'https://tableegh.imamali.net/?id=3117';
 
 class _DhikrItem {
@@ -173,7 +172,7 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('أذكار الصباح والمساء')),
+    appBar: AppBar(title: Text('أذكار الصباح والمساء')),
     body: ListView(
       padding: const EdgeInsets.all(16),
       children: [
@@ -184,23 +183,23 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
             borderRadius: BorderRadius.circular(20),
             border: Border.all(color: _dhikrGold.withValues(alpha: .3)),
           ),
-          child: const Text(
+          child: Text(
             'نصوص أذكار منقولة مع مراجعها. إذا لم يحدد المصدر عدداً للتكرار، يظهر العداد مفتوحاً ولا يعني الرقم المقترح حكماً شرعياً.',
-            style: TextStyle(color: _dhikrMuted, height: 1.7),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.7),
           ),
         ),
-        const SizedBox(height: 14),
+        SizedBox(height: 14),
         SegmentedButton<int>(
-          segments: const [
+          segments: [
             ButtonSegment(value: 0, label: Text('أذكار الصباح'), icon: Icon(Icons.wb_sunny_outlined)),
             ButtonSegment(value: 1, label: Text('أذكار المساء'), icon: Icon(Icons.nights_stay_outlined)),
           ],
           selected: {_period},
           onSelectionChanged: (selected) => _setPeriod(selected.first),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         if (_loading)
-          const Center(child: Padding(padding: EdgeInsets.all(24), child: CircularProgressIndicator(color: _dhikrGold)))
+          Center(child: Padding(padding: EdgeInsets.all(24), child: CircularProgressIndicator(color: _dhikrGold)))
         else
           ..._visibleItems.map((item) {
             final count = _counts[item.id] ?? 0;
@@ -212,36 +211,36 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
                 padding: const EdgeInsets.all(15),
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Row(children: [
-                    Expanded(child: Text(item.title, style: const TextStyle(color: _dhikrGold, fontWeight: FontWeight.w800, fontSize: 17))),
-                    Text(target == null ? '$count' : '$count / $target', style: const TextStyle(color: _dhikrMuted, fontWeight: FontWeight.bold)),
+                    Expanded(child: Text(item.title, style: TextStyle(color: _dhikrGold, fontWeight: FontWeight.w800, fontSize: 17))),
+                    Text(target == null ? '$count' : '$count / $target', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontWeight: FontWeight.bold)),
                   ]),
-                  const SizedBox(height: 10),
-                  Text(item.textFor(_period), textDirection: TextDirection.rtl, textAlign: TextAlign.right, style: const TextStyle(fontSize: 19, height: 1.9)),
+                  SizedBox(height: 10),
+                  Text(item.textFor(_period), textDirection: TextDirection.rtl, textAlign: TextAlign.right, style: TextStyle(fontSize: 19, height: 1.9)),
                   if (target != null) ...[
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(16),
                       child: LinearProgressIndicator(value: (count / target).clamp(0, 1).toDouble(), minHeight: 7, backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest, color: _dhikrGold),
                     ),
                   ],
-                  const SizedBox(height: 8),
-                  Text('المصدر: ${item.source}', style: const TextStyle(color: _dhikrMuted, height: 1.5, fontSize: 12)),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 8),
+                  Text('المصدر: ${item.source}', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.5, fontSize: 12)),
+                  SizedBox(height: 4),
                   const SelectableText(_dhikrSourceUrl, style: TextStyle(color: _dhikrGold, fontSize: 11)),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10),
                   Row(children: [
                     Expanded(
                       child: FilledButton.icon(
                         onPressed: (target != null && count >= target) || _loading ? null : () => _increment(item),
-                        icon: const Icon(Icons.fingerprint_rounded),
-                        label: const Text('تسبيح'),
+                        icon: Icon(Icons.fingerprint_rounded),
+                        label: Text('تسبيح'),
                       ),
                     ),
-                    const SizedBox(width: 10),
+                    SizedBox(width: 10),
                     IconButton(
                       tooltip: 'إعادة العداد',
                       onPressed: _loading ? null : () => _reset(item),
-                      icon: const Icon(Icons.restart_alt_rounded),
+                      icon: Icon(Icons.restart_alt_rounded),
                     ),
                   ]),
                 ]),

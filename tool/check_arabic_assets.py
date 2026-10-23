@@ -33,6 +33,30 @@ def main() -> None:
         raise SystemExit("Required offline content assets are missing:\n- " + "\n- ".join(missing))
 
     errors = []
+    # Also guard visible Flutter source strings. The text-library page intentionally
+    # contains Persian-character patterns so it can detect and exclude bad source rows.
+    source_root = Path("lib")
+    if source_root.exists():
+        for source in sorted(source_root.rglob("*.dart")):
+            try:
+                lines = source.read_text(encoding="utf-8").splitlines()
+            except (OSError, UnicodeError) as error:
+                errors.append(f"{source}: cannot read UTF-8 source ({error})")
+                continue
+            for line_number, line in enumerate(lines, start=1):
+                if "RegExp(" in line:
+                    continue
+                match = FORBIDDEN.search(line)
+                if match:
+                    errors.append(
+                        f"{source}:{line_number}: found forbidden Persian character "
+                        f"U+{ord(match.group()):04X}"
+                    )
+                    if len(errors) >= 30:
+                        break
+            if len(errors) >= 30:
+                break
+
     for asset in ASSETS:
         try:
             payload = json.loads(asset.read_text(encoding="utf-8"))
@@ -52,7 +76,7 @@ def main() -> None:
 
     if errors:
         raise SystemExit(
-            "Offline content validation failed. Normalize Persian characters to Arabic script "
+            "Arabic source/content validation failed. Normalize Persian characters to Arabic script "
             "and review the source text:\n- " + "\n- ".join(errors)
         )
     print(f"Validated {len(ASSETS)} offline content JSON assets: no Persian-specific characters found.")

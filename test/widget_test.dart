@@ -382,7 +382,15 @@ void main() {
     await tester.tap(find.text('إمساكية رمضان'));
     await tester.pumpAndSettle();
     expect(find.text('إمساكية تقديرية — قلعة سكر / العراق'), findsOneWidget);
-    expect(find.textContaining('الإمساك/الفجر:'), findsWidgets);
+    final imsakiyahRows = tester
+        .widgetList<Text>(find.byType(Text))
+        .map((widget) => widget.data ?? '')
+        .where((value) => value.startsWith('رمضان ') && value.contains(' — '))
+        .toList();
+    expect(imsakiyahRows.length, inInclusiveRange(29, 30));
+    for (var i = 0; i < imsakiyahRows.length; i++) {
+      expect(imsakiyahRows[i], startsWith('رمضان ' + (i + 1).toString() + ' — '));
+    }
 
     await tester.tap(find.text('التقويم الهجري'));
     await tester.pumpAndSettle();

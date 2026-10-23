@@ -452,7 +452,7 @@ class _MainShellState extends State<MainShell> {
             child: ListView(
               padding: const EdgeInsets.fromLTRB(12, 12, 12, 14),
               children: [
-                _drawerSectionTitle('التنقّل الأساسي', Icons.grid_view_rounded),
+                _drawerSectionTitle('الأقسام الرئيسية', Icons.grid_view_rounded),
                 _drawerGrid(
                   children: [
                     _drawerGridItem(Icons.home_rounded, 'الرئيسية', () => _selectTab(0), selected: _selected == 0),
@@ -462,10 +462,10 @@ class _MainShellState extends State<MainShell> {
                   ],
                 ),
                 const SizedBox(height: 8),
-                _drawerSectionTitle('العبادة والمتابعة', Icons.spa_rounded),
+                _drawerSectionTitle('العبادات والمتابعة', Icons.spa_rounded),
                 _drawerGrid(
                   children: [
-                    _drawerGridItem(Icons.fingerprint_rounded, 'التسبيح والعداد', () => _openDrawerPage(const TasbeehPage())),
+                    _drawerGridItem(Icons.fingerprint_rounded, 'التسبيح', () => _openDrawerPage(const TasbeehPage())),
                     _drawerGridItem(Icons.bookmark_added_rounded, 'ختمة القرآن', () => _openDrawerPage(const KhatmaPage())),
                     _drawerGridItem(Icons.event_available_rounded, 'متابعة الصلاة', () => _openDrawerPage(const PrayerTrackerPage())),
                     _drawerGridItem(Icons.handshake_rounded, 'الأعمال الصالحة', () => _openDrawerPage(const GoodDeedsPage())),

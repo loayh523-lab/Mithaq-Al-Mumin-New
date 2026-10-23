@@ -288,7 +288,9 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
     expect(find.text('الأدعية والزيارات'), findsWidgets);
-    expect(find.textContaining('110 نصاً'), findsOneWidget);
+    expect(find.textContaining('186 نصاً'), findsOneWidget);
+    expect(find.textContaining('76 صحيفة ومناجاة'), findsOneWidget);
+    expect(find.text('الصحيفة السجادية والمناجيات (76)'), findsOneWidget);
     expect(find.textContaining('25 زيارة'), findsOneWidget);
     expect(find.textContaining('ما قدرنا نحمّل مكتبة الأدعية'), findsNothing);
     await tester.scrollUntilVisible(
@@ -308,6 +310,19 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('زيارة عاشوراء'), findsWidgets);
   });
+  testWidgets('combined dua library lets readers filter into Sahifa and Munajat', (tester) async {
+    await tester.pumpWidget(const MaterialApp(
+      home: Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage()),
+    ));
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 1400)));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(find.textContaining('186 نصاً'), findsOneWidget);
+    await tester.tap(find.text('الصحيفة السجادية والمناجيات (76)'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('الدعاء 01: الدعاء في التحميد لله عز وجل'), findsWidgets);
+  });
+
   testWidgets('Sahifa and Munajat remain accessible in their own section', (tester) async {
     await tester.pumpWidget(const MaterialApp(
       home: Directionality(

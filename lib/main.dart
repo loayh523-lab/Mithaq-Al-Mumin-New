@@ -432,32 +432,52 @@ class _MainShellState extends State<MainShell> {
           ),
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.fromLTRB(10, 12, 10, 14),
+              padding: const EdgeInsets.fromLTRB(12, 12, 12, 14),
               children: [
-                _drawerSectionTitle('التنقّل الأساسي', Icons.grid_view_rounded),
-                _drawerItem(Icons.home_rounded, 'الرئيسية', () => _selectTab(0), selected: _selected == 0),
-                _drawerItem(Icons.auto_stories_rounded, 'القرآن الكريم', () => _selectTab(1), selected: _selected == 1),
-                _drawerItem(Icons.volunteer_activism_rounded, 'الأدعية والزيارات', () => _selectTab(2), selected: _selected == 2),
-                _drawerItem(Icons.access_time_rounded, 'المواقيت والتقويم', () => _selectTab(3), selected: _selected == 3),
-                const SizedBox(height: 10),
-                _drawerSectionTitle('العبادة والمتابعة', Icons.spa_rounded),
-                _drawerItem(Icons.fingerprint_rounded, 'التسبيح والعداد', () => _openDrawerPage(const TasbeehPage())),
-                _drawerItem(Icons.bookmark_added_rounded, 'ختمة القرآن', () => _openDrawerPage(const KhatmaPage())),
-                _drawerItem(Icons.event_available_rounded, 'متابعة الصلاة', () => _openDrawerPage(const PrayerTrackerPage())),
-                _drawerItem(Icons.handshake_rounded, 'الأعمال الصالحة', () => _openDrawerPage(const GoodDeedsPage())),
-                _drawerItem(Icons.history_edu_rounded, 'سجل القضاء', () => _openDrawerPage(const QadaTrackerPage())),
-                _drawerItem(Icons.shield_moon_rounded, 'حصن الأذكار', () => _openDrawerPage(const DhikrFortressPage())),
-                const SizedBox(height: 10),
+                _drawerSectionTitle('الأقسام الرئيسية', Icons.grid_view_rounded),
+                _drawerGrid(
+                  children: [
+                    _drawerGridItem(Icons.home_rounded, 'الرئيسية', () => _selectTab(0), selected: _selected == 0),
+                    _drawerGridItem(Icons.auto_stories_rounded, 'القرآن الكريم', () => _selectTab(1), selected: _selected == 1),
+                    _drawerGridItem(Icons.volunteer_activism_rounded, 'الأدعية والزيارات', () => _selectTab(2), selected: _selected == 2),
+                    _drawerGridItem(Icons.access_time_rounded, 'مواقيت الصلاة', () => _selectTab(3), selected: _selected == 3),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                _drawerSectionTitle('العبادات والمتابعة', Icons.spa_rounded),
+                _drawerGrid(
+                  children: [
+                    _drawerGridItem(Icons.fingerprint_rounded, 'التسبيح', () => _openDrawerPage(const TasbeehPage())),
+                    _drawerGridItem(Icons.bookmark_added_rounded, 'ختمة القرآن', () => _openDrawerPage(const KhatmaPage())),
+                    _drawerGridItem(Icons.event_available_rounded, 'متابعة الصلاة', () => _openDrawerPage(const PrayerTrackerPage())),
+                    _drawerGridItem(Icons.handshake_rounded, 'الأعمال الصالحة', () => _openDrawerPage(const GoodDeedsPage())),
+                    _drawerGridItem(Icons.history_edu_rounded, 'قضاء العبادات', () => _openDrawerPage(const QadaTrackerPage())),
+                    _drawerGridItem(Icons.shield_moon_rounded, 'حصن الأذكار', () => _openDrawerPage(const DhikrFortressPage())),
+                    _drawerGridItem(Icons.calculate_rounded, 'عداد الركعات', () => _openDrawerPage(const RakahCounterPage())),
+                  ],
+                ),
+                const SizedBox(height: 8),
                 _drawerSectionTitle('المعرفة والخدمات', Icons.local_library_rounded),
-                _drawerItem(Icons.tune_rounded, 'الإعدادات', () => _openDrawerPage(SettingsPage(onLocationChanged: _handleLocationChanged))),
-                _drawerItem(Icons.manage_search_rounded, 'الباحث الذكي', () => _openDrawerPage(const SmartSearchPage())),
-                _drawerItem(Icons.brightness_5_rounded, 'أسماء الله الحسنى', () => _openDrawerPage(const NamesOfAllahPage())),
-                _drawerItem(Icons.explore_rounded, 'اتجاه القبلة', () => _openDrawerPage(QiblaPage(onLocationChanged: _handleLocationChanged))),
-                _drawerItem(Icons.collections_bookmark_rounded, 'مكتبة الأدعية والزيارات والصحيفة', () => _openDrawerPage(const ShiaTextLibraryPage())),
-                _drawerItem(Icons.support_agent_rounded, 'الخدمات الإيمانية', () => _openDrawerPage(const FaithServicesPage())),
-                _drawerItem(Icons.star_rounded, 'المفضلة المباركة', () => _openDrawerPage(const FavoritesPage())),
-                _drawerItem(Icons.calculate_rounded, 'حاسبة الركعات', () => _openDrawerPage(const RakahCounterPage())),
-                _drawerItem(Icons.info_outline_rounded, 'عن التطبيق والدعم', () => _openDrawerPage(const AboutSupportPage())),
+                _drawerGrid(
+                  children: [
+                    _drawerGridItem(Icons.manage_search_rounded, 'الباحث الذكي', () => _openDrawerPage(const SmartSearchPage())),
+                    _drawerGridItem(Icons.brightness_5_rounded, 'أسماء الله الحسنى', () => _openDrawerPage(const NamesOfAllahPage())),
+                    _drawerGridItem(Icons.explore_rounded, 'اتجاه القبلة', () => _openDrawerPage(QiblaPage(onLocationChanged: _handleLocationChanged))),
+                    _drawerGridItem(Icons.collections_bookmark_rounded, 'مكتبة النصوص', () => _openDrawerPage(const ShiaTextLibraryPage())),
+                    _drawerGridItem(Icons.support_agent_rounded, 'الخدمات الإيمانية', () => _openDrawerPage(const FaithServicesPage())),
+                    _drawerGridItem(Icons.info_outline_rounded, 'عن التطبيق والدعم', () => _openDrawerPage(const AboutSupportPage())),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12, 0, 12, 10),
+            child: Row(
+              children: [
+                Expanded(child: _drawerBottomItem(Icons.star_rounded, 'المفضلة', () => _openDrawerPage(const FavoritesPage()))),
+                const SizedBox(width: 10),
+                Expanded(child: _drawerBottomItem(Icons.tune_rounded, 'الإعدادات', () => _openDrawerPage(SettingsPage(onLocationChanged: _handleLocationChanged)))),
               ],
             ),
           ),
@@ -484,6 +504,86 @@ class _MainShellState extends State<MainShell> {
             ),
           ),
         ],
+      ),
+    ),
+  );
+
+  Widget _drawerGrid({required List<Widget> children}) => GridView.count(
+    crossAxisCount: 3,
+    shrinkWrap: true,
+    physics: const NeverScrollableScrollPhysics(),
+    mainAxisSpacing: 8,
+    crossAxisSpacing: 8,
+    childAspectRatio: .88,
+    children: children,
+  );
+
+  Widget _drawerGridItem(IconData icon, String title, VoidCallback onTap, {bool selected = false}) =>
+      Material(
+        color: selected ? _emerald.withValues(alpha: .2) : _panel.withValues(alpha: .78),
+        borderRadius: BorderRadius.circular(17),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(17),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 9),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(17),
+              border: Border.all(
+                color: selected ? _gold.withValues(alpha: .55) : Colors.white.withValues(alpha: .055),
+              ),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 43,
+                  height: 43,
+                  decoration: BoxDecoration(
+                    color: selected ? _gold.withValues(alpha: .15) : _emerald.withValues(alpha: .16),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: Icon(icon, color: selected ? _gold : const Color(0xFF75D5AC), size: 23),
+                ),
+                const SizedBox(height: 7),
+                Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: selected ? Colors.white : const Color(0xFFE0EAE4),
+                    fontSize: 10.5,
+                    height: 1.25,
+                    fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+  Widget _drawerBottomItem(IconData icon, String title, VoidCallback onTap) => Material(
+    color: _emerald.withValues(alpha: .13),
+    borderRadius: BorderRadius.circular(15),
+    child: InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(15),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          border: Border.all(color: _gold.withValues(alpha: .22)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: _gold, size: 19),
+            const SizedBox(width: 7),
+            Text(title, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800)),
+          ],
+        ),
       ),
     ),
   );

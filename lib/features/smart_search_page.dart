@@ -5,7 +5,6 @@ import '../quran/quran_pages.dart';
 import 'shia_text_library_page.dart';
 
 const _searchGold = Color(0xFFD9B66D);
-const _searchMuted = Color(0xFF697A70);
 
 
 /// Normalize common Arabic writing variants for offline text matching.
@@ -159,7 +158,7 @@ class _SmartSearchPageState extends State<SmartSearchPage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('الباحث الذكي')),
+    appBar: AppBar(title: Text('الباحث الذكي')),
     body: Column(children: [
       Padding(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
@@ -169,10 +168,10 @@ class _SmartSearchPageState extends State<SmartSearchPage> {
           onSubmitted: (_) => _search(),
           decoration: InputDecoration(
             hintText: 'ابحث في القرآن والأدعية والزيارات...',
-            prefixIcon: const Icon(Icons.search_rounded),
+            prefixIcon: Icon(Icons.search_rounded),
             suffixIcon: IconButton(
               onPressed: _loading ? null : _search,
-              icon: const Icon(Icons.arrow_forward_rounded),
+              icon: Icon(Icons.arrow_forward_rounded),
             ),
             filled: true,
             fillColor: Theme.of(context).colorScheme.surface,
@@ -186,32 +185,32 @@ class _SmartSearchPageState extends State<SmartSearchPage> {
       if (_message != null)
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: Text(_message!, style: const TextStyle(color: _searchMuted, height: 1.5)),
+          child: Text(_message!, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.5)),
         ),
       Expanded(
         child: _loading
-            ? const Center(child: CircularProgressIndicator(color: _searchGold))
+            ? Center(child: CircularProgressIndicator(color: _searchGold))
             : _hits.isEmpty
-                ? const Center(child: Text('اكتب عبارة ثم اضغط البحث', style: TextStyle(color: _searchMuted)))
+                ? Center(child: Text('اكتب عبارة ثم اضغط البحث', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)))
                 : ListView.separated(
                     padding: const EdgeInsets.all(16),
                     itemCount: _hits.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 8),
+                    separatorBuilder: (_, __) => SizedBox(height: 8),
                     itemBuilder: (context, index) {
                       final hit = _hits[index];
                       return Card(
                         color: Theme.of(context).colorScheme.surface,
                         child: ListTile(
-                          title: Text(hit.title, style: const TextStyle(color: _searchGold, fontWeight: FontWeight.bold)),
+                          title: Text(hit.title, style: TextStyle(color: _searchGold, fontWeight: FontWeight.bold)),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(hit.category, style: const TextStyle(color: _searchMuted, fontSize: 11)),
-                              const SizedBox(height: 6),
-                              Text(hit.preview, maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(height: 1.6)),
+                              Text(hit.category, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11)),
+                              SizedBox(height: 6),
+                              Text(hit.preview, maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(height: 1.6)),
                             ],
                           ),
-                          trailing: const Icon(Icons.chevron_left_rounded, color: _searchGold),
+                          trailing: Icon(Icons.chevron_left_rounded, color: _searchGold),
                           onTap: () => Navigator.of(context).push(
                             MaterialPageRoute<void>(builder: (_) => hit.openPage()),
                           ),

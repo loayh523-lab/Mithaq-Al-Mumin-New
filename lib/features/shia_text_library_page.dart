@@ -323,7 +323,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
       future: _future,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return _shiaError(() {
+          return _shiaError(context, () {
             setState(() {
               if (_sahifaOnly) {
                 ShiaTextData._sahifaCache = null;
@@ -662,7 +662,7 @@ String _normalize(String value) => value
   .replaceAll(RegExp('[أإآٱ]'), 'ا')
   .replaceAll('ى', 'ي');
 
-Widget _shiaError(VoidCallback retry) => Center(
+Widget _shiaError(BuildContext context, VoidCallback retry) => Center(
   child: Padding(
     padding: const EdgeInsets.all(24),
     child: Column(mainAxisSize: MainAxisSize.min, children: [

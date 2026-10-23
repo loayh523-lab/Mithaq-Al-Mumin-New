@@ -122,7 +122,7 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
             ),
           ]),
           const SizedBox(height: 5),
-          Text(_loading ? 'جارٍ تجهيز فهرس القرآن الكريم...' : '114 سورة • $verseCount آية', style: const TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
+          Text(_loading ? 'جارٍ تجهيز فهرس القرآن الكريم...' : '114 سورة • $verseCount آية', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
           const SizedBox(height: 14),
           TextField(
             controller: _search, onChanged: (_) => setState(() {}),
@@ -150,9 +150,9 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
                     return Card(
                       margin: EdgeInsets.zero, color: Theme.of(context).colorScheme.surface,
                       child: ListTile(
-                        leading: CircleAvatar(backgroundColor: _emerald.withValues(alpha: .24), child: Text('${s.id}', style: const TextStyle(color: _gold))),
-                        title: Text(s.name, style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w700)),
-                        subtitle: Text('${s.type == 'meccan' ? 'مكية' : 'مدنية'} • ${s.totalVerses} آية', style: const TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 12)),
+                        leading: CircleAvatar(backgroundColor: _emerald.withValues(alpha: .24), child: Text('${s.id}', style: TextStyle(color: _gold))),
+                        title: Text(s.name, style: TextStyle(fontSize: 19, fontWeight: FontWeight.w700)),
+                        subtitle: Text('${s.type == 'meccan' ? 'مكية' : 'مدنية'} • ${s.totalVerses} آية', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 12)),
                         trailing: Icon(Icons.chevron_left_rounded, color: _gold),
                         onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
                           builder: (_) => Directionality(textDirection: TextDirection.rtl, child: SurahReaderPage(surah: s)),
@@ -318,7 +318,7 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
         ),
       )),
-      if (_message != null) Padding(padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4), child: Text(_message!, style: const TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant))),
+      if (_message != null) Padding(padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4), child: Text(_message!, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant))),
       Expanded(child: _loading
         ? Center(child: CircularProgressIndicator(color: _gold))
         : _hits.isEmpty
@@ -329,8 +329,8 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
               itemBuilder: (context, index) {
                 final hit = _hits[index];
                 return Card(color: Theme.of(context).colorScheme.surface, child: ListTile(
-                  title: Text('${hit.surah.name} • الآية ${hit.verseNumber}', style: const TextStyle(color: _gold, fontWeight: FontWeight.bold)),
-                  subtitle: Text(hit.text, maxLines: 4, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 19, height: 1.8)),
+                  title: Text('${hit.surah.name} • الآية ${hit.verseNumber}', style: TextStyle(color: _gold, fontWeight: FontWeight.bold)),
+                  subtitle: Text(hit.text, maxLines: 4, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 19, height: 1.8)),
                   onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => Directionality(
                     textDirection: TextDirection.rtl,
                     child: SurahReaderPage(surah: hit.surah, initialVerse: hit.verseNumber),
@@ -405,8 +405,8 @@ class _QuranBookmarksPageState extends State<QuranBookmarksPage> {
               itemBuilder: (context, index) {
                 final item = _items[index];
                 return Card(color: Theme.of(context).colorScheme.surface, child: ListTile(
-                  title: Text('${item.surah.name} • الآية ${item.verseNumber}', style: const TextStyle(color: _gold, fontWeight: FontWeight.bold)),
-                  subtitle: Text(item.text, maxLines: 3, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 18, height: 1.7)),
+                  title: Text('${item.surah.name} • الآية ${item.verseNumber}', style: TextStyle(color: _gold, fontWeight: FontWeight.bold)),
+                  subtitle: Text(item.text, maxLines: 3, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 18, height: 1.7)),
                   onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => Directionality(
                     textDirection: TextDirection.rtl,
                     child: SurahReaderPage(surah: item.surah, initialVerse: item.verseNumber),
@@ -564,10 +564,10 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text('تفسير ${widget.surah.name} — الآية ${index + 1}',
-                style: const TextStyle(color: _gold, fontSize: 19, fontWeight: FontWeight.w800)),
+                style: TextStyle(color: _gold, fontSize: 19, fontWeight: FontWeight.w800)),
               const SizedBox(height: 12),
               SelectableText(_verses[index], textDirection: TextDirection.rtl,
-                style: const TextStyle(fontSize: 22, height: 1.9)),
+                style: TextStyle(fontSize: 22, height: 1.9)),
               const SizedBox(height: 12),
               Text(
                 'هذه نافذة مرجعية للآية. يفتح الزر مكتبة تفسير الميزان على الإنترنت؛ اختر السورة والآية هناك. نص التفسير غير مضمّن دون اتصال في هذه النسخة.',
@@ -776,7 +776,7 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
                           ),
                           child: Text(
                             'الجزء ${_arabicDigits('${firstMeta.juz}')}',
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Theme.of(context).colorScheme.onSurfaceVariant,
                               fontSize: 13,
                             ),
@@ -881,7 +881,7 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
                                   Text(
                                     '۞ ${_arabicDigits('${i + 1}')} ۞',
                                     textDirection: TextDirection.rtl,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontSize: 18,
                                       color: _gold,
                                       height: 1.5,
@@ -1008,7 +1008,7 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
                                 Text(
                                   'سورة ${nextSurah.name}',
                                   textAlign: TextAlign.right,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 24,
                                     height: 1.5,
                                     color: Colors.white,

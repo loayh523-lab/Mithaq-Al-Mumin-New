@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const _rakahGold = Color(0xFFD9B66D);
-const _rakahMuted = Color(0xFF697A70);
 const _rakahEmerald = Color(0xFF1C8060);
 
 class RakahCounterPage extends StatefulWidget {
@@ -149,16 +148,16 @@ class _RakahCounterPageState extends State<RakahCounterPage> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('بدء عدّ جديد؟'),
-        content: const Text('سيُمسح تقدم العدّاد الحالي من هذا الجهاز.'),
+        title: Text('بدء عدّ جديد؟'),
+        content: Text('سيُمسح تقدم العدّاد الحالي من هذا الجهاز.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('إلغاء'),
+            child: Text('إلغاء'),
           ),
           FilledButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('إعادة التصفير'),
+            child: Text('إعادة التصفير'),
           ),
         ],
       ),
@@ -181,17 +180,17 @@ class _RakahCounterPageState extends State<RakahCounterPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('حاسبة الركعات'),
+        title: Text('حاسبة الركعات'),
         actions: [
           IconButton(
             tooltip: 'إعادة التصفير',
             onPressed: _loading ? null : _reset,
-            icon: const Icon(Icons.restart_alt_rounded),
+            icon: Icon(Icons.restart_alt_rounded),
           ),
         ],
       ),
       body: _loading
-          ? const Center(
+          ? Center(
               child: CircularProgressIndicator(color: _rakahGold),
             )
           : ListView(
@@ -209,7 +208,7 @@ class _RakahCounterPageState extends State<RakahCounterPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         'عداد مساعد للصلاة',
                         style: TextStyle(
                           fontSize: 22,
@@ -217,12 +216,12 @@ class _RakahCounterPageState extends State<RakahCounterPage> {
                           color: _rakahGold,
                         ),
                       ),
-                      const SizedBox(height: 8),
-                      const Text(
+                      SizedBox(height: 8),
+                      Text(
                         'اختر الصلاة وعدد الركعات المقصود، ثم سجّل السجدتين يدوياً لكل ركعة. يُحفظ التقدم محلياً على جهازك.',
-                        style: TextStyle(color: _rakahMuted, height: 1.7),
+                        style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.7),
                       ),
-                      const SizedBox(height: 18),
+                      SizedBox(height: 18),
                       DropdownButtonFormField<String>(
                         initialValue: _prayer,
                         decoration: InputDecoration(
@@ -245,15 +244,15 @@ class _RakahCounterPageState extends State<RakahCounterPage> {
                                 if (value != null) _changePrayer(value);
                               },
                       ),
-                      const SizedBox(height: 16),
-                      const Text(
+                      SizedBox(height: 16),
+                      Text(
                         'عدد الركعات المستهدف',
                         style: TextStyle(
-                          color: _rakahMuted,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8),
                       Wrap(
                         spacing: 8,
                         children: [2, 3, 4]
@@ -276,7 +275,7 @@ class _RakahCounterPageState extends State<RakahCounterPage> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 14),
+                SizedBox(height: 14),
                 Container(
                   padding: const EdgeInsets.all(22),
                   decoration: BoxDecoration(
@@ -295,26 +294,26 @@ class _RakahCounterPageState extends State<RakahCounterPage> {
                       Text(
                         _completed ? 'اكتمل العدّ' : 'الركعة $_currentRakah من $_targetRakahs',
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 23,
                           fontWeight: FontWeight.w800,
                         ),
                       ),
-                      const SizedBox(height: 18),
+                      SizedBox(height: 18),
                       Text(
                         '$_sajdahs / 2',
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: _rakahGold,
                           fontSize: 48,
                           fontWeight: FontWeight.w900,
                         ),
                       ),
-                      const Text(
+                      Text(
                         'السجدات المسجّلة في الركعة الحالية',
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: _rakahMuted),
+                        style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(20),
                         child: LinearProgressIndicator(
@@ -324,9 +323,9 @@ class _RakahCounterPageState extends State<RakahCounterPage> {
                           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                         ),
                       ),
-                      const SizedBox(height: 18),
+                      SizedBox(height: 18),
                       if (_completed)
-                        const Text(
+                        Text(
                           'سجّلت العدد الذي اخترته. هذا تسجيل للعدّ فقط وليس حكماً بصحة الصلاة.',
                           textAlign: TextAlign.center,
                           style: TextStyle(height: 1.7),
@@ -336,7 +335,7 @@ class _RakahCounterPageState extends State<RakahCounterPage> {
                           width: double.infinity,
                           child: FilledButton.icon(
                             onPressed: _sajdahs < 2 ? _recordSajdah : null,
-                            icon: const Icon(Icons.touch_app_rounded),
+                            icon: Icon(Icons.touch_app_rounded),
                             label: Text(
                               _sajdahs == 0
                                   ? 'تسجيل السجدة الأولى'
@@ -346,25 +345,25 @@ class _RakahCounterPageState extends State<RakahCounterPage> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 8),
+                        SizedBox(height: 8),
                         Row(
                           children: [
                             Expanded(
                               child: OutlinedButton.icon(
                                 onPressed: _sajdahs > 0 ? _undoSajdah : null,
-                                icon: const Icon(Icons.undo_rounded),
-                                label: const Text('تراجع عن سجدة'),
+                                icon: Icon(Icons.undo_rounded),
+                                label: Text('تراجع عن سجدة'),
                               ),
                             ),
-                            const SizedBox(width: 8),
+                            SizedBox(width: 8),
                             Expanded(
                               child: OutlinedButton.icon(
                                 onPressed: _sajdahs == 2 &&
                                         _currentRakah < _targetRakahs
                                     ? _nextRakah
                                     : null,
-                                icon: const Icon(Icons.arrow_forward_rounded),
-                                label: const Text('الركعة التالية'),
+                                icon: Icon(Icons.arrow_forward_rounded),
+                                label: Text('الركعة التالية'),
                               ),
                             ),
                           ],
@@ -373,14 +372,14 @@ class _RakahCounterPageState extends State<RakahCounterPage> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 14),
+                SizedBox(height: 14),
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.surface,
                     borderRadius: BorderRadius.circular(18),
                   ),
-                  child: const Row(
+                  child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Icon(Icons.info_outline_rounded, color: _rakahGold),
@@ -388,7 +387,7 @@ class _RakahCounterPageState extends State<RakahCounterPage> {
                       Expanded(
                         child: Text(
                           'هذا عدّاد يدوي للتذكّر فقط؛ لا يعتمد على حساس التقارب لأن الهاتف لا يستطيع ضمان اكتشاف السجود أو تمييز الركعات بدقة. لا يحدّد صحة الصلاة، وعند الشك راجع أحكام مرجع تقليدك.',
-                          style: TextStyle(color: _rakahMuted, height: 1.7),
+                          style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.7),
                         ),
                       ),
                     ],

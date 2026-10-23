@@ -90,7 +90,7 @@ class MithaqApp extends StatelessWidget {
         brightness: dark ? Brightness.dark : Brightness.light,
         surface: surface,
         primary: _emerald,
-        secondary: _gold,
+        secondary: dark ? _gold : const Color(0xFF80591F),
       ),
       fontFamily: 'Amiri',
       appBarTheme: AppBarTheme(
@@ -1016,14 +1016,14 @@ class _MainShellState extends State<MainShell> {
                           const SizedBox(height: 3),
                           Text(
                             'المتبقي ${_countdownLabel(nextPrayer.at, _now)}',
-                            style: const TextStyle(color: _gold, fontSize: 12),
+                            style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 12),
                           ),
                         ],
                       ),
                     ),
                     Text(
                       _clockLabel(nextPrayer.at),
-                      style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: _gold),
+                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: Theme.of(context).colorScheme.secondary),
                     ),
                   ],
                 ),
@@ -1035,7 +1035,7 @@ class _MainShellState extends State<MainShell> {
                   onPressed: () => setState(() => _selected = 3),
                   icon: const Icon(Icons.calendar_month_rounded, size: 18),
                   label: const Text('عرض مواقيت الصلوات الخمس'),
-                  style: TextButton.styleFrom(foregroundColor: _gold),
+                  style: TextButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.secondary),
                 ),
               ),
               const SizedBox(height: 8),
@@ -1057,11 +1057,11 @@ class _MainShellState extends State<MainShell> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Row(
+              Row(
                 children: [
-                  Icon(Icons.auto_awesome_rounded, color: _gold, size: 21),
+                  const Icon(Icons.auto_awesome_rounded, color: _gold, size: 21),
                   SizedBox(width: 8),
-                  Text('قبس اليوم', style: TextStyle(color: _gold, fontSize: 17, fontWeight: FontWeight.w800)),
+                  Text('قبس اليوم', style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 17, fontWeight: FontWeight.w800)),
                   Spacer(),
                   Icon(Icons.format_quote_rounded, color: Color(0x668AC5A8), size: 28),
                 ],
@@ -1088,7 +1088,7 @@ class _MainShellState extends State<MainShell> {
                     icon: const Icon(Icons.open_in_new_rounded, size: 17),
                     label: const Text('افتح الآية'),
                     style: TextButton.styleFrom(
-                      foregroundColor: _gold,
+                      foregroundColor: Theme.of(context).colorScheme.secondary,
                       visualDensity: VisualDensity.compact,
                     ),
                   );

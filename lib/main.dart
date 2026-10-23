@@ -627,68 +627,6 @@ class _MainShellState extends State<MainShell> {
     ),
   );
 
-  Widget _drawerItem(IconData icon, String title, VoidCallback onTap, {bool selected = false}) =>
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 2),
-        child: Material(
-          color: selected ? _emerald.withValues(alpha: .18) : Colors.transparent,
-          borderRadius: BorderRadius.circular(16),
-          child: InkWell(
-            onTap: onTap,
-            borderRadius: BorderRadius.circular(16),
-            child: Container(
-              constraints: const BoxConstraints(minHeight: 56),
-              padding: const EdgeInsetsDirectional.fromSTEB(9, 7, 11, 7),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: selected
-                      ? _gold.withValues(alpha: .34)
-                      : Colors.white.withValues(alpha: .045),
-                ),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    width: 39,
-                    height: 39,
-                    decoration: BoxDecoration(
-                      color: selected ? _gold.withValues(alpha: .13) : Theme.of(context).colorScheme.surface,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: selected
-                            ? _gold.withValues(alpha: .3)
-                            : _themeMuted(context).withValues(alpha: .08),
-                      ),
-                    ),
-                    child: Icon(icon, color: selected ? _gold : Theme.of(context).colorScheme.onSurfaceVariant, size: 21),
-                  ),
-                  SizedBox(width: 11),
-                  Expanded(
-                    child: Text(
-                      title,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSurface,
-                        fontSize: 13,
-                        height: 1.35,
-                        fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  Icon(
-                    selected ? Icons.check_circle_rounded : Icons.chevron_left_rounded,
-                    color: selected ? _gold : Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: .8),
-                    size: 18,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
-
   void _selectTab(int index) {
     Navigator.of(context).pop();
     setState(() => _selected = index);

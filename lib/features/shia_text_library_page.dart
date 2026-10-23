@@ -14,8 +14,8 @@ class ShiaTextLine {
   bool get isArabic => kind.toLowerCase() == 'arabic';
   bool get isTranslation => kind.toLowerCase() == 'translation';
   bool get isPersian =>
-      RegExp(r'persian|farsi|\bfa\b|فارسي|فارسی', caseSensitive: false).hasMatch(kind) ||
-      RegExp(r'[گچپژ]').hasMatch(text);
+      RegExp(r'persian|farsi|\bfa\b|\u0641\u0627\u0631\u0633\u064a|\u0641\u0627\u0631\u0633\u06cc', caseSensitive: false).hasMatch(kind) ||
+      RegExp(r'[\u067e\u0686\u0698\u06af\u06cc\u06a9\u06d2\u06d3]').hasMatch(text);
   bool get isTransliteration => kind.toLowerCase() == 'transliteration';
   factory ShiaTextLine.fromJson(Map<String, dynamic> json) => ShiaTextLine(
     index: json['index'] is int ? json['index'] as int : 0,
@@ -552,8 +552,8 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
       .toList();
 
   bool _containsPersianOnlyText(String value) =>
-      RegExp(r'[پچژگ]').hasMatch(value) ||
-      RegExp(r'دعای|روزهای|هفته|فارسی|برای|میباشد|می شود|خواهد شد|نمی', caseSensitive: false).hasMatch(value);
+      RegExp(r'[\u067e\u0686\u0698\u06af\u06cc\u06a9\u06d2\u06d3]').hasMatch(value) ||
+      RegExp(r'\u062f\u0639\u0627\u06cc|\u0631\u0648\u0632\u0647\u0627\u06cc|\u0647\u0641\u062a\u0647|\u0641\u0627\u0631\u0633\u06cc|\u0628\u0631\u0627\u06cc|\u0645\u06cc\u0628\u0627\u0634\u062f|\u0645\u06cc \u0634\u0648\u062f|\u062e\u0648\u0627\u0647\u062f \u0634\u062f|\u0646\u0645\u06cc', caseSensitive: false).hasMatch(value);
 
   @override Widget build(BuildContext context) {
     final lines = _visibleLines;

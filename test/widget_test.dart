@@ -35,6 +35,9 @@ void main() {
       scrollable: find.byType(Scrollable).first,
     );
     expect(find.text('قبس اليوم'), findsOneWidget);
+    expect(find.text('افتح الآية'), findsOneWidget);
+    expect(find.byTooltip('نسخ قبس اليوم'), findsOneWidget);
+    expect(find.byTooltip('مشاركة قبس اليوم'), findsOneWidget);
 
     await tester.scrollUntilVisible(
       find.text('ابدأ وردك'),

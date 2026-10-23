@@ -4,7 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 const _aboutPanel = Color(0xFF10251E);
 const _aboutGold = Color(0xFFD9B66D);
-const _aboutMuted = Color(0xFF9EB5A9);
+const _aboutMuted = Color(0xFF697A70);
 const _projectUri = 'https://github.com/loayh523-lab/Mithaq-Al-Mumin-New';
 const _supportUri = 'https://github.com/loayh523-lab/Mithaq-Al-Mumin-New/issues';
 const _quranSourceUri = 'https://tanzil.net/';

@@ -377,7 +377,7 @@ void main() {
     ));
     await tester.pumpAndSettle();
     expect(find.text('المواقيت والتقويم'), findsOneWidget);
-    expect(find.text('الفجر (تقديري)'), findsOneWidget);
+    expect(find.text('الفجر'), findsOneWidget);
     expect(find.textContaining('الصلاة القادمة:'), findsOneWidget);
     await tester.tap(find.text('إمساكية رمضان'));
     await tester.pumpAndSettle();

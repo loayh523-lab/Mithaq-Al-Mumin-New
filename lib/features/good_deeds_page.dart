@@ -4,7 +4,7 @@ import '../features/prayer_calendar_page.dart' show hijriDateLabel, hijriDatePar
 
 const _deedPanel = Color(0xFF10251E);
 const _deedGold = Color(0xFFD9B66D);
-const _deedMuted = Color(0xFF9EB5A9);
+const _deedMuted = Color(0xFF697A70);
 
 class _Deed {
   const _Deed({

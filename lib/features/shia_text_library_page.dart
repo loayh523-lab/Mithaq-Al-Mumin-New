@@ -193,10 +193,21 @@ class ShiaTextData {
 }
 
 class ShiaTextLibraryPage extends StatefulWidget {
-  const ShiaTextLibraryPage({super.key, this.initialCategory, this.sahifaOnly = false});
+  const ShiaTextLibraryPage({
+    super.key,
+    this.initialCategory,
+    this.sahifaOnly = false,
+    this.dataFuture,
+  });
   final String? initialCategory;
   final bool sahifaOnly;
-  @override State<ShiaTextLibraryPage> createState() => _ShiaTextLibraryPageState();
+
+  /// Allows deterministic UI tests to inject already loaded offline content.
+  /// Regular app navigation leaves this unset and uses the bundled asset loaders.
+  final Future<ShiaTextData>? dataFuture;
+
+  @override
+  State<ShiaTextLibraryPage> createState() => _ShiaTextLibraryPageState();
 }
 
 class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
@@ -220,7 +231,8 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
     _category = _sahifaOnly
         ? 'الصحيفة السجادية والمناجيات'
         : (_categories.contains(widget.initialCategory) ? widget.initialCategory! : _categories.first);
-    _future = _sahifaOnly ? ShiaTextData.loadSahifa() : ShiaTextData.load();
+    _future = widget.dataFuture ??
+        (_sahifaOnly ? ShiaTextData.loadSahifa() : ShiaTextData.load());
   }
   @override void dispose() { _controller.dispose(); super.dispose(); }
 

@@ -7,7 +7,6 @@ import '../services/prayer_notification_service.dart';
 import '../services/app_theme.dart';
 
 const _settingsGold = Color(0xFFD9B66D);
-const _settingsMuted = Color(0xFF697A70);
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key, this.onLocationChanged});
@@ -275,9 +274,9 @@ class _SettingsPageState extends State<SettingsPage> {
   @override Widget build(BuildContext context) {
     final city = _currentCity;
     return ListView(padding: const EdgeInsets.fromLTRB(18, 14, 18, 24), children: [
-      const Text('الإعدادات', style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800)),
+      Text('الإعدادات', style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800)),
       const SizedBox(height: 5),
-      const Text('خصّص التطبيق بما يناسبك، وتُحفظ هذه الخيارات على جهازك.', style: TextStyle(color: _settingsMuted, height: 1.6)),
+      Text('خصّص التطبيق بما يناسبك، وتُحفظ هذه الخيارات على جهازك.', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.6)),
       const SizedBox(height: 18),
       _section(
         icon: Icons.palette_outlined,
@@ -298,7 +297,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 isDark
                     ? 'الفحمي مع الأخضر الزمردي والذهبي'
                     : 'العاجي مع الأخضر الزمردي ولمسات ذهبية',
-                style: const TextStyle(color: _settingsMuted, height: 1.5),
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.5),
               ),
               onChanged: (value) async {
                 try {
@@ -311,9 +310,9 @@ class _SettingsPageState extends State<SettingsPage> {
               },
             ),
           ),
-          const Text(
+          Text(
             'يتغيّر المظهر فوراً ويُحفظ اختيارك على هذا الجهاز.',
-            style: TextStyle(color: _settingsMuted, fontSize: 12, height: 1.6),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 12, height: 1.6),
           ),
         ],
       ),
@@ -322,7 +321,7 @@ class _SettingsPageState extends State<SettingsPage> {
         icon: Icons.location_on_outlined,
         title: 'المدينة ومواقيت الصلاة',
         children: [
-          const Text('اختر أقرب مدينة إليك. الحسابات الفلكية المعروضة تقريبية ويجب مقارنتها بمواقيت مكتب مرجعك.', style: TextStyle(color: _settingsMuted, height: 1.6, fontSize: 12)),
+          Text('اختر أقرب مدينة إليك. الحسابات الفلكية المعروضة تقريبية ويجب مقارنتها بمواقيت مكتب مرجعك.', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.6, fontSize: 12)),
           const SizedBox(height: 12),
           DropdownButtonFormField<String>(
             key: ValueKey(_cityId),
@@ -349,7 +348,7 @@ class _SettingsPageState extends State<SettingsPage> {
             city.id == 'current_location'
                 ? 'الموقع الحالي: ${city.latitude.toStringAsFixed(4)}, ${city.longitude.toStringAsFixed(4)} — محفوظ على الجهاز'
                 : 'الإحداثيات التقريبية: ${city.latitude.toStringAsFixed(3)}, ${city.longitude.toStringAsFixed(3)}',
-            style: const TextStyle(color: _settingsMuted, fontSize: 11),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11),
           ),
         ],
       ),
@@ -362,15 +361,15 @@ class _SettingsPageState extends State<SettingsPage> {
             color: Theme.of(context).colorScheme.surface,
             child: SwitchListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('إشعارات الصلاة'),
-              subtitle: const Text('تذكيرات محلية للأيام الثلاثين القادمة وفق حساب فلكي تقديري. قد تتأخر التنبيهات بسبب قيود توفير الطاقة أو أذونات أندرويد.', style: TextStyle(color: _settingsMuted, height: 1.5, fontSize: 12)),
+              title: Text('إشعارات الصلاة'),
+              subtitle: Text('تذكيرات محلية للأيام الثلاثين القادمة وفق حساب فلكي تقديري. قد تتأخر التنبيهات بسبب قيود توفير الطاقة أو أذونات أندرويد.', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.5, fontSize: 12)),
               value: _notificationsEnabled,
               onChanged: _loaded ? _toggleNotifications : null,
               activeThumbColor: _settingsGold,
             ),
           ),
           const SizedBox(height: 10),
-          const Text(
+          Text(
             'تخصيص تنبيهات كل صلاة',
             style: TextStyle(fontWeight: FontWeight.w700, color: _settingsGold),
           ),
@@ -385,7 +384,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 _prayerEnabled[option.key] == true
                     ? 'الأذان والتذكير مفعّلان'
                     : 'لا يوجد تنبيه لهذه الصلاة',
-                style: const TextStyle(color: _settingsMuted, fontSize: 11),
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11),
               ),
               value: _prayerEnabled[option.key] ?? true,
               onChanged: _loaded
@@ -399,10 +398,10 @@ class _SettingsPageState extends State<SettingsPage> {
             color: Theme.of(context).colorScheme.surface,
             child: SwitchListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('تنبيه قبل الأذان'),
-              subtitle: const Text(
+              title: Text('تنبيه قبل الأذان'),
+              subtitle: Text(
                 'يرسل إشعاراً عادياً قبل وقت الصلاة؛ لا يشغّل تسجيل الأذان مبكراً.',
-                style: TextStyle(color: _settingsMuted, height: 1.5, fontSize: 12),
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.5, fontSize: 12),
               ),
               value: _earlyAlertEnabled,
               onChanged: _loaded ? _toggleEarlyAlert : null,
@@ -439,7 +438,7 @@ class _SettingsPageState extends State<SettingsPage> {
             child: OutlinedButton.icon(
               onPressed: _loaded ? _testNotification : null,
               icon: const Icon(Icons.notifications_active_outlined),
-              label: const Text('تجربة إشعار الأذان'),
+              label: Text('تجربة إشعار الأذان'),
             ),
           ),
 
@@ -449,12 +448,12 @@ class _SettingsPageState extends State<SettingsPage> {
             child: OutlinedButton.icon(
               onPressed: _loaded ? _checkNotificationSchedule : null,
               icon: const Icon(Icons.fact_check_outlined),
-              label: const Text('فحص جدولة الأذان'),
+              label: Text('فحص جدولة الأذان'),
             ),
           ),
-          const Text('التسجيل المضمّن هو الأذان الذي اختاره صاحب التطبيق: الأذان من العتبة العلوية المقدسة بصوت القارئ الشيخ شبّر معلة.', style: TextStyle(color: _settingsMuted, fontSize: 11, height: 1.5)),
+          Text('التسجيل المضمّن هو الأذان الذي اختاره صاحب التطبيق: الأذان من العتبة العلوية المقدسة بصوت القارئ الشيخ شبّر معلة.', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11, height: 1.5)),
           const SizedBox(height: 4),
-          const Text('يلزم السماح بإشعارات التطبيق من أندرويد. إذا وصل الإشعار بلا صوت، ارفع صوت التنبيهات وافحص إعداد قناة «أذان الصلاة».', style: TextStyle(color: _settingsMuted, fontSize: 11, height: 1.5)),
+          Text('يلزم السماح بإشعارات التطبيق من أندرويد. إذا وصل الإشعار بلا صوت، ارفع صوت التنبيهات وافحص إعداد قناة «أذان الصلاة».', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11, height: 1.5)),
         ],
       ),
       const SizedBox(height: 14),
@@ -471,24 +470,24 @@ class _SettingsPageState extends State<SettingsPage> {
       _section(
         icon: Icons.verified_outlined,
         title: 'المصادر والمحتوى',
-        children: const [
-          Text('نص القرآن العثماني: مشروع Tanzil Project عبر dotquran/corpus. فهرس السور مضمّن محلياً.', style: TextStyle(color: _settingsMuted, height: 1.6)),
+        children: [
+          Text('نص القرآن العثماني: مشروع Tanzil Project عبر dotquran/corpus. فهرس السور مضمّن محلياً.', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.6)),
           SizedBox(height: 8),
-          Text('النصوص الدعائية ستُوسّع مع إظهار اسم الكتاب والباب أو الموضع المتاح؛ لا تُعرض صيغة عامة على أنها رواية مسندة.', style: TextStyle(color: _settingsMuted, height: 1.6)),
+          Text('النصوص الدعائية ستُوسّع مع إظهار اسم الكتاب والباب أو الموضع المتاح؛ لا تُعرض صيغة عامة على أنها رواية مسندة.', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.6)),
           SizedBox(height: 8),
-          Text('مواقيت الصلاة والتاريخ الهجري تقديرية حالياً، وقد تختلف باختلاف الموقع وثبوت الهلال والرأي الفقهي.', style: TextStyle(color: _settingsMuted, height: 1.6)),
+          Text('مواقيت الصلاة والتاريخ الهجري تقديرية حالياً، وقد تختلف باختلاف الموقع وثبوت الهلال والرأي الفقهي.', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.6)),
         ],
       ),
       const SizedBox(height: 14),
       _section(
         icon: Icons.phonelink_lock_outlined,
         title: 'الخصوصية',
-        children: const [
-          Text('التقدّم والخيارات تُحفظ محلياً على الجهاز. لا يتطلب التطبيق حساباً ولا يرسل سجلّ عبادتك إلى خادم.', style: TextStyle(color: _settingsMuted, height: 1.6)),
+        children: [
+          Text('التقدّم والخيارات تُحفظ محلياً على الجهاز. لا يتطلب التطبيق حساباً ولا يرسل سجلّ عبادتك إلى خادم.', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.6)),
         ],
       ),
       const SizedBox(height: 14),
-      const Center(child: Text('ميثاق المؤمن • إصدار التطوير 0.2.0', style: TextStyle(color: _settingsMuted, fontSize: 11))),
+      Center(child: Text('ميثاق المؤمن • إصدار التطوير 0.2.0', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11))),
     ]);
   }
 

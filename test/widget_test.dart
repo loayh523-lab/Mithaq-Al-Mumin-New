@@ -70,6 +70,12 @@ void main() {
 
     await tester.tap(find.byIcon(Icons.menu));
     await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.descendant(of: find.byType(Drawer), matching: find.text('التسبيح والعداد')),
+      180,
+      scrollable: find.descendant(of: find.byType(Drawer), matching: find.byType(Scrollable)).first,
+    );
+    await tester.pumpAndSettle();
     await tester.tap(find.descendant(of: find.byType(Drawer), matching: find.text('التسبيح والعداد')));
     await tester.pumpAndSettle();
     expect(find.text('التسبيح'), findsOneWidget);
@@ -99,21 +105,36 @@ void main() {
     await tester.tap(find.byIcon(Icons.menu));
     await tester.pumpAndSettle();
 
+    final drawerScroll = find.descendant(
+      of: find.byType(Drawer),
+      matching: find.byType(Scrollable),
+    ).first;
+
     expect(find.text('التنقّل الأساسي'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.descendant(of: find.byType(Drawer), matching: find.text('العبادة والمتابعة')),
+      180,
+      scrollable: drawerScroll,
+    );
+    await tester.pumpAndSettle();
     expect(find.text('العبادة والمتابعة'), findsOneWidget);
+    for (final icon in [
+      Icons.bookmark_added_rounded,
+      Icons.event_available_rounded,
+      Icons.handshake_rounded,
+    ]) {
+      final finder = find.descendant(of: find.byType(Drawer), matching: find.byIcon(icon));
+      await tester.scrollUntilVisible(finder, 130, scrollable: drawerScroll);
+      await tester.pumpAndSettle();
+      expect(finder, findsOneWidget);
+    }
+    await tester.scrollUntilVisible(
+      find.descendant(of: find.byType(Drawer), matching: find.text('المعرفة والخدمات')),
+      180,
+      scrollable: drawerScroll,
+    );
+    await tester.pumpAndSettle();
     expect(find.text('المعرفة والخدمات'), findsOneWidget);
-    expect(
-      find.descendant(of: find.byType(Drawer), matching: find.byIcon(Icons.event_available_rounded)),
-      findsOneWidget,
-    );
-    expect(
-      find.descendant(of: find.byType(Drawer), matching: find.byIcon(Icons.handshake_rounded)),
-      findsOneWidget,
-    );
-    expect(
-      find.descendant(of: find.byType(Drawer), matching: find.byIcon(Icons.bookmark_added_rounded)),
-      findsOneWidget,
-    );
     expect(find.text('نسخة قيد التطوير • راجع المصادر عند الحاجة'), findsOneWidget);
   });
 

@@ -1,4 +1,4 @@
-name: Flutter CI
+name: Flutter CI — Review Only
 
 on:
   push:
@@ -108,19 +108,3 @@ jobs:
         run: flutter analyze
       - name: Test
         run: flutter test
-      - name: Build debug APK
-        run: flutter build apk --debug
-      - name: Upload debug APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: mithaq-al-mumin-debug-apk
-          path: build/app/outputs/flutter-apk/app-debug.apk
-          if-no-files-found: error
-      - name: Build optimized ARM64 release APK
-        run: flutter build apk --release --target-platform android-arm64
-      - name: Upload optimized ARM64 release APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: mithaq-al-mumin-arm64-release
-          path: build/app/outputs/flutter-apk/app-release.apk
-          if-no-files-found: error

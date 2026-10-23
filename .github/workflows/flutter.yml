@@ -35,7 +35,7 @@ jobs:
               content = content.replace("<application", '<application android:label="ميثاق المؤمن"', 1)
           manifest.write_text(content, encoding="utf-8")
           PY
-      - name: Prepare the original Mithaq Android launcher icon
+      - name: Generate the redesigned Mithaq vector launcher icon
         run: python3 tool/prepare_android_branding.py
       - name: Configure Android notification scheduling
         run: |

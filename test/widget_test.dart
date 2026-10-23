@@ -111,6 +111,29 @@ void main() {
   });
  
 
+  test('Persian-script guard recognizes Persian-specific Unicode characters', () {
+    final persianLetter = ShiaTextLine(
+      index: 1,
+      kind: 'arabic',
+      text: String.fromCharCodes([0x06AF]),
+    );
+    expect(persianLetter.isPersian, isTrue);
+
+    final persianLabel = ShiaTextLine(
+      index: 2,
+      kind: String.fromCharCodes([0x0641, 0x0627, 0x0631, 0x0633, 0x06CC]),
+      text: 'sample',
+    );
+    expect(persianLabel.isPersian, isTrue);
+
+    final arabicLine = ShiaTextLine(
+      index: 3,
+      kind: 'arabic',
+      text: 'بسم الله الرحمن الرحيم',
+    );
+    expect(arabicLine.isPersian, isFalse);
+  });
+
   test('prayer notification IDs keep early alerts separate from adhan reminders', () {
     expect(PrayerNotificationService.isPrayerReminderNotificationIdForTesting(3999), isFalse);
     expect(PrayerNotificationService.isPrayerReminderNotificationIdForTesting(4000), isTrue);

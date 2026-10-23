@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:share_plus/share_plus.dart';
 import 'data/religious_content.dart';
 import 'quran/quran_pages.dart';
 import 'features/prayer_calendar_page.dart';
@@ -28,13 +29,37 @@ const _emerald = Color(0xFF1C8060);
 const _gold = Color(0xFFD9B66D);
 const _muted = Color(0xFF9EB5A9);
 
-const _dailyInspirations = <({String text, String source})>[
-  (text: 'أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ', source: 'سورة الرعد، الآية 28'),
-  (text: 'وَقُلْ رَبِّ زِدْنِي عِلْمًا', source: 'سورة طه، الآية 114'),
-  (text: 'فَإِنَّ مَعَ الْعُسْرِ يُسْرًا', source: 'سورة الشرح، الآية 5'),
-  (text: 'إِنَّ اللَّهَ مَعَ الصَّابِرِينَ', source: 'سورة البقرة، الآية 153'),
-  (text: 'لَا تَقْنَطُوا مِنْ رَحْمَةِ اللَّهِ', source: 'سورة الزمر، الآية 53'),
-  (text: 'وَهُوَ مَعَكُمْ أَيْنَ مَا كُنْتُمْ', source: 'سورة الحديد، الآية 4'),
+const _dailyInspirations = <({String text, String source, int surahId, int verse})>[
+  (text: 'أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ', source: 'سورة الرعد، الآية 28', surahId: 13, verse: 28),
+  (text: 'وَقُلْ رَبِّ زِدْنِي عِلْمًا', source: 'سورة طه، الآية 114', surahId: 20, verse: 114),
+  (text: 'فَإِنَّ مَعَ الْعُسْرِ يُسْرًا', source: 'سورة الشرح، الآية 5', surahId: 94, verse: 5),
+  (text: 'إِنَّ اللَّهَ مَعَ الصَّابِرِينَ', source: 'سورة البقرة، الآية 153', surahId: 2, verse: 153),
+  (text: 'لَا تَقْنَطُوا مِنْ رَحْمَةِ اللَّهِ', source: 'سورة الزمر، الآية 53', surahId: 39, verse: 53),
+  (text: 'وَهُوَ مَعَكُمْ أَيْنَ مَا كُنْتُمْ', source: 'سورة الحديد، الآية 4', surahId: 57, verse: 4),
+  (text: 'لَا يُكَلِّفُ اللَّهُ نَفْسًا إِلَّا وُسْعَهَا', source: 'سورة البقرة، الآية 286', surahId: 2, verse: 286),
+  (text: 'فَاذْكُرُونِي أَذْكُرْكُمْ', source: 'سورة البقرة، الآية 152', surahId: 2, verse: 152),
+  (text: 'لَئِنْ شَكَرْتُمْ لَأَزِيدَنَّكُمْ', source: 'سورة إبراهيم، الآية 7', surahId: 14, verse: 7),
+  (text: 'وَلَا تَهِنُوا وَلَا تَحْزَنُوا', source: 'سورة آل عمران، الآية 139', surahId: 3, verse: 139),
+  (text: 'وَمَنْ يَتَوَكَّلْ عَلَى اللَّهِ فَهُوَ حَسْبُهُ', source: 'سورة الطلاق، الآية 3', surahId: 65, verse: 3),
+  (text: 'وَلَا تَيْأَسُوا مِنْ رَوْحِ اللَّهِ', source: 'سورة يوسف، الآية 87', surahId: 12, verse: 87),
+  (text: 'قُلْ لَنْ يُصِيبَنَا إِلَّا مَا كَتَبَ اللَّهُ لَنَا', source: 'سورة التوبة، الآية 51', surahId: 9, verse: 51),
+  (text: 'وَاسْتَعِينُوا بِالصَّبْرِ وَالصَّلَاةِ', source: 'سورة البقرة، الآية 45', surahId: 2, verse: 45),
+  (text: 'إِنَّنِي مَعَكُمَا أَسْمَعُ وَأَرَى', source: 'سورة طه، الآية 46', surahId: 20, verse: 46),
+  (text: 'فَبِأَيِّ آلَاءِ رَبِّكُمَا تُكَذِّبَانِ', source: 'سورة الرحمن، الآية 13', surahId: 55, verse: 13),
+  (text: 'وَمَا خَلَقْتُ الْجِنَّ وَالْإِنْسَ إِلَّا لِيَعْبُدُونِ', source: 'سورة الذاريات، الآية 56', surahId: 51, verse: 56),
+  (text: 'وَلَسَوْفَ يُعْطِيكَ رَبُّكَ فَتَرْضَى', source: 'سورة الضحى، الآية 5', surahId: 93, verse: 5),
+  (text: 'مَا وَدَّعَكَ رَبُّكَ وَمَا قَلَى', source: 'سورة الضحى، الآية 3', surahId: 93, verse: 3),
+  (text: 'إِنَّ اللَّهَ لَا يُغَيِّرُ مَا بِقَوْمٍ حَتَّى يُغَيِّرُوا مَا بِأَنْفُسِهِمْ', source: 'سورة الرعد، الآية 11', surahId: 13, verse: 11),
+  (text: 'فَإِنِّي قَرِيبٌ أُجِيبُ دَعْوَةَ الدَّاعِ إِذَا دَعَانِ', source: 'سورة البقرة، الآية 186', surahId: 2, verse: 186),
+  (text: 'ادْعُونِي أَسْتَجِبْ لَكُمْ', source: 'سورة غافر، الآية 60', surahId: 40, verse: 60),
+  (text: 'سَيَجْعَلُ اللَّهُ بَعْدَ عُسْرٍ يُسْرًا', source: 'سورة الطلاق، الآية 7', surahId: 65, verse: 7),
+  (text: 'حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ', source: 'سورة آل عمران، الآية 173', surahId: 3, verse: 173),
+  (text: 'إِنَّمَا يُوَفَّى الصَّابِرُونَ أَجْرَهُمْ بِغَيْرِ حِسَابٍ', source: 'سورة الزمر، الآية 10', surahId: 39, verse: 10),
+  (text: 'وَالَّذِينَ جَاهَدُوا فِينَا لَنَهْدِيَنَّهُمْ سُبُلَنَا', source: 'سورة العنكبوت، الآية 69', surahId: 29, verse: 69),
+  (text: 'أَلَا إِنَّ أَوْلِيَاءَ اللَّهِ لَا خَوْفٌ عَلَيْهِمْ وَلَا هُمْ يَحْزَنُونَ', source: 'سورة يونس، الآية 62', surahId: 10, verse: 62),
+  (text: 'أَلَيْسَ اللَّهُ بِكَافٍ عَبْدَهُ', source: 'سورة الزمر، الآية 36', surahId: 39, verse: 36),
+  (text: 'إِنْ يَنْصُرْكُمُ اللَّهُ فَلَا غَالِبَ لَكُمْ', source: 'سورة آل عمران، الآية 160', surahId: 3, verse: 160),
+  (text: 'وَمَنْ يُؤْمِنْ بِاللَّهِ يَهْدِ قَلْبَهُ', source: 'سورة التغابن، الآية 11', surahId: 64, verse: 11),
 ];
 
 class MithaqApp extends StatelessWidget {
@@ -464,6 +489,63 @@ class _MainShellState extends State<MainShell> {
     return '${date.day} ${months[date.month - 1]} ${date.year}';
   }
 
+  Future<void> _copyDailyInspiration(
+    ({String text, String source, int surahId, int verse}) inspiration,
+  ) async {
+    try {
+      await Clipboard.setData(
+        ClipboardData(text: '${inspiration.text}\n${inspiration.source}'),
+      );
+      if (mounted) _notice('تم نسخ قبس اليوم مع مصدره');
+    } catch (_) {
+      if (mounted) _notice('تعذّر نسخ قبس اليوم');
+    }
+  }
+
+  Future<void> _shareDailyInspiration(
+    ({String text, String source, int surahId, int verse}) inspiration,
+  ) async {
+    try {
+      await SharePlus.instance.share(
+        ShareParams(
+          title: 'قبس اليوم من ميثاق المؤمن',
+          text: '${inspiration.text}\n${inspiration.source}\n\nمن تطبيق ميثاق المؤمن',
+        ),
+      );
+    } catch (_) {
+      if (mounted) _notice('تعذّرت مشاركة قبس اليوم');
+    }
+  }
+
+  Future<void> _openDailyInspiration(
+    ({String text, String source, int surahId, int verse}) inspiration,
+  ) async {
+    try {
+      final raw = await rootBundle.loadString('assets/quran/chapters.json');
+      final decoded = jsonDecode(raw) as Map<String, dynamic>;
+      final rawChapters = decoded['chapters'] as List<dynamic>;
+      SurahInfo? match;
+      for (final rawChapter in rawChapters) {
+        if (rawChapter is! Map<String, dynamic>) continue;
+        final chapter = SurahInfo.fromJson(rawChapter);
+        if (chapter.id == inspiration.surahId) {
+          match = chapter;
+          break;
+        }
+      }
+      if (!mounted) return;
+      if (match == null) {
+        _notice('تعذّر العثور على السورة في فهرس القرآن المحلي');
+        return;
+      }
+      _pushPage(
+        SurahReaderPage(surah: match, initialVerse: inspiration.verse),
+      );
+    } catch (_) {
+      if (mounted) _notice('تعذّر فتح الآية من القرآن المحلي');
+    }
+  }
+
   Widget _homePage() {
     final dayOfYear = DateTime(_now.year, _now.month, _now.day)
         .difference(DateTime(_now.year, 1, 1)).inDays;
@@ -748,6 +830,33 @@ class _MainShellState extends State<MainShell> {
                   const Icon(Icons.menu_book_rounded, color: _muted, size: 15),
                   const SizedBox(width: 6),
                   Expanded(child: Text(inspiration.source, style: const TextStyle(color: _muted, fontSize: 12))),
+                ],
+              ),
+              const SizedBox(height: 4),
+              Row(
+                children: [
+                  TextButton.icon(
+                    onPressed: () => _openDailyInspiration(inspiration),
+                    icon: const Icon(Icons.open_in_new_rounded, size: 17),
+                    label: const Text('افتح الآية'),
+                    style: TextButton.styleFrom(
+                      foregroundColor: _gold,
+                      visualDensity: VisualDensity.compact,
+                    ),
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    tooltip: 'نسخ قبس اليوم',
+                    onPressed: () => _copyDailyInspiration(inspiration),
+                    icon: const Icon(Icons.copy_rounded, size: 19),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                  IconButton(
+                    tooltip: 'مشاركة قبس اليوم',
+                    onPressed: () => _shareDailyInspiration(inspiration),
+                    icon: const Icon(Icons.share_rounded, size: 19),
+                    visualDensity: VisualDensity.compact,
+                  ),
                 ],
               ),
             ],

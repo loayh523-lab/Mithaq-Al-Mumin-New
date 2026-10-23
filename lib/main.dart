@@ -392,9 +392,9 @@ class _MainShellState extends State<MainShell> {
               children: [
                 Row(
                   children: [
-                    const MithaqBrandMark(size: 62)
+                    const MithaqBrandMark(size: 62),
                     const SizedBox(width: 13),
-                    const Expanded(
+                    Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -538,7 +538,7 @@ class _MainShellState extends State<MainShell> {
 
   Widget _drawerGridItem(IconData icon, String title, VoidCallback onTap, {bool selected = false}) =>
       Material(
-        color: selected ? _emerald.withValues(alpha: .2) : _panel.withValues(alpha: .78),
+        color: selected ? _emerald.withValues(alpha: .16) : Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(17),
         child: InkWell(
           onTap: onTap,

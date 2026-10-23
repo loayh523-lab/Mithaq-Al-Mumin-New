@@ -22,6 +22,7 @@ import 'features/about_support_page.dart';
 import 'services/prayer_locations.dart';
 import 'services/prayer_notification_service.dart';
 import 'services/app_theme.dart';
+import 'widgets/mithaq_brand.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,7 +38,7 @@ const _ink = Color(0xFF071713);
 const _panel = Color(0xFF10251E);
 const _emerald = Color(0xFF1C8060);
 const _gold = Color(0xFFD9B66D);
-const _muted = Color(0xFF9EB5A9);
+const _muted = Color(0xFF697A70);
 
 const _dailyInspirations = <({String text, String source, int surahId, int verse})>[
   (text: 'أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ', source: 'سورة الرعد، الآية 28', surahId: 13, verse: 28),
@@ -291,7 +292,7 @@ class _MainShellState extends State<MainShell> {
       appBar: AppBar(
         title: Row(
           children: [
-            Image.asset('assets/images/mithaq_logo.jpg', width: 34, height: 42, fit: BoxFit.contain),
+            const MithaqBrandMark(size: 36),
             const SizedBox(width: 10),
             const Expanded(
               child: Text(
@@ -368,7 +369,7 @@ class _MainShellState extends State<MainShell> {
   }
 
   Widget _navigationDrawer() => Drawer(
-    backgroundColor: _ink,
+    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
     child: SafeArea(
       child: Column(
         children: [
@@ -376,10 +377,12 @@ class _MainShellState extends State<MainShell> {
             width: double.infinity,
             padding: const EdgeInsets.fromLTRB(18, 18, 18, 16),
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
+              gradient: LinearGradient(
                 begin: Alignment.topRight,
                 end: Alignment.bottomLeft,
-                colors: [Color(0xFF173C2D), Color(0xFF0B211A), _ink],
+                colors: Theme.of(context).brightness == Brightness.dark
+                    ? [const Color(0xFF173C2D), const Color(0xFF0B211A), Theme.of(context).scaffoldBackgroundColor]
+                    : [const Color(0xFFE5EFE7), const Color(0xFFF2F5EF), Theme.of(context).scaffoldBackgroundColor],
               ),
               border: Border(
                 bottom: BorderSide(color: _gold.withValues(alpha: .32)),
@@ -389,23 +392,7 @@ class _MainShellState extends State<MainShell> {
               children: [
                 Row(
                   children: [
-                    Container(
-                      width: 62,
-                      height: 62,
-                      padding: const EdgeInsets.all(3),
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(18),
-                        border: Border.all(color: _gold.withValues(alpha: .65)),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(14),
-                        child: Image.asset(
-                          'assets/images/mithaq_logo.jpg',
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    ),
+                    const MithaqBrandMark(size: 62)
                     const SizedBox(width: 13),
                     const Expanded(
                       child: Column(
@@ -416,7 +403,7 @@ class _MainShellState extends State<MainShell> {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                              color: Colors.white,
+                              color: Theme.of(context).colorScheme.onSurface,
                               fontSize: 20,
                               fontWeight: FontWeight.w900,
                             ),
@@ -441,18 +428,18 @@ class _MainShellState extends State<MainShell> {
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
                   decoration: BoxDecoration(
-                    color: Colors.black.withValues(alpha: .22),
+                    color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: .45),
                     borderRadius: BorderRadius.circular(13),
-                    border: Border.all(color: Colors.white.withValues(alpha: .06)),
+                    border: Border.all(color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: .5)),
                   ),
-                  child: const Row(
+                  child: Row(
                     children: [
-                      Icon(Icons.auto_awesome_rounded, color: _gold, size: 17),
+                      const Icon(Icons.auto_awesome_rounded, color: _gold, size: 17),
                       SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           'قرآن • دعاء • عبادة • متابعة',
-                          style: TextStyle(color: Color(0xFFDCE8E0), fontSize: 12),
+                          style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 12),
                         ),
                       ),
                     ],
@@ -517,7 +504,7 @@ class _MainShellState extends State<MainShell> {
             margin: const EdgeInsets.fromLTRB(14, 0, 14, 10),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             decoration: BoxDecoration(
-              color: _panel,
+              color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(14),
               border: Border.all(color: _gold.withValues(alpha: .16)),
             ),
@@ -561,7 +548,7 @@ class _MainShellState extends State<MainShell> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(17),
               border: Border.all(
-                color: selected ? _gold.withValues(alpha: .55) : Colors.white.withValues(alpha: .055),
+                color: selected ? _gold.withValues(alpha: .55) : Theme.of(context).colorScheme.outlineVariant.withValues(alpha: .55),
               ),
             ),
             child: Column(
@@ -574,7 +561,7 @@ class _MainShellState extends State<MainShell> {
                     color: selected ? _gold.withValues(alpha: .15) : _emerald.withValues(alpha: .16),
                     borderRadius: BorderRadius.circular(14),
                   ),
-                  child: Icon(icon, color: selected ? _gold : const Color(0xFF75D5AC), size: 23),
+                  child: Icon(icon, color: selected ? _gold : Theme.of(context).colorScheme.secondary, size: 23),
                 ),
                 const SizedBox(height: 7),
                 Text(
@@ -583,7 +570,7 @@ class _MainShellState extends State<MainShell> {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    color: selected ? Colors.white : const Color(0xFFE0EAE4),
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontSize: 10.5,
                     height: 1.25,
                     fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
@@ -672,7 +659,7 @@ class _MainShellState extends State<MainShell> {
                             : _muted.withValues(alpha: .08),
                       ),
                     ),
-                    child: Icon(icon, color: selected ? _gold : _muted, size: 21),
+                    child: Icon(icon, color: selected ? _gold : Theme.of(context).colorScheme.onSurfaceVariant, size: 21),
                   ),
                   const SizedBox(width: 11),
                   Expanded(
@@ -681,7 +668,7 @@ class _MainShellState extends State<MainShell> {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        color: selected ? Colors.white : const Color(0xFFD5E0D9),
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontSize: 13,
                         height: 1.35,
                         fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
@@ -690,7 +677,7 @@ class _MainShellState extends State<MainShell> {
                   ),
                   Icon(
                     selected ? Icons.check_circle_rounded : Icons.chevron_left_rounded,
-                    color: selected ? _gold : _muted.withValues(alpha: .65),
+                    color: selected ? _gold : Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: .8),
                     size: 18,
                   ),
                 ],
@@ -1073,7 +1060,7 @@ class _MainShellState extends State<MainShell> {
         Container(
           padding: const EdgeInsets.fromLTRB(17, 16, 17, 17),
           decoration: BoxDecoration(
-            color: _panel.withValues(alpha: .92),
+            color: Theme.of(context).colorScheme.surface.withValues(alpha: .92),
             borderRadius: BorderRadius.circular(22),
             border: Border.all(color: _gold.withValues(alpha: .27)),
           ),
@@ -1614,7 +1601,7 @@ class _TasbeehPageState extends State<TasbeehPage> {
                 child: LinearProgressIndicator(
                   value: progress < 0.0 ? 0.0 : (progress > 1.0 ? 1.0 : progress),
                   minHeight: 7,
-                  backgroundColor: _panel,
+                  backgroundColor: Theme.of(context).colorScheme.surface,
                   color: _gold,
                 ),
               ),

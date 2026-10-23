@@ -5,7 +5,6 @@ import '../services/prayer_locations.dart';
 import '../services/qibla_calculation.dart';
 
 const _qiblaGold = Color(0xFFD9B66D);
-const _qiblaPanel = Color(0xFF10251E);
 const _qiblaMuted = Color(0xFF9EB5A9);
 
 /// Live compass direction for the configured approximate Qal'at Sukar location.
@@ -110,11 +109,11 @@ class _QiblaPageState extends State<QiblaPage> {
           return const Center(child: Padding(padding: EdgeInsets.all(28), child: Column(mainAxisSize: MainAxisSize.min, children: [
             Icon(Icons.explore_off_outlined, size: 58, color: _qiblaGold), SizedBox(height: 14),
             Text('البوصلة غير متاحة', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)), SizedBox(height: 8),
-            Text('تأكد أن جهازك يحتوي على حساس بوصلة، وابتعد عن المغناطيس والأغطية المغناطيسية. جرّب تحريك الهاتف بشكل رقم 8 لمعايرة الحساس.', textAlign: TextAlign.center, style: TextStyle(color: _qiblaMuted, height: 1.6)),
+            Text('تأكد أن جهازك يحتوي على حساس بوصلة، وابتعد عن المغناطيس والأغطية المغناطيسية. جرّب تحريك الهاتف بشكل رقم 8 لمعايرة الحساس.', textAlign: TextAlign.center, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.6)),
           ])));
         }
         return ListView(padding: const EdgeInsets.all(24), children: [
-          Container(padding: const EdgeInsets.all(24), decoration: BoxDecoration(color: _qiblaPanel, borderRadius: BorderRadius.circular(28), border: Border.all(color: _qiblaGold.withValues(alpha: .3))), child: Column(children: [
+          Container(padding: const EdgeInsets.all(24), decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface, borderRadius: BorderRadius.circular(28), border: Border.all(color: _qiblaGold.withValues(alpha: .3))), child: Column(children: [
             const Text('اتجاه الكعبة المشرفة', style: TextStyle(color: _qiblaMuted)), const SizedBox(height: 6),
             Text('${_bearing.round()}° من الشمال الجغرافي', style: const TextStyle(color: _qiblaGold, fontSize: 21, fontWeight: FontWeight.bold)),
             const SizedBox(height: 4),

@@ -705,24 +705,71 @@ class _Hijri {
   }
 }
 
-List<Widget> _ramadanRows(BuildContext context, DateTime reference, double latitude, double longitude) {
+List<Widget> _ramadanRows(
+  BuildContext context,
+  DateTime reference,
+  double latitude,
+  double longitude,
+) {
   final current = _Hijri.fromGregorian(reference);
   final targetYear = current.month > 9 ? current.year + 1 : current.year;
   DateTime? start;
   final scanStart = DateTime(reference.year - 1, 1, 1);
   for (var i = 0; i < 800; i++) {
     final candidate = scanStart.add(Duration(days: i));
-    final h = _Hijri.fromGregorian(candidate);
-    if (h.year == targetYear && h.month == 9 && h.day == 1) { start = candidate; break; }
+    final hijri = _Hijri.fromGregorian(candidate);
+    if (hijri.year == targetYear && hijri.month == 9 && hijri.day == 1) {
+      start = candidate;
+      break;
+    }
   }
-  // If conversion does not find the target, keep a clearly approximate 30-day table.
-  final first = start ?? DateTime(reference.year, reference.month, reference.day);
-  return List.generate(30, (i) {
-    final d = first.add(Duration(days: i));
-    final t = SolarPrayerTimes.forDate(d, latitude, longitude, 3.0);
-    final h = _Hijri.fromGregorian(d);
-    return Card(color: Theme.of(context).colorScheme.surface, child: ListTile(dense: true, leading: CircleAvatar(backgroundColor: _gold.withValues(alpha: .15), child: Text('${i + 1}', style: TextStyle(color: _gold))), title: Text('رمضان ${h.day} — ${_dateLabel(d)}'), subtitle: Text('الإمساك/الفجر: ${formatPrayerTime12Hour(t.fajr)}  •  الإفطار التقريبي: ${formatPrayerTime12Hour(t.maghrib)}')));
-  });
+
+  if (start == null) {
+    return [
+      Padding(
+        padding: const EdgeInsets.all(16),
+        child: Text(
+          'تعذّر تحديد بداية رمضان بالتقويم الحسابي. اعتمد تقويماً محلياً موثوقاً.',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+            height: 1.6,
+          ),
+        ),
+      ),
+    ];
+  }
+
+  final rows = <Widget>[];
+  for (var i = 0; i < 30; i++) {
+    final day = start.add(Duration(days: i));
+    final hijri = _Hijri.fromGregorian(day);
+    if (hijri.year != targetYear || hijri.month != 9) break;
+
+    final times = SolarPrayerTimes.forDate(
+      day,
+      latitude,
+      longitude,
+      3.0,
+    );
+    rows.add(
+      Card(
+        color: Theme.of(context).colorScheme.surface,
+        child: ListTile(
+          dense: true,
+          leading: CircleAvatar(
+            backgroundColor: _gold.withValues(alpha: .15),
+            child: Text('${hijri.day}', style: TextStyle(color: _gold)),
+          ),
+          title: Text('رمضان ${hijri.day} — ${_dateLabel(day)}'),
+          subtitle: Text(
+            'الإمساك/الفجر: ${formatPrayerTime12Hour(times.fajr)}  •  الإفطار التقريبي: ${formatPrayerTime12Hour(times.maghrib)}',
+          ),
+        ),
+      ),
+    );
+  }
+  return rows;
 }
 
 String? _occasion(_Hijri h) {

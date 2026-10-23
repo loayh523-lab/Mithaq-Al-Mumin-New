@@ -36,7 +36,13 @@ void main() {
     );
     expect(find.text('قبس اليوم'), findsOneWidget);
     expect(find.text('افتح الآية'), findsOneWidget);
+    expect(find.byTooltip('قبس آخر'), findsOneWidget);
     expect(find.byTooltip('نسخ قبس اليوم'), findsOneWidget);
+    final originalVerse = tester.widget<Text>(find.byType(Text).first).data;
+    await tester.tap(find.byTooltip('قبس آخر'));
+    await tester.pump();
+    expect(find.text('قبس اليوم'), findsOneWidget);
+    expect(find.textContaining('سورة'), findsWidgets);
     expect(find.byTooltip('مشاركة قبس اليوم'), findsOneWidget);
 
     await tester.scrollUntilVisible(

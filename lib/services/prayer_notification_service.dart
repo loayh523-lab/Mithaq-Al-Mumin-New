@@ -13,7 +13,7 @@ class PrayerNotificationService {
   static const int _idStart = 4000;
   static const int _daysToSchedule = 30;
   // Increment this when the Android notification channel or schedule format changes.
-  static const int _scheduleRevision = 9;
+  static const int _scheduleRevision = 10;
 
   static Future<void> _initialize() async {
     if (_initialized) return;
@@ -42,7 +42,7 @@ class PrayerNotificationService {
         'إذا ظهر هذا التنبيه فقد وصل الإشعار التجريبي. افحص مستوى صوت التنبيهات إذا لم تسمع الأذان.',
         const NotificationDetails(
           android: AndroidNotificationDetails(
-            'mithaq_adhan_shabbar_v9', 'أذان الصلاة',
+            'mithaq_adhan_shabbar_v10', 'أذان الصلاة',
             channelDescription: 'أذان الصلاة من التسجيل المرفق بالتطبيق. إذا لم تسمع الصوت فتحقق من إعدادات قناة أذان الصلاة ومستوى صوت التنبيهات.',
             importance: Importance.high, priority: Priority.high,
             sound: RawResourceAndroidNotificationSound('adhan_shabbar_maalla'),
@@ -177,7 +177,7 @@ class PrayerNotificationService {
               scheduled,
               const NotificationDetails(
                 android: AndroidNotificationDetails(
-                  'mithaq_adhan_shabbar_v9',
+                  'mithaq_adhan_shabbar_v10',
                   'أذان الصلاة',
                   channelDescription: 'أذان الصلاة من التسجيل المرفق بالتطبيق. إذا لم تسمع الصوت فتحقق من إعدادات قناة أذان الصلاة ومستوى صوت التنبيهات.',
                   importance: Importance.high,

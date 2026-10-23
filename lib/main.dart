@@ -21,8 +21,17 @@ import 'features/rakah_counter_page.dart';
 import 'features/about_support_page.dart';
 import 'services/prayer_locations.dart';
 import 'services/prayer_notification_service.dart';
+import 'services/app_theme.dart';
 
-void main() => runApp(const MithaqApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  try {
+    await AppTheme.load();
+  } catch (_) {
+    // Keep the default dark appearance if local preferences cannot be read.
+  }
+  runApp(const MithaqApp());
+}
 
 const _ink = Color(0xFF071713);
 const _panel = Color(0xFF10251E);
@@ -66,57 +75,79 @@ const _dailyInspirations = <({String text, String source, int surahId, int verse
 class MithaqApp extends StatelessWidget {
   const MithaqApp({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'ميثاق المؤمن',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        useMaterial3: true,
-        brightness: Brightness.dark,
-        scaffoldBackgroundColor: _ink,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: _emerald,
-          brightness: Brightness.dark,
-          surface: _panel,
-          primary: _emerald,
-          secondary: _gold,
-        ),
-        fontFamily: 'Amiri',
-        appBarTheme: const AppBarTheme(
-          backgroundColor: _ink,
-          foregroundColor: Colors.white,
-          centerTitle: false,
-          elevation: 0,
-          scrolledUnderElevation: 0,
-        ),
-        inputDecorationTheme: InputDecorationTheme(
-          filled: true,
-          fillColor: _ink,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
-            borderSide: BorderSide(color: _muted.withValues(alpha: .24)),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
-            borderSide: BorderSide(color: _muted.withValues(alpha: .20)),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
-            borderSide: const BorderSide(color: _gold, width: 1.4),
-          ),
-        ),
-        snackBarTheme: SnackBarThemeData(
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: _panel,
-          contentTextStyle: const TextStyle(color: Colors.white),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+  ThemeData _makeTheme(bool dark) {
+    final background = dark ? _ink : const Color(0xFFF7F5EF);
+    final surface = dark ? _panel : const Color(0xFFFFFFFF);
+    final foreground = dark ? Colors.white : const Color(0xFF18352B);
+    final muted = dark ? _muted : const Color(0xFF667A70);
+    return ThemeData(
+      useMaterial3: true,
+      brightness: dark ? Brightness.dark : Brightness.light,
+      scaffoldBackgroundColor: background,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: _emerald,
+        brightness: dark ? Brightness.dark : Brightness.light,
+        surface: surface,
+        primary: _emerald,
+        secondary: _gold,
+      ),
+      fontFamily: 'Amiri',
+      appBarTheme: AppBarTheme(
+        backgroundColor: background,
+        foregroundColor: foreground,
+        centerTitle: false,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+      ),
+      cardTheme: CardThemeData(
+        color: surface,
+        elevation: 0,
+        margin: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18),
+          side: BorderSide(color: muted.withValues(alpha: .14)),
         ),
       ),
-      home: const Directionality(
-        textDirection: TextDirection.rtl,
-        child: MainShell(),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: dark ? _ink : const Color(0xFFF0F2EC),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: BorderSide(color: muted.withValues(alpha: .24)),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: BorderSide(color: muted.withValues(alpha: .20)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: const BorderSide(color: _gold, width: 1.4),
+        ),
+      ),
+      snackBarTheme: SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: surface,
+        contentTextStyle: TextStyle(color: foreground),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: AppTheme.isDark,
+      builder: (context, isDark, child) => MaterialApp(
+        title: 'ميثاق المؤمن',
+        debugShowCheckedModeBanner: false,
+        theme: _makeTheme(false),
+        darkTheme: _makeTheme(true),
+        themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
+        home: const Directionality(
+          textDirection: TextDirection.rtl,
+          child: MainShell(),
+        ),
       ),
     );
   }

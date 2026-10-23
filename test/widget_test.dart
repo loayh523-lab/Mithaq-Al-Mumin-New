@@ -348,7 +348,7 @@ void main() {
           expect(
             ordered[i],
             greaterThan(ordered[i - 1]),
-            reason: city.name + ' / ' + date.toIso8601String(),
+            reason: '${city.name} / ${date.toIso8601String()}',
           );
         }
       }
@@ -389,7 +389,7 @@ void main() {
         .toList();
     expect(imsakiyahRows.length, inInclusiveRange(29, 30));
     for (var i = 0; i < imsakiyahRows.length; i++) {
-      expect(imsakiyahRows[i], startsWith('رمضان ' + (i + 1).toString() + ' — '));
+      expect(imsakiyahRows[i], startsWith('رمضان ${i + 1} — '));
     }
 
     await tester.tap(find.text('التقويم الهجري'));

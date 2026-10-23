@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'faith_library_pages.dart';
 
-const _faithPanel = Color(0xFF10251E);
 const _faithGold = Color(0xFFD9B66D);
-const _faithMuted = Color(0xFF9EB5A9);
+const _faithMuted = Color(0xFF697A70);
 
 const _officialFiqhUrl = 'https://www.leader.ir/ar';
 const _tafsirUrl = 'https://almizan.wilayah.app/';
@@ -46,7 +45,7 @@ class FaithServicesPage extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(18),
           decoration: BoxDecoration(
-            color: _faithPanel,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(22),
             border: Border.all(color: _faithGold.withValues(alpha: .32)),
           ),
@@ -131,7 +130,7 @@ class FaithServicesPage extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: _faithPanel,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(18),
             border: Border.all(color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: .45)),
           ),
@@ -197,7 +196,7 @@ class _ServiceTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Card(
-    color: _faithPanel,
+    color: Theme.of(context).colorScheme.surface,
     margin: const EdgeInsets.only(bottom: 10),
     child: Padding(
       padding: const EdgeInsets.all(15),
@@ -275,7 +274,7 @@ class IstikharaGuidePage extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(18),
           decoration: BoxDecoration(
-            color: _faithPanel,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(20),
             border: Border.all(color: _faithGold.withValues(alpha: .3)),
           ),
@@ -333,7 +332,7 @@ class ArbaeenGuidePage extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(18),
           decoration: BoxDecoration(
-            color: _faithPanel,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(20),
             border: Border.all(color: _faithGold.withValues(alpha: .3)),
           ),
@@ -367,7 +366,7 @@ class _GuideStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Card(
-    color: _faithPanel,
+    color: Theme.of(context).colorScheme.surface,
     margin: const EdgeInsets.only(bottom: 10),
     child: Padding(
       padding: const EdgeInsets.all(15),

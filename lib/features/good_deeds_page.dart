@@ -3,7 +3,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../features/prayer_calendar_page.dart' show hijriDateLabel, hijriDateParts;
 
 const _deedGold = Color(0xFFD9B66D);
-const _deedMuted = Color(0xFF697A70);
 
 class _Deed {
   const _Deed({
@@ -249,7 +248,7 @@ class _GoodDeedsPageState extends State<GoodDeedsPage> {
       'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت', 'الأحد',
     ];
     return Scaffold(
-      appBar: AppBar(title: const Text('صالح الأعمال')),
+      appBar: AppBar(title: Text('صالح الأعمال')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -261,15 +260,15 @@ class _GoodDeedsPageState extends State<GoodDeedsPage> {
               border: Border.all(color: _deedGold.withValues(alpha: .3)),
             ),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const Text('أعمال اليوم ومصادرها', style: TextStyle(color: _deedGold, fontSize: 22, fontWeight: FontWeight.w800)),
-              const SizedBox(height: 8),
-              Text('${weekdays[today.weekday - 1]} • ${hijriDateLabel(today, correction: _hijriCorrection)}', style: const TextStyle(color: _deedMuted)),
-              const SizedBox(height: 8),
-              const Text(
+              Text('أعمال اليوم ومصادرها', style: TextStyle(color: _deedGold, fontSize: 22, fontWeight: FontWeight.w800)),
+              SizedBox(height: 8),
+              Text('${weekdays[today.weekday - 1]} • ${hijriDateLabel(today, correction: _hijriCorrection)}', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
+              SizedBox(height: 8),
+              Text(
                 'هذه أعمال مستحبة أو اقتراحات عامة وليست واجبات جديدة. أعمال رجب وشعبان ورمضان والمناسبات المعروفة تظهر بحسب التاريخ الهجري التقديري وتصحيحك المحفوظ. ثبوت الهلال قد يغيّر اليوم.',
-                style: TextStyle(color: _deedMuted, height: 1.7),
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.7),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               LinearProgressIndicator(
                 value: deeds.isEmpty ? 0 : completed / deeds.length,
                 minHeight: 8,
@@ -277,13 +276,13 @@ class _GoodDeedsPageState extends State<GoodDeedsPage> {
                 color: _deedGold,
                 borderRadius: BorderRadius.circular(20),
               ),
-              const SizedBox(height: 8),
-              Text('$completed من ${deeds.length} أعمال', style: const TextStyle(color: _deedGold, fontWeight: FontWeight.bold)),
+              SizedBox(height: 8),
+              Text('$completed من ${deeds.length} أعمال', style: TextStyle(color: _deedGold, fontWeight: FontWeight.bold)),
             ]),
           ),
-          const SizedBox(height: 14),
+          SizedBox(height: 14),
           if (_loading)
-            const Center(child: Padding(padding: EdgeInsets.all(24), child: CircularProgressIndicator(color: _deedGold)))
+            Center(child: Padding(padding: EdgeInsets.all(24), child: CircularProgressIndicator(color: _deedGold)))
           else
             ...deeds.map((deed) {
               final checked = _completed.contains(deed.id);
@@ -299,14 +298,14 @@ class _GoodDeedsPageState extends State<GoodDeedsPage> {
                       activeColor: _deedGold,
                       checkColor: Theme.of(context).colorScheme.onPrimary,
                       onChanged: (value) => _toggle(deed.id, value ?? false),
-                      title: Text(deed.title, style: const TextStyle(fontWeight: FontWeight.bold)),
-                      subtitle: Text(deed.description, style: const TextStyle(color: _deedMuted, height: 1.5)),
-                      secondary: const Icon(Icons.volunteer_activism_rounded, color: _deedGold),
+                      title: Text(deed.title, style: TextStyle(fontWeight: FontWeight.bold)),
+                      subtitle: Text(deed.description, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.5)),
+                      secondary: Icon(Icons.volunteer_activism_rounded, color: _deedGold),
                     ),
-                    const Divider(color: Color(0x223CB58B)),
-                    Text('المصدر: ${deed.source}', style: const TextStyle(color: _deedMuted, height: 1.5, fontSize: 12)),
-                    const SizedBox(height: 4),
-                    SelectableText(deed.sourceUrl, style: const TextStyle(color: _deedGold, fontSize: 11)),
+                    Divider(color: Color(0x223CB58B)),
+                    Text('المصدر: ${deed.source}', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.5, fontSize: 12)),
+                    SizedBox(height: 4),
+                    SelectableText(deed.sourceUrl, style: TextStyle(color: _deedGold, fontSize: 11)),
                   ]),
                 ),
               );

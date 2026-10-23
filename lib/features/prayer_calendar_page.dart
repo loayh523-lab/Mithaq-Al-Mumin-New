@@ -139,7 +139,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
       ] else if (tab == 1) ...[
         Text('إمساكية تقديرية — ${city.name} / العراق', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17)), const SizedBox(height: 5),
         Text('يعرض الشهر كاملاً من اليوم الأول إلى آخر يوم من رمضان المحسوب تقويمياً. الأوقات فلكية تقديرية وليست بديلاً عن إمساكية مكتب مرجعك أو الجهة المحلية المعتمدة.', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11, height: 1.5)),
-        ..._ramadanRows(date, city.latitude, city.longitude),
+        ..._ramadanRows(context, date, city.latitude, city.longitude),
       ] else if (_showAnnualCalendar) ..._annualCalendar(date.year, correction)
       else ..._monthCalendar(date, correction),
       const Divider(),
@@ -705,7 +705,7 @@ class _Hijri {
   }
 }
 
-List<Widget> _ramadanRows(DateTime reference, double latitude, double longitude) {
+List<Widget> _ramadanRows(BuildContext context, DateTime reference, double latitude, double longitude) {
   final current = _Hijri.fromGregorian(reference);
   final targetYear = current.month > 9 ? current.year + 1 : current.year;
   DateTime? start;

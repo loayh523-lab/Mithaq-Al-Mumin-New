@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-const _aboutPanel = Color(0xFF10251E);
 const _aboutGold = Color(0xFFD9B66D);
 const _aboutMuted = Color(0xFF697A70);
 const _projectUri = 'https://github.com/loayh523-lab/Mithaq-Al-Mumin-New';
@@ -148,7 +147,7 @@ class _AboutSupportPageState extends State<AboutSupportPage> {
                 ),
                 const SizedBox(height: 8),
                 const Material(
-                  color: _aboutPanel,
+                  color: Theme.of(context).colorScheme.surface,
                   child: ListTile(
                     contentPadding: EdgeInsets.zero,
                     leading: Icon(Icons.star_border_rounded, color: _aboutGold),
@@ -233,7 +232,7 @@ class _AboutSupportPageState extends State<AboutSupportPage> {
       Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: _aboutPanel,
+          color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: .45)),
         ),

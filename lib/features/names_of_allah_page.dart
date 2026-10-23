@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 const _namesGold = Color(0xFFD9B66D);
-const _namesMuted = Color(0xFF697A70);
 
 class NamesOfAllahPage extends StatefulWidget {
   const NamesOfAllahPage({super.key});
@@ -123,14 +122,14 @@ class _NamesOfAllahPageState extends State<NamesOfAllahPage> {
       .where((item) => query.isEmpty || item.name.contains(query) || item.meaning.contains(query))
       .toList();
     return Scaffold(
-      appBar: AppBar(title: const Text('أسماء الله الحسنى')),
+      appBar: AppBar(title: Text('أسماء الله الحسنى')),
       body: Column(children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
           child: Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface, borderRadius: BorderRadius.circular(18), border: Border.all(color: _namesGold.withValues(alpha: .3))),
-            child: const Text('قائمة مشهورة لأسماء الله الحسنى ومعانٍ موجزة للتدبّر. قد تختلف طريقة تعداد الأسماء وترتيبها بين المصادر.', style: TextStyle(color: _namesMuted, height: 1.7)),
+            child: Text('قائمة مشهورة لأسماء الله الحسنى ومعانٍ موجزة للتدبّر. قد تختلف طريقة تعداد الأسماء وترتيبها بين المصادر.', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.7)),
           ),
         ),
         Padding(
@@ -140,7 +139,7 @@ class _NamesOfAllahPageState extends State<NamesOfAllahPage> {
             onChanged: (_) => setState(() {}),
             decoration: InputDecoration(
               hintText: 'ابحث عن اسم أو معنى...',
-              prefixIcon: const Icon(Icons.search_rounded),
+              prefixIcon: Icon(Icons.search_rounded),
               filled: true, fillColor: Theme.of(context).colorScheme.surface,
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
             ),
@@ -150,15 +149,15 @@ class _NamesOfAllahPageState extends State<NamesOfAllahPage> {
           child: ListView.separated(
             padding: const EdgeInsets.all(16),
             itemCount: filtered.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 8),
+            separatorBuilder: (_, __) => SizedBox(height: 8),
             itemBuilder: (context, index) {
               final item = filtered[index];
               return Card(
                 color: Theme.of(context).colorScheme.surface,
                 child: ListTile(
-                  leading: CircleAvatar(backgroundColor: _namesGold.withValues(alpha: .15), child: Text(item.number.toString(), style: const TextStyle(color: _namesGold, fontSize: 12))),
-                  title: Text(item.name, style: const TextStyle(color: _namesGold, fontSize: 20, fontWeight: FontWeight.w800)),
-                  subtitle: Text(item.meaning, style: const TextStyle(color: _namesMuted, height: 1.6)),
+                  leading: CircleAvatar(backgroundColor: _namesGold.withValues(alpha: .15), child: Text(item.number.toString(), style: TextStyle(color: _namesGold, fontSize: 12))),
+                  title: Text(item.name, style: TextStyle(color: _namesGold, fontSize: 20, fontWeight: FontWeight.w800)),
+                  subtitle: Text(item.meaning, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.6)),
                 ),
               );
             },

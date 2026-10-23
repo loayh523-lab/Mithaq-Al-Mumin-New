@@ -49,7 +49,8 @@ class ShiaTextEntry {
         ? alternateName.trim()
         : title.trim();
     final genericTaqibTitle = slug.startsWith('taqib-after-salaat-') &&
-        (candidate.contains('دعاء التعقيب بعد الصلاة') ||
+        (candidate == 'تعقيبات الصلاة' ||
+            candidate.contains('دعاء التعقيب بعد الصلاة') ||
             candidate.contains('تعقيب بعد الصلاة') ||
             candidate.contains('تعقيب الصلاة'));
     if (!genericTaqibTitle) return candidate;

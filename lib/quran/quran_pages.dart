@@ -8,7 +8,6 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 
 const _emerald = Color(0xFF1C8060);
 const _gold = Color(0xFFD9B66D);
-const _muted = Color(0xFF697A70);
 
 class SurahInfo {
   const SurahInfo({required this.id, required this.name, required this.transliteration, required this.type, required this.totalVerses});
@@ -105,30 +104,30 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
             IconButton(
               tooltip: 'متابعة القراءة',
               onPressed: _resumeReading,
-              icon: const Icon(Icons.play_circle_outline_rounded, color: _gold),
+              icon: Icon(Icons.play_circle_outline_rounded, color: _gold),
             ),
             IconButton(
               tooltip: 'البحث داخل الآيات',
               onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
                 builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: QuranSearchPage()),
               )),
-              icon: const Icon(Icons.manage_search_rounded, color: _gold),
+              icon: Icon(Icons.manage_search_rounded, color: _gold),
             ),
             IconButton(
               tooltip: 'الآيات المحفوظة',
               onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
                 builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: QuranBookmarksPage()),
               )),
-              icon: const Icon(Icons.bookmarks_outlined, color: _gold),
+              icon: Icon(Icons.bookmarks_outlined, color: _gold),
             ),
           ]),
           const SizedBox(height: 5),
-          Text(_loading ? 'جارٍ تجهيز فهرس القرآن الكريم...' : '114 سورة • $verseCount آية', style: const TextStyle(color: _muted)),
+          Text(_loading ? 'جارٍ تجهيز فهرس القرآن الكريم...' : '114 سورة • $verseCount آية', style: const TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
           const SizedBox(height: 14),
           TextField(
             controller: _search, onChanged: (_) => setState(() {}),
             decoration: InputDecoration(
-              hintText: 'ابحث باسم السورة أو رقمها...', prefixIcon: const Icon(Icons.search_rounded),
+              hintText: 'ابحث باسم السورة أو رقمها...', prefixIcon: Icon(Icons.search_rounded),
               filled: true, fillColor: Theme.of(context).colorScheme.surface,
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
             ),
@@ -137,11 +136,11 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
       ),
       Expanded(
         child: _loading
-          ? const Center(child: CircularProgressIndicator(color: _gold))
+          ? Center(child: CircularProgressIndicator(color: _gold))
           : _error != null
             ? _QuranError(message: _error!, onRetry: _loadCatalog)
             : filtered.isEmpty
-              ? const Center(child: Text('ماكو سورة تطابق البحث', style: TextStyle(color: _muted)))
+              ? Center(child: Text('ماكو سورة تطابق البحث', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)))
               : ListView.separated(
                   padding: const EdgeInsets.fromLTRB(18, 8, 18, 18),
                   itemCount: filtered.length,
@@ -153,8 +152,8 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
                       child: ListTile(
                         leading: CircleAvatar(backgroundColor: _emerald.withValues(alpha: .24), child: Text('${s.id}', style: const TextStyle(color: _gold))),
                         title: Text(s.name, style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w700)),
-                        subtitle: Text('${s.type == 'meccan' ? 'مكية' : 'مدنية'} • ${s.totalVerses} آية', style: const TextStyle(color: _muted, fontSize: 12)),
-                        trailing: const Icon(Icons.chevron_left_rounded, color: _gold),
+                        subtitle: Text('${s.type == 'meccan' ? 'مكية' : 'مدنية'} • ${s.totalVerses} آية', style: const TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 12)),
+                        trailing: Icon(Icons.chevron_left_rounded, color: _gold),
                         onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
                           builder: (_) => Directionality(textDirection: TextDirection.rtl, child: SurahReaderPage(surah: s)),
                         )),
@@ -163,9 +162,9 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
                   },
                 ),
       ),
-      const Padding(
+      Padding(
         padding: EdgeInsets.fromLTRB(18, 0, 18, 8),
-        child: Text('فهرس السور محلي. نص الآيات العثماني مضمّن داخل نسخة التطبيق ويعمل دون إنترنت.', textAlign: TextAlign.center, style: TextStyle(color: _muted, fontSize: 10)),
+        child: Text('فهرس السور محلي. نص الآيات العثماني مضمّن داخل نسخة التطبيق ويعمل دون إنترنت.', textAlign: TextAlign.center, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 10)),
       ),
     ]);
   }
@@ -307,23 +306,23 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
   }
 
   @override Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('البحث في القرآن')),
+    appBar: AppBar(title: Text('البحث في القرآن')),
     body: Column(children: [
       Padding(padding: const EdgeInsets.all(16), child: TextField(
         controller: _query, textInputAction: TextInputAction.search, onSubmitted: (_) => _search(),
         decoration: InputDecoration(
           hintText: 'ابحث بكلمة من الآية...',
-          prefixIcon: const Icon(Icons.search),
-          suffixIcon: IconButton(onPressed: _search, icon: const Icon(Icons.arrow_forward_rounded)),
+          prefixIcon: Icon(Icons.search),
+          suffixIcon: IconButton(onPressed: _search, icon: Icon(Icons.arrow_forward_rounded)),
           filled: true, fillColor: Theme.of(context).colorScheme.surface,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
         ),
       )),
-      if (_message != null) Padding(padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4), child: Text(_message!, style: const TextStyle(color: _muted))),
+      if (_message != null) Padding(padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4), child: Text(_message!, style: const TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant))),
       Expanded(child: _loading
-        ? const Center(child: CircularProgressIndicator(color: _gold))
+        ? Center(child: CircularProgressIndicator(color: _gold))
         : _hits.isEmpty
-          ? const Center(child: Text('تظهر النتائج هنا', style: TextStyle(color: _muted)))
+          ? Center(child: Text('تظهر النتائج هنا', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)))
           : ListView.separated(
               padding: const EdgeInsets.all(16), itemCount: _hits.length,
               separatorBuilder: (_, __) => const SizedBox(height: 8),
@@ -393,13 +392,13 @@ class _QuranBookmarksPageState extends State<QuranBookmarksPage> {
   }
 
   @override Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('الآيات المحفوظة')),
+    appBar: AppBar(title: Text('الآيات المحفوظة')),
     body: _loading
-      ? const Center(child: CircularProgressIndicator(color: _gold))
+      ? Center(child: CircularProgressIndicator(color: _gold))
       : _error != null
         ? _QuranError(message: _error!, onRetry: _load)
         : _items.isEmpty
-          ? const Center(child: Padding(padding: EdgeInsets.all(24), child: Text('ما عندك آيات محفوظة حالياً. افتح سورة واضغط علامة الحفظ بجانب الآية.', textAlign: TextAlign.center, style: TextStyle(color: _muted, height: 1.6))))
+          ? Center(child: Padding(padding: EdgeInsets.all(24), child: Text('ما عندك آيات محفوظة حالياً. افتح سورة واضغط علامة الحفظ بجانب الآية.', textAlign: TextAlign.center, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.6))))
           : ListView.separated(
               padding: const EdgeInsets.all(16), itemCount: _items.length,
               separatorBuilder: (_, __) => const SizedBox(height: 8),
@@ -412,7 +411,7 @@ class _QuranBookmarksPageState extends State<QuranBookmarksPage> {
                     textDirection: TextDirection.rtl,
                     child: SurahReaderPage(surah: item.surah, initialVerse: item.verseNumber),
                   ))),
-                  trailing: IconButton(tooltip: 'إزالة الحفظ', onPressed: () => _remove(item), icon: const Icon(Icons.bookmark_remove_outlined, color: _muted)),
+                  trailing: IconButton(tooltip: 'إزالة الحفظ', onPressed: () => _remove(item), icon: Icon(Icons.bookmark_remove_outlined, color: Theme.of(context).colorScheme.onSurfaceVariant)),
                 ));
               },
             ),
@@ -428,11 +427,11 @@ class _QuranError extends StatelessWidget {
   Widget build(BuildContext context) => Center(child: Padding(
     padding: const EdgeInsets.all(24),
     child: Column(mainAxisSize: MainAxisSize.min, children: [
-      const Icon(Icons.error_outline_rounded, color: _gold, size: 42),
+      Icon(Icons.error_outline_rounded, color: _gold, size: 42),
       const SizedBox(height: 12),
       Text(message, textAlign: TextAlign.center),
       const SizedBox(height: 12),
-      FilledButton.icon(onPressed: onRetry, icon: const Icon(Icons.refresh_rounded), label: const Text('إعادة المحاولة')),
+      FilledButton.icon(onPressed: onRetry, icon: Icon(Icons.refresh_rounded), label: Text('إعادة المحاولة')),
     ]),
   ));
 }
@@ -570,9 +569,9 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
               SelectableText(_verses[index], textDirection: TextDirection.rtl,
                 style: const TextStyle(fontSize: 22, height: 1.9)),
               const SizedBox(height: 12),
-              const Text(
+              Text(
                 'هذه نافذة مرجعية للآية. يفتح الزر مكتبة تفسير الميزان على الإنترنت؛ اختر السورة والآية هناك. نص التفسير غير مضمّن دون اتصال في هذه النسخة.',
-                style: TextStyle(color: _muted, height: 1.7),
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.7),
               ),
               const SizedBox(height: 14),
               FilledButton.icon(
@@ -592,8 +591,8 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
                     }
                   }
                 },
-                icon: const Icon(Icons.open_in_new_rounded),
-                label: const Text('فتح مكتبة تفسير الميزان'),
+                icon: Icon(Icons.open_in_new_rounded),
+                label: Text('فتح مكتبة تفسير الميزان'),
               ),
             ],
           ),
@@ -704,7 +703,7 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
                       (prefs) => prefs.setDouble('quran_font_size', next),
                     ));
                   },
-            icon: const Icon(Icons.text_decrease_rounded),
+            icon: Icon(Icons.text_decrease_rounded),
           ),
           IconButton(
             tooltip: 'تكبير الخط',
@@ -717,7 +716,7 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
                       (prefs) => prefs.setDouble('quran_font_size', next),
                     ));
                   },
-            icon: const Icon(Icons.text_increase_rounded),
+            icon: Icon(Icons.text_increase_rounded),
           ),
           IconButton(
             tooltip: _keepScreenOn
@@ -726,7 +725,7 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
             onPressed: () => _setKeepScreenOn(!_keepScreenOn),
             icon: Icon(
               _keepScreenOn ? Icons.light_mode_rounded : Icons.light_mode_outlined,
-              color: _keepScreenOn ? _gold : _muted,
+              color: _keepScreenOn ? _gold : Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
           IconButton(
@@ -735,18 +734,18 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
               context: context,
               applicationName: 'ميثاق المؤمن',
               applicationVersion: '0.1.0',
-              children: const [
+              children: [
                 Text(
                   'النص العثماني مضمّن داخل التطبيق من مشروع dotquran/corpus الذي ينسب النص إلى Tanzil. لا يغيّر التطبيق كلمات الآيات.',
                 ),
               ],
             ),
-            icon: const Icon(Icons.info_outline_rounded),
+            icon: Icon(Icons.info_outline_rounded),
           ),
         ],
       ),
       body: _loading
-          ? const Center(
+          ? Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -772,13 +771,13 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
                           decoration: BoxDecoration(
                             color: Theme.of(context).colorScheme.surface,
                             border: Border.all(
-                              color: _muted.withValues(alpha: .3),
+                              color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: .3),
                             ),
                           ),
                           child: Text(
                             'الجزء ${_arabicDigits('${firstMeta.juz}')}',
                             style: const TextStyle(
-                              color: _muted,
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
                               fontSize: 13,
                             ),
                           ),
@@ -798,7 +797,7 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
                         children: [
                           Icon(
                             Icons.auto_awesome_rounded,
-                            color: _muted.withValues(alpha: .75),
+                            color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: .75),
                             size: 24,
                           ),
                           const SizedBox(width: 10),
@@ -817,7 +816,7 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
                           const SizedBox(width: 10),
                           Icon(
                             Icons.auto_awesome_rounded,
-                            color: _muted.withValues(alpha: .75),
+                            color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: .75),
                             size: 24,
                           ),
                         ],
@@ -894,7 +893,7 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
                                       saved
                                           ? Icons.bookmark_rounded
                                           : Icons.more_horiz_rounded,
-                                      color: saved ? _gold : _muted,
+                                      color: saved ? _gold : Theme.of(context).colorScheme.onSurfaceVariant,
                                       size: 21,
                                     ),
                                     onSelected: (action) async {
@@ -1000,7 +999,7 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
                             padding: const EdgeInsetsDirectional.fromSTEB(18, 17, 20, 17),
                             child: Row(
                               children: [
-                                const Icon(
+                                Icon(
                                   Icons.chevron_left_rounded,
                                   color: _emerald,
                                   size: 30,
@@ -1021,13 +1020,13 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
                         ),
                       ),
                     ],
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.symmetric(vertical: 18),
                       child: Text(
                         'المصدر: مشروع Tanzil عبر dotquran/corpus. نص الآيات لا يتغير. الجزء ظاهر أعلى القراءة فقط؛ أزلنا أرقام الصفحات والتقسيمات من تحت الآيات حتى تبقى القراءة واضحة.',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: _muted,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                           fontSize: 11,
                           height: 1.7,
                         ),

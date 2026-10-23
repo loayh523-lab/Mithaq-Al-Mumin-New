@@ -106,10 +106,18 @@ class _SettingsPageState extends State<SettingsPage> {
     setState(() { _cityId = id; _currentCity = PrayerLocations.byId(id); });
     try {
       await PrayerLocations.save(id);
-      await widget.onLocationChanged?.call();
-      if (_notificationsEnabled) {
-        final ok = await PrayerNotificationService.configure(enabled: true, city: PrayerLocations.byId(id));
-        if (!ok && mounted) _message('تم حفظ المدينة لكن تعذّر تحديث التذكيرات. افتح إعدادات الإشعارات وتحقق من الإذن.');
+      if (widget.onLocationChanged != null) {
+        // The parent refreshes the dashboard and reschedules reminders. Avoid
+        // rebuilding the 30-day schedule a second time from this page.
+        await widget.onLocationChanged!.call();
+      } else if (_notificationsEnabled) {
+        final ok = await PrayerNotificationService.configure(
+          enabled: true,
+          city: PrayerLocations.byId(id),
+        );
+        if (!ok && mounted) {
+          _message('تم حفظ المدينة لكن تعذّر تحديث التذكيرات. افتح إعدادات الإشعارات وتحقق من الإذن.');
+        }
       }
       if (mounted) _message('تم حفظ المدينة للمواقيت والقبلة');
     } catch (_) {
@@ -127,9 +135,14 @@ class _SettingsPageState extends State<SettingsPage> {
         return;
       }
       setState(() { _currentCity = city; _cityId = city.id; });
-      await widget.onLocationChanged?.call();
-      if (_notificationsEnabled) {
-        final ok = await PrayerNotificationService.configure(enabled: true, city: city);
+      if (widget.onLocationChanged != null) {
+        // Let the parent update prayer times and notifications exactly once.
+        await widget.onLocationChanged!.call();
+      } else if (_notificationsEnabled) {
+        final ok = await PrayerNotificationService.configure(
+          enabled: true,
+          city: city,
+        );
         if (!ok && mounted) _message('حُفظ الموقع لكن تعذّر تحديث تذكيرات الصلاة');
       }
       final accuracy = await PrayerLocations.currentLocationAccuracy();

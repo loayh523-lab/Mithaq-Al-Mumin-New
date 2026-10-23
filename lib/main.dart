@@ -2317,7 +2317,7 @@ class _PrayerTrackerPageState extends State<PrayerTrackerPage> {
               ),
             ))),
           SizedBox(height: 8),
-          Text('هذا سجلّ شخصي فقط وليس جدولاً لمواقيت الصلاة. ستُضاف المواقيت بعد اعتماد طريقة حساب جعفرية موثّقة.', style: TextStyle(color: _themeMuted(context), fontSize: 12, height: 1.7)),
+          Text('هذا سجلّ شخصي لمتابعة أداء الصلوات، وليس جدولاً للمواقيت. افتح قسم «المواقيت والتقويم» لمشاهدة الأوقات التقديرية، وقارنها بجدول مكتب مرجعك.', style: TextStyle(color: _themeMuted(context), fontSize: 12, height: 1.7)),
         ],
       ),
     );

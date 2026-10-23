@@ -892,7 +892,7 @@ class _MainShellState extends State<MainShell> {
                             Text(
                               'ميثاق المؤمن',
                               style: TextStyle(
-                                color: Colors.white,
+                                color: Theme.of(context).colorScheme.onSurface,
                                 fontSize: 20,
                                 fontWeight: FontWeight.w900,
                                 letterSpacing: .2,
@@ -901,7 +901,7 @@ class _MainShellState extends State<MainShell> {
                             SizedBox(height: 2),
                             Text(
                               'درب العبادة والطمأنينة',
-                              style: TextStyle(color: _muted, fontSize: 11),
+                              style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11),
                             ),
                           ],
                         ),

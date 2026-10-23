@@ -473,7 +473,7 @@ class _SettingsPageState extends State<SettingsPage> {
         children: [
           Text('نص القرآن العثماني: مشروع Tanzil Project عبر dotquran/corpus. فهرس السور مضمّن محلياً.', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.6)),
           SizedBox(height: 8),
-          Text('النصوص الدعائية ستُوسّع مع إظهار اسم الكتاب والباب أو الموضع المتاح؛ لا تُعرض صيغة عامة على أنها رواية مسندة.', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.6)),
+          Text('تعرض مكتبة الأدعية اسم سجل البيانات ورابطه عند توفرهما؛ وهذا لا يغني عن توثيق الكتاب الأصلي أو تخريج الرواية. الصيغ العامة لا تُعرض على أنها روايات مسندة.', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.6)),
           SizedBox(height: 8),
           Text('مواقيت الصلاة والتاريخ الهجري تقديرية حالياً، وقد تختلف باختلاف الموقع وثبوت الهلال والرأي الفقهي.', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.6)),
         ],

@@ -71,12 +71,12 @@ void main() {
     await tester.tap(find.byIcon(Icons.menu));
     await tester.pumpAndSettle();
     await tester.scrollUntilVisible(
-      find.descendant(of: find.byType(Drawer), matching: find.text('التسبيح والعداد')),
+      find.descendant(of: find.byType(Drawer), matching: find.text('التسبيح')),
       180,
       scrollable: find.descendant(of: find.byType(Drawer), matching: find.byType(Scrollable)).first,
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.descendant(of: find.byType(Drawer), matching: find.text('التسبيح والعداد')));
+    await tester.tap(find.descendant(of: find.byType(Drawer), matching: find.text('التسبيح')));
     await tester.pumpAndSettle();
     expect(find.text('التسبيح'), findsOneWidget);
     await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 250)));
@@ -110,14 +110,14 @@ void main() {
       matching: find.byType(Scrollable),
     ).first;
 
-    expect(find.text('التنقّل الأساسي'), findsOneWidget);
+    expect(find.text('الأقسام الرئيسية'), findsOneWidget);
     await tester.scrollUntilVisible(
-      find.descendant(of: find.byType(Drawer), matching: find.text('العبادة والمتابعة')),
+      find.descendant(of: find.byType(Drawer), matching: find.text('العبادات والمتابعة')),
       180,
       scrollable: drawerScroll,
     );
     await tester.pumpAndSettle();
-    expect(find.text('العبادة والمتابعة'), findsOneWidget);
+    expect(find.text('العبادات والمتابعة'), findsOneWidget);
     for (final icon in [
       Icons.bookmark_added_rounded,
       Icons.event_available_rounded,

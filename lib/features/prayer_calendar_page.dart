@@ -7,7 +7,7 @@ import '../services/prayer_locations.dart';
 const _panel = Color(0xFF10251E);
 const _calendarInk = Color(0xFF071713);
 const _gold = Color(0xFFD9B66D);
-const _muted = Color(0xFF9EB5A9);
+const _muted = Color(0xFF697A70);
 
 /// Approximate solar times for Qal'at Sukar using a configurable Jafari-style estimate.
 /// Local religious authority timetables take precedence.
@@ -322,7 +322,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
                   ? _gold
                   : occasion != null
                       ? _gold.withValues(alpha: .10)
-                      : _panel,
+                      : Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(12),
               child: InkWell(
                 borderRadius: BorderRadius.circular(12),

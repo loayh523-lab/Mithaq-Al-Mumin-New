@@ -775,23 +775,65 @@ class _MainShellState extends State<MainShell> {
                 ),
               ),
               const SizedBox(height: 12),
-              Row(
-                children: prayerRows.map((prayer) => Expanded(
-                  child: Column(
-                    children: [
-                      Text(
-                        prayer.name,
-                        style: const TextStyle(color: _muted, fontSize: 10),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: prayerRows.map((prayer) {
+                    final isNextPrayerToday =
+                        nextPrayer.at.year == _now.year &&
+                        nextPrayer.at.month == _now.month &&
+                        nextPrayer.at.day == _now.day;
+                    final isNext = isNextPrayerToday && prayer.name == nextPrayer.name;
+                    return Container(
+                      width: 76,
+                      margin: const EdgeInsetsDirectional.only(end: 8),
+                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: isNext
+                            ? _emerald.withValues(alpha: .22)
+                            : _ink.withValues(alpha: .55),
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(
+                          color: isNext
+                              ? _gold.withValues(alpha: .70)
+                              : _gold.withValues(alpha: .12),
+                        ),
                       ),
-                      const SizedBox(height: 5),
-                      Text(
-                        formatPrayerTime12Hour(prayer.time),
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            prayer.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: isNext ? _gold : _muted,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            formatPrayerTime12Hour(prayer.time),
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: isNext ? Colors.white : const Color(0xFFD8E3DC),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                          if (isNext) ...[
+                            const SizedBox(height: 4),
+                            const Text(
+                              'القادمة',
+                              style: TextStyle(color: _gold, fontSize: 9),
+                            ),
+                          ],
+                        ],
                       ),
-                    ],
-                  ),
-                )).toList(),
+                    );
+                  }).toList(),
+                ),
               ),
               const SizedBox(height: 8),
               const Text(

@@ -229,7 +229,7 @@ class _RakahCounterPageState extends State<RakahCounterPage> {
                         decoration: InputDecoration(
                           labelText: 'الصلاة',
                           filled: true,
-                          fillColor: const Color(0xFF071713),
+                          fillColor: Theme.of(context).scaffoldBackgroundColor,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(14),
                           ),
@@ -322,7 +322,7 @@ class _RakahCounterPageState extends State<RakahCounterPage> {
                           value: progress,
                           minHeight: 9,
                           color: _rakahGold,
-                          backgroundColor: const Color(0xFF071713),
+                          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                         ),
                       ),
                       const SizedBox(height: 18),

@@ -12,6 +12,8 @@ class PrayerNotificationService {
   static bool _initialized = false;
   static const int _idStart = 4000;
   static const int _daysToSchedule = 30;
+  // Increment this when the Android notification channel or schedule format changes.
+  static const int _scheduleRevision = 6;
 
   static Future<void> _initialize() async {
     if (_initialized) return;
@@ -40,7 +42,7 @@ class PrayerNotificationService {
         'إذا ظهر هذا التنبيه فقد وصل الإشعار التجريبي. افحص مستوى صوت التنبيهات إذا لم تسمع الأذان.',
         const NotificationDetails(
           android: AndroidNotificationDetails(
-            'mithaq_adhan_shabbar_v5', 'أذان الصلاة',
+            'mithaq_adhan_shabbar_v6', 'أذان الصلاة',
             channelDescription: 'صوت تنبيه الصلاة المرفق بالتطبيق؛ لم يتم التحقق من نسبته إلى جهة أو قارئ معين',
             importance: Importance.high, priority: Priority.high,
             sound: RawResourceAndroidNotificationSound('adhan_shabbar_maalla'),
@@ -61,6 +63,11 @@ class PrayerNotificationService {
     try {
       await _initialize();
       final prefs = await SharedPreferences.getInstance();
+      // Android persists notification-channel settings across upgrades. Rebuild old
+      // schedules once so alarms move from the legacy sound channel to the new one.
+      if (prefs.getInt('prayer_schedule_revision') != _scheduleRevision) {
+        return await configure(enabled: true, city: city);
+      }
       if (defaultTargetPlatform == TargetPlatform.android) {
         final android = _plugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
         final enabled = await android?.areNotificationsEnabled();
@@ -170,7 +177,7 @@ class PrayerNotificationService {
               scheduled,
               const NotificationDetails(
                 android: AndroidNotificationDetails(
-                  'mithaq_adhan_shabbar_v5',
+                  'mithaq_adhan_shabbar_v6',
                   'أذان الصلاة',
                   channelDescription: 'صوت تنبيه الصلاة المرفق بالتطبيق؛ لم يتم التحقق من نسبته إلى جهة أو قارئ معين',
                   importance: Importance.high,
@@ -216,6 +223,7 @@ class PrayerNotificationService {
         await prefs.setBool('prayer_notifications_enabled', false);
         return false;
       }
+      await prefs.setInt('prayer_schedule_revision', _scheduleRevision);
       await prefs.setBool('prayer_notifications_enabled', true);
       return true;
     } catch (error, stackTrace) {

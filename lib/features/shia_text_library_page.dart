@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const _shiaGold = Color(0xFFD9B66D);
-const _shiaMuted = Color(0xFF697A70);
 
 class ShiaTextLine {
   const ShiaTextLine({required this.index, required this.kind, required this.text});
@@ -337,7 +336,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
           });
         }
         if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator(color: _shiaGold));
+          return Center(child: CircularProgressIndicator(color: _shiaGold));
         }
         final data = snapshot.data!;
         final filtered = data.entries.where((entry) {
@@ -361,20 +360,20 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
               border: Border.all(color: _shiaGold.withValues(alpha: .28)),
             ),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const Text('مكتبة الأدعية والزيارات', style: TextStyle(color: _shiaGold, fontSize: 20, fontWeight: FontWeight.w800)),
+              Text('مكتبة الأدعية والزيارات', style: TextStyle(color: _shiaGold, fontSize: 20, fontWeight: FontWeight.w800)),
               const SizedBox(height: 6),
               Text(
                 _sahifaOnly
                     ? '${data.entries.length} نصاً محفوظاً من الصحيفة السجادية والمناجيات'
                     : '${data.entries.length} نصاً • $sahifaCount صحيفة ومناجاة • $ziyaratCount زيارة • $dailyCount يومي • $taqibatCount تعقيبات',
-                style: const TextStyle(color: _shiaMuted, height: 1.5),
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.5),
               ),
               const SizedBox(height: 6),
               Text(
                 _sahifaOnly
                     ? 'الصحيفة السجادية والمناجيات محفوظة هنا بقسم مستقل ولا تدخل ضمن مجموعة الـ١١٠ المختارة.'
                     : 'تصفح الصحيفة والمناجيات والأدعية اليومية والعامة والزيارات وأعمال المناسبات من مكتبة واحدة.',
-                style: const TextStyle(color: _shiaMuted, fontSize: 11, height: 1.5),
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11, height: 1.5),
               ),
             ]),
           ),
@@ -417,16 +416,16 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
                   child: Padding(
                     padding: const EdgeInsets.all(24),
                     child: Column(mainAxisSize: MainAxisSize.min, children: [
-                      const Text(
+                      Text(
                         'ماكو نصوص ضمن هذا القسم في مصدر الأدعية الحالي.',
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: _shiaMuted, height: 1.6),
+                        style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.6),
                       ),
                       const SizedBox(height: 8),
-                      const Text(
+                      Text(
                         'جرّب البحث باسم الدعاء أو اختر قسماً آخر من الأقسام المعروضة.',
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: _shiaMuted, fontSize: 12, height: 1.6),
+                        style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 12, height: 1.6),
                       ),
                     ]),
                   ),
@@ -445,7 +444,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
                           child: Icon(entry.isSahifa ? Icons.menu_book_rounded : Icons.auto_awesome_rounded, color: _shiaGold),
                         ),
                         title: Text(entry.displayTitle, style: const TextStyle(fontWeight: FontWeight.bold)),
-                        subtitle: Text('${entry.isSahifa ? 'الصحيفة السجادية' : 'دعاء / زيارة'} • $arabicLineCount أسطر عربية', style: const TextStyle(color: _shiaMuted)),
+                        subtitle: Text('${entry.isSahifa ? 'الصحيفة السجادية' : 'دعاء / زيارة'} • $arabicLineCount أسطر عربية', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
                         trailing: const Icon(Icons.chevron_left_rounded, color: _shiaGold),
                         onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
                           builder: (_) => Directionality(textDirection: TextDirection.rtl, child: ShiaTextReaderPage(entry: entry)),
@@ -457,7 +456,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(12, 0, 12, 10),
-            child: Text('المصدر: ${data.sourceProject} • ${data.license}', textAlign: TextAlign.center, style: const TextStyle(color: _shiaMuted, fontSize: 10)),
+            child: Text('المصدر: ${data.sourceProject} • ${data.license}', textAlign: TextAlign.center, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 10)),
           ),
         ]);
       },
@@ -567,7 +566,7 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
             onPressed: _favoriteLoaded ? _toggleFavorite : null,
             icon: Icon(
               _isFavorite ? Icons.star_rounded : Icons.star_border_rounded,
-              color: _isFavorite ? _shiaGold : _shiaMuted,
+              color: _isFavorite ? _shiaGold : Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
           IconButton(
@@ -593,17 +592,17 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
           child: Column(children: [
             const Align(
               alignment: AlignmentDirectional.centerStart,
-              child: Text('النص العربي', style: TextStyle(color: _shiaMuted, fontWeight: FontWeight.w600)),
+              child: Text('النص العربي', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontWeight: FontWeight.w600)),
             ),
             Row(children: [
               const Icon(Icons.text_fields_rounded, color: _shiaGold),
               Expanded(child: Slider(value: _fontSize, min: 16, max: 34, divisions: 9, label: _fontSize.round().toString(), onChanged: (v) => setState(() => _fontSize = v), activeColor: _shiaGold)),
-              Text('${_fontSize.round()}', style: const TextStyle(color: _shiaMuted)),
+              Text('${_fontSize.round()}', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
             ]),
           ]),
         ),
         Expanded(child: lines.isEmpty
-          ? const Center(child: Text('لا توجد أسطر ضمن هذا الخيار.', style: TextStyle(color: _shiaMuted)))
+          ? Center(child: Text('لا توجد أسطر ضمن هذا الخيار.', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)))
           : ListView(
               padding: const EdgeInsets.fromLTRB(20, 8, 20, 30),
               children: [
@@ -633,13 +632,13 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
                   );
                 }),
                 const Divider(color: Color(0x334A7562)),
-                const Text('هذا النص منقول من سجلّ البيانات المشار إليه أدناه. قد تختلف الضبطات أو ترتيب الفقرات بين الطبعات.', style: TextStyle(color: _shiaMuted, height: 1.7, fontSize: 11)),
+                Text('هذا النص منقول من سجلّ البيانات المشار إليه أدناه. قد تختلف الضبطات أو ترتيب الفقرات بين الطبعات.', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.7, fontSize: 11)),
                 if (widget.entry.sourceReference.isNotEmpty) ...[
                   const SizedBox(height: 6),
                   SelectableText(
                     'المرجع: ${widget.entry.sourceReference}',
                     textDirection: TextDirection.rtl,
-                    style: const TextStyle(color: _shiaMuted, fontSize: 11, height: 1.6),
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11, height: 1.6),
                   ),
                 ],
                 if (widget.entry.sourceUrl.isNotEmpty) ...[
@@ -647,7 +646,7 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
                   SelectableText(
                     'رابط بيانات المصدر: ${widget.entry.sourceUrl}',
                     textDirection: TextDirection.ltr,
-                    style: const TextStyle(color: _shiaMuted, fontSize: 10),
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 10),
                   ),
                 ],
               ],
@@ -669,11 +668,11 @@ Widget _shiaError(VoidCallback retry) => Center(
     child: Column(mainAxisSize: MainAxisSize.min, children: [
       const Icon(Icons.error_outline_rounded, color: _shiaGold, size: 42),
       const SizedBox(height: 12),
-      const Text('ما قدرنا نحمّل مكتبة الأدعية', style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold)),
+      Text('ما قدرنا نحمّل مكتبة الأدعية', style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold)),
       const SizedBox(height: 8),
-      const Text('قد يكون ملف المحتوى غير موجود في هذه النسخة. أعد المحاولة أو ثبّت نسخة مبنية بملفات البيانات.', textAlign: TextAlign.center, style: TextStyle(color: _shiaMuted, height: 1.6)),
+      Text('قد يكون ملف المحتوى غير موجود في هذه النسخة. أعد المحاولة أو ثبّت نسخة مبنية بملفات البيانات.', textAlign: TextAlign.center, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.6)),
       const SizedBox(height: 16),
-      FilledButton.icon(onPressed: retry, icon: const Icon(Icons.refresh_rounded), label: const Text('إعادة المحاولة')),
+      FilledButton.icon(onPressed: retry, icon: const Icon(Icons.refresh_rounded), label: Text('إعادة المحاولة')),
     ]),
   ),
 );

@@ -5,7 +5,6 @@ import '../services/prayer_locations.dart';
 import '../services/qibla_calculation.dart';
 
 const _qiblaGold = Color(0xFFD9B66D);
-const _qiblaMuted = Color(0xFF9EB5A9);
 
 /// Live compass direction for the configured approximate Qal'at Sukar location.
 class QiblaPage extends StatefulWidget {
@@ -90,14 +89,14 @@ class _QiblaPageState extends State<QiblaPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(
-      title: const Text('اتجاه القبلة'),
+      title: Text('اتجاه القبلة'),
       actions: [
         IconButton(
           tooltip: 'تحديث الموقع الدقيق',
           onPressed: _gpsBusy ? null : _refreshLocation,
           icon: _gpsBusy
-            ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
-            : const Icon(Icons.my_location_rounded),
+            ? SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+            : Icon(Icons.my_location_rounded),
         ),
       ],
     ),
@@ -106,7 +105,7 @@ class _QiblaPageState extends State<QiblaPage> {
       builder: (context, snapshot) {
         final heading = snapshot.data?.heading;
         if (heading == null) {
-          return const Center(child: Padding(padding: EdgeInsets.all(28), child: Column(mainAxisSize: MainAxisSize.min, children: [
+          return Center(child: Padding(padding: EdgeInsets.all(28), child: Column(mainAxisSize: MainAxisSize.min, children: [
             Icon(Icons.explore_off_outlined, size: 58, color: _qiblaGold), SizedBox(height: 14),
             Text('البوصلة غير متاحة', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)), SizedBox(height: 8),
             Text('تأكد أن جهازك يحتوي على حساس بوصلة، وابتعد عن المغناطيس والأغطية المغناطيسية. جرّب تحريك الهاتف بشكل رقم 8 لمعايرة الحساس.', textAlign: TextAlign.center, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.6)),
@@ -114,11 +113,11 @@ class _QiblaPageState extends State<QiblaPage> {
         }
         return ListView(padding: const EdgeInsets.all(24), children: [
           Container(padding: const EdgeInsets.all(24), decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface, borderRadius: BorderRadius.circular(28), border: Border.all(color: _qiblaGold.withValues(alpha: .3))), child: Column(children: [
-            const Text('اتجاه الكعبة المشرفة', style: TextStyle(color: _qiblaMuted)), const SizedBox(height: 6),
-            Text('${_bearing.round()}° من الشمال الجغرافي', style: const TextStyle(color: _qiblaGold, fontSize: 21, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 4),
-            Text(_declinationLabel, textAlign: TextAlign.center, style: const TextStyle(color: _qiblaMuted, fontSize: 12)),
-            const SizedBox(height: 28),
+            Text('اتجاه الكعبة المشرفة', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)), SizedBox(height: 6),
+            Text('${_bearing.round()}° من الشمال الجغرافي', style: TextStyle(color: _qiblaGold, fontSize: 21, fontWeight: FontWeight.bold)),
+            SizedBox(height: 4),
+            Text(_declinationLabel, textAlign: TextAlign.center, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 12)),
+            SizedBox(height: 28),
             SizedBox(
               width: 250,
               height: 250,
@@ -126,26 +125,26 @@ class _QiblaPageState extends State<QiblaPage> {
                 angle: -heading * math.pi / 180,
                 child: Stack(alignment: Alignment.center, children: [
                   Container(decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: _qiblaGold.withValues(alpha: .5), width: 2))),
-                  const Positioned(top: 12, child: Text('شمال', style: TextStyle(color: _qiblaMuted, fontSize: 11, fontWeight: FontWeight.bold))),
-                  const Positioned(bottom: 12, child: Text('جنوب', style: TextStyle(color: _qiblaMuted, fontSize: 11))),
-                  const Positioned(left: 8, child: Text('غرب', style: TextStyle(color: _qiblaMuted, fontSize: 11))),
-                  const Positioned(right: 8, child: Text('شرق', style: TextStyle(color: _qiblaMuted, fontSize: 11))),
-                  Transform.rotate(angle: _magneticBearing * math.pi / 180, child: const Icon(Icons.navigation_rounded, size: 120, color: _qiblaGold)),
+                  Positioned(top: 12, child: Text('شمال', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11, fontWeight: FontWeight.bold))),
+                  Positioned(bottom: 12, child: Text('جنوب', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11))),
+                  Positioned(left: 8, child: Text('غرب', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11))),
+                  Positioned(right: 8, child: Text('شرق', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11))),
+                  Transform.rotate(angle: _magneticBearing * math.pi / 180, child: Icon(Icons.navigation_rounded, size: 120, color: _qiblaGold)),
                   Container(width: 16, height: 16, decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle)),
                 ]),
               ),
             ),
-            const SizedBox(height: 20), Text('اتجاه الهاتف: ${heading.round()}°', style: const TextStyle(color: _qiblaMuted)),
+            SizedBox(height: 20), Text('اتجاه الهاتف: ${heading.round()}°', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
           ])),
-          const SizedBox(height: 18),
+          SizedBox(height: 18),
           Text(
             'الموقع المعتمد: ${_city.name} — ${_city.id == 'current_location' ? 'GPS من الجهاز' : 'إحداثيات مدينة تقريبية'}${_gpsAccuracy == null ? '' : ' (دقة GPS نحو ${_gpsAccuracy!.round()} م)'}. يُصحّح اتجاه السهم بفرق الشمال المغناطيسي وفق نموذج WMM2025 المحلي. دقة القراءة تعتمد أيضاً على حساس الهاتف ومعايرته؛ ابتعد عن المغناطيس والمعادن وحرّك الهاتف بشكل رقم 8.',
-            style: const TextStyle(color: _qiblaMuted, height: 1.6, fontSize: 12),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.6, fontSize: 12),
           ),
           if (_locationMessage != null)
             Padding(
               padding: const EdgeInsets.only(top: 8),
-              child: Text(_locationMessage!, style: const TextStyle(color: _qiblaGold, height: 1.5)),
+              child: Text(_locationMessage!, style: TextStyle(color: _qiblaGold, height: 1.5)),
             ),
         ]);
       },

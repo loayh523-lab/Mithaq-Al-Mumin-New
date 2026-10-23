@@ -1,5 +1,5 @@
-/// Small starter content collection for Mithaq Al-Mumin.
-/// Keep quotations short and add a precise source before expanding this file.
+/// Curated short daily adhkar and Quranic invocations.
+/// General formulas are explicitly labelled and are not presented as sourced narrations.
 class ReligiousText {
   const ReligiousText({
     required this.title,
@@ -25,7 +25,7 @@ const dailyDhikr = <ReligiousText>[
     title: 'الصلاة على محمد وآل محمد',
     text: 'اللهم صل على محمد وآل محمد',
     source: 'الصلاة على النبي وآله',
-    note: 'ذكر عام؛ ستضاف الإحالات التفصيلية عند توثيق مكتبة الروايات.',
+    note: 'صيغة عامة للصلاة على النبي وآله، ولا تُعرض هنا بوصفها نص رواية مسندة.',
   ),
   ReligiousText(
     title: 'التسبيح',
@@ -37,7 +37,7 @@ const dailyDhikr = <ReligiousText>[
     title: 'الحوقلة',
     text: 'لا حول ولا قوة إلا بالله العلي العظيم',
     source: 'صيغة ذكر عامة',
-    note: 'ذكر عام؛ لا ينسبه التطبيق هنا إلى رواية محددة.',
+    note: 'صيغة ذكر عامة، ولا ينسبها التطبيق هنا إلى رواية محددة.',
   ),
   ReligiousText(
     title: 'التهليل',

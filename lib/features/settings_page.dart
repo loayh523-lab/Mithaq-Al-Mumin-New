@@ -8,7 +8,7 @@ import '../services/app_theme.dart';
 
 const _settingsPanel = Color(0xFF10251E);
 const _settingsGold = Color(0xFFD9B66D);
-const _settingsMuted = Color(0xFF9EB5A9);
+const _settingsMuted = Color(0xFF697A70);
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key, this.onLocationChanged});

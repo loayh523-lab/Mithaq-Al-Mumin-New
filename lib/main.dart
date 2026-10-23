@@ -137,6 +137,7 @@ class _MainShellState extends State<MainShell> {
   int _hijriCorrection = 0;
   bool _dailyTaskDone = false;
   String _dailyTaskKey = '';
+  int _inspirationOffset = 0;
 
   static const _dailyTasks = <String>[
     'اقرأ صفحة من القرآن الكريم بتدبّر',
@@ -551,7 +552,7 @@ class _MainShellState extends State<MainShell> {
     final dayOfYear = DateTime(_now.year, _now.month, _now.day)
         .difference(DateTime(_now.year, 1, 1)).inDays;
     final dailyTask = _dailyTasks[dayOfYear % _dailyTasks.length];
-    final inspiration = _dailyInspirations[dayOfYear % _dailyInspirations.length];
+    final inspiration = _dailyInspirations[(dayOfYear + _inspirationOffset) % _dailyInspirations.length];
     final occasion = hijriOccasionLabel(_now, correction: _hijriCorrection);
     final prayerTimes = SolarPrayerTimes.forDate(
       _now, _prayerCity.latitude, _prayerCity.longitude, 3.0,
@@ -846,6 +847,14 @@ class _MainShellState extends State<MainShell> {
                     ),
                   ),
                   const Spacer(),
+                  IconButton(
+                    tooltip: 'قبس آخر',
+                    onPressed: () => setState(() {
+                      _inspirationOffset = (_inspirationOffset + 1) % _dailyInspirations.length;
+                    }),
+                    icon: const Icon(Icons.refresh_rounded, size: 19),
+                    visualDensity: VisualDensity.compact,
+                  ),
                   IconButton(
                     tooltip: 'نسخ قبس اليوم',
                     onPressed: () => _copyDailyInspiration(inspiration),

@@ -235,7 +235,7 @@ class _AboutSupportPageState extends State<AboutSupportPage> {
         decoration: BoxDecoration(
           color: _aboutPanel,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.white.withValues(alpha: .05)),
+          border: Border.all(color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: .45)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

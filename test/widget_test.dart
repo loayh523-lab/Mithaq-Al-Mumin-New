@@ -754,32 +754,3 @@ void main() {
   });
 
 }
-).hasMatch(label), isTrue, reason: label);
-      final parts = label.split(':').map(int.parse).toList();
-      expect(parts[0], inInclusiveRange(0, 23));
-      expect(parts[1], inInclusiveRange(0, 59));
-      return parts[0] * 60 + parts[1];
-    }
-
-    for (final city in PrayerLocations.cities) {
-      for (final date in [DateTime(2026, 1, 15), DateTime(2026, 6, 15), DateTime(2026, 10, 24)]) {
-        final times = SolarPrayerTimes.forDate(date, city.latitude, city.longitude, 3.0);
-        final ordered = [
-          times.fajr,
-          times.sunrise,
-          times.noon,
-          times.asr,
-          times.sunset,
-          times.maghrib,
-          times.isha,
-        ].map(minutes).toList();
-        for (var i = 1; i < ordered.length; i++) {
-          expect(
-            ordered[i],
-            greaterThan(ordered[i - 1]),
-            reason: '${city.name} / ${date.toIso8601String()} times must be chronological',
-          );
-        }
-      }
-    }
-  });

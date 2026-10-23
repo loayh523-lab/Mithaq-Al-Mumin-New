@@ -632,11 +632,11 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
                   );
                 }),
                 const Divider(color: Color(0x334A7562)),
-                Text('هذا النص منقول من سجلّ البيانات المشار إليه أدناه. قد تختلف الضبطات أو ترتيب الفقرات بين الطبعات.', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.7, fontSize: 11)),
+                Text('هذا النص منقول من قاعدة البيانات المذكورة أدناه. رقم السجل والرابط يحدّدان موضعه في مجموعة البيانات، ولا يغنيان عن مراجعة الكتاب الأصلي وتوثيق الرواية. قد تختلف الضبطات أو ترتيب الفقرات بين الطبعات.', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.7, fontSize: 11)),
                 if (widget.entry.sourceReference.isNotEmpty) ...[
                   const SizedBox(height: 6),
                   SelectableText(
-                    'المرجع: ${widget.entry.sourceReference}',
+                    'موضع السجل في قاعدة البيانات: ${widget.entry.sourceReference}',
                     textDirection: TextDirection.rtl,
                     style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11, height: 1.6),
                   ),
@@ -644,7 +644,7 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
                 if (widget.entry.sourceUrl.isNotEmpty) ...[
                   const SizedBox(height: 6),
                   SelectableText(
-                    'رابط بيانات المصدر: ${widget.entry.sourceUrl}',
+                    'رابط قاعدة البيانات: ${widget.entry.sourceUrl}',
                     textDirection: TextDirection.ltr,
                     style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 10),
                   ),

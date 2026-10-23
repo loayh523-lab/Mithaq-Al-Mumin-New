@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'shia_text_library_page.dart';
 
-const _favoritesPanel = Color(0xFF10251E);
 const _favoritesGold = Color(0xFFD9B66D);
-const _favoritesMuted = Color(0xFF9EB5A9);
+const _favoritesMuted = Color(0xFF697A70);
 
 class FavoritesPage extends StatefulWidget {
   const FavoritesPage({super.key});
@@ -169,7 +168,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
                         itemBuilder: (context, index) {
                           final entry = _entries[index];
                           return Card(
-                            color: _favoritesPanel,
+                            color: Theme.of(context).colorScheme.surface,
                             child: ListTile(
                               leading: const Icon(Icons.star_rounded,
                                   color: _favoritesGold),

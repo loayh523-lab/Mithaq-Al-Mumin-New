@@ -108,12 +108,24 @@ class PrayerNotificationService {
   }) async {
     try {
       await _initialize();
+      final prefs = await SharedPreferences.getInstance();
       var scheduleMode = AndroidScheduleMode.inexactAllowWhileIdle;
       if (defaultTargetPlatform == TargetPlatform.android) {
         final android = _plugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
         final granted = await android?.requestNotificationsPermission();
         final notificationsEnabled = await android?.areNotificationsEnabled();
         if (enabled && (granted == false || notificationsEnabled == false)) {
+          // Do not leave a stale "enabled" state when Android denies notifications.
+          // Cancel our pending reminders as well, so a later permission change can
+          // rebuild a clean schedule through ensureScheduled().
+          final pendingOnDenied = await _plugin.pendingNotificationRequests();
+          for (final request in pendingOnDenied) {
+            if (request.id >= _idStart &&
+                request.id < _idStart + _daysToSchedule * 10) {
+              await _plugin.cancel(request.id);
+            }
+          }
+          await prefs.setBool('prayer_notifications_enabled', false);
           return false;
         }
         var canScheduleExact = false;
@@ -140,9 +152,12 @@ class PrayerNotificationService {
           await _plugin.cancel(request.id);
         }
       }
-      if (!enabled) return true;
+      if (!enabled) {
+        await prefs.setBool('prayer_notifications_enabled', false);
+        await prefs.setInt('prayer_schedule_revision', _scheduleRevision);
+        return true;
+      }
 
-      final prefs = await SharedPreferences.getInstance();
       const prayerLabels = ['الفجر', 'الظهر', 'العصر', 'المغرب', 'العشاء'];
       const prayerKeys = ['fajr', 'noon', 'asr', 'maghrib', 'isha'];
       final prayerEnabled = <bool>[

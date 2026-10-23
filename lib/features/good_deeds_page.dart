@@ -274,7 +274,7 @@ class _GoodDeedsPageState extends State<GoodDeedsPage> {
               LinearProgressIndicator(
                 value: deeds.isEmpty ? 0 : completed / deeds.length,
                 minHeight: 8,
-                backgroundColor: Colors.black26,
+                backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
                 color: _deedGold,
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -298,7 +298,7 @@ class _GoodDeedsPageState extends State<GoodDeedsPage> {
                       contentPadding: EdgeInsets.zero,
                       value: checked,
                       activeColor: _deedGold,
-                      checkColor: Colors.black,
+                      checkColor: Theme.of(context).colorScheme.onPrimary,
                       onChanged: (value) => _toggle(deed.id, value ?? false),
                       title: Text(deed.title, style: const TextStyle(fontWeight: FontWeight.bold)),
                       subtitle: Text(deed.description, style: const TextStyle(color: _deedMuted, height: 1.5)),

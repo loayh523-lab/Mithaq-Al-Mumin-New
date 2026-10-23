@@ -96,7 +96,7 @@ class _AboutSupportPageState extends State<AboutSupportPage> {
                   ),
                   SizedBox(height: 12),
                   Text(
-                    'الإصدار 0.1.0+1 • نسخة تطويرية',
+                    'الإصدار 0.2.0+3 • نسخة تطويرية',
                     style: TextStyle(color: _aboutGold, fontSize: 12),
                   ),
                 ],

@@ -1024,9 +1024,9 @@ class _MainShellState extends State<MainShell> {
                 ],
               ),
               const SizedBox(height: 4),
-              Row(
-                children: [
-                  TextButton.icon(
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final openVerseButton = TextButton.icon(
                     onPressed: () => _openDailyInspiration(inspiration),
                     icon: const Icon(Icons.open_in_new_rounded, size: 17),
                     label: const Text('افتح الآية'),
@@ -1034,29 +1034,55 @@ class _MainShellState extends State<MainShell> {
                       foregroundColor: _gold,
                       visualDensity: VisualDensity.compact,
                     ),
-                  ),
-                  const Spacer(),
-                  IconButton(
-                    tooltip: 'قبس آخر',
-                    onPressed: () => setState(() {
-                      _inspirationOffset = (_inspirationOffset + 1) % _dailyInspirations.length;
-                    }),
-                    icon: const Icon(Icons.refresh_rounded, size: 19),
-                    visualDensity: VisualDensity.compact,
-                  ),
-                  IconButton(
-                    tooltip: 'نسخ قبس اليوم',
-                    onPressed: () => _copyDailyInspiration(inspiration),
-                    icon: const Icon(Icons.copy_rounded, size: 19),
-                    visualDensity: VisualDensity.compact,
-                  ),
-                  IconButton(
-                    tooltip: 'مشاركة قبس اليوم',
-                    onPressed: () => _shareDailyInspiration(inspiration),
-                    icon: const Icon(Icons.share_rounded, size: 19),
-                    visualDensity: VisualDensity.compact,
-                  ),
-                ],
+                  );
+                  final verseActions = Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        tooltip: 'قبس آخر',
+                        onPressed: () => setState(() {
+                          _inspirationOffset = (_inspirationOffset + 1) % _dailyInspirations.length;
+                        }),
+                        icon: const Icon(Icons.refresh_rounded, size: 19),
+                        visualDensity: VisualDensity.compact,
+                      ),
+                      IconButton(
+                        tooltip: 'نسخ قبس اليوم',
+                        onPressed: () => _copyDailyInspiration(inspiration),
+                        icon: const Icon(Icons.copy_rounded, size: 19),
+                        visualDensity: VisualDensity.compact,
+                      ),
+                      IconButton(
+                        tooltip: 'مشاركة قبس اليوم',
+                        onPressed: () => _shareDailyInspiration(inspiration),
+                        icon: const Icon(Icons.share_rounded, size: 19),
+                        visualDensity: VisualDensity.compact,
+                      ),
+                    ],
+                  );
+                  if (constraints.maxWidth < 310) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Align(
+                          alignment: AlignmentDirectional.centerStart,
+                          child: openVerseButton,
+                        ),
+                        Align(
+                          alignment: AlignmentDirectional.centerEnd,
+                          child: verseActions,
+                        ),
+                      ],
+                    );
+                  }
+                  return Row(
+                    children: [
+                      openVerseButton,
+                      const Spacer(),
+                      verseActions,
+                    ],
+                  );
+                },
               ),
             ],
           ),

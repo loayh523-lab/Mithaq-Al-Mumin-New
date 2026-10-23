@@ -488,7 +488,7 @@ class _SettingsPageState extends State<SettingsPage> {
         ],
       ),
       const SizedBox(height: 14),
-      const Center(child: Text('ميثاق المؤمن • إصدار التطوير 0.1.0', style: TextStyle(color: _settingsMuted, fontSize: 11))),
+      const Center(child: Text('ميثاق المؤمن • إصدار التطوير 0.2.0', style: TextStyle(color: _settingsMuted, fontSize: 11))),
     ]);
   }
 

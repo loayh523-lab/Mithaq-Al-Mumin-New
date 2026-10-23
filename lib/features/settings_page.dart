@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/prayer_locations.dart';
 import '../services/prayer_notification_service.dart';
+import '../services/app_theme.dart';
 
 const _settingsPanel = Color(0xFF10251E);
 const _settingsGold = Color(0xFFD9B66D);
@@ -279,6 +280,45 @@ class _SettingsPageState extends State<SettingsPage> {
       const SizedBox(height: 5),
       const Text('خصّص التطبيق بما يناسبك، وتُحفظ هذه الخيارات على جهازك.', style: TextStyle(color: _settingsMuted, height: 1.6)),
       const SizedBox(height: 18),
+      _section(
+        icon: Icons.palette_outlined,
+        title: 'مظهر التطبيق',
+        children: [
+          ValueListenableBuilder<bool>(
+            valueListenable: AppTheme.isDark,
+            builder: (context, isDark, child) => SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              value: isDark,
+              activeThumbColor: _settingsGold,
+              secondary: Icon(
+                isDark ? Icons.dark_mode_rounded : Icons.light_mode_rounded,
+                color: _settingsGold,
+              ),
+              title: Text(isDark ? 'المظهر الداكن' : 'المظهر الفاتح'),
+              subtitle: Text(
+                isDark
+                    ? 'الفحمي مع الأخضر الزمردي والذهبي'
+                    : 'العاجي مع الأخضر الزمردي ولمسات ذهبية',
+                style: const TextStyle(color: _settingsMuted, height: 1.5),
+              ),
+              onChanged: (value) async {
+                try {
+                  await AppTheme.setDark(value);
+                } catch (_) {
+                  if (mounted) {
+                    _message('تغيّر المظهر مؤقتاً لكن تعذّر حفظه على الجهاز');
+                  }
+                }
+              },
+            ),
+          ),
+          const Text(
+            'يجري توحيد ألوان الصفحات الداخلية مع هذا الاختيار ضمن مراجعة التصميم.',
+            style: TextStyle(color: _settingsMuted, fontSize: 12, height: 1.6),
+          ),
+        ],
+      ),
+      const SizedBox(height: 14),
       _section(
         icon: Icons.location_on_outlined,
         title: 'المدينة ومواقيت الصلاة',

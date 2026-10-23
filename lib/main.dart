@@ -336,26 +336,87 @@ class _MainShellState extends State<MainShell> {
         children: [
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.fromLTRB(20, 24, 20, 22),
+            padding: const EdgeInsets.fromLTRB(18, 18, 18, 16),
             decoration: BoxDecoration(
               gradient: const LinearGradient(
                 begin: Alignment.topRight,
                 end: Alignment.bottomLeft,
-                colors: [Color(0xFF1B5943), Color(0xFF0B211A)],
+                colors: [Color(0xFF173C2D), Color(0xFF0B211A), _ink],
               ),
-              border: Border(bottom: BorderSide(color: _gold.withValues(alpha: .3))),
+              border: Border(
+                bottom: BorderSide(color: _gold.withValues(alpha: .32)),
+              ),
             ),
-            child: Row(
+            child: Column(
               children: [
-                Image.asset('assets/images/mithaq_logo.jpg', width: 42, height: 50, fit: BoxFit.contain),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
+                  children: [
+                    Container(
+                      width: 62,
+                      height: 62,
+                      padding: const EdgeInsets.all(3),
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(18),
+                        border: Border.all(color: _gold.withValues(alpha: .65)),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(14),
+                        child: Image.asset(
+                          'assets/images/mithaq_logo.jpg',
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 13),
+                    const Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'ميثاق المؤمن',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            'درب العبادة والطمأنينة',
+                            maxLines: 2,
+                            style: TextStyle(
+                              color: _muted,
+                              fontSize: 12,
+                              height: 1.45,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 14),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: .22),
+                    borderRadius: BorderRadius.circular(13),
+                    border: Border.all(color: Colors.white.withValues(alpha: .06)),
+                  ),
+                  child: const Row(
                     children: [
-                      Text('ميثاق المؤمن', maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 19, fontWeight: FontWeight.w800)),
-                      SizedBox(height: 4),
-                      Text('درب العبادة والطمأنينة', maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: _muted, fontSize: 12)),
+                      Icon(Icons.auto_awesome_rounded, color: _gold, size: 17),
+                      SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          'قرآن • دعاء • عبادة • متابعة',
+                          style: TextStyle(color: Color(0xFFDCE8E0), fontSize: 12),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -364,56 +425,141 @@ class _MainShellState extends State<MainShell> {
           ),
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              padding: const EdgeInsets.fromLTRB(10, 12, 10, 14),
               children: [
+                _drawerSectionTitle('التنقّل الأساسي', Icons.grid_view_rounded),
                 _drawerItem(Icons.home_rounded, 'الرئيسية', () => _selectTab(0), selected: _selected == 0),
-                _drawerItem(Icons.menu_book_rounded, 'القرآن الكريم', () => _selectTab(1), selected: _selected == 1),
-                _drawerItem(Icons.auto_awesome_rounded, 'الأدعية والزيارات', () => _selectTab(2), selected: _selected == 2),
-                _drawerItem(Icons.calendar_month_rounded, 'المواقيت والتقويم', () => _selectTab(3), selected: _selected == 3),
-                const Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(14, 18, 14, 8),
-                  child: Text('العبادة والمتابعة', style: TextStyle(color: _gold, fontWeight: FontWeight.w800, fontSize: 13)),
-                ),
+                _drawerItem(Icons.auto_stories_rounded, 'القرآن الكريم', () => _selectTab(1), selected: _selected == 1),
+                _drawerItem(Icons.volunteer_activism_rounded, 'الأدعية والزيارات', () => _selectTab(2), selected: _selected == 2),
+                _drawerItem(Icons.access_time_rounded, 'المواقيت والتقويم', () => _selectTab(3), selected: _selected == 3),
+                const SizedBox(height: 10),
+                _drawerSectionTitle('العبادة والمتابعة', Icons.spa_rounded),
                 _drawerItem(Icons.fingerprint_rounded, 'التسبيح والعداد', () => _openDrawerPage(const TasbeehPage())),
-                _drawerItem(Icons.auto_stories_rounded, 'ختمة القرآن', () => _openDrawerPage(const KhatmaPage())),
-                _drawerItem(Icons.checklist_rounded, 'متابعة الصلاة', () => _openDrawerPage(const PrayerTrackerPage())),
-                _drawerItem(Icons.checklist_rounded, 'الأعمال الصالحة', () => _openDrawerPage(const GoodDeedsPage())),
-                _drawerItem(Icons.calculate_outlined, 'سجل القضاء', () => _openDrawerPage(const QadaTrackerPage())),
-                _drawerItem(Icons.shield_moon_outlined, 'حصن الأذكار', () => _openDrawerPage(const DhikrFortressPage())),
-                const Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(14, 18, 14, 8),
-                  child: Text('الأدوات والخدمات', style: TextStyle(color: _gold, fontWeight: FontWeight.w800, fontSize: 13)),
-                ),
-                _drawerItem(Icons.settings_rounded, 'الإعدادات', () => _openDrawerPage(SettingsPage(onLocationChanged: _handleLocationChanged))),
-                _drawerItem(Icons.search_rounded, 'الباحث الذكي', () => _openDrawerPage(const SmartSearchPage())),
-                _drawerItem(Icons.auto_awesome_rounded, 'أسماء الله الحسنى', () => _openDrawerPage(const NamesOfAllahPage())),
+                _drawerItem(Icons.bookmark_added_rounded, 'ختمة القرآن', () => _openDrawerPage(const KhatmaPage())),
+                _drawerItem(Icons.event_available_rounded, 'متابعة الصلاة', () => _openDrawerPage(const PrayerTrackerPage())),
+                _drawerItem(Icons.handshake_rounded, 'الأعمال الصالحة', () => _openDrawerPage(const GoodDeedsPage())),
+                _drawerItem(Icons.history_edu_rounded, 'سجل القضاء', () => _openDrawerPage(const QadaTrackerPage())),
+                _drawerItem(Icons.shield_moon_rounded, 'حصن الأذكار', () => _openDrawerPage(const DhikrFortressPage())),
+                const SizedBox(height: 10),
+                _drawerSectionTitle('المعرفة والخدمات', Icons.local_library_rounded),
+                _drawerItem(Icons.tune_rounded, 'الإعدادات', () => _openDrawerPage(SettingsPage(onLocationChanged: _handleLocationChanged))),
+                _drawerItem(Icons.manage_search_rounded, 'الباحث الذكي', () => _openDrawerPage(const SmartSearchPage())),
+                _drawerItem(Icons.brightness_5_rounded, 'أسماء الله الحسنى', () => _openDrawerPage(const NamesOfAllahPage())),
                 _drawerItem(Icons.explore_rounded, 'اتجاه القبلة', () => _openDrawerPage(QiblaPage(onLocationChanged: _handleLocationChanged))),
-                _drawerItem(Icons.library_books_rounded, 'مكتبة الأدعية والزيارات والصحيفة', () => _openDrawerPage(const ShiaTextLibraryPage())),
-                _drawerItem(Icons.volunteer_activism_rounded, 'الخدمات الإيمانية', () => _openDrawerPage(const FaithServicesPage())),
+                _drawerItem(Icons.collections_bookmark_rounded, 'مكتبة الأدعية والزيارات والصحيفة', () => _openDrawerPage(const ShiaTextLibraryPage())),
+                _drawerItem(Icons.support_agent_rounded, 'الخدمات الإيمانية', () => _openDrawerPage(const FaithServicesPage())),
                 _drawerItem(Icons.star_rounded, 'المفضلة المباركة', () => _openDrawerPage(const FavoritesPage())),
-                _drawerItem(Icons.calculate_outlined, 'حاسبة الركعات', () => _openDrawerPage(const RakahCounterPage())),
+                _drawerItem(Icons.calculate_rounded, 'حاسبة الركعات', () => _openDrawerPage(const RakahCounterPage())),
                 _drawerItem(Icons.info_outline_rounded, 'عن التطبيق والدعم', () => _openDrawerPage(const AboutSupportPage())),
               ],
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.all(14),
-            child: Text('ميثاق المؤمن • نسخة قيد التطوير', style: TextStyle(color: _muted, fontSize: 11)),
+          Container(
+            width: double.infinity,
+            margin: const EdgeInsets.fromLTRB(14, 0, 14, 10),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            decoration: BoxDecoration(
+              color: _panel,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: _gold.withValues(alpha: .16)),
+            ),
+            child: const Row(
+              children: [
+                Icon(Icons.security_rounded, color: _gold, size: 17),
+                SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'نسخة قيد التطوير • راجع المصادر عند الحاجة',
+                    style: TextStyle(color: _muted, fontSize: 10, height: 1.45),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
     ),
   );
 
+  Widget _drawerSectionTitle(String title, IconData icon) => Padding(
+    padding: const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 7),
+    child: Row(
+      children: [
+        Icon(icon, color: _gold.withValues(alpha: .88), size: 16),
+        const SizedBox(width: 8),
+        Text(
+          title,
+          style: const TextStyle(
+            color: _gold,
+            fontSize: 12,
+            fontWeight: FontWeight.w900,
+            letterSpacing: .1,
+          ),
+        ),
+      ],
+    ),
+  );
+
   Widget _drawerItem(IconData icon, String title, VoidCallback onTap, {bool selected = false}) =>
-      ListTile(
-        leading: Icon(icon, color: selected ? _gold : _muted),
-        title: Text(title, style: TextStyle(color: selected ? Colors.white : _muted, fontWeight: selected ? FontWeight.w800 : FontWeight.w500)),
-        selected: selected,
-        selectedTileColor: _emerald.withValues(alpha: .18),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-        onTap: onTap,
-        dense: true,
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 2),
+        child: Material(
+          color: selected ? _emerald.withValues(alpha: .18) : Colors.transparent,
+          borderRadius: BorderRadius.circular(16),
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(16),
+            child: Container(
+              constraints: const BoxConstraints(minHeight: 56),
+              padding: const EdgeInsetsDirectional.fromSTEB(9, 7, 11, 7),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: selected
+                      ? _gold.withValues(alpha: .34)
+                      : Colors.white.withValues(alpha: .045),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 39,
+                    height: 39,
+                    decoration: BoxDecoration(
+                      color: selected ? _gold.withValues(alpha: .13) : _panel,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: selected
+                            ? _gold.withValues(alpha: .3)
+                            : _muted.withValues(alpha: .08),
+                      ),
+                    ),
+                    child: Icon(icon, color: selected ? _gold : _muted, size: 21),
+                  ),
+                  const SizedBox(width: 11),
+                  Expanded(
+                    child: Text(
+                      title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: selected ? Colors.white : const Color(0xFFD5E0D9),
+                        fontSize: 13,
+                        height: 1.35,
+                        fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  Icon(
+                    selected ? Icons.check_circle_rounded : Icons.chevron_left_rounded,
+                    color: selected ? _gold : _muted.withValues(alpha: .65),
+                    size: 18,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
       );
 
   void _selectTab(int index) {
@@ -943,43 +1089,48 @@ class _MainShellState extends State<MainShell> {
           ],
         ),
         const SizedBox(height: 10),
-        GridView.count(
-          crossAxisCount: 3,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          crossAxisSpacing: 8,
-          mainAxisSpacing: 8,
-          childAspectRatio: 1.12,
-          children: [
-            _homeMiniShortcut(
-              Icons.explore_rounded, 'اتجاه القبلة',
-              () => _pushPage(QiblaPage(onLocationChanged: _handleLocationChanged)),
-            ),
-            _homeMiniShortcut(
-              Icons.fingerprint_rounded, 'التسبيح',
-              () => _pushPage(const TasbeehPage()),
-            ),
-            _homeMiniShortcut(
-              Icons.shield_moon_outlined, 'حصن الأذكار',
-              () => _pushPage(const DhikrFortressPage()),
-            ),
-            _homeMiniShortcut(
-              Icons.checklist_rounded, 'الأعمال الصالحة',
-              () => _pushPage(const GoodDeedsPage()),
-            ),
-            _homeMiniShortcut(
-              Icons.auto_stories_rounded, 'الختمة',
-              () => _pushPage(const KhatmaPage()),
-            ),
-            _homeMiniShortcut(
-              Icons.calendar_month_rounded, 'التقويم الهجري',
-              () => _pushPage(PrayerCalendarPage(
-                initialTab: 2,
-                onLocationChanged: _handleLocationChanged,
-                onHijriCorrectionChanged: _loadDashboardData,
-              )),
-            ),
-          ],
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final columns = constraints.maxWidth >= 410 ? 3 : 2;
+            return GridView.count(
+              crossAxisCount: columns,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              childAspectRatio: columns == 2 ? 1.22 : 1.02,
+              children: [
+                _homeMiniShortcut(
+                  Icons.explore_rounded, 'اتجاه القبلة',
+                  () => _pushPage(QiblaPage(onLocationChanged: _handleLocationChanged)),
+                ),
+                _homeMiniShortcut(
+                  Icons.fingerprint_rounded, 'التسبيح',
+                  () => _pushPage(const TasbeehPage()),
+                ),
+                _homeMiniShortcut(
+                  Icons.shield_moon_rounded, 'حصن الأذكار',
+                  () => _pushPage(const DhikrFortressPage()),
+                ),
+                _homeMiniShortcut(
+                  Icons.handshake_rounded, 'الأعمال الصالحة',
+                  () => _pushPage(const GoodDeedsPage()),
+                ),
+                _homeMiniShortcut(
+                  Icons.bookmark_added_rounded, 'الختمة',
+                  () => _pushPage(const KhatmaPage()),
+                ),
+                _homeMiniShortcut(
+                  Icons.event_note_rounded, 'التقويم الهجري',
+                  () => _pushPage(PrayerCalendarPage(
+                    initialTab: 2,
+                    onLocationChanged: _handleLocationChanged,
+                    onHijriCorrectionChanged: _loadDashboardData,
+                  )),
+                ),
+              ],
+            );
+          },
         ),
         const SizedBox(height: 20),
         Container(
@@ -1063,8 +1214,8 @@ class _MainShellState extends State<MainShell> {
         onTap: onTap,
         borderRadius: BorderRadius.circular(20),
         child: Container(
-          constraints: const BoxConstraints(minHeight: 124),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+          constraints: const BoxConstraints(minHeight: 132),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 15),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             border: Border.all(color: _gold.withValues(alpha: .22)),
@@ -1072,9 +1223,18 @@ class _MainShellState extends State<MainShell> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(icon, color: _gold, size: 29),
-              const SizedBox(height: 18),
-              Text(title, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
+              Container(
+                width: 46,
+                height: 46,
+                decoration: BoxDecoration(
+                  color: _emerald.withValues(alpha: .17),
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: _gold.withValues(alpha: .18)),
+                ),
+                child: Icon(icon, color: _gold, size: 25),
+              ),
+              const SizedBox(height: 13),
+              Text(title, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14, height: 1.3)),
               const SizedBox(height: 4),
               Text(subtitle, style: const TextStyle(color: _muted, fontSize: 11)),
             ],
@@ -1088,27 +1248,41 @@ class _MainShellState extends State<MainShell> {
   Widget _homeMiniShortcut(IconData icon, String title, VoidCallback onTap) {
     return Material(
       color: _panel,
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(18),
+      clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(18),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(18),
             border: Border.all(color: _gold.withValues(alpha: .18)),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: _gold, size: 27),
-              const SizedBox(height: 8),
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: _emerald.withValues(alpha: .16),
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: _gold.withValues(alpha: .16)),
+                ),
+                child: Icon(icon, color: _gold, size: 23),
+              ),
+              const SizedBox(height: 9),
               Text(
                 title,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800),
+                style: const TextStyle(
+                  fontSize: 12,
+                  height: 1.35,
+                  fontWeight: FontWeight.w800,
+                ),
               ),
             ],
           ),

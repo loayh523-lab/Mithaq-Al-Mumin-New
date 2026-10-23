@@ -3,7 +3,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'faith_library_pages.dart';
 
 const _faithGold = Color(0xFFD9B66D);
-const _faithMuted = Color(0xFF697A70);
 
 const _officialFiqhUrl = 'https://www.leader.ir/ar';
 const _tafsirUrl = 'https://almizan.wilayah.app/';
@@ -38,7 +37,7 @@ class FaithServicesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('الخدمات الإيمانية')),
+    appBar: AppBar(title: Text('الخدمات الإيمانية')),
     body: ListView(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
       children: [
@@ -49,7 +48,7 @@ class FaithServicesPage extends StatelessWidget {
             borderRadius: BorderRadius.circular(22),
             border: Border.all(color: _faithGold.withValues(alpha: .32)),
           ),
-          child: const Column(
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('دليل الخدمات والمصادر', style: TextStyle(
@@ -58,12 +57,12 @@ class FaithServicesPage extends StatelessWidget {
               SizedBox(height: 8),
               Text(
                 'روابط لمصادر خارجية مع أدلة تعمل من داخل التطبيق. الروابط تحتاج الإنترنت؛ لا نعرض النص الخارجي وكأنه مخزّن دون اتصال.',
-                style: TextStyle(color: _faithMuted, height: 1.7),
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.7),
               ),
             ],
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         _ServiceTile(
           icon: Icons.menu_book_rounded,
           title: 'فقه المؤمن — المسائل الشرعية',
@@ -126,7 +125,7 @@ class FaithServicesPage extends StatelessWidget {
             ),
           )),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
@@ -134,7 +133,7 @@ class FaithServicesPage extends StatelessWidget {
             borderRadius: BorderRadius.circular(18),
             border: Border.all(color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: .45)),
           ),
-          child: const Column(
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('ما يحتاج مرحلة تنفيذ أخرى', style: TextStyle(
@@ -169,10 +168,10 @@ class FaithServicesPage extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 12),
-        const Text(
+        SizedBox(height: 12),
+        Text(
           'تنبيه: المصدر الفقهي الخارجي قد يتضمن أحكاماً خاصة بمرجع معيّن. لا تعتمد جواباً فقهياً إلا بعد التأكد من مطابقته لمرجع تقليدك.',
-          style: TextStyle(color: _faithMuted, height: 1.7, fontSize: 12),
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.7, fontSize: 12),
         ),
       ],
     ),
@@ -205,21 +204,21 @@ class _ServiceTile extends StatelessWidget {
         children: [
           Row(children: [
             Icon(icon, color: _faithGold, size: 25),
-            const SizedBox(width: 10),
-            Expanded(child: Text(title, style: const TextStyle(
+            SizedBox(width: 10),
+            Expanded(child: Text(title, style: TextStyle(
               fontWeight: FontWeight.w800, fontSize: 16,
             ))),
           ]),
-          const SizedBox(height: 8),
-          Text(description, style: const TextStyle(
-            color: _faithMuted, height: 1.6,
+          SizedBox(height: 8),
+          Text(description, style: TextStyle(
+            color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.6,
           )),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           Align(
             alignment: AlignmentDirectional.centerStart,
             child: TextButton.icon(
               onPressed: onTap,
-              icon: const Icon(Icons.open_in_new_rounded, size: 18),
+              icon: Icon(Icons.open_in_new_rounded, size: 18),
               label: Text(actionLabel),
             ),
           ),
@@ -243,17 +242,17 @@ class _StatusLine extends StatelessWidget {
       children: [
         Icon(
           done ? Icons.check_circle_outline_rounded : Icons.pending_outlined,
-          color: done ? _faithGold : _faithMuted,
+          color: done ? _faithGold : Theme.of(context).colorScheme.onSurfaceVariant,
           size: 20,
         ),
-        const SizedBox(width: 9),
+        SizedBox(width: 9),
         Expanded(child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-            const SizedBox(height: 3),
-            Text(detail, style: const TextStyle(
-              color: _faithMuted, height: 1.5, fontSize: 12,
+            Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
+            SizedBox(height: 3),
+            Text(detail, style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.5, fontSize: 12,
             )),
           ],
         )),
@@ -267,7 +266,7 @@ class IstikharaGuidePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('الاستخارة القرآنية')),
+    appBar: AppBar(title: Text('الاستخارة القرآنية')),
     body: ListView(
       padding: const EdgeInsets.all(18),
       children: [
@@ -278,12 +277,12 @@ class IstikharaGuidePage extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
             border: Border.all(color: _faithGold.withValues(alpha: .3)),
           ),
-          child: const Text(
+          child: Text(
             'الاستخارة ليست لعبة ولا أداة لمعرفة الغيب. لا تُستعمل بديلاً عن التفكير أو السؤال أو الاستشارة.',
             style: TextStyle(color: _faithGold, fontSize: 18, height: 1.8, fontWeight: FontWeight.w800),
           ),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         const _GuideStep(
           number: '١',
           title: 'فكّر في الموضوع',
@@ -304,16 +303,16 @@ class IstikharaGuidePage extends StatelessWidget {
           title: 'لا تعتبرها كشفاً للغيب',
           detail: 'لا يزعم التطبيق أن آية بعينها تتنبأ بالمستقبل أو تضمن نتيجة القرار.',
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         FilledButton.icon(
           onPressed: () => openFaithSource(context, _officialFiqhUrl),
-          icon: const Icon(Icons.open_in_new_rounded),
-          label: const Text('مراجعة المصدر الفقهي الرسمي'),
+          icon: Icon(Icons.open_in_new_rounded),
+          label: Text('مراجعة المصدر الفقهي الرسمي'),
         ),
-        const SizedBox(height: 12),
-        const Text(
+        SizedBox(height: 12),
+        Text(
           'هذه إرشادات عامة وليست فتوى. راجع النص الرسمي لمرجع تقليدك إذا أردت معرفة الحكم أو الكيفية بالتحديد.',
-          style: TextStyle(color: _faithMuted, height: 1.7, fontSize: 12),
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.7, fontSize: 12),
         ),
       ],
     ),
@@ -325,7 +324,7 @@ class ArbaeenGuidePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('دليل المشاية')),
+    appBar: AppBar(title: Text('دليل المشاية')),
     body: ListView(
       padding: const EdgeInsets.all(18),
       children: [
@@ -336,22 +335,22 @@ class ArbaeenGuidePage extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
             border: Border.all(color: _faithGold.withValues(alpha: .3)),
           ),
-          child: const Text(
+          child: Text(
             'قائمة تحضير تعمل دون إنترنت. ليست خريطة طريق، ولا تؤكد مواقع المواكب أو الخدمات.',
             style: TextStyle(color: _faithGold, height: 1.7, fontSize: 17, fontWeight: FontWeight.w700),
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         const _GuideStep(number: '١', title: 'قبل الانطلاق', detail: 'تحقق من حالة الطقس وتعليمات الجهات المحلية وخط سير مجموعتك، وأخبر أهلك بخطتك.'),
         const _GuideStep(number: '٢', title: 'الماء والراحة', detail: 'اشرب الماء بانتظام وخذ فترات راحة، ولا تواصل المشي إذا شعرت بدوار أو تعب شديد؛ اطلب مساعدة المشرفين أو الخدمات الطبية.'),
         const _GuideStep(number: '٣', title: 'الهاتف والاتصال', detail: 'اشحن الهاتف وخذ بطارية احتياطية، واحفظ أرقام أفراد مجموعتك ومكان الالتقاء عند الانفصال.'),
         const _GuideStep(number: '٤', title: 'الأغراض الأساسية', detail: 'هوية شخصية، أدوية موصوفة لك إن وجدت، حذاء مريح مجرّب، مستلزمات النظافة، وملابس مناسبة للطقس.'),
         const _GuideStep(number: '٥', title: 'احترام الآخرين', detail: 'اتبع تعليمات المنظمين، حافظ على نظافة الطريق، ولا تدخل مساراً مغلقاً أو مزدحماً.'),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         OutlinedButton.icon(
           onPressed: () => openFaithSource(context, _officialFiqhUrl),
-          icon: const Icon(Icons.open_in_new_rounded),
-          label: const Text('فتح موقع المكتب الرسمي'),
+          icon: Icon(Icons.open_in_new_rounded),
+          label: Text('فتح موقع المكتب الرسمي'),
         ),
       ],
     ),
@@ -376,18 +375,18 @@ class _GuideStep extends StatelessWidget {
           CircleAvatar(
             radius: 16,
             backgroundColor: _faithGold.withValues(alpha: .15),
-            child: Text(number, style: const TextStyle(
+            child: Text(number, style: TextStyle(
               color: _faithGold, fontWeight: FontWeight.w800,
             )),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Expanded(child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: const TextStyle(fontWeight: FontWeight.w800)),
-              const SizedBox(height: 5),
-              Text(detail, style: const TextStyle(
-                color: _faithMuted, height: 1.6,
+              Text(title, style: TextStyle(fontWeight: FontWeight.w800)),
+              SizedBox(height: 5),
+              Text(detail, style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.6,
               )),
             ],
           )),

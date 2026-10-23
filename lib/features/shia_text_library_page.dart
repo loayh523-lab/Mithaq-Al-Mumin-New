@@ -84,7 +84,10 @@ class ShiaTextEntry {
         'بسم الله',
         'أعوذ بالله من الشيطان الرجيم',
         'اللهم صل على محمد وآل محمد',
+        'اللهم صل على محمد و آل محمد',
         'اللهم صل على محمد',
+        'و آل محمد',
+        'وآل محمد',
       ];
       var changed = true;
       while (changed) {
@@ -101,7 +104,11 @@ class ShiaTextEntry {
 
     final candidates = arabicLines
         .map(meaningfulPrefix)
-        .where((line) => normalizeForTitle(line).isNotEmpty)
+        // Ignore a leftover connective or short salawat fragment, and choose
+        // the first genuinely descriptive phrase from the complete entry.
+        .where((line) => normalizeForTitle(line)
+            .replaceAll(RegExp(r'\s+'), '')
+            .runes.length >= 12)
         .toList();
     final sourceLine = candidates.isNotEmpty
         ? candidates.first

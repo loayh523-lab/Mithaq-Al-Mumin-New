@@ -13,7 +13,9 @@ class PrayerNotificationService {
   static const int _idStart = 4000;
   static const int _daysToSchedule = 30;
   // Increment this when the Android notification channel or schedule format changes.
-  static const int _scheduleRevision = 10;
+  // Android keeps channel sound settings immutable, so a new channel ID is needed
+  // when migrating the bundled adhan sound on existing installations.
+  static const int _scheduleRevision = 11;
 
   static Future<void> _initialize() async {
     if (_initialized) return;
@@ -42,7 +44,7 @@ class PrayerNotificationService {
         'إذا ظهر هذا التنبيه فقد وصل الإشعار التجريبي. افحص مستوى صوت التنبيهات إذا لم تسمع الأذان.',
         const NotificationDetails(
           android: AndroidNotificationDetails(
-            'mithaq_adhan_shabbar_v10', 'أذان الصلاة',
+            'mithaq_adhan_shabbar_v11', 'أذان الصلاة',
             channelDescription: 'أذان الصلاة من التسجيل المرفق بالتطبيق. إذا لم تسمع الصوت فتحقق من إعدادات قناة أذان الصلاة ومستوى صوت التنبيهات.',
             importance: Importance.high, priority: Priority.high,
             sound: RawResourceAndroidNotificationSound('adhan_shabbar_maalla'),
@@ -98,7 +100,7 @@ class PrayerNotificationService {
   }
 
   /// Schedules local reminders for the next 30 days. Prayer times are estimates;
-  /// the source and attribution of the bundled notification sound are unverified.
+  /// the selected recording is bundled locally as the prayer notification sound.
   static Future<bool> configure({
     required bool enabled,
     required PrayerCity city,
@@ -177,7 +179,7 @@ class PrayerNotificationService {
               scheduled,
               const NotificationDetails(
                 android: AndroidNotificationDetails(
-                  'mithaq_adhan_shabbar_v10',
+                  'mithaq_adhan_shabbar_v11',
                   'أذان الصلاة',
                   channelDescription: 'أذان الصلاة من التسجيل المرفق بالتطبيق. إذا لم تسمع الصوت فتحقق من إعدادات قناة أذان الصلاة ومستوى صوت التنبيهات.',
                   importance: Importance.high,

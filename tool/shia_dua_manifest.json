@@ -7,10 +7,10 @@
   "expectedCount": 110,
   "expectedCategoryCounts": {
     "الأدعية والأذكار اليومية": 25,
+    "التعقيبات بعد الصلاة": 5,
     "الأدعية العامة وأدعية الفرج وصاحب الزمان": 35,
     "الأعمال والمناسبات": 20,
-    "الزيارات الشريفة": 25,
-    "التعقيبات بعد الصلاة": 5
+    "الزيارات الشريفة": 25
   },
   "entries": [
     {
@@ -27,7 +27,7 @@
       "sourceId": 282,
       "sourceName": "Dua after Salaat - 1",
       "slug": "taqib-after-salaat-01",
-      "title": "تعقيب بعد الصلاة",
+      "title": "تعقيبات الصلاة",
       "alternateName": "",
       "category": "التعقيبات بعد الصلاة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 282",
@@ -37,7 +37,7 @@
       "sourceId": 283,
       "sourceName": "Dua after Salaat - 2",
       "slug": "taqib-after-salaat-02",
-      "title": "تعقيب بعد الصلاة",
+      "title": "تعقيبات الصلاة",
       "alternateName": "",
       "category": "التعقيبات بعد الصلاة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 283",
@@ -47,7 +47,7 @@
       "sourceId": 284,
       "sourceName": "Dua after Salaat - 3",
       "slug": "taqib-after-salaat-03",
-      "title": "تعقيب بعد الصلاة",
+      "title": "تعقيبات الصلاة",
       "alternateName": "",
       "category": "التعقيبات بعد الصلاة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 284",
@@ -57,7 +57,7 @@
       "sourceId": 285,
       "sourceName": "Dua after Salaat - 4",
       "slug": "taqib-after-salaat-04",
-      "title": "تعقيب بعد الصلاة",
+      "title": "تعقيبات الصلاة",
       "alternateName": "",
       "category": "التعقيبات بعد الصلاة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 285",
@@ -67,7 +67,7 @@
       "sourceId": 286,
       "sourceName": "Dua after Salaat - 5",
       "slug": "taqib-after-salaat-05",
-      "title": "تعقيب بعد الصلاة",
+      "title": "تعقيبات الصلاة",
       "alternateName": "",
       "category": "التعقيبات بعد الصلاة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 286",

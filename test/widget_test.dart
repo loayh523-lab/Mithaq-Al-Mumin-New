@@ -102,9 +102,18 @@ void main() {
     expect(find.text('التنقّل الأساسي'), findsOneWidget);
     expect(find.text('العبادة والمتابعة'), findsOneWidget);
     expect(find.text('المعرفة والخدمات'), findsOneWidget);
-    expect(find.byIcon(Icons.event_available_rounded), findsOneWidget);
-    expect(find.byIcon(Icons.handshake_rounded), findsOneWidget);
-    expect(find.byIcon(Icons.bookmark_added_rounded), findsOneWidget);
+    expect(
+      find.descendant(of: find.byType(Drawer), matching: find.byIcon(Icons.event_available_rounded)),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: find.byType(Drawer), matching: find.byIcon(Icons.handshake_rounded)),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: find.byType(Drawer), matching: find.byIcon(Icons.bookmark_added_rounded)),
+      findsOneWidget,
+    );
     expect(find.text('نسخة قيد التطوير • راجع المصادر عند الحاجة'), findsOneWidget);
   });
 

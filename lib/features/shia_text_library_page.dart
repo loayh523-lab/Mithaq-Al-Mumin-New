@@ -78,7 +78,7 @@ class ShiaTextEntry {
     String meaningfulPrefix(String line) {
       var value = line
           .trim()
-          .replaceAll(RegExp(r'[\\u064B-\\u065F\\u0670\\u0640]'), '');
+          .replaceAll(RegExp(r'[\u064B-\u065F\u0670\u0640]'), '');
       const commonOpeners = [
         'بسم الله الرحمن الرحيم',
         'بسم الله',

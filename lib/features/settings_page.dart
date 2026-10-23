@@ -452,7 +452,7 @@ class _SettingsPageState extends State<SettingsPage> {
               label: const Text('فحص جدولة الأذان'),
             ),
           ),
-          const Text('تنبيه: التسجيل الصوتي المضمّن حالياً لم يُتحقّق من مطابقته للأذان الجعفري أو من كونه بصوت الشيخ شبّر معلة. لا تعتمد عليه قبل استبداله بتسجيل موثّق.', style: TextStyle(color: _settingsMuted, fontSize: 11, height: 1.5)),
+          const Text('التسجيل المضمّن هو الأذان الذي اختاره صاحب التطبيق: الأذان من العتبة العلوية المقدسة بصوت القارئ الشيخ شبّر معلة.', style: TextStyle(color: _settingsMuted, fontSize: 11, height: 1.5)),
           const SizedBox(height: 4),
           const Text('يلزم السماح بإشعارات التطبيق من أندرويد. إذا وصل الإشعار بلا صوت، ارفع صوت التنبيهات وافحص إعداد قناة «أذان الصلاة».', style: TextStyle(color: _settingsMuted, fontSize: 11, height: 1.5)),
         ],

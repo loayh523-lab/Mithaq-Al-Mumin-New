@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/prayer_locations.dart';
 
-const _panel = Color(0xFF10251E);
-const _calendarInk = Color(0xFF071713);
 const _gold = Color(0xFFD9B66D);
 const _muted = Color(0xFF697A70);
 
@@ -338,7 +336,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
                           ? _gold
                           : occasion != null
                               ? _gold.withValues(alpha: .5)
-                              : Colors.white.withValues(alpha: .04),
+                              : Theme.of(context).colorScheme.outlineVariant.withValues(alpha: .4),
                     ),
                   ),
                   child: Column(
@@ -347,7 +345,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
                       Text(
                         _arabicIndicDigits(hijri.day),
                         style: TextStyle(
-                          color: selected ? _calendarInk : Colors.white,
+                          color: selected ? const Color(0xFF071713) : Theme.of(context).colorScheme.onSurface,
                           fontSize: 16,
                           fontWeight: FontWeight.w900,
                         ),
@@ -356,7 +354,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
                       Text(
                         day.day.toString(),
                         style: TextStyle(
-                          color: selected ? _calendarInk.withValues(alpha: .7) : _muted,
+                          color: selected ? const Color(0xFF071713).withValues(alpha: .7) : Theme.of(context).colorScheme.onSurfaceVariant,
                           fontSize: 9,
                         ),
                       ),
@@ -364,7 +362,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
                         Icon(
                           Icons.circle,
                           size: 4,
-                          color: selected ? _calendarInk : _gold,
+                          color: selected ? const Color(0xFF071713) : _gold,
                         ),
                     ],
                   ),
@@ -489,7 +487,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(18),
-          side: BorderSide(color: Colors.white.withValues(alpha: .055)),
+          side: BorderSide(color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: .45)),
         ),
         child: ExpansionTile(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),

@@ -33,8 +33,8 @@ def main() -> None:
         raise SystemExit("Required offline content assets are missing:\n- " + "\n- ".join(missing))
 
     errors = []
-    # Also guard visible Flutter source strings. The text-library page intentionally
-    # contains Persian-character patterns so it can detect and exclude bad source rows.
+    # Guard every Dart source line, including regular-expression patterns. Persian
+    # detector patterns should use Unicode escapes rather than embedding Persian letters.
     source_root = Path("lib")
     if source_root.exists():
         for source in sorted(source_root.rglob("*.dart")):
@@ -44,8 +44,6 @@ def main() -> None:
                 errors.append(f"{source}: cannot read UTF-8 source ({error})")
                 continue
             for line_number, line in enumerate(lines, start=1):
-                if "RegExp(" in line:
-                    continue
                 match = FORBIDDEN.search(line)
                 if match:
                     errors.append(

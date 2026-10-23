@@ -115,7 +115,29 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
       if (tab == 0) ...[
         Row(children: [Expanded(child: Text('مواقيت ${_dateLabel(date)}', style: const TextStyle(fontWeight: FontWeight.bold))), IconButton(onPressed: () => setState(() => date = date.subtract(const Duration(days: 1))), icon: const Icon(Icons.chevron_right)), IconButton(onPressed: () => setState(() => date = date.add(const Duration(days: 1))), icon: const Icon(Icons.chevron_left)), IconButton(onPressed: () => setState(() => date = DateTime.now()), icon: const Icon(Icons.today))]),
         if (_sameDay(date, now)) _nextPrayerCard(times, now),
-        _time(Icons.wb_twilight, 'الفجر (تقديري)', times.fajr), _time(Icons.wb_sunny_outlined, 'الشروق', times.sunrise), _time(Icons.sunny, 'الظهر', times.noon), _time(Icons.wb_sunny_rounded, 'العصر (تقديري)', times.asr), _time(Icons.wb_twilight, 'الغروب', times.sunset), _time(Icons.nights_stay_outlined, 'المغرب (تقديري)', times.maghrib), _time(Icons.dark_mode_outlined, 'العشاء (تقديري)', times.isha),
+        GridView.count(
+          crossAxisCount: 2,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          mainAxisSpacing: 8,
+          crossAxisSpacing: 8,
+          childAspectRatio: 2.25,
+          children: [
+            _prayerTimeTile(Icons.wb_twilight, 'الفجر', times.fajr),
+            _prayerTimeTile(Icons.sunny, 'الظهر', times.noon),
+            _prayerTimeTile(Icons.wb_sunny_rounded, 'العصر', times.asr),
+            _prayerTimeTile(Icons.nights_stay_outlined, 'المغرب', times.maghrib),
+            _prayerTimeTile(Icons.dark_mode_outlined, 'العشاء', times.isha),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            Expanded(child: _time(Icons.wb_sunny_outlined, 'الشروق', times.sunrise)),
+            const SizedBox(width: 8),
+            Expanded(child: _time(Icons.wb_twilight, 'الغروب', times.sunset)),
+          ],
+        ),
         const Padding(padding: EdgeInsets.all(8), child: Text('الحساب المحلي احتياطي تقريبي، وليس بديلاً عن جدول شرعي معتمد من مكتب مرجعك. استخدم زر GPS لتحديث الإحداثيات وفعّل تنبيهات الصلاة من الإعدادات.', style: TextStyle(color: _muted, fontSize: 11, height: 1.6))),
       ] else if (tab == 1) ...[
         Text('إمساكية تقديرية — ${city.name} / العراق', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17)), const SizedBox(height: 5),
@@ -553,6 +575,26 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
       ]),
     );
   }
+
+  Widget _prayerTimeTile(IconData icon, String label, String time) => Container(
+    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+    decoration: BoxDecoration(
+      color: _panel,
+      borderRadius: BorderRadius.circular(16),
+      border: Border.all(color: _gold.withValues(alpha: .18)),
+    ),
+    child: Row(
+      children: [
+        Icon(icon, color: _gold, size: 21),
+        const SizedBox(width: 8),
+        Expanded(child: Text(label, style: const TextStyle(fontWeight: FontWeight.w700))),
+        Text(
+          formatPrayerTime12Hour(time),
+          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: _gold),
+        ),
+      ],
+    ),
+  );
 
   Widget _time(IconData icon, String label, String time) => Card(color: _panel, child: ListTile(leading: Icon(icon, color: _gold), title: Text(label), trailing: Text(formatPrayerTime12Hour(time), style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold))));
 }

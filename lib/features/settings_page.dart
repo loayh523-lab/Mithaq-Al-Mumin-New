@@ -360,7 +360,7 @@ class _SettingsPageState extends State<SettingsPage> {
         title: 'تذكيرات الصلاة',
         children: [
           Material(
-            color: _settingsPanel,
+            color: Theme.of(context).colorScheme.surface,
             child: SwitchListTile(
               contentPadding: EdgeInsets.zero,
               title: const Text('إشعارات الصلاة'),
@@ -377,7 +377,7 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           const SizedBox(height: 4),
           ..._prayerOptions.map((option) => Material(
-            color: _settingsPanel,
+            color: Theme.of(context).colorScheme.surface,
             child: SwitchListTile(
               key: ValueKey('prayer_enabled_${option.key}'),
               contentPadding: EdgeInsets.zero,
@@ -397,7 +397,7 @@ class _SettingsPageState extends State<SettingsPage> {
           )),
           const Divider(color: Color(0x334A7562)),
           Material(
-            color: _settingsPanel,
+            color: Theme.of(context).colorScheme.surface,
             child: SwitchListTile(
               contentPadding: EdgeInsets.zero,
               title: const Text('تنبيه قبل الأذان'),
@@ -496,12 +496,14 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget _section({required IconData icon, required String title, required List<Widget> children}) => Container(
     padding: const EdgeInsets.all(16),
     decoration: BoxDecoration(
-      color: _settingsPanel,
+      color: Theme.of(context).colorScheme.surface,
       borderRadius: BorderRadius.circular(20),
-      border: Border.all(color: _settingsGold.withValues(alpha: .13)),
+      border: Border.all(color: Theme.of(context).colorScheme.secondary.withValues(alpha: .18)),
       boxShadow: [
         BoxShadow(
-          color: Colors.black.withValues(alpha: .10),
+          color: Theme.of(context).brightness == Brightness.dark
+              ? Colors.black.withValues(alpha: .10)
+              : const Color(0xFF30483D).withValues(alpha: .05),
           blurRadius: 12,
           offset: const Offset(0, 4),
         ),

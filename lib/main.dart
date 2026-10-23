@@ -262,7 +262,14 @@ class _MainShellState extends State<MainShell> {
           children: [
             Image.asset('assets/images/mithaq_logo.jpg', width: 34, height: 42, fit: BoxFit.contain),
             const SizedBox(width: 10),
-            const Text('ميثاق المؤمن', style: TextStyle(fontWeight: FontWeight.w800)),
+            const Expanded(
+              child: Text(
+                'ميثاق المؤمن',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontWeight: FontWeight.w800),
+              ),
+            ),
           ],
         ),
         actions: [

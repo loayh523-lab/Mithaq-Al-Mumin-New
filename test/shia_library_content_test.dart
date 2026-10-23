@@ -60,7 +60,7 @@ void main() {
       expect(taqibat, hasLength(5));
       expect(taqibat.every((entry) => entry.category == 'التعقيبات بعد الصلاة'), isTrue);
       expect(taqibat.map((entry) => entry.displayTitle).toSet(), hasLength(5));
-      expect(taqibat.every((entry) => !RegExp(r'\\(\\d+\\)').hasMatch(entry.displayTitle)), isTrue);
+      expect(taqibat.every((entry) => !['(1)', '(2)', '(3)', '(4)', '(5)'].any((number) => entry.displayTitle.contains(number)), isTrue);
       expect(taqibat.every((entry) => entry.displayTitle != entry.title), isTrue);
     });
 

@@ -329,12 +329,12 @@ class _MainShellState extends State<MainShell> {
       ),
       bottomNavigationBar: DecoratedBox(
         decoration: BoxDecoration(
-          color: _ink,
+          color: Theme.of(context).scaffoldBackgroundColor,
           border: Border(top: BorderSide(color: _gold.withValues(alpha: .18))),
         ),
         child: NavigationBar(
           height: 68,
-          backgroundColor: _ink,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           surfaceTintColor: Colors.transparent,
           indicatorColor: _emerald.withValues(alpha: .25),
           labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,

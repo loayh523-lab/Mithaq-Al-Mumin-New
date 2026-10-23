@@ -102,6 +102,8 @@ jobs:
         run: python3 tool/prepare_shia_duas.py
       - name: Prepare licensed Arabic fonts
         run: python3 tool/prepare_fonts.py
+      - name: Validate bundled Arabic text and reject Persian characters
+        run: python3 tool/check_arabic_assets.py
       - name: Install dependencies
         run: flutter pub get
       - name: Analyze

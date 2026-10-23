@@ -75,7 +75,9 @@ class ShiaTextEntry {
       final normalized = normalizeForTitle(line);
       return normalized.isNotEmpty &&
           !normalized.startsWith('بسماللهالرحمنالرحيم') &&
-          !normalized.startsWith('اعوذباللهمنالشيطانالرجيم');
+          !normalized.startsWith('اعوذباللهمنالشيطانالرجيم') &&
+          !normalized.startsWith('اللهمصل') &&
+          !normalized.startsWith('اللهمصلعلىمحمد');
     }).toList();
     final sourceLine = meaningfulLines.isNotEmpty
         ? meaningfulLines.first

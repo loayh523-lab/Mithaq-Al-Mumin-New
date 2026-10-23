@@ -4,9 +4,8 @@ import 'package:flutter/services.dart';
 import '../quran/quran_pages.dart';
 import 'shia_text_library_page.dart';
 
-const _searchPanel = Color(0xFF10251E);
 const _searchGold = Color(0xFFD9B66D);
-const _searchMuted = Color(0xFF9EB5A9);
+const _searchMuted = Color(0xFF697A70);
 
 
 /// Normalize common Arabic writing variants for offline text matching.
@@ -176,7 +175,7 @@ class _SmartSearchPageState extends State<SmartSearchPage> {
               icon: const Icon(Icons.arrow_forward_rounded),
             ),
             filled: true,
-            fillColor: _searchPanel,
+            fillColor: Theme.of(context).colorScheme.surface,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
               borderSide: BorderSide.none,
@@ -201,7 +200,7 @@ class _SmartSearchPageState extends State<SmartSearchPage> {
                     itemBuilder: (context, index) {
                       final hit = _hits[index];
                       return Card(
-                        color: _searchPanel,
+                        color: Theme.of(context).colorScheme.surface,
                         child: ListTile(
                           title: Text(hit.title, style: const TextStyle(color: _searchGold, fontWeight: FontWeight.bold)),
                           subtitle: Column(

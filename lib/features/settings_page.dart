@@ -6,7 +6,6 @@ import '../services/prayer_locations.dart';
 import '../services/prayer_notification_service.dart';
 import '../services/app_theme.dart';
 
-const _settingsPanel = Color(0xFF10251E);
 const _settingsGold = Color(0xFFD9B66D);
 const _settingsMuted = Color(0xFF697A70);
 

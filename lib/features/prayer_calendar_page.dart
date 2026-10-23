@@ -133,9 +133,9 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
         const SizedBox(height: 8),
         Row(
           children: [
-            Expanded(child: _time(Icons.wb_sunny_outlined, 'الشروق', times.sunrise)),
+            Expanded(child: _prayerTimeTile(Icons.wb_sunny_outlined, 'الشروق', times.sunrise)),
             const SizedBox(width: 8),
-            Expanded(child: _time(Icons.wb_twilight, 'الغروب', times.sunset)),
+            Expanded(child: _prayerTimeTile(Icons.wb_twilight, 'الغروب', times.sunset)),
           ],
         ),
         const Padding(padding: EdgeInsets.all(8), child: Text('الحساب المحلي احتياطي تقريبي، وليس بديلاً عن جدول شرعي معتمد من مكتب مرجعك. استخدم زر GPS لتحديث الإحداثيات وفعّل تنبيهات الصلاة من الإعدادات.', style: TextStyle(color: _muted, fontSize: 11, height: 1.6))),

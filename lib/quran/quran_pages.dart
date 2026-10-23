@@ -807,9 +807,9 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
                             child: Text(
                               'سورة ${widget.surah.name}',
                               textAlign: TextAlign.center,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 25,
-                                color: Colors.white,
+                                color: Theme.of(context).colorScheme.onSurface,
                                 fontWeight: FontWeight.w600,
                                 height: 1.6,
                               ),
@@ -825,15 +825,15 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
                       ),
                     ),
                     if (widget.surah.id != 1 && widget.surah.id != 9)
-                      const Padding(
-                        padding: EdgeInsets.only(bottom: 22),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 22),
                         child: Center(
                           child: Text(
                             'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 27,
-                              color: Colors.white,
+                              color: Theme.of(context).colorScheme.onSurface,
                               height: 2,
                             ),
                           ),
@@ -872,7 +872,7 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
                                 style: TextStyle(
                                   fontSize: _fontSize,
                                   height: 2.25,
-                                  color: Colors.white,
+                                  color: Theme.of(context).colorScheme.onSurface,
                                   fontFamily: 'AmiriQuran',
                                 ),
                               ),

@@ -174,7 +174,7 @@ class _QadaTrackerPageState extends State<QadaTrackerPage> {
 
   Widget _summary(String title, String value) => Container(
     padding: const EdgeInsets.all(12),
-    decoration: BoxDecoration(color: Colors.black12, borderRadius: BorderRadius.circular(14)),
+    decoration: BoxDecoration(color: Theme.of(context).colorScheme.surfaceContainerHighest, borderRadius: BorderRadius.circular(14)),
     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(title, style: const TextStyle(color: _qadaMuted, fontSize: 12)),
       const SizedBox(height: 5),

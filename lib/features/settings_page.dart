@@ -158,6 +158,22 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
+
+  Future<void> _checkNotificationSchedule() async {
+    final count = await PrayerNotificationService.pendingPrayerReminderCount();
+    final allowed = await PrayerNotificationService.notificationsAreEnabled();
+    if (!mounted) return;
+    if (allowed == false) {
+      _message('إذن الإشعارات مرفوض من أندرويد. فعّله من إعدادات التطبيق ثم جرّب مجدداً.');
+    } else if (count < 0) {
+      _message('تعذّر قراءة مواعيد الإشعارات من النظام. جرّب إعادة تشغيل التطبيق.');
+    } else if (!_notificationsEnabled || count == 0) {
+      _message('ماكو مواعيد أذان مجدولة حالياً. فعّل إشعارات الصلاة أولاً.');
+    } else {
+      _message('النظام يحتفظ حالياً بـ$count موعد أذان مجدول. إذا لا يظهر التنبيه، افحص السماح بالتشغيل بالخلفية وتوفير الطاقة.');
+    }
+  }
+
   Future<void> _testNotification() async {
     final ok = await PrayerNotificationService.showTestNotification();
     if (!mounted) return;
@@ -385,6 +401,16 @@ class _SettingsPageState extends State<SettingsPage> {
               onPressed: _loaded ? _testNotification : null,
               icon: const Icon(Icons.notifications_active_outlined),
               label: const Text('تجربة إشعار الأذان'),
+            ),
+          ),
+
+          const SizedBox(height: 8),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: _loaded ? _checkNotificationSchedule : null,
+              icon: const Icon(Icons.fact_check_outlined),
+              label: const Text('فحص جدولة الأذان'),
             ),
           ),
           const Text('تنبيه: التسجيل الصوتي المضمّن حالياً لم يُتحقّق من مطابقته للأذان الجعفري أو من كونه بصوت الشيخ شبّر معلة. لا تعتمد عليه قبل استبداله بتسجيل موثّق.', style: TextStyle(color: _settingsMuted, fontSize: 11, height: 1.5)),

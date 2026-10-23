@@ -13,7 +13,7 @@ class PrayerNotificationService {
   static const int _idStart = 4000;
   static const int _daysToSchedule = 30;
   // Increment this when the Android notification channel or schedule format changes.
-  static const int _scheduleRevision = 8;
+  static const int _scheduleRevision = 9;
 
   static Future<void> _initialize() async {
     if (_initialized) return;
@@ -42,7 +42,7 @@ class PrayerNotificationService {
         'إذا ظهر هذا التنبيه فقد وصل الإشعار التجريبي. افحص مستوى صوت التنبيهات إذا لم تسمع الأذان.',
         const NotificationDetails(
           android: AndroidNotificationDetails(
-            'mithaq_adhan_shabbar_v8', 'أذان الصلاة',
+            'mithaq_adhan_shabbar_v9', 'أذان الصلاة',
             channelDescription: 'أذان الصلاة من التسجيل المرفق بالتطبيق. إذا لم تسمع الصوت فتحقق من إعدادات قناة أذان الصلاة ومستوى صوت التنبيهات.',
             importance: Importance.high, priority: Priority.high,
             sound: RawResourceAndroidNotificationSound('adhan_shabbar_maalla'),
@@ -177,7 +177,7 @@ class PrayerNotificationService {
               scheduled,
               const NotificationDetails(
                 android: AndroidNotificationDetails(
-                  'mithaq_adhan_shabbar_v8',
+                  'mithaq_adhan_shabbar_v9',
                   'أذان الصلاة',
                   channelDescription: 'أذان الصلاة من التسجيل المرفق بالتطبيق. إذا لم تسمع الصوت فتحقق من إعدادات قناة أذان الصلاة ومستوى صوت التنبيهات.',
                   importance: Importance.high,
@@ -229,6 +229,35 @@ class PrayerNotificationService {
     } catch (error, stackTrace) {
       debugPrint('Prayer reminder scheduling failed: $error\\n$stackTrace');
       return false;
+    }
+  }
+
+
+  /// Number of scheduled prayer-time reminders (excludes the earlier heads-up).
+  /// Returns -1 when the platform notification API could not be queried.
+  static Future<int> pendingPrayerReminderCount() async {
+    try {
+      await _initialize();
+      final pending = await _plugin.pendingNotificationRequests();
+      return pending.where((request) =>
+        request.id >= _idStart &&
+        request.id < _idStart + _daysToSchedule * 10).length;
+    } catch (error, stackTrace) {
+      debugPrint('Reading scheduled prayer reminders failed: $error\\n$stackTrace');
+      return -1;
+    }
+  }
+
+  /// Returns the Android app-level notification permission state when available.
+  static Future<bool?> notificationsAreEnabled() async {
+    try {
+      await _initialize();
+      if (defaultTargetPlatform != TargetPlatform.android) return null;
+      final android = _plugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+      return await android?.areNotificationsEnabled();
+    } catch (error, stackTrace) {
+      debugPrint('Reading notification permission state failed: $error\\n$stackTrace');
+      return null;
     }
   }
 

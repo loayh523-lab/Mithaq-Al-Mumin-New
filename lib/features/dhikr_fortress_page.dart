@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-const _dhikrPanel = Color(0xFF10251E);
 const _dhikrGold = Color(0xFFD9B66D);
-const _dhikrMuted = Color(0xFF9EB5A9);
+const _dhikrMuted = Color(0xFF697A70);
 const _dhikrSourceUrl = 'https://tableegh.imamali.net/?id=3117';
 
 class _DhikrItem {
@@ -181,7 +180,7 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
         Container(
           padding: const EdgeInsets.all(17),
           decoration: BoxDecoration(
-            color: _dhikrPanel,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(20),
             border: Border.all(color: _dhikrGold.withValues(alpha: .3)),
           ),
@@ -207,7 +206,7 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
             final count = _counts[item.id] ?? 0;
             final target = item.target;
             return Card(
-              color: _dhikrPanel,
+              color: Theme.of(context).colorScheme.surface,
               margin: const EdgeInsets.only(bottom: 10),
               child: Padding(
                 padding: const EdgeInsets.all(15),

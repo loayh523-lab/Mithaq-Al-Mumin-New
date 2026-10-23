@@ -101,14 +101,14 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
         ],
       ),
       body: ListView(padding: const EdgeInsets.all(16), children: [
-      Container(padding: const EdgeInsets.all(18), decoration: BoxDecoration(color: _panel, borderRadius: BorderRadius.circular(22), border: Border.all(color: _gold.withValues(alpha: .3))), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Container(padding: const EdgeInsets.all(18), decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface, borderRadius: BorderRadius.circular(22), border: Border.all(color: _gold.withValues(alpha: .3))), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const Text('التاريخ الهجري التقريبي', style: TextStyle(color: _muted)), const SizedBox(height: 8),
         Text('${hijri.day} ${hijri.monthName} ${hijri.year} هـ', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: _gold)),
         const SizedBox(height: 6), Text(_dateLabel(date), style: const TextStyle(color: _muted)),
         Row(children: [const Expanded(child: Text('تصحيح يدوي للتاريخ')), IconButton(onPressed: () => _correct(-1), icon: const Icon(Icons.remove_circle_outline)), Text('$correction يوم'), IconButton(onPressed: () => _correct(1), icon: const Icon(Icons.add_circle_outline))]),
         const Text('التاريخ محسوب بالتقويم الهجري الجدولي وقد يختلف يوماً عن إعلان ثبوت الهلال في العراق. يمكنك ضبطه إذا اعتمد مكتب مرجعك تاريخاً مختلفاً.', style: TextStyle(color: _muted, fontSize: 11, height: 1.5)),
       ])),
-      if (_occasion(hijri) != null) Card(color: _panel, child: ListTile(leading: const Icon(Icons.event, color: _gold), title: const Text('مناسبة دينية'), subtitle: Text(_occasion(hijri)!, style: const TextStyle(height: 1.5)))),
+      if (_occasion(hijri) != null) Card(color: Theme.of(context).colorScheme.surface, child: ListTile(leading: const Icon(Icons.event, color: _gold), title: const Text('مناسبة دينية'), subtitle: Text(_occasion(hijri)!, style: const TextStyle(height: 1.5)))),
       const SizedBox(height: 14),
       SegmentedButton<int>(segments: const [ButtonSegment(value: 0, label: Text('مواقيت الصلاة'), icon: Icon(Icons.access_time)), ButtonSegment(value: 1, label: Text('إمساكية رمضان'), icon: Icon(Icons.nights_stay_outlined)), ButtonSegment(value: 2, label: Text('التقويم الهجري'), icon: Icon(Icons.calendar_month_rounded))], selected: {tab}, onSelectionChanged: (v) => setState(() => tab = v.first)),
       const SizedBox(height: 12),
@@ -228,7 +228,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
 
     return [
       Card(
-        color: _panel,
+        color: Theme.of(context).colorScheme.surface,
         margin: const EdgeInsets.symmetric(vertical: 5),
         elevation: 0,
         shape: RoundedRectangleBorder(
@@ -375,7 +375,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
         },
       ),
       Card(
-        color: _panel,
+        color: Theme.of(context).colorScheme.surface,
         margin: const EdgeInsets.only(top: 10, bottom: 6),
         elevation: 0,
         child: Padding(
@@ -458,7 +458,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
   List<Widget> _annualCalendar(int year, int correction) {
     final widgets = <Widget>[
       Card(
-        color: _panel,
+        color: Theme.of(context).colorScheme.surface,
         margin: const EdgeInsets.symmetric(vertical: 5),
         elevation: 0,
         shape: RoundedRectangleBorder(
@@ -483,7 +483,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
     for (var month = 1; month <= 12; month++) {
       final daysInMonth = DateUtils.getDaysInMonth(year, month);
       widgets.add(Card(
-        color: _panel,
+        color: Theme.of(context).colorScheme.surface,
         margin: const EdgeInsets.symmetric(vertical: 5),
         elevation: 0,
         clipBehavior: Clip.antiAlias,
@@ -579,7 +579,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
   Widget _prayerTimeTile(IconData icon, String label, String time) => Container(
     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
     decoration: BoxDecoration(
-      color: _panel,
+      color: Theme.of(context).colorScheme.surface,
       borderRadius: BorderRadius.circular(16),
       border: Border.all(color: _gold.withValues(alpha: .18)),
     ),
@@ -596,7 +596,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
     ),
   );
 
-  Widget _time(IconData icon, String label, String time) => Card(color: _panel, child: ListTile(leading: Icon(icon, color: _gold), title: Text(label), trailing: Text(formatPrayerTime12Hour(time), style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold))));
+  Widget _time(IconData icon, String label, String time) => Card(color: Theme.of(context).colorScheme.surface, child: ListTile(leading: Icon(icon, color: _gold), title: Text(label), trailing: Text(formatPrayerTime12Hour(time), style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold))));
 }
 
 String _arabicIndicDigits(int value) => value.toString().replaceAllMapped(
@@ -724,7 +724,7 @@ List<Widget> _ramadanRows(DateTime reference, double latitude, double longitude)
     final d = first.add(Duration(days: i));
     final t = SolarPrayerTimes.forDate(d, latitude, longitude, 3.0);
     final h = _Hijri.fromGregorian(d);
-    return Card(color: _panel, child: ListTile(dense: true, leading: CircleAvatar(backgroundColor: _gold.withValues(alpha: .15), child: Text('${i + 1}', style: const TextStyle(color: _gold))), title: Text('رمضان ${h.day} — ${_dateLabel(d)}'), subtitle: Text('الإمساك/الفجر: ${formatPrayerTime12Hour(t.fajr)}  •  الإفطار التقريبي: ${formatPrayerTime12Hour(t.maghrib)}')));
+    return Card(color: Theme.of(context).colorScheme.surface, child: ListTile(dense: true, leading: CircleAvatar(backgroundColor: _gold.withValues(alpha: .15), child: Text('${i + 1}', style: const TextStyle(color: _gold))), title: Text('رمضان ${h.day} — ${_dateLabel(d)}'), subtitle: Text('الإمساك/الفجر: ${formatPrayerTime12Hour(t.fajr)}  •  الإفطار التقريبي: ${formatPrayerTime12Hour(t.maghrib)}')));
   });
 }
 

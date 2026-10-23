@@ -590,7 +590,7 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
         if (!_focusMode) Padding(
           padding: const EdgeInsets.fromLTRB(14, 4, 14, 4),
           child: Column(children: [
-            const Align(
+            Align(
               alignment: AlignmentDirectional.centerStart,
               child: Text('النص العربي', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontWeight: FontWeight.w600)),
             ),

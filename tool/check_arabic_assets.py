@@ -11,6 +11,7 @@ ASSETS = (
     Path("assets/shia_duas/shia_duas.json"),
     Path("assets/shia_duas/sahifa_sajjadiya.json"),
 )
+DUA_MANIFEST = Path("tool/shia_dua_manifest.json")
 # Includes Persian Yeh/Keheh as well as letters not used in standard Arabic.
 FORBIDDEN = re.compile(r"[\u067e\u0686\u0698\u06af\u06cc\u06a9\u06d2\u06d3]")
 
@@ -28,7 +29,8 @@ def strings(value, path="$"):
 
 
 def main() -> None:
-    missing = [str(path) for path in ASSETS if not path.is_file()]
+    required_json = (*ASSETS, DUA_MANIFEST)
+    missing = [str(path) for path in required_json if not path.is_file()]
     if missing:
         raise SystemExit("Required offline content assets are missing:\n- " + "\n- ".join(missing))
 
@@ -55,7 +57,7 @@ def main() -> None:
             if len(errors) >= 30:
                 break
 
-    for asset in ASSETS:
+    for asset in required_json:
         try:
             payload = json.loads(asset.read_text(encoding="utf-8"))
         except (OSError, UnicodeError, json.JSONDecodeError) as error:
@@ -77,7 +79,10 @@ def main() -> None:
             "Arabic source/content validation failed. Normalize Persian characters to Arabic script "
             "and review the source text:\n- " + "\n- ".join(errors)
         )
-    print(f"Validated {len(ASSETS)} offline content JSON assets: no Persian-specific characters found.")
+    print(
+        f"Validated {len(ASSETS)} offline content JSON assets and the dua manifest: "
+        "no Persian-specific characters found."
+    )
 
 
 if __name__ == "__main__":

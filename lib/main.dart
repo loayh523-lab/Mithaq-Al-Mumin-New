@@ -651,7 +651,7 @@ class _MainShellState extends State<MainShell> {
                     width: 39,
                     height: 39,
                     decoration: BoxDecoration(
-                      color: selected ? _gold.withValues(alpha: .13) : _panel,
+                      color: selected ? _gold.withValues(alpha: .13) : Theme.of(context).colorScheme.surface,
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
                         color: selected
@@ -883,17 +883,7 @@ class _MainShellState extends State<MainShell> {
                 children: [
                   Row(
                     children: [
-                      Container(
-                        width: 42,
-                        height: 42,
-                        decoration: BoxDecoration(
-                          color: _gold.withValues(alpha: .13),
-                          borderRadius: BorderRadius.circular(14),
-                          border: Border.all(color: _gold.withValues(alpha: .25)),
-                        ),
-                        clipBehavior: Clip.antiAlias,
-                        child: Image.asset('assets/images/mithaq_logo.jpg', fit: BoxFit.contain),
-                      ),
+                      const MithaqBrandMark(size: 42)
                       const SizedBox(width: 11),
                       const Expanded(
                         child: Column(
@@ -978,7 +968,7 @@ class _MainShellState extends State<MainShell> {
         Container(
           padding: const EdgeInsets.fromLTRB(15, 15, 15, 13),
           decoration: BoxDecoration(
-            color: _panel,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(22),
             border: Border.all(color: _gold.withValues(alpha: .24)),
           ),
@@ -1819,7 +1809,7 @@ class _DuaLibraryState extends State<_DuaLibrary> {
             hintText: 'ابحث عن ذكر...',
             prefixIcon: const Icon(Icons.search_rounded),
             filled: true,
-            fillColor: _panel,
+            fillColor: Theme.of(context).colorScheme.surface,
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
           ),
         ),
@@ -1845,7 +1835,7 @@ class _DuaLibraryState extends State<_DuaLibrary> {
               onTap: () => showDialog<void>(
                 context: context,
                 builder: (context) => AlertDialog(
-                  backgroundColor: _panel,
+                  backgroundColor: Theme.of(context).colorScheme.surface,
                   title: Text(item.title),
                   content: SingleChildScrollView(child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -2093,7 +2083,7 @@ class _KhatmaPageState extends State<KhatmaPage> {
                   child: LinearProgressIndicator(
                     value: _completedJuz / 30,
                     minHeight: 10,
-                    backgroundColor: _ink,
+                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                     color: _gold,
                   ),
                 ),
@@ -2171,7 +2161,7 @@ class _KhatmaPageState extends State<KhatmaPage> {
                         final page = index + 1;
                         final done = _completedPages.contains(page);
                         return Material(
-                          color: done ? _emerald : _ink,
+                          color: done ? _emerald : Theme.of(context).scaffoldBackgroundColor,
                           borderRadius: BorderRadius.circular(9),
                           child: InkWell(
                             borderRadius: BorderRadius.circular(9),

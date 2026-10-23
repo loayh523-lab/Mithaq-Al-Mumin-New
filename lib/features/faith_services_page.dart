@@ -133,7 +133,7 @@ class FaithServicesPage extends StatelessWidget {
           decoration: BoxDecoration(
             color: _faithPanel,
             borderRadius: BorderRadius.circular(18),
-            border: Border.all(color: Colors.white.withValues(alpha: .06)),
+            border: Border.all(color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: .45)),
           ),
           child: const Column(
             crossAxisAlignment: CrossAxisAlignment.start,

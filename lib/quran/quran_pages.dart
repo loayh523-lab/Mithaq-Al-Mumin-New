@@ -9,7 +9,7 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 const _panel = Color(0xFF10251E);
 const _emerald = Color(0xFF1C8060);
 const _gold = Color(0xFFD9B66D);
-const _muted = Color(0xFF9EB5A9);
+const _muted = Color(0xFF697A70);
 
 class SurahInfo {
   const SurahInfo({required this.id, required this.name, required this.transliteration, required this.type, required this.totalVerses});
@@ -130,7 +130,7 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
             controller: _search, onChanged: (_) => setState(() {}),
             decoration: InputDecoration(
               hintText: 'ابحث باسم السورة أو رقمها...', prefixIcon: const Icon(Icons.search_rounded),
-              filled: true, fillColor: _panel,
+              filled: true, fillColor: Theme.of(context).colorScheme.surface,
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
             ),
           ),
@@ -150,7 +150,7 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
                   itemBuilder: (context, i) {
                     final s = filtered[i];
                     return Card(
-                      margin: EdgeInsets.zero, color: _panel,
+                      margin: EdgeInsets.zero, color: Theme.of(context).colorScheme.surface,
                       child: ListTile(
                         leading: CircleAvatar(backgroundColor: _emerald.withValues(alpha: .24), child: Text('${s.id}', style: const TextStyle(color: _gold))),
                         title: Text(s.name, style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w700)),
@@ -316,7 +316,7 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
           hintText: 'ابحث بكلمة من الآية...',
           prefixIcon: const Icon(Icons.search),
           suffixIcon: IconButton(onPressed: _search, icon: const Icon(Icons.arrow_forward_rounded)),
-          filled: true, fillColor: _panel,
+          filled: true, fillColor: Theme.of(context).colorScheme.surface,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
         ),
       )),
@@ -330,7 +330,7 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
               separatorBuilder: (_, __) => const SizedBox(height: 8),
               itemBuilder: (context, index) {
                 final hit = _hits[index];
-                return Card(color: _panel, child: ListTile(
+                return Card(color: Theme.of(context).colorScheme.surface, child: ListTile(
                   title: Text('${hit.surah.name} • الآية ${hit.verseNumber}', style: const TextStyle(color: _gold, fontWeight: FontWeight.bold)),
                   subtitle: Text(hit.text, maxLines: 4, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 19, height: 1.8)),
                   onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => Directionality(
@@ -406,7 +406,7 @@ class _QuranBookmarksPageState extends State<QuranBookmarksPage> {
               separatorBuilder: (_, __) => const SizedBox(height: 8),
               itemBuilder: (context, index) {
                 final item = _items[index];
-                return Card(color: _panel, child: ListTile(
+                return Card(color: Theme.of(context).colorScheme.surface, child: ListTile(
                   title: Text('${item.surah.name} • الآية ${item.verseNumber}', style: const TextStyle(color: _gold, fontWeight: FontWeight.bold)),
                   subtitle: Text(item.text, maxLines: 3, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 18, height: 1.7)),
                   onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => Directionality(
@@ -556,7 +556,7 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: _panel,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       showDragHandle: true,
       builder: (sheetContext) => SafeArea(
         child: Padding(
@@ -771,7 +771,7 @@ class _SurahReaderPageState extends State<SurahReaderPage> {
                             vertical: 5,
                           ),
                           decoration: BoxDecoration(
-                            color: _panel,
+                            color: Theme.of(context).colorScheme.surface,
                             border: Border.all(
                               color: _muted.withValues(alpha: .3),
                             ),

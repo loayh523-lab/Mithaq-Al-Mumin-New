@@ -119,16 +119,21 @@ class ShiaTextData {
   final String sourceProject;
   final String license;
   static Future<ShiaTextData>? _cache;
+  static Future<ShiaTextData>? _coreCache;
   static Future<ShiaTextData>? _sahifaCache;
+
+  /// Loads the original curated 110-text collection without Sahifa entries.
+  /// The unified on-screen library uses [load] to combine this with Sahifa.
+  static Future<ShiaTextData> loadCore() => _coreCache ??= _loadAsset(
+    'assets/shia_duas/shia_duas.json',
+    expectedCount: 110,
+    sahifaOnly: false,
+  );
 
   static Future<ShiaTextData> load() => _cache ??= _loadCombined();
 
   static Future<ShiaTextData> _loadCombined() async {
-    final core = await _loadAsset(
-      'assets/shia_duas/shia_duas.json',
-      expectedCount: 110,
-      sahifaOnly: false,
-    );
+    final core = await loadCore();
     final sahifa = await loadSahifa();
     final entries = <ShiaTextEntry>[...sahifa.entries, ...core.entries];
     final slugs = entries.map((entry) => entry.slug).toSet();

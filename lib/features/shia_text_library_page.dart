@@ -71,23 +71,44 @@ class ShiaTextEntry {
       }
       return compact.toString().replaceAll('ٱ', 'ا');
     }
-    final meaningfulLines = arabicLines.where((line) {
-      final normalized = normalizeForTitle(line);
-      return normalized.isNotEmpty &&
-          !normalized.startsWith('بسماللهالرحمنالرحيم') &&
-          !normalized.startsWith('اعوذباللهمنالشيطانالرجيم') &&
-          !normalized.startsWith('اللهمصل') &&
-          !normalized.startsWith('اللهمصلعلىمحمد');
-    }).toList();
-    final sourceLine = meaningfulLines.isNotEmpty
-        ? meaningfulLines.first
+    // Imported entries sometimes store an entire dua as one line beginning
+    // with the same basmala/salawat. Strip that boilerplate before deriving a
+    // readable title, otherwise five different texts all appear with one title.
+    String meaningfulPrefix(String line) {
+      var value = line.trim();
+      const commonOpeners = [
+        'بسم الله الرحمن الرحيم',
+        'بسم الله',
+        'أعوذ بالله من الشيطان الرجيم',
+        'اللهم صل على محمد وآل محمد',
+        'اللهم صل على محمد',
+      ];
+      var changed = true;
+      while (changed) {
+        changed = false;
+        for (final opener in commonOpeners) {
+          if (value.startsWith(opener)) {
+            value = value.substring(opener.length).trimLeft();
+            changed = true;
+          }
+        }
+      }
+      return value;
+    }
+
+    final candidates = arabicLines
+        .map(meaningfulPrefix)
+        .where((line) => normalizeForTitle(line).isNotEmpty)
+        .toList();
+    final sourceLine = candidates.isNotEmpty
+        ? candidates.first
         : (arabicLines.isNotEmpty ? arabicLines.first : '');
     if (sourceLine.isEmpty) return 'تعقيب بعد الصلاة';
 
     final runes = sourceLine.runes.toList();
-    final preview = runes.length <= 34
+    final preview = runes.length <= 42
         ? sourceLine
-        : '${String.fromCharCodes(runes.take(34)).trimRight()}…';
+        : '${String.fromCharCodes(runes.take(42)).trimRight()}…';
     return 'تعقيب بعد الصلاة — $preview';
   }
   bool get isSahifa => slug.startsWith('sahifa-sajjadiya-') || slug.startsWith('munajat-sahifa-');

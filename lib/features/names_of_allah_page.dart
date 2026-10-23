@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-const _namesPanel = Color(0xFF10251E);
 const _namesGold = Color(0xFFD9B66D);
-const _namesMuted = Color(0xFF9EB5A9);
+const _namesMuted = Color(0xFF697A70);
 
 class NamesOfAllahPage extends StatefulWidget {
   const NamesOfAllahPage({super.key});
@@ -130,7 +129,7 @@ class _NamesOfAllahPageState extends State<NamesOfAllahPage> {
           padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
           child: Container(
             padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(color: _namesPanel, borderRadius: BorderRadius.circular(18), border: Border.all(color: _namesGold.withValues(alpha: .3))),
+            decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface, borderRadius: BorderRadius.circular(18), border: Border.all(color: _namesGold.withValues(alpha: .3))),
             child: const Text('قائمة مشهورة لأسماء الله الحسنى ومعانٍ موجزة للتدبّر. قد تختلف طريقة تعداد الأسماء وترتيبها بين المصادر.', style: TextStyle(color: _namesMuted, height: 1.7)),
           ),
         ),
@@ -142,7 +141,7 @@ class _NamesOfAllahPageState extends State<NamesOfAllahPage> {
             decoration: InputDecoration(
               hintText: 'ابحث عن اسم أو معنى...',
               prefixIcon: const Icon(Icons.search_rounded),
-              filled: true, fillColor: _namesPanel,
+              filled: true, fillColor: Theme.of(context).colorScheme.surface,
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
             ),
           ),
@@ -155,7 +154,7 @@ class _NamesOfAllahPageState extends State<NamesOfAllahPage> {
             itemBuilder: (context, index) {
               final item = filtered[index];
               return Card(
-                color: _namesPanel,
+                color: Theme.of(context).colorScheme.surface,
                 child: ListTile(
                   leading: CircleAvatar(backgroundColor: _namesGold.withValues(alpha: .15), child: Text(item.number.toString(), style: const TextStyle(color: _namesGold, fontSize: 12))),
                   title: Text(item.name, style: const TextStyle(color: _namesGold, fontSize: 20, fontWeight: FontWeight.w800)),

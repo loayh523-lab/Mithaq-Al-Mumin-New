@@ -811,13 +811,6 @@ class _MainShellState extends State<MainShell> {
       _now, _prayerCity.latitude, _prayerCity.longitude, 3.0,
     );
     final nextPrayer = _nextPrayer(prayerTimes, _now);
-    final prayerRows = <({String name, String time})>[
-      (name: 'الفجر', time: prayerTimes.fajr),
-      (name: 'الظهر', time: prayerTimes.noon),
-      (name: 'العصر', time: prayerTimes.asr),
-      (name: 'المغرب', time: prayerTimes.maghrib),
-      (name: 'العشاء', time: prayerTimes.isha),
-    ];
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 28),

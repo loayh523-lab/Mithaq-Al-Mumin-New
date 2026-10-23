@@ -17,10 +17,34 @@ import 'package:mithaq_al_mumin/features/rakah_counter_page.dart';
 import 'package:mithaq_al_mumin/features/about_support_page.dart';
 import 'package:mithaq_al_mumin/services/qibla_calculation.dart';
 import 'package:mithaq_al_mumin/services/prayer_notification_service.dart';
+import 'package:mithaq_al_mumin/services/app_theme.dart';
 
 void main() {
-  setUp(() {
+  setUp(() async {
     SharedPreferences.setMockInitialValues({});
+    await AppTheme.load();
+  });
+
+  testWidgets('settings theme switch updates the app and persists the choice', (tester) async {
+    await tester.pumpWidget(const MithaqApp());
+
+    expect(AppTheme.isDark.value, isTrue);
+    await tester.tap(find.byIcon(Icons.menu));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('الإعدادات'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('المظهر الداكن'), findsOneWidget);
+    await tester.tap(find.byType(Switch).first);
+    await tester.pumpAndSettle();
+
+    expect(AppTheme.isDark.value, isFalse);
+    expect(
+      Theme.of(tester.element(find.byType(Scaffold).first)).brightness,
+      Brightness.light,
+    );
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getBool('app_theme_dark'), isFalse);
   });
 
   testWidgets('home screen shows the agreed dashboard and drawer navigation opens tasbeeh', (tester) async {

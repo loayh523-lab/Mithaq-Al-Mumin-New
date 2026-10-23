@@ -16,6 +16,7 @@ import 'package:mithaq_al_mumin/features/favorites_page.dart';
 import 'package:mithaq_al_mumin/features/rakah_counter_page.dart';
 import 'package:mithaq_al_mumin/features/about_support_page.dart';
 import 'package:mithaq_al_mumin/services/qibla_calculation.dart';
+import 'package:mithaq_al_mumin/services/prayer_notification_service.dart';
 
 void main() {
   setUp(() {
@@ -77,6 +78,53 @@ void main() {
     expect(find.text('تسبيح الزهراء'), findsOneWidget);
     expect(find.text('تسبيح عام'), findsOneWidget);
     expect(find.text('مراحل تسبيح الزهراء عليها السلام'), findsOneWidget);
+  });
+ 
+
+  test('prayer notification IDs keep early alerts separate from adhan reminders', () {
+    expect(PrayerNotificationService.isPrayerReminderNotificationIdForTesting(3999), isFalse);
+    expect(PrayerNotificationService.isPrayerReminderNotificationIdForTesting(4000), isTrue);
+    expect(PrayerNotificationService.isPrayerReminderNotificationIdForTesting(4004), isTrue);
+    expect(PrayerNotificationService.isPrayerReminderNotificationIdForTesting(4005), isFalse);
+    expect(PrayerNotificationService.isPrayerReminderNotificationIdForTesting(4009), isFalse);
+    expect(PrayerNotificationService.isPrayerReminderNotificationIdForTesting(4010), isTrue);
+    expect(PrayerNotificationService.isPrayerReminderNotificationIdForTesting(4294), isTrue);
+    expect(PrayerNotificationService.isPrayerReminderNotificationIdForTesting(4295), isFalse);
+    expect(PrayerNotificationService.isPrayerReminderNotificationIdForTesting(4299), isFalse);
+    expect(PrayerNotificationService.isPrayerReminderNotificationIdForTesting(4300), isFalse);
+  });
+
+  testWidgets('drawer groups features and distinguishes the daily actions', (tester) async {
+    await tester.pumpWidget(const MithaqApp());
+    await tester.tap(find.byIcon(Icons.menu));
+    await tester.pumpAndSettle();
+
+    expect(find.text('التنقّل الأساسي'), findsOneWidget);
+    expect(find.text('العبادة والمتابعة'), findsOneWidget);
+    expect(find.text('المعرفة والخدمات'), findsOneWidget);
+    expect(find.byIcon(Icons.event_available_rounded), findsOneWidget);
+    expect(find.byIcon(Icons.handshake_rounded), findsOneWidget);
+    expect(find.byIcon(Icons.bookmark_added_rounded), findsOneWidget);
+    expect(find.text('نسخة قيد التطوير • راجع المصادر عند الحاجة'), findsOneWidget);
+  });
+
+  testWidgets('quick actions adapt to a narrow phone width without layout errors', (tester) async {
+    tester.view.physicalSize = const Size(360, 800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(const MithaqApp());
+    await tester.scrollUntilVisible(
+      find.text('ابدأ وردك'),
+      220,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('اتجاه القبلة'), findsOneWidget);
+    expect(find.text('حصن الأذكار'), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('Quran index loads the bundled 114-surah catalog', (tester) async {

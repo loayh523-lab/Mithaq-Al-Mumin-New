@@ -85,12 +85,11 @@ class PrayerNotificationService {
       if (selectedCount == 0) {
         return await configure(enabled: true, city: city);
       }
-      final hasEarlyAlerts = prefs.getBool('prayer_early_alert_enabled') ?? false;
-      final minimumHealthyCount = selectedCount * 20 * (hasEarlyAlerts ? 2 : 1);
+      final minimumHealthyCount = selectedCount * 20;
       final pending = await _plugin.pendingNotificationRequests();
-      final activeCount = pending.where((request) =>
-        request.id >= _idStart &&
-        request.id < _idStart + _daysToSchedule * 10).length;
+      final activeCount = pending
+          .where((request) => _isPrayerReminderId(request.id))
+          .length;
       if (activeCount >= minimumHealthyCount) return true;
       return await configure(enabled: true, city: city);
     } catch (error, stackTrace) {
@@ -112,21 +111,23 @@ class PrayerNotificationService {
       var scheduleMode = AndroidScheduleMode.inexactAllowWhileIdle;
       if (defaultTargetPlatform == TargetPlatform.android) {
         final android = _plugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
-        final granted = await android?.requestNotificationsPermission();
-        final notificationsEnabled = await android?.areNotificationsEnabled();
-        if (enabled && (granted == false || notificationsEnabled == false)) {
-          // Do not leave a stale "enabled" state when Android denies notifications.
-          // Cancel our pending reminders as well, so a later permission change can
-          // rebuild a clean schedule through ensureScheduled().
-          final pendingOnDenied = await _plugin.pendingNotificationRequests();
-          for (final request in pendingOnDenied) {
-            if (request.id >= _idStart &&
-                request.id < _idStart + _daysToSchedule * 10) {
-              await _plugin.cancel(request.id);
+        if (enabled) {
+          final granted = await android?.requestNotificationsPermission();
+          final notificationsEnabled = await android?.areNotificationsEnabled();
+          if (granted == false || notificationsEnabled == false) {
+            // Do not leave a stale "enabled" state when Android denies notifications.
+            // Cancel our pending reminders as well, so a later permission change can
+            // rebuild a clean schedule through ensureScheduled().
+            final pendingOnDenied = await _plugin.pendingNotificationRequests();
+            for (final request in pendingOnDenied) {
+              if (request.id >= _idStart &&
+                  request.id < _idStart + _daysToSchedule * 10) {
+                await _plugin.cancel(request.id);
+              }
             }
+            await prefs.setBool('prayer_notifications_enabled', false);
+            return false;
           }
-          await prefs.setBool('prayer_notifications_enabled', false);
-          return false;
         }
         var canScheduleExact = false;
         try {
@@ -234,8 +235,9 @@ class PrayerNotificationService {
         }
       }
       final scheduled = await _plugin.pendingNotificationRequests();
-      final prayerReminders = scheduled.where((request) =>
-        request.id >= _idStart && request.id < _idStart + _daysToSchedule * 10).length;
+      final prayerReminders = scheduled
+          .where((request) => _isPrayerReminderId(request.id))
+          .length;
       if (prayerReminders == 0) {
         await prefs.setBool('prayer_notifications_enabled', false);
         return false;
@@ -250,15 +252,27 @@ class PrayerNotificationService {
   }
 
 
+  static bool _isPrayerReminderId(int id) {
+    if (id < _idStart || id >= _idStart + _daysToSchedule * 10) {
+      return false;
+    }
+    // Each day uses slots 0-4 for prayer times and 5-9 for early alerts.
+    return (id - _idStart) % 10 < 5;
+  }
+
+  @visibleForTesting
+  static bool isPrayerReminderNotificationIdForTesting(int id) =>
+      _isPrayerReminderId(id);
+
   /// Number of scheduled prayer-time reminders (excludes the earlier heads-up).
   /// Returns -1 when the platform notification API could not be queried.
   static Future<int> pendingPrayerReminderCount() async {
     try {
       await _initialize();
       final pending = await _plugin.pendingNotificationRequests();
-      return pending.where((request) =>
-        request.id >= _idStart &&
-        request.id < _idStart + _daysToSchedule * 10).length;
+      return pending
+          .where((request) => _isPrayerReminderId(request.id))
+          .length;
     } catch (error, stackTrace) {
       debugPrint('Reading scheduled prayer reminders failed: $error\\n$stackTrace');
       return -1;

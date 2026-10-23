@@ -1882,7 +1882,7 @@ class _DuaLibraryState extends State<_DuaLibrary> {
             ),
           )),
         const SizedBox(height: 8),
-        const Text('تنبيه: هذه نسخة تأسيسية؛ النصوص المنسوبة إلى روايات أو كتب ستضاف بعد مراجعة المصدر والموضع بدقة.', style: TextStyle(color: _muted, fontSize: 12, height: 1.6)),
+        const Text('يضم هذا القسم أذكاراً عامة ومختارات قرآنية قصيرة. لا تُعرض الصيغ العامة على أنها روايات مسندة، وتُذكر إحالة الآية حيث يكون النص قرآنيّاً.', style: TextStyle(color: _muted, fontSize: 12, height: 1.6)),
       ],
     );
   }

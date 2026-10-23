@@ -43,7 +43,6 @@ class _MithaqMarkPainter extends CustomPainter {
 
   static const _gold = Color(0xFFD9B66D);
   static const _lightGold = Color(0xFFF5D99A);
-  static const _green = Color(0xFF0C3025);
 
   @override
   void paint(Canvas canvas, Size size) {

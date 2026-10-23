@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-const _rakahPanel = Color(0xFF10251E);
 const _rakahGold = Color(0xFFD9B66D);
-const _rakahMuted = Color(0xFF9EB5A9);
+const _rakahMuted = Color(0xFF697A70);
 const _rakahEmerald = Color(0xFF1C8060);
 
 class RakahCounterPage extends StatefulWidget {
@@ -201,7 +200,7 @@ class _RakahCounterPageState extends State<RakahCounterPage> {
                 Container(
                   padding: const EdgeInsets.all(18),
                   decoration: BoxDecoration(
-                    color: _rakahPanel,
+                    color: Theme.of(context).colorScheme.surface,
                     borderRadius: BorderRadius.circular(22),
                     border: Border.all(
                       color: _rakahGold.withValues(alpha: .3),
@@ -269,7 +268,7 @@ class _RakahCounterPageState extends State<RakahCounterPage> {
                                   labelStyle: TextStyle(
                                     color: _targetRakahs == target
                                         ? _rakahGold
-                                        : Colors.white,
+                                        : Theme.of(context).colorScheme.onSurface,
                                   ),
                                 ))
                             .toList(),
@@ -378,7 +377,7 @@ class _RakahCounterPageState extends State<RakahCounterPage> {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: _rakahPanel,
+                    color: Theme.of(context).colorScheme.surface,
                     borderRadius: BorderRadius.circular(18),
                   ),
                   child: const Row(

@@ -40,6 +40,8 @@ const _emerald = Color(0xFF1C8060);
 const _gold = Color(0xFFD9B66D);
 const _muted = Color(0xFF697A70);
 
+Color _themeMuted(BuildContext context) => Theme.of(context).colorScheme.onSurfaceVariant;
+
 const _dailyInspirations = <({String text, String source, int surahId, int verse})>[
   (text: 'أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ', source: 'سورة الرعد، الآية 28', surahId: 13, verse: 28),
   (text: 'وَقُلْ رَبِّ زِدْنِي عِلْمًا', source: 'سورة طه، الآية 114', surahId: 20, verse: 114),
@@ -293,8 +295,8 @@ class _MainShellState extends State<MainShell> {
         title: Row(
           children: [
             const MithaqBrandMark(size: 36),
-            const SizedBox(width: 10),
-            const Expanded(
+            SizedBox(width: 10),
+            Expanded(
               child: Text(
                 'ميثاق المؤمن',
                 maxLines: 1,
@@ -308,7 +310,7 @@ class _MainShellState extends State<MainShell> {
           IconButton(
             tooltip: 'الباحث الذكي',
             onPressed: () => _pushPage(const SmartSearchPage()),
-            icon: const Icon(Icons.search_rounded, color: _gold),
+            icon: Icon(Icons.search_rounded, color: _gold),
           ),
         ],
       ),
@@ -393,7 +395,7 @@ class _MainShellState extends State<MainShell> {
                 Row(
                   children: [
                     const MithaqBrandMark(size: 62),
-                    const SizedBox(width: 13),
+                    SizedBox(width: 13),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -413,7 +415,7 @@ class _MainShellState extends State<MainShell> {
                             'درب العبادة والطمأنينة',
                             maxLines: 2,
                             style: TextStyle(
-                              color: _muted,
+                              color: _themeMuted(context),
                               fontSize: 12,
                               height: 1.45,
                             ),
@@ -423,7 +425,7 @@ class _MainShellState extends State<MainShell> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 14),
+                SizedBox(height: 14),
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
@@ -434,7 +436,7 @@ class _MainShellState extends State<MainShell> {
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.auto_awesome_rounded, color: _gold, size: 17),
+                      Icon(Icons.auto_awesome_rounded, color: _gold, size: 17),
                       SizedBox(width: 8),
                       Expanded(
                         child: Text(
@@ -461,7 +463,7 @@ class _MainShellState extends State<MainShell> {
                     _drawerGridItem(Icons.access_time_rounded, 'مواقيت الصلاة', () => _selectTab(3), selected: _selected == 3),
                   ],
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 _drawerSectionTitle('العبادات والمتابعة', Icons.spa_rounded),
                 _drawerGrid(
                   children: [
@@ -474,7 +476,7 @@ class _MainShellState extends State<MainShell> {
                     _drawerGridItem(Icons.calculate_rounded, 'عداد الركعات', () => _openDrawerPage(const RakahCounterPage())),
                   ],
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 _drawerSectionTitle('المعرفة والخدمات', Icons.local_library_rounded),
                 _drawerGrid(
                   children: [
@@ -494,7 +496,7 @@ class _MainShellState extends State<MainShell> {
             child: Row(
               children: [
                 Expanded(child: _drawerBottomItem(Icons.star_rounded, 'المفضلة', () => _openDrawerPage(const FavoritesPage()))),
-                const SizedBox(width: 10),
+                SizedBox(width: 10),
                 Expanded(child: _drawerBottomItem(Icons.tune_rounded, 'الإعدادات', () => _openDrawerPage(SettingsPage(onLocationChanged: _handleLocationChanged)))),
               ],
             ),
@@ -508,14 +510,14 @@ class _MainShellState extends State<MainShell> {
               borderRadius: BorderRadius.circular(14),
               border: Border.all(color: _gold.withValues(alpha: .16)),
             ),
-            child: const Row(
+            child: Row(
               children: [
                 Icon(Icons.security_rounded, color: _gold, size: 17),
                 SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     'نسخة قيد التطوير • راجع المصادر عند الحاجة',
-                    style: TextStyle(color: _muted, fontSize: 10, height: 1.45),
+                    style: TextStyle(color: _themeMuted(context), fontSize: 10, height: 1.45),
                   ),
                 ),
               ],
@@ -563,7 +565,7 @@ class _MainShellState extends State<MainShell> {
                   ),
                   child: Icon(icon, color: selected ? _gold : Theme.of(context).colorScheme.secondary, size: 23),
                 ),
-                const SizedBox(height: 7),
+                SizedBox(height: 7),
                 Text(
                   title,
                   textAlign: TextAlign.center,
@@ -598,8 +600,8 @@ class _MainShellState extends State<MainShell> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, color: _gold, size: 19),
-            const SizedBox(width: 7),
-            Text(title, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800)),
+            SizedBox(width: 7),
+            Text(title, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800)),
           ],
         ),
       ),
@@ -611,10 +613,10 @@ class _MainShellState extends State<MainShell> {
     child: Row(
       children: [
         Icon(icon, color: _gold.withValues(alpha: .88), size: 16),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             color: _gold,
             fontSize: 12,
             fontWeight: FontWeight.w900,
@@ -656,12 +658,12 @@ class _MainShellState extends State<MainShell> {
                       border: Border.all(
                         color: selected
                             ? _gold.withValues(alpha: .3)
-                            : _muted.withValues(alpha: .08),
+                            : _themeMuted(context).withValues(alpha: .08),
                       ),
                     ),
                     child: Icon(icon, color: selected ? _gold : Theme.of(context).colorScheme.onSurfaceVariant, size: 21),
                   ),
-                  const SizedBox(width: 11),
+                  SizedBox(width: 11),
                   Expanded(
                     child: Text(
                       title,
@@ -884,8 +886,8 @@ class _MainShellState extends State<MainShell> {
                   Row(
                     children: [
                       const MithaqBrandMark(size: 42),
-                      const SizedBox(width: 11),
-                      const Expanded(
+                      SizedBox(width: 11),
+                      Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -909,34 +911,34 @@ class _MainShellState extends State<MainShell> {
                       Icon(Icons.nights_stay_outlined, color: _gold.withValues(alpha: .8)),
                     ],
                   ),
-                  const SizedBox(height: 26),
-                  const Text(
+                  SizedBox(height: 26),
+                  Text(
                     'التاريخ الهجري',
-                    style: TextStyle(color: _muted, fontSize: 11, fontWeight: FontWeight.w600),
+                    style: TextStyle(color: _themeMuted(context), fontSize: 11, fontWeight: FontWeight.w600),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   Text(
                     hijriDateLabel(_now, correction: _hijriCorrection),
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: _gold,
                       fontSize: 22,
                       fontWeight: FontWeight.w800,
                       height: 1.5,
                     ),
                   ),
-                  const SizedBox(height: 3),
+                  SizedBox(height: 3),
                   Row(
                     children: [
-                      const Icon(Icons.calendar_today_rounded, size: 14, color: _muted),
-                      const SizedBox(width: 7),
+                      Icon(Icons.calendar_today_rounded, size: 14, color: _themeMuted(context)),
+                      SizedBox(width: 7),
                       Text(
                         _gregorianLabel(_now),
-                        style: const TextStyle(color: Color(0xFFD8E3DC), fontSize: 13),
+                        style: TextStyle(color: Color(0xFFD8E3DC), fontSize: 13),
                       ),
                     ],
                   ),
                   if (occasion != null) ...[
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 7),
                       decoration: BoxDecoration(
@@ -947,12 +949,12 @@ class _MainShellState extends State<MainShell> {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(Icons.event_available_rounded, size: 15, color: _gold),
-                          const SizedBox(width: 7),
+                          Icon(Icons.event_available_rounded, size: 15, color: _gold),
+                          SizedBox(width: 7),
                           Flexible(
                             child: Text(
                               occasion,
-                              style: const TextStyle(color: Color(0xFFF0DDAF), fontSize: 12),
+                              style: TextStyle(color: Color(0xFFF0DDAF), fontSize: 12),
                             ),
                           ),
                         ],
@@ -964,7 +966,7 @@ class _MainShellState extends State<MainShell> {
             ],
           ),
         ),
-        const SizedBox(height: 14),
+        SizedBox(height: 14),
         Container(
           padding: const EdgeInsets.fromLTRB(15, 15, 15, 13),
           decoration: BoxDecoration(
@@ -977,9 +979,9 @@ class _MainShellState extends State<MainShell> {
             children: [
               Row(
                 children: [
-                  const Icon(Icons.access_time_filled_rounded, color: _gold, size: 22),
-                  const SizedBox(width: 9),
-                  const Expanded(
+                  Icon(Icons.access_time_filled_rounded, color: _gold, size: 22),
+                  SizedBox(width: 9),
+                  Expanded(
                     child: Text(
                       'مواقيت الصلاة',
                       style: TextStyle(fontSize: 17, fontWeight: FontWeight.w900),
@@ -987,11 +989,11 @@ class _MainShellState extends State<MainShell> {
                   ),
                   Text(
                     '${_prayerCity.name} • تقديري',
-                    style: const TextStyle(color: _muted, fontSize: 10),
+                    style: TextStyle(color: _themeMuted(context), fontSize: 10),
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               Container(
                 padding: const EdgeInsets.all(13),
                 decoration: BoxDecoration(
@@ -1001,19 +1003,19 @@ class _MainShellState extends State<MainShell> {
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.notifications_active_outlined, color: _gold, size: 25),
-                    const SizedBox(width: 10),
+                    Icon(Icons.notifications_active_outlined, color: _gold, size: 25),
+                    SizedBox(width: 10),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('الصلاة القادمة', style: TextStyle(color: _muted, fontSize: 11)),
-                          const SizedBox(height: 3),
+                          Text('الصلاة القادمة', style: TextStyle(color: _themeMuted(context), fontSize: 11)),
+                          SizedBox(height: 3),
                           Text(
                             nextPrayer.name,
-                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
                           ),
-                          const SizedBox(height: 3),
+                          SizedBox(height: 3),
                           Text(
                             'المتبقي ${_countdownLabel(nextPrayer.at, _now)}',
                             style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 12),
@@ -1028,25 +1030,25 @@ class _MainShellState extends State<MainShell> {
                   ],
                 ),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               Align(
                 alignment: AlignmentDirectional.centerEnd,
                 child: TextButton.icon(
                   onPressed: () => setState(() => _selected = 3),
-                  icon: const Icon(Icons.calendar_month_rounded, size: 18),
-                  label: const Text('عرض مواقيت الصلوات الخمس'),
+                  icon: Icon(Icons.calendar_month_rounded, size: 18),
+                  label: Text('عرض مواقيت الصلوات الخمس'),
                   style: TextButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.secondary),
                 ),
               ),
-              const SizedBox(height: 8),
-              const Text(
+              SizedBox(height: 8),
+              Text(
                 'الأوقات حسابية تقريبية؛ اعتمد جدول مكتب مرجعك عند اختلاف الموعد.',
-                style: TextStyle(color: _muted, fontSize: 10, height: 1.5),
+                style: TextStyle(color: _themeMuted(context), fontSize: 10, height: 1.5),
               ),
             ],
           ),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         Container(
           padding: const EdgeInsets.fromLTRB(17, 16, 17, 17),
           decoration: BoxDecoration(
@@ -1059,34 +1061,34 @@ class _MainShellState extends State<MainShell> {
             children: [
               Row(
                 children: [
-                  const Icon(Icons.auto_awesome_rounded, color: _gold, size: 21),
+                  Icon(Icons.auto_awesome_rounded, color: _gold, size: 21),
                   SizedBox(width: 8),
                   Text('قبس اليوم', style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 17, fontWeight: FontWeight.w800)),
                   Spacer(),
                   Icon(Icons.format_quote_rounded, color: Color(0x668AC5A8), size: 28),
                 ],
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: 10),
               Text(
                 inspiration.text,
                 textAlign: TextAlign.start,
-                style: const TextStyle(fontSize: 20, height: 1.8, fontWeight: FontWeight.w700),
+                style: TextStyle(fontSize: 20, height: 1.8, fontWeight: FontWeight.w700),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Row(
                 children: [
-                  const Icon(Icons.menu_book_rounded, color: _muted, size: 15),
-                  const SizedBox(width: 6),
-                  Expanded(child: Text(inspiration.source, style: const TextStyle(color: _muted, fontSize: 12))),
+                  Icon(Icons.menu_book_rounded, color: _themeMuted(context), size: 15),
+                  SizedBox(width: 6),
+                  Expanded(child: Text(inspiration.source, style: TextStyle(color: _themeMuted(context), fontSize: 12))),
                 ],
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: 4),
               LayoutBuilder(
                 builder: (context, constraints) {
                   final openVerseButton = TextButton.icon(
                     onPressed: () => _openDailyInspiration(inspiration),
-                    icon: const Icon(Icons.open_in_new_rounded, size: 17),
-                    label: const Text('افتح الآية'),
+                    icon: Icon(Icons.open_in_new_rounded, size: 17),
+                    label: Text('افتح الآية'),
                     style: TextButton.styleFrom(
                       foregroundColor: Theme.of(context).colorScheme.secondary,
                       visualDensity: VisualDensity.compact,
@@ -1100,19 +1102,19 @@ class _MainShellState extends State<MainShell> {
                         onPressed: () => setState(() {
                           _inspirationOffset = (_inspirationOffset + 1) % _dailyInspirations.length;
                         }),
-                        icon: const Icon(Icons.refresh_rounded, size: 19),
+                        icon: Icon(Icons.refresh_rounded, size: 19),
                         visualDensity: VisualDensity.compact,
                       ),
                       IconButton(
                         tooltip: 'نسخ قبس اليوم',
                         onPressed: () => _copyDailyInspiration(inspiration),
-                        icon: const Icon(Icons.copy_rounded, size: 19),
+                        icon: Icon(Icons.copy_rounded, size: 19),
                         visualDensity: VisualDensity.compact,
                       ),
                       IconButton(
                         tooltip: 'مشاركة قبس اليوم',
                         onPressed: () => _shareDailyInspiration(inspiration),
-                        icon: const Icon(Icons.share_rounded, size: 19),
+                        icon: Icon(Icons.share_rounded, size: 19),
                         visualDensity: VisualDensity.compact,
                       ),
                     ],
@@ -1135,7 +1137,7 @@ class _MainShellState extends State<MainShell> {
                   return Row(
                     children: [
                       openVerseButton,
-                      const Spacer(),
+                      Spacer(),
                       verseActions,
                     ],
                   );
@@ -1144,12 +1146,12 @@ class _MainShellState extends State<MainShell> {
             ],
           ),
         ),
-        const SizedBox(height: 18),
-        const Text(
+        SizedBox(height: 18),
+        Text(
           'ابدأ وردك',
           style: TextStyle(fontSize: 19, fontWeight: FontWeight.w900),
         ),
-        const SizedBox(height: 10),
+        SizedBox(height: 10),
         Row(
           children: [
             Expanded(
@@ -1160,7 +1162,7 @@ class _MainShellState extends State<MainShell> {
                 onTap: () => setState(() => _selected = 1),
               ),
             ),
-            const SizedBox(width: 11),
+            SizedBox(width: 11),
             Expanded(
               child: _homeShortcut(
                 icon: Icons.volunteer_activism_rounded,
@@ -1171,7 +1173,7 @@ class _MainShellState extends State<MainShell> {
             ),
           ],
         ),
-        const SizedBox(height: 10),
+        SizedBox(height: 10),
         LayoutBuilder(
           builder: (context, constraints) {
             final columns = constraints.maxWidth >= 410 ? 3 : 2;
@@ -1215,7 +1217,7 @@ class _MainShellState extends State<MainShell> {
             );
           },
         ),
-        const SizedBox(height: 20),
+        SizedBox(height: 20),
         Container(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
           decoration: BoxDecoration(
@@ -1235,30 +1237,30 @@ class _MainShellState extends State<MainShell> {
                       color: _emerald.withValues(alpha: .19),
                       borderRadius: BorderRadius.circular(13),
                     ),
-                    child: const Icon(Icons.wb_twilight_rounded, color: _gold, size: 22),
+                    child: Icon(Icons.wb_twilight_rounded, color: _gold, size: 22),
                   ),
-                  const SizedBox(width: 10),
-                  const Expanded(
+                  SizedBox(width: 10),
+                  Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('وِرد اليوم', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900)),
                         SizedBox(height: 2),
-                        Text('أعمال تتجدّد كل يوم', style: TextStyle(color: _muted, fontSize: 12)),
+                        Text('أعمال تتجدّد كل يوم', style: TextStyle(color: _themeMuted(context), fontSize: 12)),
                       ],
                     ),
                   ),
                   Text(
                     _dailyTaskDone ? 'أُنجز' : 'عمل اليوم',
-                    style: TextStyle(color: _dailyTaskDone ? _gold : _muted, fontSize: 11, fontWeight: FontWeight.w700),
+                    style: TextStyle(color: _dailyTaskDone ? _gold : _themeMuted(context), fontSize: 11, fontWeight: FontWeight.w700),
                   ),
                 ],
               ),
-              const SizedBox(height: 13),
+              SizedBox(height: 13),
               _dailyDhikrRow(Icons.check_circle_outline_rounded, 'الحوقلة', 'لا حول ولا قوة إلا بالله'),
               _dailyDhikrRow(Icons.favorite_border_rounded, 'الاستغفار', 'أستغفر الله وأتوب إليه'),
               _dailyDhikrRow(Icons.spa_outlined, 'الصلاة على محمد وآل محمد', 'اللهم صلِّ على محمد وآل محمد'),
-              const Divider(height: 20, color: Color(0x224EB58B)),
+              Divider(height: 20, color: Color(0x224EB58B)),
               Material(
                 type: MaterialType.transparency,
                 child: CheckboxListTile(
@@ -1268,14 +1270,14 @@ class _MainShellState extends State<MainShell> {
                   activeColor: _emerald,
                   checkColor: Colors.white,
                   controlAffinity: ListTileControlAffinity.leading,
-                  title: const Text('عمل اليوم المختار', style: TextStyle(fontWeight: FontWeight.w800)),
-                  subtitle: Text(dailyTask, style: const TextStyle(color: _muted, height: 1.6)),
+                  title: Text('عمل اليوم المختار', style: TextStyle(fontWeight: FontWeight.w800)),
+                  subtitle: Text(dailyTask, style: TextStyle(color: _themeMuted(context), height: 1.6)),
                 ),
               ),
-              const SizedBox(height: 2),
-              const Text(
+              SizedBox(height: 2),
+              Text(
                 'تتغيّر الأعمال المقترحة تلقائياً مع تغيّر اليوم، وتُحفظ علامة إنجاز العمل المختار لكل يوم.',
-                style: TextStyle(color: _muted, fontSize: 11, height: 1.6),
+                style: TextStyle(color: _themeMuted(context), fontSize: 11, height: 1.6),
               ),
             ],
           ),
@@ -1328,10 +1330,10 @@ class _MainShellState extends State<MainShell> {
                 ),
                 child: Icon(icon, color: _gold, size: 25),
               ),
-              const SizedBox(height: 13),
-              Text(title, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14, height: 1.3)),
-              const SizedBox(height: 4),
-              Text(subtitle, style: const TextStyle(color: _muted, fontSize: 11)),
+              SizedBox(height: 13),
+              Text(title, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14, height: 1.3)),
+              SizedBox(height: 4),
+              Text(subtitle, style: TextStyle(color: _themeMuted(context), fontSize: 11)),
             ],
           ),
         ),
@@ -1372,13 +1374,13 @@ class _MainShellState extends State<MainShell> {
                 ),
                 child: Icon(icon, color: _gold, size: 23),
               ),
-              const SizedBox(height: 9),
+              SizedBox(height: 9),
               Text(
                 title,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 12,
                   height: 1.35,
                   fontWeight: FontWeight.w800,
@@ -1405,14 +1407,14 @@ class _MainShellState extends State<MainShell> {
             ),
             child: Icon(icon, color: _gold, size: 19),
           ),
-          const SizedBox(width: 10),
+          SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13)),
-                const SizedBox(height: 2),
-                Text(text, style: const TextStyle(color: _muted, fontSize: 12)),
+                Text(title, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13)),
+                SizedBox(height: 2),
+                Text(text, style: TextStyle(color: _themeMuted(context), fontSize: 12)),
               ],
             ),
           ),
@@ -1528,10 +1530,10 @@ class _TasbeehPageState extends State<TasbeehPage> {
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 30),
       children: [
-        const Text('التسبيح', style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800)),
-        const SizedBox(height: 6),
-        if (_zahraMode) const Text('عداد محفوظ على جهازك، مع تسبيح الزهراء عليها السلام بالترتيب', style: TextStyle(color: _muted, height: 1.6)),
-        const SizedBox(height: 18),
+        Text('التسبيح', style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800)),
+        SizedBox(height: 6),
+        if (_zahraMode) Text('عداد محفوظ على جهازك، مع تسبيح الزهراء عليها السلام بالترتيب', style: TextStyle(color: _themeMuted(context), height: 1.6)),
+        SizedBox(height: 18),
         SegmentedButton<bool>(
           segments: const [
             ButtonSegment(value: true, label: Text('تسبيح الزهراء'), icon: Icon(Icons.auto_awesome_rounded)),
@@ -1540,7 +1542,7 @@ class _TasbeehPageState extends State<TasbeehPage> {
           selected: {_zahraMode},
           onSelectionChanged: _loading ? null : (selection) => _setMode(selection.first),
         ),
-        const SizedBox(height: 18),
+        SizedBox(height: 18),
         if (_zahraMode) ...[
           Container(
             padding: const EdgeInsets.all(15),
@@ -1550,8 +1552,8 @@ class _TasbeehPageState extends State<TasbeehPage> {
               border: Border.all(color: _gold.withValues(alpha: .28)),
             ),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const Text('مراحل تسبيح الزهراء عليها السلام', style: TextStyle(color: _gold, fontWeight: FontWeight.w800)),
-              const SizedBox(height: 12),
+              Text('مراحل تسبيح الزهراء عليها السلام', style: TextStyle(color: _gold, fontWeight: FontWeight.w800)),
+              SizedBox(height: 12),
               for (var i = 0; i < _steps.length; i++)
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
@@ -1560,19 +1562,19 @@ class _TasbeehPageState extends State<TasbeehPage> {
                       i < _step || (i == _step && _count >= _steps[i].target)
                           ? Icons.check_circle_rounded
                           : i == _step ? Icons.radio_button_checked_rounded : Icons.radio_button_unchecked_rounded,
-                      color: i == _step ? _gold : _muted,
+                      color: i == _step ? _gold : _themeMuted(context),
                       size: 20,
                     ),
-                    const SizedBox(width: 9),
-                    Expanded(child: Text('${_steps[i].title}: ${_steps[i].phrase}', style: TextStyle(color: i == _step ? Colors.white : _muted, fontWeight: i == _step ? FontWeight.bold : FontWeight.normal))),
-                    Text('${i == _step ? _count : i < _step ? _steps[i].target : 0}/${_steps[i].target}', style: const TextStyle(color: _gold, fontWeight: FontWeight.bold)),
+                    SizedBox(width: 9),
+                    Expanded(child: Text('${_steps[i].title}: ${_steps[i].phrase}', style: TextStyle(color: i == _step ? Colors.white : _themeMuted(context), fontWeight: i == _step ? FontWeight.bold : FontWeight.normal))),
+                    Text('${i == _step ? _count : i < _step ? _steps[i].target : 0}/${_steps[i].target}', style: TextStyle(color: _gold, fontWeight: FontWeight.bold)),
                   ]),
                 ),
-              const SizedBox(height: 4),
-              const Text('التكبير 34 مرة، ثم الحمد 33 مرة، ثم التسبيح 33 مرة.', style: TextStyle(color: _muted, fontSize: 12, height: 1.6)),
+              SizedBox(height: 4),
+              Text('التكبير 34 مرة، ثم الحمد 33 مرة، ثم التسبيح 33 مرة.', style: TextStyle(color: _themeMuted(context), fontSize: 12, height: 1.6)),
             ]),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
         ],
         Center(
           child: Column(children: [
@@ -1580,12 +1582,12 @@ class _TasbeehPageState extends State<TasbeehPage> {
               Text(
                 current >= (target ?? 0) && _step == 2 ? 'اكتمل تسبيح الزهراء' : step.phrase,
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 20, height: 1.8, color: _gold, fontWeight: FontWeight.w800),
+                style: TextStyle(fontSize: 20, height: 1.8, color: _gold, fontWeight: FontWeight.w800),
               ),
-            const SizedBox(height: 18),
+            SizedBox(height: 18),
             if (_zahraMode) ...[
-              Text('$_count', style: const TextStyle(fontSize: 54, fontWeight: FontWeight.w800)),
-              const SizedBox(height: 8),
+              Text('$_count', style: TextStyle(fontSize: 54, fontWeight: FontWeight.w800)),
+              SizedBox(height: 8),
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: LinearProgressIndicator(
@@ -1595,11 +1597,11 @@ class _TasbeehPageState extends State<TasbeehPage> {
                   color: _gold,
                 ),
               ),
-              const SizedBox(height: 8),
-              Text('المرحلة ${_step + 1} من 3 • المطلوب ${step.target}', style: const TextStyle(color: _muted)),
+              SizedBox(height: 8),
+              Text('المرحلة ${_step + 1} من 3 • المطلوب ${step.target}', style: TextStyle(color: _themeMuted(context))),
             ] else
-              Text('$_generalCount', style: const TextStyle(fontSize: 58, fontWeight: FontWeight.w800)),
-            const SizedBox(height: 22),
+              Text('$_generalCount', style: TextStyle(fontSize: 58, fontWeight: FontWeight.w800)),
+            SizedBox(height: 22),
             Semantics(
               button: true,
               label: 'زيادة عداد التسبيح',
@@ -1615,18 +1617,18 @@ class _TasbeehPageState extends State<TasbeehPage> {
                     border: Border.all(color: _gold, width: 2),
                     boxShadow: [BoxShadow(color: _emerald.withValues(alpha: .2), blurRadius: 28, spreadRadius: 4)],
                   ),
-                  child: const Center(child: Icon(Icons.fingerprint_rounded, color: _gold, size: 76)),
+                  child: Center(child: Icon(Icons.fingerprint_rounded, color: _gold, size: 76)),
                 ),
               ),
             ),
-            const SizedBox(height: 10),
-            if (_zahraMode) const Text('اضغط على الدائرة للتسبيح', style: TextStyle(color: _muted)),
-            const SizedBox(height: 18),
+            SizedBox(height: 10),
+            if (_zahraMode) Text('اضغط على الدائرة للتسبيح', style: TextStyle(color: _themeMuted(context))),
+            SizedBox(height: 18),
             Wrap(alignment: WrapAlignment.center, spacing: 10, children: [
               OutlinedButton.icon(
                 onPressed: _loading ? null : _reset,
-                icon: const Icon(Icons.refresh_rounded),
-                label: const Text('إعادة من البداية'),
+                icon: Icon(Icons.refresh_rounded),
+                label: Text('إعادة من البداية'),
               ),
               if (_zahraMode && _step > 0)
                 OutlinedButton.icon(
@@ -1634,12 +1636,12 @@ class _TasbeehPageState extends State<TasbeehPage> {
                     setState(() { _step--; _count = 0; });
                     _persist();
                   },
-                  icon: const Icon(Icons.undo_rounded),
-                  label: const Text('المرحلة السابقة'),
+                  icon: Icon(Icons.undo_rounded),
+                  label: Text('المرحلة السابقة'),
                 ),
             ]),
             if (_zahraMode && _step == 2 && _count >= 33)
-              const Padding(
+              Padding(
                 padding: EdgeInsets.only(top: 14),
                 child: Text('تقبّل الله طاعتكم', style: TextStyle(color: _gold, fontSize: 18, fontWeight: FontWeight.bold)),
               ),
@@ -1701,7 +1703,7 @@ class _DuaLibraryState extends State<_DuaLibrary> {
         title,
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
-        style: const TextStyle(fontWeight: FontWeight.w800, height: 1.45),
+        style: TextStyle(fontWeight: FontWeight.w800, height: 1.45),
       ),
       subtitle: Padding(
         padding: const EdgeInsets.only(top: 3),
@@ -1709,10 +1711,10 @@ class _DuaLibraryState extends State<_DuaLibrary> {
           subtitle,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
-          style: const TextStyle(color: _muted, height: 1.45, fontSize: 12),
+          style: TextStyle(color: _themeMuted(context), height: 1.45, fontSize: 12),
         ),
       ),
-      trailing: const Icon(Icons.chevron_left_rounded, color: _gold, size: 23),
+      trailing: Icon(Icons.chevron_left_rounded, color: _gold, size: 23),
       onTap: onTap,
     ),
   );
@@ -1728,25 +1730,25 @@ class _DuaLibraryState extends State<_DuaLibrary> {
     return ListView(
       padding: const EdgeInsets.all(18),
       children: [
-        const Text('الأدعية والأذكار', style: TextStyle(fontSize: 25, fontWeight: FontWeight.w800)),
-        const SizedBox(height: 6),
-        const Text('الأدعية والأذكار والمكتبة الشيعية', style: TextStyle(color: _muted)),
-        const SizedBox(height: 14),
+        Text('الأدعية والأذكار', style: TextStyle(fontSize: 25, fontWeight: FontWeight.w800)),
+        SizedBox(height: 6),
+        Text('الأدعية والأذكار والمكتبة الشيعية', style: TextStyle(color: _themeMuted(context))),
+        SizedBox(height: 14),
         Card(
           color: Theme.of(context).colorScheme.surface,
           child: ListTile(
-            leading: const CircleAvatar(backgroundColor: Color(0x223CB58B), child: Icon(Icons.menu_book_rounded, color: _gold)),
-            title: const Text('الأدعية والزيارات والصحيفة السجادية', style: TextStyle(fontWeight: FontWeight.bold)),
-            subtitle: const Text('مجموعة نصوص مع البحث والعرض دون إنترنت', style: TextStyle(color: _muted)),
-            trailing: const Icon(Icons.chevron_left_rounded, color: _gold),
+            leading: CircleAvatar(backgroundColor: Color(0x223CB58B), child: Icon(Icons.menu_book_rounded, color: _gold)),
+            title: Text('الأدعية والزيارات والصحيفة السجادية', style: TextStyle(fontWeight: FontWeight.bold)),
+            subtitle: Text('مجموعة نصوص مع البحث والعرض دون إنترنت', style: TextStyle(color: _themeMuted(context))),
+            trailing: Icon(Icons.chevron_left_rounded, color: _gold),
             onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
               builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: ShiaTextLibraryPage()),
             )),
           ),
         ),
-        const SizedBox(height: 16),
-        const Text('أقسام المكتبة', style: TextStyle(fontSize: 19, fontWeight: FontWeight.w800)),
-        const SizedBox(height: 8),
+        SizedBox(height: 16),
+        Text('أقسام المكتبة', style: TextStyle(fontSize: 19, fontWeight: FontWeight.w800)),
+        SizedBox(height: 8),
         _sectionCard(
           context,
           icon: Icons.menu_book_rounded,
@@ -1801,19 +1803,19 @@ class _DuaLibraryState extends State<_DuaLibrary> {
             builder: (_) => const Directionality(textDirection: TextDirection.rtl, child: NamesOfAllahPage()),
           )),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         TextField(
           controller: _search,
           onChanged: (_) => setState(() {}),
           decoration: InputDecoration(
             hintText: 'ابحث عن ذكر...',
-            prefixIcon: const Icon(Icons.search_rounded),
+            prefixIcon: Icon(Icons.search_rounded),
             filled: true,
             fillColor: Theme.of(context).colorScheme.surface,
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         Wrap(
           spacing: 8,
           runSpacing: 8,
@@ -1823,9 +1825,9 @@ class _DuaLibraryState extends State<_DuaLibrary> {
             onSelected: (_) => setState(() => _filter = filter),
           )).toList(),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         if (items.isEmpty)
-          const Padding(padding: EdgeInsets.all(24), child: Center(child: Text('ماكو نتائج مطابقة', style: TextStyle(color: _muted))))
+          Padding(padding: EdgeInsets.all(24), child: Center(child: Text('ماكو نتائج مطابقة', style: TextStyle(color: _themeMuted(context)))))
         else
           ...items.map((item) => Card(
             color: Theme.of(context).colorScheme.surface,
@@ -1841,18 +1843,18 @@ class _DuaLibraryState extends State<_DuaLibrary> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(item.text, style: const TextStyle(fontSize: 20, height: 1.8)),
-                      const SizedBox(height: 16),
-                      const Text('المصدر / التوضيح', style: TextStyle(color: _gold, fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 6),
-                      Text(item.source, style: const TextStyle(color: _muted)),
+                      Text(item.text, style: TextStyle(fontSize: 20, height: 1.8)),
+                      SizedBox(height: 16),
+                      Text('المصدر / التوضيح', style: TextStyle(color: _gold, fontWeight: FontWeight.bold)),
+                      SizedBox(height: 6),
+                      Text(item.source, style: TextStyle(color: _themeMuted(context))),
                       if (item.note != null) ...[
-                        const SizedBox(height: 8),
-                        Text(item.note!, style: const TextStyle(color: _muted, height: 1.5)),
+                        SizedBox(height: 8),
+                        Text(item.note!, style: TextStyle(color: _themeMuted(context), height: 1.5)),
                       ],
                     ],
                   )),
-                  actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('إغلاق'))],
+                  actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text('إغلاق'))],
                 ),
               ),
               child: Padding(
@@ -1860,11 +1862,11 @@ class _DuaLibraryState extends State<_DuaLibrary> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(children: [Expanded(child: Text(item.title, style: const TextStyle(color: _gold, fontWeight: FontWeight.bold))), const Icon(Icons.open_in_new_rounded, size: 17, color: _muted)]),
-                    const SizedBox(height: 10),
-                    Text(item.text, style: const TextStyle(fontSize: 18, height: 1.7)),
-                    const SizedBox(height: 8),
-                    Text(item.source, style: const TextStyle(fontSize: 12, color: _muted)),
+                    Row(children: [Expanded(child: Text(item.title, style: TextStyle(color: _gold, fontWeight: FontWeight.bold))), Icon(Icons.open_in_new_rounded, size: 17, color: _themeMuted(context))]),
+                    SizedBox(height: 10),
+                    Text(item.text, style: TextStyle(fontSize: 18, height: 1.7)),
+                    SizedBox(height: 8),
+                    Text(item.source, style: TextStyle(fontSize: 12, color: _themeMuted(context))),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: IconButton(
@@ -1873,7 +1875,7 @@ class _DuaLibraryState extends State<_DuaLibrary> {
                           Clipboard.setData(ClipboardData(text: item.text));
                           widget.onNotice('تم نسخ الذكر');
                         },
-                        icon: const Icon(Icons.content_copy_rounded, size: 19),
+                        icon: Icon(Icons.content_copy_rounded, size: 19),
                       ),
                     ),
                   ],
@@ -1881,8 +1883,8 @@ class _DuaLibraryState extends State<_DuaLibrary> {
               ),
             ),
           )),
-        const SizedBox(height: 8),
-        const Text('يضم هذا القسم أذكاراً عامة ومختارات قرآنية قصيرة. لا تُعرض الصيغ العامة على أنها روايات مسندة، وتُذكر إحالة الآية حيث يكون النص قرآنيّاً.', style: TextStyle(color: _muted, fontSize: 12, height: 1.6)),
+        SizedBox(height: 8),
+        Text('يضم هذا القسم أذكاراً عامة ومختارات قرآنية قصيرة. لا تُعرض الصيغ العامة على أنها روايات مسندة، وتُذكر إحالة الآية حيث يكون النص قرآنيّاً.', style: TextStyle(color: _themeMuted(context), fontSize: 12, height: 1.6)),
       ],
     );
   }
@@ -2002,16 +2004,16 @@ class _KhatmaPageState extends State<KhatmaPage> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('إعادة ضبط الختمة؟'),
-        content: const Text('سيُعاد تقدّم الختمة إلى صفر جزء.'),
+        title: Text('إعادة ضبط الختمة؟'),
+        content: Text('سيُعاد تقدّم الختمة إلى صفر جزء.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('إلغاء'),
+            child: Text('إلغاء'),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('إعادة الضبط'),
+            child: Text('إعادة الضبط'),
           ),
         ],
       ),
@@ -2024,12 +2026,12 @@ class _KhatmaPageState extends State<KhatmaPage> {
     final percent = (_completedJuz / 30 * 100).round();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('ختمة القرآن'),
+        title: Text('ختمة القرآن'),
         actions: [
           IconButton(
             tooltip: 'إعادة ضبط الختمة',
             onPressed: _confirmReset,
-            icon: const Icon(Icons.restart_alt_rounded),
+            icon: Icon(Icons.restart_alt_rounded),
           ),
         ],
       ),
@@ -2046,38 +2048,38 @@ class _KhatmaPageState extends State<KhatmaPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.auto_stories_rounded, color: _gold, size: 34),
-                const SizedBox(height: 16),
-                const Text(
+                Icon(Icons.auto_stories_rounded, color: _gold, size: 34),
+                SizedBox(height: 16),
+                Text(
                   'خطوة كل يوم',
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.w800),
                 ),
-                const SizedBox(height: 8),
-                const Text(
+                SizedBox(height: 8),
+                Text(
                   'سجّل الأجزاء التي أكملت قراءتها، وسيبقى تقدّمك محفوظاً على هذا الجهاز.',
-                  style: TextStyle(color: _muted, height: 1.7),
+                  style: TextStyle(color: _themeMuted(context), height: 1.7),
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
                       '$_completedJuz',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 48,
                         fontWeight: FontWeight.w800,
                         color: _gold,
                       ),
                     ),
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.only(bottom: 10, right: 8),
-                      child: Text('/ 30 جزءاً', style: TextStyle(color: _muted)),
+                      child: Text('/ 30 جزءاً', style: TextStyle(color: _themeMuted(context))),
                     ),
-                    const Spacer(),
-                    Text('$percent%', style: const TextStyle(color: _gold, fontWeight: FontWeight.bold)),
+                    Spacer(),
+                    Text('$percent%', style: TextStyle(color: _gold, fontWeight: FontWeight.bold)),
                   ],
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(20),
                   child: LinearProgressIndicator(
@@ -2087,7 +2089,7 @@ class _KhatmaPageState extends State<KhatmaPage> {
                     color: _gold,
                   ),
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: 20),
                 Row(
                   children: [
                     Expanded(
@@ -2095,18 +2097,18 @@ class _KhatmaPageState extends State<KhatmaPage> {
                         onPressed: _completedJuz > 0
                             ? () => _setProgress(_completedJuz - 1)
                             : null,
-                        icon: const Icon(Icons.remove_rounded),
-                        label: const Text('إنقاص جزء'),
+                        icon: Icon(Icons.remove_rounded),
+                        label: Text('إنقاص جزء'),
                       ),
                     ),
-                    const SizedBox(width: 10),
+                    SizedBox(width: 10),
                     Expanded(
                       child: FilledButton.icon(
                         onPressed: _completedJuz < 30
                             ? () => _setProgress(_completedJuz + 1)
                             : null,
-                        icon: const Icon(Icons.add_rounded),
-                        label: const Text('إكمال جزء'),
+                        icon: Icon(Icons.add_rounded),
+                        label: Text('إكمال جزء'),
                       ),
                     ),
                   ],
@@ -2114,42 +2116,42 @@ class _KhatmaPageState extends State<KhatmaPage> {
               ],
             ),
           ),
-          const SizedBox(height: 18),
+          SizedBox(height: 18),
           if (_completedJuz == 30)
-            const ListTile(
+            ListTile(
               leading: Icon(Icons.check_circle_rounded, color: _gold),
               title: Text('تقبّل الله طاعتكم'),
               subtitle: Text('أكملت تسجيل الأجزاء الثلاثين في هذه الختمة.'),
             )
           else
             ListTile(
-              leading: const Icon(Icons.bookmark_outline_rounded, color: _gold),
-              title: const Text('الخطوة التالية'),
+              leading: Icon(Icons.bookmark_outline_rounded, color: _gold),
+              title: Text('الخطوة التالية'),
               subtitle: Text('بعد قراءة الجزء ${_completedJuz + 1}، حدّث تقدّمك هنا.'),
             ),
-          const SizedBox(height: 18),
+          SizedBox(height: 18),
           Container(
             padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface, borderRadius: BorderRadius.circular(20), border: Border.all(color: _gold.withValues(alpha: .25))),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const Text('تتبّع الصفحات', style: TextStyle(color: _gold, fontSize: 20, fontWeight: FontWeight.w800)),
-              const SizedBox(height: 6),
-              const Text('سجّل كل صفحة بعد قراءتها في مصحف المدينة ذي 604 صفحات. يُحسب اكتمال الجزء من الصفحات المسجّلة ضمن نطاقه.', style: TextStyle(color: _muted, height: 1.6, fontSize: 12)),
-              const SizedBox(height: 12),
+              Text('تتبّع الصفحات', style: TextStyle(color: _gold, fontSize: 20, fontWeight: FontWeight.w800)),
+              SizedBox(height: 6),
+              Text('سجّل كل صفحة بعد قراءتها في مصحف المدينة ذي 604 صفحات. يُحسب اكتمال الجزء من الصفحات المسجّلة ضمن نطاقه.', style: TextStyle(color: _themeMuted(context), height: 1.6, fontSize: 12)),
+              SizedBox(height: 12),
               Row(children: [
-                Expanded(child: Text('${_completedPages.length} / 604 صفحة', style: const TextStyle(color: _gold, fontWeight: FontWeight.bold))),
-                Text('${(_completedPages.length / 604 * 100).round()}%', style: const TextStyle(color: _gold, fontWeight: FontWeight.bold)),
+                Expanded(child: Text('${_completedPages.length} / 604 صفحة', style: TextStyle(color: _gold, fontWeight: FontWeight.bold))),
+                Text('${(_completedPages.length / 604 * 100).round()}%', style: TextStyle(color: _gold, fontWeight: FontWeight.bold)),
               ]),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               ClipRRect(borderRadius: BorderRadius.circular(20), child: LinearProgressIndicator(value: _completedPages.length / 604, minHeight: 8, backgroundColor: Theme.of(context).scaffoldBackgroundColor, color: _gold)),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Material(
                 color: Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(12),
                 child: ExpansionTile(
                 tilePadding: EdgeInsets.zero,
-                title: const Text('اختيار الصفحات المكتملة'),
-                subtitle: const Text('اضغط رقم الصفحة لتسجيلها أو إلغاء تسجيلها'),
+                title: Text('اختيار الصفحات المكتملة'),
+                subtitle: Text('اضغط رقم الصفحة لتسجيلها أو إلغاء تسجيلها'),
                 children: [
                   SizedBox(
                     height: 360,
@@ -2166,7 +2168,7 @@ class _KhatmaPageState extends State<KhatmaPage> {
                           child: InkWell(
                             borderRadius: BorderRadius.circular(9),
                             onTap: () => _togglePage(page),
-                            child: Center(child: Text('$page', style: TextStyle(color: done ? Colors.white : _muted, fontSize: 11, fontWeight: done ? FontWeight.bold : FontWeight.normal))),
+                            child: Center(child: Text('$page', style: TextStyle(color: done ? Colors.white : _themeMuted(context), fontSize: 11, fontWeight: done ? FontWeight.bold : FontWeight.normal))),
                           ),
                         );
                       },
@@ -2176,8 +2178,8 @@ class _KhatmaPageState extends State<KhatmaPage> {
               )),
             ]),
           ),
-          const SizedBox(height: 8),
-          const Text('أرقام الصفحات تخص مصحف المدينة ذي 604 صفحات. إذا كنت تستخدم طبعة مختلفة، اعتمد ترقيمها أو تابع الأجزاء أعلاه.', style: TextStyle(color: _muted, fontSize: 12, height: 1.6)),
+          SizedBox(height: 8),
+          Text('أرقام الصفحات تخص مصحف المدينة ذي 604 صفحات. إذا كنت تستخدم طبعة مختلفة، اعتمد ترقيمها أو تابع الأجزاء أعلاه.', style: TextStyle(color: _themeMuted(context), fontSize: 12, height: 1.6)),
         ],
       ),
     );
@@ -2248,7 +2250,7 @@ class _PrayerTrackerPageState extends State<PrayerTrackerPage> {
   Widget build(BuildContext context) {
     final progress = _completed.length / _prayers.length;
     return Scaffold(
-      appBar: AppBar(title: const Text('متابعة الصلاة')),
+      appBar: AppBar(title: Text('متابعة الصلاة')),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
@@ -2262,12 +2264,12 @@ class _PrayerTrackerPageState extends State<PrayerTrackerPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.volunteer_activism_rounded, color: _gold, size: 34),
-                const SizedBox(height: 14),
-                const Text('صلوات اليوم', style: TextStyle(fontSize: 25, fontWeight: FontWeight.w800)),
-                const SizedBox(height: 6),
-                const Text('علّم الصلاة بعد أدائها. السجلّ يُحفظ لهذا اليوم على جهازك.', style: TextStyle(color: _muted, height: 1.7)),
-                const SizedBox(height: 20),
+                Icon(Icons.volunteer_activism_rounded, color: _gold, size: 34),
+                SizedBox(height: 14),
+                Text('صلوات اليوم', style: TextStyle(fontSize: 25, fontWeight: FontWeight.w800)),
+                SizedBox(height: 6),
+                Text('علّم الصلاة بعد أدائها. السجلّ يُحفظ لهذا اليوم على جهازك.', style: TextStyle(color: _themeMuted(context), height: 1.7)),
+                SizedBox(height: 20),
                 Row(
                   children: [
                     Expanded(
@@ -2281,16 +2283,16 @@ class _PrayerTrackerPageState extends State<PrayerTrackerPage> {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 12),
-                    Text('${_completed.length}/5', style: const TextStyle(color: _gold, fontWeight: FontWeight.bold)),
+                    SizedBox(width: 12),
+                    Text('${_completed.length}/5', style: TextStyle(color: _gold, fontWeight: FontWeight.bold)),
                   ],
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           if (!_loaded)
-            const Center(child: Padding(padding: EdgeInsets.all(24), child: CircularProgressIndicator()))
+            Center(child: Padding(padding: EdgeInsets.all(24), child: CircularProgressIndicator()))
           else
             ..._prayers.map((prayer) => Card(
               color: Theme.of(context).colorScheme.surface,
@@ -2305,17 +2307,17 @@ class _PrayerTrackerPageState extends State<PrayerTrackerPage> {
                 checkColor: Colors.white,
                 secondary: Icon(
                   _completed.contains(prayer) ? Icons.check_circle_rounded : Icons.radio_button_unchecked_rounded,
-                  color: _completed.contains(prayer) ? _gold : _muted,
+                  color: _completed.contains(prayer) ? _gold : _themeMuted(context),
                 ),
-                title: Text(prayer, style: const TextStyle(fontWeight: FontWeight.w700)),
+                title: Text(prayer, style: TextStyle(fontWeight: FontWeight.w700)),
                 subtitle: Text(
                   _completed.contains(prayer) ? 'تم تسجيلها' : 'لم تُسجّل بعد',
-                  style: const TextStyle(color: _muted),
+                  style: TextStyle(color: _themeMuted(context)),
                 ),
               ),
             ))),
-          const SizedBox(height: 8),
-          const Text('هذا سجلّ شخصي فقط وليس جدولاً لمواقيت الصلاة. ستُضاف المواقيت بعد اعتماد طريقة حساب جعفرية موثّقة.', style: TextStyle(color: _muted, fontSize: 12, height: 1.7)),
+          SizedBox(height: 8),
+          Text('هذا سجلّ شخصي فقط وليس جدولاً لمواقيت الصلاة. ستُضاف المواقيت بعد اعتماد طريقة حساب جعفرية موثّقة.', style: TextStyle(color: _themeMuted(context), fontSize: 12, height: 1.7)),
         ],
       ),
     );

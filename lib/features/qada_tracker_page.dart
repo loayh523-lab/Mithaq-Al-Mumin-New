@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-const _qadaPanel = Color(0xFF10251E);
 const _qadaGold = Color(0xFFD9B66D);
-const _qadaMuted = Color(0xFF9EB5A9);
+const _qadaMuted = Color(0xFF697A70);
 
 class _QadaItem {
   const _QadaItem(this.keyName, this.title, this.unit, this.description);
@@ -114,7 +113,7 @@ class _QadaTrackerPageState extends State<QadaTrackerPage> {
           Container(
             padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
-              color: _qadaPanel,
+              color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(20),
               border: Border.all(color: _qadaGold.withValues(alpha: .3)),
             ),
@@ -135,7 +134,7 @@ class _QadaTrackerPageState extends State<QadaTrackerPage> {
             const Center(child: Padding(padding: EdgeInsets.all(24), child: CircularProgressIndicator(color: _qadaGold)))
           else
             ..._items.map((item) => Card(
-              color: _qadaPanel,
+              color: Theme.of(context).colorScheme.surface,
               margin: const EdgeInsets.only(bottom: 9),
               child: Padding(
                 padding: const EdgeInsets.all(13),

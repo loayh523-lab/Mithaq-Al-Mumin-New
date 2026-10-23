@@ -3,7 +3,6 @@ import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 const _aboutGold = Color(0xFFD9B66D);
-const _aboutMuted = Color(0xFF697A70);
 const _projectUri = 'https://github.com/loayh523-lab/Mithaq-Al-Mumin-New';
 const _supportUri = 'https://github.com/loayh523-lab/Mithaq-Al-Mumin-New/issues';
 const _quranSourceUri = 'https://tanzil.net/';
@@ -63,7 +62,7 @@ class _AboutSupportPageState extends State<AboutSupportPage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: const Text('عن التطبيق والدعم')),
+        appBar: AppBar(title: Text('عن التطبيق والدعم')),
         body: ListView(
           padding: const EdgeInsets.fromLTRB(18, 12, 18, 28),
           children: [
@@ -78,7 +77,7 @@ class _AboutSupportPageState extends State<AboutSupportPage> {
                 borderRadius: BorderRadius.circular(24),
                 border: Border.all(color: _aboutGold.withValues(alpha: .3)),
               ),
-              child: const Column(
+              child: Column(
                 children: [
                   Icon(Icons.mosque_rounded, color: _aboutGold, size: 48),
                   SizedBox(height: 12),
@@ -92,7 +91,7 @@ class _AboutSupportPageState extends State<AboutSupportPage> {
                   SizedBox(height: 5),
                   Text(
                     'درب العبادة والطمأنينة',
-                    style: TextStyle(color: _aboutMuted),
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
                   ),
                   SizedBox(height: 12),
                   Text(
@@ -102,7 +101,7 @@ class _AboutSupportPageState extends State<AboutSupportPage> {
                 ],
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             _section(
               title: 'المشاركة والدعم',
               icon: Icons.volunteer_activism_outlined,
@@ -112,16 +111,16 @@ class _AboutSupportPageState extends State<AboutSupportPage> {
                   child: FilledButton.icon(
                     onPressed: _busy ? null : _shareProject,
                     icon: _busy
-                        ? const SizedBox(
+                        ? SizedBox(
                             width: 18,
                             height: 18,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
-                        : const Icon(Icons.share_rounded),
-                    label: const Text('مشاركة ميثاق المؤمن'),
+                        : Icon(Icons.share_rounded),
+                    label: Text('مشاركة ميثاق المؤمن'),
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 SizedBox(
                   width: double.infinity,
                   child: OutlinedButton.icon(
@@ -129,11 +128,11 @@ class _AboutSupportPageState extends State<AboutSupportPage> {
                       Uri.parse(_supportUri),
                       label: 'صفحة الدعم الفني',
                     ),
-                    icon: const Icon(Icons.support_agent_rounded),
-                    label: const Text('الدعم الفني والإبلاغ عن مشكلة'),
+                    icon: Icon(Icons.support_agent_rounded),
+                    label: Text('الدعم الفني والإبلاغ عن مشكلة'),
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 SizedBox(
                   width: double.infinity,
                   child: OutlinedButton.icon(
@@ -141,12 +140,12 @@ class _AboutSupportPageState extends State<AboutSupportPage> {
                       Uri.parse(_projectUri),
                       label: 'صفحة المشروع',
                     ),
-                    icon: const Icon(Icons.code_rounded),
-                    label: const Text('المصدر والتحديثات'),
+                    icon: Icon(Icons.code_rounded),
+                    label: Text('المصدر والتحديثات'),
                   ),
                 ),
-                const SizedBox(height: 8),
-                const Material(
+                SizedBox(height: 8),
+                Material(
                   color: Theme.of(context).colorScheme.surface,
                   child: ListTile(
                     contentPadding: EdgeInsets.zero,
@@ -154,22 +153,22 @@ class _AboutSupportPageState extends State<AboutSupportPage> {
                     title: Text('تقييم التطبيق على Google Play'),
                     subtitle: Text(
                       'سيُفعّل رابط التقييم بعد نشر النسخة الرسمية على المتجر.',
-                      style: TextStyle(color: _aboutMuted, height: 1.5),
+                      style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.5),
                     ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
             _section(
               title: 'المصادر والتراخيص',
               icon: Icons.verified_outlined,
               children: [
-                const Text(
+                Text(
                   'نص القرآن العثماني وفهرس السور يعتمدان على مصادر موثّقة مذكورة في المشروع. قد تتطلب بعض المصادر اتصالاً بالإنترنت.',
-                  style: TextStyle(color: _aboutMuted, height: 1.7),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.7),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 _sourceButton(
                   title: 'مصدر نص القرآن — Tanzil',
                   onPressed: () => _open(
@@ -184,26 +183,26 @@ class _AboutSupportPageState extends State<AboutSupportPage> {
                     label: 'مصدر التسجيل الصوتي',
                   ),
                 ),
-                const SizedBox(height: 8),
-                const Text(
+                SizedBox(height: 8),
+                Text(
                   'التسجيل الصوتي المرفق بنمط ماهور، ولم نتحقق من مطابقته لألفاظ الأذان الجعفري؛ لذلك لا نصفه بأنه تسجيل جعفري موثّق. راجع صفحات المصادر لمعرفة شروط إعادة الاستخدام.',
-                  style: TextStyle(color: _aboutMuted, height: 1.7, fontSize: 12),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.7, fontSize: 12),
                 ),
               ],
             ),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
             _section(
               title: 'تنبيه للمستخدم',
               icon: Icons.info_outline_rounded,
-              children: const [
+              children: [
                 Text(
                   'المواقيت والتاريخ الهجري في النسخة الحالية تقديرية وقد تختلف عن التقويم المحلي وثبوت الهلال. راجع تقويم مكتب مرجع تقليدك في المواقيت والمسائل الشرعية.',
-                  style: TextStyle(color: _aboutMuted, height: 1.7),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.7),
                 ),
                 SizedBox(height: 8),
                 Text(
                   'التفسير الكامل دون إنترنت، والختمات الجماعية المتزامنة، ومكتبة الصوتيات المرخّصة، والخلفيات القابلة للتعيين، واختيار تسجيلات متعددة للأذان ما زالت تحتاج إلى مصادر وخدمات إضافية.',
-                  style: TextStyle(color: _aboutMuted, height: 1.7),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.7),
                 ),
               ],
             ),
@@ -219,7 +218,7 @@ class _AboutSupportPageState extends State<AboutSupportPage> {
         alignment: AlignmentDirectional.centerStart,
         child: TextButton.icon(
           onPressed: onPressed,
-          icon: const Icon(Icons.open_in_new_rounded, size: 18),
+          icon: Icon(Icons.open_in_new_rounded, size: 18),
           label: Text(title),
         ),
       );
@@ -242,11 +241,11 @@ class _AboutSupportPageState extends State<AboutSupportPage> {
             Row(
               children: [
                 Icon(icon, color: _aboutGold),
-                const SizedBox(width: 10),
+                SizedBox(width: 10),
                 Expanded(
                   child: Text(
                     title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.w800,
                     ),
@@ -254,7 +253,7 @@ class _AboutSupportPageState extends State<AboutSupportPage> {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             ...children,
           ],
         ),

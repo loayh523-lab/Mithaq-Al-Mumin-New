@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../services/prayer_locations.dart';
 
 const _gold = Color(0xFFD9B66D);
-const _muted = Color(0xFF697A70);
 
 /// Approximate solar times for Qal'at Sukar using a configurable Jafari-style estimate.
 /// Local religious authority timetables take precedence.
@@ -87,31 +86,31 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
     final times = SolarPrayerTimes.forDate(date, city.latitude, city.longitude, zone);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('المواقيت والتقويم'),
+        title: Text('المواقيت والتقويم'),
         actions: [
           IconButton(
             tooltip: 'تحديث الموقع من GPS',
             onPressed: _gpsBusy ? null : _refreshLocation,
             icon: _gpsBusy
               ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
-              : const Icon(Icons.my_location_rounded),
+              : Icon(Icons.my_location_rounded),
           ),
         ],
       ),
       body: ListView(padding: const EdgeInsets.all(16), children: [
       Container(padding: const EdgeInsets.all(18), decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface, borderRadius: BorderRadius.circular(22), border: Border.all(color: _gold.withValues(alpha: .3))), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const Text('التاريخ الهجري التقريبي', style: TextStyle(color: _muted)), const SizedBox(height: 8),
-        Text('${hijri.day} ${hijri.monthName} ${hijri.year} هـ', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: _gold)),
-        const SizedBox(height: 6), Text(_dateLabel(date), style: const TextStyle(color: _muted)),
-        Row(children: [const Expanded(child: Text('تصحيح يدوي للتاريخ')), IconButton(onPressed: () => _correct(-1), icon: const Icon(Icons.remove_circle_outline)), Text('$correction يوم'), IconButton(onPressed: () => _correct(1), icon: const Icon(Icons.add_circle_outline))]),
-        const Text('التاريخ محسوب بالتقويم الهجري الجدولي وقد يختلف يوماً عن إعلان ثبوت الهلال في العراق. يمكنك ضبطه إذا اعتمد مكتب مرجعك تاريخاً مختلفاً.', style: TextStyle(color: _muted, fontSize: 11, height: 1.5)),
+        Text('التاريخ الهجري التقريبي', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)), const SizedBox(height: 8),
+        Text('${hijri.day} ${hijri.monthName} ${hijri.year} هـ', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: _gold)),
+        const SizedBox(height: 6), Text(_dateLabel(date), style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
+        Row(children: [const Expanded(child: Text('تصحيح يدوي للتاريخ')), IconButton(onPressed: () => _correct(-1), icon: Icon(Icons.remove_circle_outline)), Text('$correction يوم'), IconButton(onPressed: () => _correct(1), icon: Icon(Icons.add_circle_outline))]),
+        Text('التاريخ محسوب بالتقويم الهجري الجدولي وقد يختلف يوماً عن إعلان ثبوت الهلال في العراق. يمكنك ضبطه إذا اعتمد مكتب مرجعك تاريخاً مختلفاً.', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11, height: 1.5)),
       ])),
-      if (_occasion(hijri) != null) Card(color: Theme.of(context).colorScheme.surface, child: ListTile(leading: const Icon(Icons.event, color: _gold), title: const Text('مناسبة دينية'), subtitle: Text(_occasion(hijri)!, style: const TextStyle(height: 1.5)))),
+      if (_occasion(hijri) != null) Card(color: Theme.of(context).colorScheme.surface, child: ListTile(leading: Icon(Icons.event, color: _gold), title: Text('مناسبة دينية'), subtitle: Text(_occasion(hijri)!, style: TextStyle(height: 1.5)))),
       const SizedBox(height: 14),
       SegmentedButton<int>(segments: const [ButtonSegment(value: 0, label: Text('مواقيت الصلاة'), icon: Icon(Icons.access_time)), ButtonSegment(value: 1, label: Text('إمساكية رمضان'), icon: Icon(Icons.nights_stay_outlined)), ButtonSegment(value: 2, label: Text('التقويم الهجري'), icon: Icon(Icons.calendar_month_rounded))], selected: {tab}, onSelectionChanged: (v) => setState(() => tab = v.first)),
       const SizedBox(height: 12),
       if (tab == 0) ...[
-        Row(children: [Expanded(child: Text('مواقيت ${_dateLabel(date)}', style: const TextStyle(fontWeight: FontWeight.bold))), IconButton(onPressed: () => setState(() => date = date.subtract(const Duration(days: 1))), icon: const Icon(Icons.chevron_right)), IconButton(onPressed: () => setState(() => date = date.add(const Duration(days: 1))), icon: const Icon(Icons.chevron_left)), IconButton(onPressed: () => setState(() => date = DateTime.now()), icon: const Icon(Icons.today))]),
+        Row(children: [Expanded(child: Text('مواقيت ${_dateLabel(date)}', style: TextStyle(fontWeight: FontWeight.bold))), IconButton(onPressed: () => setState(() => date = date.subtract(const Duration(days: 1))), icon: Icon(Icons.chevron_right)), IconButton(onPressed: () => setState(() => date = date.add(const Duration(days: 1))), icon: Icon(Icons.chevron_left)), IconButton(onPressed: () => setState(() => date = DateTime.now()), icon: Icon(Icons.today))]),
         if (_sameDay(date, now)) _nextPrayerCard(times, now),
         GridView.count(
           crossAxisCount: 2,
@@ -136,23 +135,23 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
             Expanded(child: _prayerTimeTile(Icons.wb_twilight, 'الغروب', times.sunset)),
           ],
         ),
-        const Padding(padding: EdgeInsets.all(8), child: Text('الحساب المحلي احتياطي تقريبي، وليس بديلاً عن جدول شرعي معتمد من مكتب مرجعك. استخدم زر GPS لتحديث الإحداثيات وفعّل تنبيهات الصلاة من الإعدادات.', style: TextStyle(color: _muted, fontSize: 11, height: 1.6))),
+        Padding(padding: EdgeInsets.all(8), child: Text('الحساب المحلي احتياطي تقريبي، وليس بديلاً عن جدول شرعي معتمد من مكتب مرجعك. استخدم زر GPS لتحديث الإحداثيات وفعّل تنبيهات الصلاة من الإعدادات.', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11, height: 1.6))),
       ] else if (tab == 1) ...[
-        Text('إمساكية تقديرية — ${city.name} / العراق', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17)), const SizedBox(height: 5),
-        const Text('يعرض الشهر كاملاً من اليوم الأول إلى آخر يوم من رمضان المحسوب تقويمياً. الأوقات فلكية تقديرية وليست بديلاً عن إمساكية مكتب مرجعك أو الجهة المحلية المعتمدة.', style: TextStyle(color: _muted, fontSize: 11, height: 1.5)),
+        Text('إمساكية تقديرية — ${city.name} / العراق', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17)), const SizedBox(height: 5),
+        Text('يعرض الشهر كاملاً من اليوم الأول إلى آخر يوم من رمضان المحسوب تقويمياً. الأوقات فلكية تقديرية وليست بديلاً عن إمساكية مكتب مرجعك أو الجهة المحلية المعتمدة.', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11, height: 1.5)),
         ..._ramadanRows(date, city.latitude, city.longitude),
       ] else if (_showAnnualCalendar) ..._annualCalendar(date.year, correction)
       else ..._monthCalendar(date, correction),
       const Divider(),
-      const Text('الموقع الحالي للحساب', style: TextStyle(fontWeight: FontWeight.bold)),
+      Text('الموقع الحالي للحساب', style: TextStyle(fontWeight: FontWeight.bold)),
       Text(
         '${city.name} — ${city.id == 'current_location' ? 'موقع GPS من الجهاز' : 'إحداثيات المدينة التقريبية'}${_gpsAccuracy == null ? '' : ' (دقة نحو ${_gpsAccuracy!.round()} متر)'}',
-        style: const TextStyle(color: _muted),
+        style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
       ),
       if (_locationMessage != null)
         Padding(
           padding: const EdgeInsets.only(top: 8),
-          child: Text(_locationMessage!, style: const TextStyle(color: _gold)),
+          child: Text(_locationMessage!, style: TextStyle(color: _gold)),
         ),
     ]));
   }
@@ -240,7 +239,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
               IconButton(
                 tooltip: 'الشهر الهجري السابق',
                 onPressed: () => _moveHijriMonth(-1),
-                icon: const Icon(Icons.chevron_right_rounded, color: _gold),
+                icon: Icon(Icons.chevron_right_rounded, color: _gold),
               ),
               Expanded(
                 child: Column(
@@ -248,7 +247,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
                     Text(
                       '${selectedHijri.monthName} ${_arabicIndicDigits(selectedHijri.year)} هـ',
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: _gold,
                         fontSize: 18,
                         fontWeight: FontWeight.w900,
@@ -257,7 +256,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
                     const SizedBox(height: 3),
                     Text(
                       '${_gregorianMonthName(firstDay.month)} ${firstDay.year}',
-                      style: const TextStyle(color: _muted, fontSize: 11),
+                      style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11),
                     ),
                   ],
                 ),
@@ -265,22 +264,22 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
               IconButton(
                 tooltip: 'الشهر الهجري التالي',
                 onPressed: () => _moveHijriMonth(1),
-                icon: const Icon(Icons.chevron_left_rounded, color: _gold),
+                icon: Icon(Icons.chevron_left_rounded, color: _gold),
               ),
               IconButton(
                 tooltip: 'عرض التقويم السنوي',
                 onPressed: () => setState(() => _showAnnualCalendar = true),
-                icon: const Icon(Icons.calendar_view_month_rounded, color: _muted),
+                icon: Icon(Icons.calendar_view_month_rounded, color: Theme.of(context).colorScheme.onSurfaceVariant),
               ),
             ],
           ),
         ),
       ),
-      const Padding(
+      Padding(
         padding: EdgeInsets.fromLTRB(4, 4, 4, 8),
         child: Text(
           'اختر يوماً لعرض مناسبته وتاريخه. التقويم حسابي وقد يختلف عن إعلان ثبوت الهلال.',
-          style: TextStyle(color: _muted, height: 1.5, fontSize: 11),
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.5, fontSize: 11),
         ),
       ),
       Row(
@@ -291,7 +290,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
               child: Text(
                 day,
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: _muted, fontSize: 9, fontWeight: FontWeight.w700),
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 9, fontWeight: FontWeight.w700),
               ),
             ),
           ),
@@ -383,12 +382,12 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
             children: [
               Row(
                 children: [
-                  const Icon(Icons.event_available_rounded, color: _gold, size: 21),
+                  Icon(Icons.event_available_rounded, color: _gold, size: 21),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       '${_arabicIndicDigits(selectedHijri.day)} ${selectedHijri.monthName} ${_arabicIndicDigits(selectedHijri.year)} هـ',
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w900),
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900),
                     ),
                   ),
                 ],
@@ -396,19 +395,19 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
               const SizedBox(height: 5),
               Text(
                 '${_dateLabel(selectedDate)} م',
-                style: const TextStyle(color: _muted, fontSize: 12),
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 12),
               ),
               if (selectedOccasion != null) ...[
                 const SizedBox(height: 10),
                 Text(
                   selectedOccasion,
-                  style: const TextStyle(color: _gold, fontSize: 15, height: 1.5, fontWeight: FontWeight.w800),
+                  style: TextStyle(color: _gold, fontSize: 15, height: 1.5, fontWeight: FontWeight.w800),
                 ),
               ] else ...[
                 const SizedBox(height: 8),
-                const Text(
+                Text(
                   'لا توجد مناسبة مسجلة لهذا اليوم في قائمة المناسبات الحالية.',
-                  style: TextStyle(color: _muted, fontSize: 11, height: 1.5),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11, height: 1.5),
                 ),
               ],
               const SizedBox(height: 12),
@@ -432,16 +431,16 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
                         });
                       }
                     },
-                    icon: const Icon(Icons.sync_alt_rounded),
-                    label: const Text('تحويل تاريخ ميلادي'),
+                    icon: Icon(Icons.sync_alt_rounded),
+                    label: Text('تحويل تاريخ ميلادي'),
                   ),
                   TextButton.icon(
                     onPressed: () => setState(() {
                       date = DateTime.now();
                       _showAnnualCalendar = false;
                     }),
-                    icon: const Icon(Icons.today_rounded),
-                    label: const Text('اليوم'),
+                    icon: Icon(Icons.today_rounded),
+                    label: Text('اليوم'),
                   ),
                 ],
               ),
@@ -466,16 +465,16 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           child: Row(children: [
-            IconButton(tooltip: 'السنة السابقة', onPressed: () => _changeAnnualYear(-1), icon: const Icon(Icons.chevron_right_rounded, color: _gold)),
-            Expanded(child: Text('التقويم السنوي $year', textAlign: TextAlign.center, style: const TextStyle(color: _gold, fontWeight: FontWeight.w800, fontSize: 18))),
-            IconButton(tooltip: 'السنة التالية', onPressed: () => _changeAnnualYear(1), icon: const Icon(Icons.chevron_left_rounded, color: _gold)),
-            IconButton(tooltip: 'العودة إلى التقويم الشهري', onPressed: () => setState(() => _showAnnualCalendar = false), icon: const Icon(Icons.calendar_view_month_rounded, color: _gold)),
+            IconButton(tooltip: 'السنة السابقة', onPressed: () => _changeAnnualYear(-1), icon: Icon(Icons.chevron_right_rounded, color: _gold)),
+            Expanded(child: Text('التقويم السنوي $year', textAlign: TextAlign.center, style: TextStyle(color: _gold, fontWeight: FontWeight.w800, fontSize: 18))),
+            IconButton(tooltip: 'السنة التالية', onPressed: () => _changeAnnualYear(1), icon: Icon(Icons.chevron_left_rounded, color: _gold)),
+            IconButton(tooltip: 'العودة إلى التقويم الشهري', onPressed: () => setState(() => _showAnnualCalendar = false), icon: Icon(Icons.calendar_view_month_rounded, color: _gold)),
           ]),
         ),
       ),
-      const Padding(
+      Padding(
         padding: EdgeInsets.symmetric(horizontal: 4, vertical: 6),
-        child: Text('افتح أي شهر لتشاهد كل أيامه بالتاريخين الميلادي والهجري والمناسبات المسجلة. التاريخ الهجري حسابي تقريبي؛ قد يختلف عن إعلان ثبوت الهلال.', style: TextStyle(color: _muted, height: 1.6, fontSize: 12)),
+        child: Text('افتح أي شهر لتشاهد كل أيامه بالتاريخين الميلادي والهجري والمناسبات المسجلة. التاريخ الهجري حسابي تقريبي؛ قد يختلف عن إعلان ثبوت الهلال.', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.6, fontSize: 12)),
       ),
     ];
     for (var month = 1; month <= 12; month++) {
@@ -492,8 +491,8 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
         child: ExpansionTile(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
           collapsedShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-          leading: const Icon(Icons.calendar_month_rounded, color: _gold),
-          title: Text(_gregorianMonthName(month), style: const TextStyle(fontWeight: FontWeight.bold)),
+          leading: Icon(Icons.calendar_month_rounded, color: _gold),
+          title: Text(_gregorianMonthName(month), style: TextStyle(fontWeight: FontWeight.bold)),
           subtitle: Text('$daysInMonth يوماً'),
           children: List<Widget>.generate(daysInMonth, (index) {
             final day = index + 1;
@@ -503,11 +502,11 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
             final hijriLabel = '${hijri.day} ${hijri.monthName} ${hijri.year} هـ';
             return ListTile(
               dense: true,
-              leading: SizedBox(width: 30, child: Text('$day', textAlign: TextAlign.center, style: const TextStyle(color: _gold, fontWeight: FontWeight.bold))),
+              leading: SizedBox(width: 30, child: Text('$day', textAlign: TextAlign.center, style: TextStyle(color: _gold, fontWeight: FontWeight.bold))),
               title: Text('$day ${_gregorianMonthName(month)} $year م'),
-              subtitle: Text(occasion == null ? hijriLabel : '$hijriLabel\n$occasion', style: const TextStyle(color: _muted, height: 1.5)),
+              subtitle: Text(occasion == null ? hijriLabel : '$hijriLabel\n$occasion', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.5)),
               isThreeLine: occasion != null,
-              trailing: occasion == null ? null : const Icon(Icons.event_available_rounded, color: _gold, size: 18),
+              trailing: occasion == null ? null : Icon(Icons.event_available_rounded, color: _gold, size: 18),
               onTap: () => setState(() { date = gregorian; tab = 0; }),
             );
           }),
@@ -559,16 +558,16 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
         border: Border.all(color: _gold.withValues(alpha: .35)),
       ),
       child: Row(children: [
-        const Icon(Icons.hourglass_bottom_rounded, color: _gold, size: 28),
+        Icon(Icons.hourglass_bottom_rounded, color: _gold, size: 28),
         const SizedBox(width: 12),
         Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text('الصلاة القادمة: $nextName', style: const TextStyle(fontWeight: FontWeight.bold, color: _gold, fontSize: 16)),
+          Text('الصلاة القادمة: $nextName', style: TextStyle(fontWeight: FontWeight.bold, color: _gold, fontSize: 16)),
           const SizedBox(height: 4),
-          Text('الوقت المحسوب: ${formatPrayerTime12Hour(nextTimeText)}', style: const TextStyle(color: _muted, fontSize: 12)),
+          Text('الوقت المحسوب: ${formatPrayerTime12Hour(nextTimeText)}', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 12)),
         ])),
         Text(
           hours > 0 ? '$hoursس $minutesد' : '$minutes دقيقة',
-          style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 17),
+          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 17),
         ),
       ]),
     );
@@ -585,16 +584,16 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
       children: [
         Icon(icon, color: _gold, size: 21),
         const SizedBox(width: 8),
-        Expanded(child: Text(label, style: const TextStyle(fontWeight: FontWeight.w700))),
+        Expanded(child: Text(label, style: TextStyle(fontWeight: FontWeight.w700))),
         Text(
           formatPrayerTime12Hour(time),
-          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: _gold),
+          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: _gold),
         ),
       ],
     ),
   );
 
-  Widget _time(IconData icon, String label, String time) => Card(color: Theme.of(context).colorScheme.surface, child: ListTile(leading: Icon(icon, color: _gold), title: Text(label), trailing: Text(formatPrayerTime12Hour(time), style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold))));
+  Widget _time(IconData icon, String label, String time) => Card(color: Theme.of(context).colorScheme.surface, child: ListTile(leading: Icon(icon, color: _gold), title: Text(label), trailing: Text(formatPrayerTime12Hour(time), style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold))));
 }
 
 String _arabicIndicDigits(int value) => value.toString().replaceAllMapped(
@@ -722,7 +721,7 @@ List<Widget> _ramadanRows(DateTime reference, double latitude, double longitude)
     final d = first.add(Duration(days: i));
     final t = SolarPrayerTimes.forDate(d, latitude, longitude, 3.0);
     final h = _Hijri.fromGregorian(d);
-    return Card(color: Theme.of(context).colorScheme.surface, child: ListTile(dense: true, leading: CircleAvatar(backgroundColor: _gold.withValues(alpha: .15), child: Text('${i + 1}', style: const TextStyle(color: _gold))), title: Text('رمضان ${h.day} — ${_dateLabel(d)}'), subtitle: Text('الإمساك/الفجر: ${formatPrayerTime12Hour(t.fajr)}  •  الإفطار التقريبي: ${formatPrayerTime12Hour(t.maghrib)}')));
+    return Card(color: Theme.of(context).colorScheme.surface, child: ListTile(dense: true, leading: CircleAvatar(backgroundColor: _gold.withValues(alpha: .15), child: Text('${i + 1}', style: TextStyle(color: _gold))), title: Text('رمضان ${h.day} — ${_dateLabel(d)}'), subtitle: Text('الإمساك/الفجر: ${formatPrayerTime12Hour(t.fajr)}  •  الإفطار التقريبي: ${formatPrayerTime12Hour(t.maghrib)}')));
   });
 }
 

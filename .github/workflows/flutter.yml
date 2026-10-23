@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Validate Python build scripts
+        run: python3 -m compileall -q tool
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:

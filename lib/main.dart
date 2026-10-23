@@ -1208,7 +1208,7 @@ class _MainShellState extends State<MainShell> {
     required VoidCallback onTap,
   }) {
     return Material(
-      color: _panel,
+      color: Colors.transparent,
       borderRadius: BorderRadius.circular(20),
       child: InkWell(
         onTap: onTap,
@@ -1217,8 +1217,20 @@ class _MainShellState extends State<MainShell> {
           constraints: const BoxConstraints(minHeight: 132),
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 15),
           decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              colors: [Color(0xFF17382C), Color(0xFF0B1C16), Color(0xFF10251E)],
+            ),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: _gold.withValues(alpha: .22)),
+            border: Border.all(color: _gold.withValues(alpha: .28)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: .16),
+                blurRadius: 14,
+                offset: const Offset(0, 6),
+              ),
+            ],
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1247,7 +1259,7 @@ class _MainShellState extends State<MainShell> {
 
   Widget _homeMiniShortcut(IconData icon, String title, VoidCallback onTap) {
     return Material(
-      color: _panel,
+      color: Colors.transparent,
       borderRadius: BorderRadius.circular(18),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -1256,8 +1268,13 @@ class _MainShellState extends State<MainShell> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
           decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color(0xFF143126), Color(0xFF0D211A)],
+            ),
             borderRadius: BorderRadius.circular(18),
-            border: Border.all(color: _gold.withValues(alpha: .18)),
+            border: Border.all(color: _gold.withValues(alpha: .20)),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

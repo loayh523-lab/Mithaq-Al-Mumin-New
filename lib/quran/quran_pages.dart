@@ -6,7 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
-const _panel = Color(0xFF10251E);
 const _emerald = Color(0xFF1C8060);
 const _gold = Color(0xFFD9B66D);
 const _muted = Color(0xFF697A70);

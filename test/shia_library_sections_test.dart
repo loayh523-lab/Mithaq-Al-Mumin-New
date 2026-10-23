@@ -24,13 +24,15 @@ void main() {
           'الصحيفة السجادية والمناجيات');
     });
 
-    test('daily prayers and taqibat share one section', () {
+    test('daily prayers and taqibat have separate clear sections', () {
       expect(entry(slug: 'dua-morning', title: 'دعاء الصباح').category,
           'الأدعية والأذكار اليومية');
       expect(entry(slug: 'taqib-prayer', title: 'تعقيب الصلاة').category,
-          'الأدعية والأذكار اليومية');
+          'التعقيبات بعد الصلاة');
       expect(entry(slug: 'dua-friday', title: 'دعاء يوم الجمعة').category,
           'الأدعية والأذكار اليومية');
+      expect(entry(slug: 'taqib-after-salaat-01', title: 'تعقيب بعد الصلاة').category,
+          'التعقيبات بعد الصلاة');
     });
 
     test('general and Mahdi-related prayers share one section', () {

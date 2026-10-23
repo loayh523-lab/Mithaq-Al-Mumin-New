@@ -5,12 +5,13 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('Curated offline Arabic supplication library', () {
-    test('contains exactly 110 complete texts in the four curated sections', () async {
+    test('contains exactly 110 complete texts in the five curated sections', () async {
       final data = await ShiaTextData.loadCore();
       expect(data.entries, hasLength(110));
 
       const expectedCounts = <String, int>{
-        'الأدعية والأذكار اليومية': 30,
+        'الأدعية والأذكار اليومية': 25,
+        'التعقيبات بعد الصلاة': 5,
         'الأدعية العامة وأدعية الفرج وصاحب الزمان': 35,
         'الأعمال والمناسبات': 20,
         'الزيارات الشريفة': 25,
@@ -53,6 +54,16 @@ void main() {
       expect(slugs, hasLength(110));
       expect(completeTexts, hasLength(110));
     });
+    test('taqibat after prayer have a distinct section and meaningful content-based titles', () async {
+      final data = await ShiaTextData.loadCore();
+      final taqibat = data.entries.where((entry) => entry.slug.startsWith('taqib-after-salaat-')).toList();
+      expect(taqibat, hasLength(5));
+      expect(taqibat.every((entry) => entry.category == 'التعقيبات بعد الصلاة'), isTrue);
+      expect(taqibat.map((entry) => entry.displayTitle).toSet(), hasLength(5));
+      expect(taqibat.every((entry) => !RegExp(r'\\(\\d+\\)').hasMatch(entry.displayTitle)), isTrue);
+      expect(taqibat.every((entry) => entry.displayTitle != entry.title), isTrue);
+    });
+
     test('combined library contains the curated collection and Sahifa without duplicate identifiers', () async {
       final data = await ShiaTextData.load();
       expect(data.entries, hasLength(186));

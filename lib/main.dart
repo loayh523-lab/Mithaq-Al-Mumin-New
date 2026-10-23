@@ -893,7 +893,7 @@ class _MainShellState extends State<MainShell> {
               child: _homeShortcut(
                 icon: Icons.volunteer_activism_rounded,
                 title: 'الأدعية',
-                subtitle: 'أدعية وزيارات • 5 أقسام',
+                subtitle: 'أدعية وزيارات • 6 أقسام',
                 onTap: () => setState(() => _selected = 2),
               ),
             ),

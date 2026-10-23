@@ -6,10 +6,11 @@
   "repositoryLicense": "MIT",
   "expectedCount": 110,
   "expectedCategoryCounts": {
-    "الأدعية والأذكار اليومية": 30,
+    "الأدعية والأذكار اليومية": 25,
     "الأدعية العامة وأدعية الفرج وصاحب الزمان": 35,
     "الأعمال والمناسبات": 20,
-    "الزيارات الشريفة": 25
+    "الزيارات الشريفة": 25,
+    "التعقيبات بعد الصلاة": 5
   },
   "entries": [
     {
@@ -26,9 +27,9 @@
       "sourceId": 282,
       "sourceName": "Dua after Salaat - 1",
       "slug": "taqib-after-salaat-01",
-      "title": "دعاء التعقيب بعد الصلاة (1)",
+      "title": "تعقيب بعد الصلاة",
       "alternateName": "",
-      "category": "الأدعية والأذكار اليومية",
+      "category": "التعقيبات بعد الصلاة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 282",
       "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
     },
@@ -36,9 +37,9 @@
       "sourceId": 283,
       "sourceName": "Dua after Salaat - 2",
       "slug": "taqib-after-salaat-02",
-      "title": "دعاء التعقيب بعد الصلاة (2)",
+      "title": "تعقيب بعد الصلاة",
       "alternateName": "",
-      "category": "الأدعية والأذكار اليومية",
+      "category": "التعقيبات بعد الصلاة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 283",
       "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
     },
@@ -46,9 +47,9 @@
       "sourceId": 284,
       "sourceName": "Dua after Salaat - 3",
       "slug": "taqib-after-salaat-03",
-      "title": "دعاء التعقيب بعد الصلاة (3)",
+      "title": "تعقيب بعد الصلاة",
       "alternateName": "",
-      "category": "الأدعية والأذكار اليومية",
+      "category": "التعقيبات بعد الصلاة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 284",
       "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
     },
@@ -56,9 +57,9 @@
       "sourceId": 285,
       "sourceName": "Dua after Salaat - 4",
       "slug": "taqib-after-salaat-04",
-      "title": "دعاء التعقيب بعد الصلاة (4)",
+      "title": "تعقيب بعد الصلاة",
       "alternateName": "",
-      "category": "الأدعية والأذكار اليومية",
+      "category": "التعقيبات بعد الصلاة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 285",
       "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
     },
@@ -66,9 +67,9 @@
       "sourceId": 286,
       "sourceName": "Dua after Salaat - 5",
       "slug": "taqib-after-salaat-05",
-      "title": "دعاء التعقيب بعد الصلاة (5)",
+      "title": "تعقيب بعد الصلاة",
       "alternateName": "",
-      "category": "الأدعية والأذكار اليومية",
+      "category": "التعقيبات بعد الصلاة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 286",
       "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
     },

@@ -19,7 +19,8 @@ EXPECTED_COUNT = 110
 EXPECTED_SAHIFA_COUNT = 76
 SAHIFA_CATEGORY = "الصحيفة السجادية والمناجيات"
 EXPECTED_CATEGORY_COUNTS = {
-    "الأدعية والأذكار اليومية": 30,
+    "الأدعية والأذكار اليومية": 25,
+    "التعقيبات بعد الصلاة": 5,
     "الأدعية العامة وأدعية الفرج وصاحب الزمان": 35,
     "الأعمال والمناسبات": 20,
     "الزيارات الشريفة": 25,
@@ -77,7 +78,7 @@ def main() -> None:
     if manifest.get("downloadUrl") != SOURCE_URL or manifest.get("sourceUrl") != SOURCE_PAGE:
         raise SystemExit("Manifest source URL does not match the pinned dataset.")
     if manifest.get("expectedCategoryCounts") != EXPECTED_CATEGORY_COUNTS:
-        raise SystemExit("Manifest category counts differ from the agreed four curated sections.")
+        raise SystemExit("Manifest category counts differ from the agreed five curated sections.")
 
     source = fetch_json(SOURCE_URL)
     source_meta = source.get("metadata") if isinstance(source, dict) else None
@@ -178,7 +179,8 @@ def main() -> None:
                 SAHIFA_CATEGORY if slug.startswith(("sahifa-sajjadiya-", "munajat-sahifa-")) else
                 "الزيارات الشريفة" if slug.startswith("ziyarat-") else
                 "الأعمال والمناسبات" if slug.startswith("occasion-") else
-                "الأدعية والأذكار اليومية" if slug.startswith(("daily-", "taqib-")) else
+                "التعقيبات بعد الصلاة" if slug.startswith("taqib-after-salaat-") else
+                "الأدعية والأذكار اليومية" if slug.startswith("daily-") else
                 "الأدعية العامة وأدعية الفرج وصاحب الزمان" if slug.startswith("general-") else None
             )
             if slug_category != category:
@@ -196,7 +198,8 @@ def main() -> None:
                 "sahifa" if slug.startswith("sahifa-sajjadiya-") else
                 "munajat" if slug.startswith("munajat-sahifa-") else
                 "ziyarat" if slug.startswith("ziyarat-") else
-                "daily" if slug.startswith(("daily-", "taqib-")) else
+                "taqibat" if slug.startswith("taqib-after-salaat-") else
+                "daily" if slug.startswith("daily-") else
                 "occasion" if slug.startswith("occasion-") else "dua"
             )
             prepared_entry = {
@@ -259,7 +262,7 @@ def main() -> None:
     atomic_json(SAHIFA_DEST, sahifa_result)
 
     print(
-        f"Prepared {len(prepared)} distinct Arabic texts in four curated sections "
+        f"Prepared {len(prepared)} distinct Arabic texts in five curated sections "
         f"({total_arabic_lines} Arabic lines) and preserved {len(prepared_sahifa)} Sahifa/Munajat texts separately "
         f"({sahifa_arabic_lines} Arabic lines). No duplicate full texts, Persian or Latin."
     )

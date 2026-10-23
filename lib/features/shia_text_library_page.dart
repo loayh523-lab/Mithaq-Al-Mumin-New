@@ -76,7 +76,9 @@ class ShiaTextEntry {
     // with the same basmala/salawat. Strip that boilerplate before deriving a
     // readable title, otherwise five different texts all appear with one title.
     String meaningfulPrefix(String line) {
-      var value = line.trim();
+      var value = line
+          .trim()
+          .replaceAll(RegExp(r'[\\u064B-\\u065F\\u0670\\u0640]'), '');
       const commonOpeners = [
         'بسم الله الرحمن الرحيم',
         'بسم الله',

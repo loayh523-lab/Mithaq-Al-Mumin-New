@@ -312,7 +312,51 @@ void main() {
 
   test('estimated prayer times stay ordered and valid for supported Iraq cities', () {
     int minutes(String label) {
-      expect(RegExp(r'^\\d{2}:\\d{2}    expect(formatPrayerTime12Hour('00:05'), '12:05 ص');
+      final parts = label.split(':');
+      expect(parts.length, 2, reason: label);
+      final hour = parts.length == 2 ? int.tryParse(parts[0]) : null;
+      final minute = parts.length == 2 ? int.tryParse(parts[1]) : null;
+      expect(hour, isNotNull, reason: label);
+      expect(minute, isNotNull, reason: label);
+      expect(hour ?? -1, inInclusiveRange(0, 23), reason: label);
+      expect(minute ?? -1, inInclusiveRange(0, 59), reason: label);
+      return (hour ?? 0) * 60 + (minute ?? 0);
+    }
+
+    for (final city in PrayerLocations.cities) {
+      for (final date in [
+        DateTime(2026, 1, 15),
+        DateTime(2026, 6, 15),
+        DateTime(2026, 10, 24),
+      ]) {
+        final times = SolarPrayerTimes.forDate(
+          date,
+          city.latitude,
+          city.longitude,
+          3.0,
+        );
+        final ordered = [
+          times.fajr,
+          times.sunrise,
+          times.noon,
+          times.asr,
+          times.sunset,
+          times.maghrib,
+          times.isha,
+        ].map(minutes).toList();
+        for (var i = 1; i < ordered.length; i++) {
+          expect(
+            ordered[i],
+            greaterThan(ordered[i - 1]),
+            reason: city.name + ' / ' + date.toIso8601String(),
+          );
+        }
+      }
+    }
+  });
+
+  test('prayer times are displayed in a readable 12-hour Arabic format', () {
+    expect(formatPrayerTime12Hour('00:05'), '12:05 ص');
     expect(formatPrayerTime12Hour('08:15'), '8:15 ص');
     expect(formatPrayerTime12Hour('12:07'), '12:07 م');
     expect(formatPrayerTime12Hour('13:09'), '1:09 م');

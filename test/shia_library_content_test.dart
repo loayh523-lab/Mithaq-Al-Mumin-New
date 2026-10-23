@@ -6,7 +6,7 @@ void main() {
 
   group('Curated offline Arabic supplication library', () {
     test('contains exactly 110 complete texts in the four curated sections', () async {
-      final data = await ShiaTextData.load();
+      final data = await ShiaTextData.loadCore();
       expect(data.entries, hasLength(110));
 
       const expectedCounts = <String, int>{
@@ -53,6 +53,20 @@ void main() {
       expect(slugs, hasLength(110));
       expect(completeTexts, hasLength(110));
     });
+    test('combined library contains the curated collection and Sahifa without duplicate identifiers', () async {
+      final data = await ShiaTextData.load();
+      expect(data.entries, hasLength(186));
+      expect(
+        data.entries.where((entry) => entry.category == 'الصحيفة السجادية والمناجيات'),
+        hasLength(76),
+      );
+      expect(
+        data.entries.where((entry) => entry.category != 'الصحيفة السجادية والمناجيات'),
+        hasLength(110),
+      );
+      expect(data.entries.map((entry) => entry.slug).toSet(), hasLength(186));
+    });
+
     test('preserves Sahifa and Munajat separately without counting them among the 110', () async {
       final data = await ShiaTextData.loadSahifa();
       expect(data.entries, hasLength(76));

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../features/prayer_calendar_page.dart' show hijriDateLabel, hijriDateParts;
 
-const _deedPanel = Color(0xFF10251E);
 const _deedGold = Color(0xFFD9B66D);
 const _deedMuted = Color(0xFF697A70);
 
@@ -257,7 +256,7 @@ class _GoodDeedsPageState extends State<GoodDeedsPage> {
           Container(
             padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
-              color: _deedPanel,
+              color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(20),
               border: Border.all(color: _deedGold.withValues(alpha: .3)),
             ),
@@ -289,7 +288,7 @@ class _GoodDeedsPageState extends State<GoodDeedsPage> {
             ...deeds.map((deed) {
               final checked = _completed.contains(deed.id);
               return Card(
-                color: _deedPanel,
+                color: Theme.of(context).colorScheme.surface,
                 margin: const EdgeInsets.only(bottom: 10),
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),

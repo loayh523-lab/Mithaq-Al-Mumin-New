@@ -1,4 +1,4 @@
-name: Flutter CI — Review Only
+name: Flutter CI — Analyze, Test, Android Release Build
 
 on:
   push:
@@ -110,3 +110,6 @@ jobs:
         run: flutter analyze
       - name: Test
         run: flutter test
+      # Build for validation only. Deliberately do not publish or upload the APK.
+      - name: Build Android release APK for validation
+        run: flutter build apk --release

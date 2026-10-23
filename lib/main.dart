@@ -883,7 +883,7 @@ class _MainShellState extends State<MainShell> {
                 children: [
                   Row(
                     children: [
-                      const MithaqBrandMark(size: 42)
+                      const MithaqBrandMark(size: 42),
                       const SizedBox(width: 11),
                       const Expanded(
                         child: Column(

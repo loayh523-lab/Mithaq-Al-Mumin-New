@@ -1219,7 +1219,7 @@ class _MainShellState extends State<MainShell> {
         Container(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
           decoration: BoxDecoration(
-            color: _panel,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(22),
             border: Border.all(color: _emerald.withValues(alpha: .42)),
           ),
@@ -1545,7 +1545,7 @@ class _TasbeehPageState extends State<TasbeehPage> {
           Container(
             padding: const EdgeInsets.all(15),
             decoration: BoxDecoration(
-              color: _panel,
+              color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(18),
               border: Border.all(color: _gold.withValues(alpha: .28)),
             ),
@@ -1611,7 +1611,7 @@ class _TasbeehPageState extends State<TasbeehPage> {
                   height: 190,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: _panel,
+                    color: Theme.of(context).colorScheme.surface,
                     border: Border.all(color: _gold, width: 2),
                     boxShadow: [BoxShadow(color: _emerald.withValues(alpha: .2), blurRadius: 28, spreadRadius: 4)],
                   ),
@@ -1676,7 +1676,7 @@ class _DuaLibraryState extends State<_DuaLibrary> {
     required String subtitle,
     required VoidCallback onTap,
   }) => Card(
-    color: _panel,
+    color: Theme.of(context).colorScheme.surface,
     margin: const EdgeInsets.symmetric(vertical: 5),
     elevation: 0,
     clipBehavior: Clip.antiAlias,
@@ -1733,7 +1733,7 @@ class _DuaLibraryState extends State<_DuaLibrary> {
         const Text('الأدعية والأذكار والمكتبة الشيعية', style: TextStyle(color: _muted)),
         const SizedBox(height: 14),
         Card(
-          color: _panel,
+          color: Theme.of(context).colorScheme.surface,
           child: ListTile(
             leading: const CircleAvatar(backgroundColor: Color(0x223CB58B), child: Icon(Icons.menu_book_rounded, color: _gold)),
             title: const Text('الأدعية والزيارات والصحيفة السجادية', style: TextStyle(fontWeight: FontWeight.bold)),
@@ -1828,7 +1828,7 @@ class _DuaLibraryState extends State<_DuaLibrary> {
           const Padding(padding: EdgeInsets.all(24), child: Center(child: Text('ماكو نتائج مطابقة', style: TextStyle(color: _muted))))
         else
           ...items.map((item) => Card(
-            color: _panel,
+            color: Theme.of(context).colorScheme.surface,
             margin: const EdgeInsets.only(bottom: 12),
             child: InkWell(
               borderRadius: BorderRadius.circular(16),
@@ -2039,7 +2039,7 @@ class _KhatmaPageState extends State<KhatmaPage> {
           Container(
             padding: const EdgeInsets.all(22),
             decoration: BoxDecoration(
-              color: _panel,
+              color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(24),
               border: Border.all(color: _gold.withValues(alpha: .35)),
             ),
@@ -2130,7 +2130,7 @@ class _KhatmaPageState extends State<KhatmaPage> {
           const SizedBox(height: 18),
           Container(
             padding: const EdgeInsets.all(18),
-            decoration: BoxDecoration(color: _panel, borderRadius: BorderRadius.circular(20), border: Border.all(color: _gold.withValues(alpha: .25))),
+            decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface, borderRadius: BorderRadius.circular(20), border: Border.all(color: _gold.withValues(alpha: .25))),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               const Text('تتبّع الصفحات', style: TextStyle(color: _gold, fontSize: 20, fontWeight: FontWeight.w800)),
               const SizedBox(height: 6),
@@ -2141,10 +2141,10 @@ class _KhatmaPageState extends State<KhatmaPage> {
                 Text('${(_completedPages.length / 604 * 100).round()}%', style: const TextStyle(color: _gold, fontWeight: FontWeight.bold)),
               ]),
               const SizedBox(height: 8),
-              ClipRRect(borderRadius: BorderRadius.circular(20), child: LinearProgressIndicator(value: _completedPages.length / 604, minHeight: 8, backgroundColor: _ink, color: _gold)),
+              ClipRRect(borderRadius: BorderRadius.circular(20), child: LinearProgressIndicator(value: _completedPages.length / 604, minHeight: 8, backgroundColor: Theme.of(context).scaffoldBackgroundColor, color: _gold)),
               const SizedBox(height: 8),
               Material(
-                color: _panel,
+                color: Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(12),
                 child: ExpansionTile(
                 tilePadding: EdgeInsets.zero,
@@ -2255,7 +2255,7 @@ class _PrayerTrackerPageState extends State<PrayerTrackerPage> {
           Container(
             padding: const EdgeInsets.all(22),
             decoration: BoxDecoration(
-              color: _panel,
+              color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(24),
               border: Border.all(color: _gold.withValues(alpha: .3)),
             ),
@@ -2277,7 +2277,7 @@ class _PrayerTrackerPageState extends State<PrayerTrackerPage> {
                           value: progress,
                           minHeight: 9,
                           color: _gold,
-                          backgroundColor: _ink,
+                          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                         ),
                       ),
                     ),
@@ -2293,7 +2293,7 @@ class _PrayerTrackerPageState extends State<PrayerTrackerPage> {
             const Center(child: Padding(padding: EdgeInsets.all(24), child: CircularProgressIndicator()))
           else
             ..._prayers.map((prayer) => Card(
-              color: _panel,
+              color: Theme.of(context).colorScheme.surface,
               clipBehavior: Clip.antiAlias,
               margin: const EdgeInsets.only(bottom: 9),
               child: Material(

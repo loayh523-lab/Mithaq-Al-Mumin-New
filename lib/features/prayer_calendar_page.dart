@@ -593,7 +593,6 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
     ),
   );
 
-  Widget _time(IconData icon, String label, String time) => Card(color: Theme.of(context).colorScheme.surface, child: ListTile(leading: Icon(icon, color: _gold), title: Text(label), trailing: Text(formatPrayerTime12Hour(time), style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold))));
 }
 
 String _arabicIndicDigits(int value) => value.toString().replaceAllMapped(

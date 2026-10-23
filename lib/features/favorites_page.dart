@@ -3,7 +3,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'shia_text_library_page.dart';
 
 const _favoritesGold = Color(0xFFD9B66D);
-const _favoritesMuted = Color(0xFF697A70);
 
 class FavoritesPage extends StatefulWidget {
   const FavoritesPage({super.key});
@@ -97,9 +96,9 @@ class _FavoritesPageState extends State<FavoritesPage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: const Text('المفضلة المباركة')),
+        appBar: AppBar(title: Text('المفضلة المباركة')),
         body: _loading
-            ? const Center(
+            ? Center(
                 child: CircularProgressIndicator(color: _favoritesGold),
               )
             : _error != null
@@ -109,15 +108,15 @@ class _FavoritesPageState extends State<FavoritesPage> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(Icons.error_outline_rounded,
+                          Icon(Icons.error_outline_rounded,
                               color: _favoritesGold, size: 40),
-                          const SizedBox(height: 12),
+                          SizedBox(height: 12),
                           Text(_error!, textAlign: TextAlign.center),
-                          const SizedBox(height: 12),
+                          SizedBox(height: 12),
                           FilledButton.icon(
                             onPressed: _load,
-                            icon: const Icon(Icons.refresh_rounded),
-                            label: const Text('إعادة المحاولة'),
+                            icon: Icon(Icons.refresh_rounded),
+                            label: Text('إعادة المحاولة'),
                           ),
                         ],
                       ),
@@ -130,10 +129,10 @@ class _FavoritesPageState extends State<FavoritesPage> {
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Icon(Icons.star_border_rounded,
+                              Icon(Icons.star_border_rounded,
                                   color: _favoritesGold, size: 52),
-                              const SizedBox(height: 14),
-                              const Text(
+                              SizedBox(height: 14),
+                              Text(
                                 'مفضلتك فارغة حالياً',
                                 style: TextStyle(
                                   fontSize: 20,
@@ -141,20 +140,20 @@ class _FavoritesPageState extends State<FavoritesPage> {
                                   color: _favoritesGold,
                                 ),
                               ),
-                              const SizedBox(height: 8),
-                              const Text(
+                              SizedBox(height: 8),
+                              Text(
                                 'افتح أي دعاء أو زيارة واضغط النجمة لحفظه هنا. تُحفظ المفضلة على جهازك وتعمل دون إنترنت.',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  color: _favoritesMuted,
+                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                                   height: 1.7,
                                 ),
                               ),
-                              const SizedBox(height: 16),
+                              SizedBox(height: 16),
                               FilledButton.icon(
                                 onPressed: _openLibrary,
-                                icon: const Icon(Icons.menu_book_rounded),
-                                label: const Text('تصفح الأدعية والزيارات'),
+                                icon: Icon(Icons.menu_book_rounded),
+                                label: Text('تصفح الأدعية والزيارات'),
                               ),
                             ],
                           ),
@@ -164,28 +163,28 @@ class _FavoritesPageState extends State<FavoritesPage> {
                         padding: const EdgeInsets.all(16),
                         itemCount: _entries.length,
                         separatorBuilder: (_, __) =>
-                            const SizedBox(height: 8),
+                            SizedBox(height: 8),
                         itemBuilder: (context, index) {
                           final entry = _entries[index];
                           return Card(
                             color: Theme.of(context).colorScheme.surface,
                             child: ListTile(
-                              leading: const Icon(Icons.star_rounded,
+                              leading: Icon(Icons.star_rounded,
                                   color: _favoritesGold),
                               title: Text(
                                 entry.displayTitle,
-                                style: const TextStyle(
+                                style: TextStyle(
                                     fontWeight: FontWeight.w700),
                               ),
                               subtitle: Text(
                                 entry.category,
                                 style:
-                                    const TextStyle(color: _favoritesMuted),
+                                    TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
                               ),
                               trailing: IconButton(
                                 tooltip: 'إزالة من المفضلة',
                                 onPressed: () => _remove(entry),
-                                icon: const Icon(Icons.star_rounded,
+                                icon: Icon(Icons.star_rounded,
                                     color: _favoritesGold),
                               ),
                               onTap: () => Navigator.of(context).push(

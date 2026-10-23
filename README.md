@@ -28,15 +28,22 @@
 ## تشغيل المشروع محلياً
 
 ```bash
+flutter create --platforms=android --project-name=mithaq_al_mumin .
+python3 tool/prepare_android_project.py
+python3 tool/prepare_android_branding.py
+python3 tool/prepare_adhan.py
 python3 tool/prepare_quran.py
+python3 tool/prepare_quran_metadata.py
+python3 tool/prepare_shia_duas.py
 python3 tool/prepare_fonts.py
+python3 tool/check_arabic_assets.py
 flutter pub get
 flutter analyze
 flutter test
 flutter run
 ```
 
-قد تحتاج إلى تشغيل سكربتات إعداد المحتوى المشار إليها في `.github/workflows/flutter.yml` إذا كنت تبني خارج GitHub Actions. فحوصات Actions الحالية تجهّز ملفات Android والأصول، ثم تنفّذ التحليل والاختبارات وتبني APK للإصدار بغرض التحقق فقط؛ لا تحفظه كأثر ولا ترفعه أو تنشره.
+لإنشاء APK محلياً للتحقق من بناء أندرويد استخدم `flutter build apk --release`. إعداد توقيع إنتاجي غير مضاف؛ لا تنشر الملف الناتج. تنفّذ GitHub Actions خطوات التجهيز نفسها ثم التحليل والاختبارات وبناء APK للتحقق فقط، ولا ترفعه كأثر أو تنشره.
 
 ## القرآن الكريم والمصادر
 

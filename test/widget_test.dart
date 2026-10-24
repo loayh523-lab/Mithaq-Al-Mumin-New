@@ -414,7 +414,7 @@ void main() {
       for (final textWidget in tester.widgetList<Text>(find.byType(Text))) {
         final label = textWidget.data;
         if (label == null) continue;
-        final match = RegExp(r'^رمضان (\\d+) — ').firstMatch(label);
+        final match = RegExp(r'^رمضان (\d+) — ').firstMatch(label);
         if (match != null) observedDays.add(int.parse(match.group(1)!));
       }
     }

@@ -47,6 +47,14 @@ jobs:
         run: flutter analyze
       - name: Test
         run: flutter test
-      # Build for validation only. Deliberately do not publish or upload the APK.
+      # Build a validation APK for direct review. This is not a Play Store release
+      # and is not signed with a production release key.
       - name: Build Android release APK for validation
         run: flutter build apk --release
+      - name: Upload validation APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: mithaq-al-mumin-validation-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
+          retention-days: 14

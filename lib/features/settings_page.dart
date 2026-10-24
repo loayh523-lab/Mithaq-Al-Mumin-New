@@ -282,40 +282,28 @@ class _SettingsPageState extends State<SettingsPage> {
         icon: Icons.palette_outlined,
         title: 'مظهر التطبيق',
         children: [
-          Material(
-            color: Theme.of(context).colorScheme.surface,
-            child: ValueListenableBuilder<bool>(
-              valueListenable: AppTheme.isDark,
-            builder: (context, isDark, child) => SwitchListTile(
-              contentPadding: EdgeInsets.zero,
-              value: isDark,
-              activeThumbColor: _settingsGold,
-              secondary: Icon(
-                isDark ? Icons.dark_mode_rounded : Icons.light_mode_rounded,
-                color: _settingsGold,
-              ),
-              title: Text(isDark ? 'المظهر الداكن' : 'المظهر الفاتح'),
-              subtitle: Text(
-                isDark
-                    ? 'الفحمي مع الأخضر الزمردي والذهبي'
-                    : 'العاجي مع الأخضر الزمردي ولمسات ذهبية',
-                style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.5),
-              ),
-              onChanged: (value) async {
-                try {
-                  await AppTheme.setDark(value);
-                } catch (_) {
-                  if (mounted) {
-                    _message('تغيّر المظهر مؤقتاً لكن تعذّر حفظه على الجهاز');
-                  }
-                }
-              },
-              ),
+          ValueListenableBuilder<bool>(
+            valueListenable: AppTheme.isDark,
+            builder: (context, isDark, child) => Row(
+              children: [
+                Expanded(
+                  child: _themeOption(dark: false, selected: !isDark),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: _themeOption(dark: true, selected: isDark),
+                ),
+              ],
             ),
           ),
+          const SizedBox(height: 10),
           Text(
             'يتغيّر المظهر فوراً ويُحفظ اختيارك على هذا الجهاز.',
-            style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 12, height: 1.6),
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              fontSize: 12,
+              height: 1.6,
+            ),
           ),
         ],
       ),
@@ -492,6 +480,126 @@ class _SettingsPageState extends State<SettingsPage> {
       const SizedBox(height: 14),
       Center(child: Text('ميثاق المؤمن • إصدار التطوير 0.2.0', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11))),
     ]);
+  }
+
+  Widget _themeOption({required bool dark, required bool selected}) {
+    final isDarkOption = dark;
+    final background = isDarkOption
+        ? const Color(0xFF071713)
+        : const Color(0xFFF7F5EF);
+    final surface = isDarkOption
+        ? const Color(0xFF10251E)
+        : const Color(0xFFFFFFFF);
+    final foreground = isDarkOption
+        ? const Color(0xFFF5F4EC)
+        : const Color(0xFF18352B);
+    final accent = isDarkOption
+        ? const Color(0xFFD9B66D)
+        : const Color(0xFF79551F);
+    final border = selected
+        ? Theme.of(context).colorScheme.secondary
+        : Theme.of(context).colorScheme.outlineVariant;
+
+    return Material(
+      color: surface,
+      borderRadius: BorderRadius.circular(17),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(17),
+        onTap: () async {
+          try {
+            await AppTheme.setDark(isDarkOption);
+          } catch (_) {
+            if (mounted) {
+              _message('تغيّر المظهر لكن تعذّر حفظ الاختيار على الجهاز');
+            }
+          }
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 160),
+          padding: const EdgeInsets.all(11),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(17),
+            border: Border.all(
+              color: border.withValues(alpha: selected ? .95 : .45),
+              width: selected ? 1.7 : 1,
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 46,
+                decoration: BoxDecoration(
+                  color: background,
+                  borderRadius: BorderRadius.circular(11),
+                  border: Border.all(color: accent.withValues(alpha: .38)),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      isDarkOption
+                          ? Icons.dark_mode_rounded
+                          : Icons.light_mode_rounded,
+                      color: accent,
+                      size: 21,
+                    ),
+                    const SizedBox(width: 8),
+                    ...[
+                      const Color(0xFF267A58),
+                      const Color(0xFFD9B66D),
+                      const Color(0xFF8AA99B),
+                    ].map(
+                      (color) => Container(
+                        width: 9,
+                        height: 20,
+                        margin: const EdgeInsetsDirectional.only(end: 4),
+                        decoration: BoxDecoration(
+                          color: color,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      isDarkOption ? 'داكن' : 'فاتح',
+                      style: TextStyle(
+                        color: foreground,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ),
+                  Icon(
+                    selected
+                        ? Icons.check_circle_rounded
+                        : Icons.circle_outlined,
+                    color: selected ? accent : foreground.withValues(alpha: .42),
+                    size: 19,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 3),
+              Text(
+                isDarkOption ? 'زمردي وفحمي وذهبي' : 'عاجي وأخضر ولمسات ذهبية',
+                maxLines: 2,
+                style: TextStyle(
+                  color: foreground.withValues(alpha: .72),
+                  fontSize: 10,
+                  height: 1.35,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _section({required IconData icon, required String title, required List<Widget> children}) => Material(

@@ -163,7 +163,7 @@ class MainShell extends StatefulWidget {
   State<MainShell> createState() => _MainShellState();
 }
 
-class _MainShellState extends State<MainShell> {
+class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
   int _selected = 0;
   PrayerCity _prayerCity = PrayerLocations.cities.first;
   DateTime _now = DateTime.now();
@@ -185,6 +185,7 @@ class _MainShellState extends State<MainShell> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _refreshPrayerReminders();
     _loadDashboardData();
     _dashboardClock = Timer.periodic(const Duration(seconds: 30), (_) {
@@ -199,8 +200,20 @@ class _MainShellState extends State<MainShell> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _dashboardClock?.cancel();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // Refresh the dashboard clock and top up scheduled reminders after returning
+      // from Android settings, battery saver, or a long period in the background.
+      if (mounted) setState(() => _now = DateTime.now());
+      _loadDashboardData();
+      _refreshPrayerReminders();
+    }
   }
 
   String _dayKey(DateTime date) =>

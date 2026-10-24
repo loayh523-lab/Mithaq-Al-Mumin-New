@@ -79,21 +79,30 @@ class MithaqApp extends StatelessWidget {
   const MithaqApp({super.key});
 
   ThemeData _makeTheme(bool dark) {
-    final background = dark ? _ink : const Color(0xFFF7F5EF);
-    final surface = dark ? _panel : const Color(0xFFFFFFFF);
-    final foreground = dark ? Colors.white : const Color(0xFF18352B);
-    final muted = dark ? _muted : const Color(0xFF667A70);
+    final background =
+        dark ? const Color(0xFF071713) : const Color(0xFFF7F5EF);
+    final surface = dark ? const Color(0xFF10251E) : const Color(0xFFFFFFFF);
+    final foreground =
+        dark ? const Color(0xFFF5F4EC) : const Color(0xFF18352B);
+    final muted =
+        dark ? const Color(0xFFB2C0B7) : const Color(0xFF5D7166);
+    final scheme = ColorScheme.fromSeed(
+      seedColor: _emerald,
+      brightness: dark ? Brightness.dark : Brightness.light,
+      surface: surface,
+      primary: dark ? const Color(0xFF4CA782) : const Color(0xFF267A58),
+      secondary: dark ? _gold : const Color(0xFF79551F),
+    ).copyWith(
+      onSurface: foreground,
+      onSurfaceVariant: muted,
+      outlineVariant: muted.withValues(alpha: dark ? .34 : .28),
+    );
+
     return ThemeData(
       useMaterial3: true,
       brightness: dark ? Brightness.dark : Brightness.light,
       scaffoldBackgroundColor: background,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: _emerald,
-        brightness: dark ? Brightness.dark : Brightness.light,
-        surface: surface,
-        primary: _emerald,
-        secondary: dark ? _gold : const Color(0xFF80591F),
-      ),
+      colorScheme: scheme,
       fontFamily: 'Amiri',
       appBarTheme: AppBarTheme(
         backgroundColor: background,
@@ -101,38 +110,96 @@ class MithaqApp extends StatelessWidget {
         centerTitle: false,
         elevation: 0,
         scrolledUnderElevation: 0,
+        surfaceTintColor: Colors.transparent,
       ),
       cardTheme: CardThemeData(
         color: surface,
         elevation: 0,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(18),
-          side: BorderSide(color: muted.withValues(alpha: .14)),
+          borderRadius: BorderRadius.circular(20),
+          side: BorderSide(
+            color: scheme.outlineVariant.withValues(alpha: .60),
+          ),
         ),
+      ),
+      dividerTheme: DividerThemeData(
+        color: scheme.outlineVariant.withValues(alpha: .58),
+        thickness: .7,
+        space: 1,
+      ),
+      listTileTheme: ListTileThemeData(
+        iconColor: scheme.secondary,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(14),
+        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 14),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: scheme.primary,
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 13),
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: scheme.secondary,
+          side: BorderSide(
+            color: scheme.secondary.withValues(alpha: .45),
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          foregroundColor: scheme.secondary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      ),
+      navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: background,
+        indicatorColor: scheme.primary.withValues(alpha: dark ? .28 : .12),
+        elevation: 0,
+        surfaceTintColor: Colors.transparent,
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: dark ? _ink : const Color(0xFFF0F2EC),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: BorderSide(color: muted.withValues(alpha: .24)),
+          borderSide: BorderSide(
+            color: scheme.outlineVariant.withValues(alpha: .80),
+          ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: BorderSide(color: muted.withValues(alpha: .20)),
+          borderSide: BorderSide(
+            color: scheme.outlineVariant.withValues(alpha: .70),
+          ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: _gold, width: 1.4),
+          borderSide: BorderSide(color: scheme.secondary, width: 1.4),
         ),
       ),
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
         backgroundColor: surface,
         contentTextStyle: TextStyle(color: foreground),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(14),
+        ),
       ),
     );
   }
@@ -356,25 +423,37 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
           labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
           selectedIndex: _selected,
           onDestinationSelected: (index) => setState(() => _selected = index),
-          destinations: const [
+          destinations: [
             NavigationDestination(
-              icon: Icon(Icons.home_outlined),
-              selectedIcon: Icon(Icons.home_rounded, color: _gold),
+              icon: const Icon(Icons.home_outlined),
+              selectedIcon: Icon(
+                Icons.home_rounded,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
               label: 'الرئيسية',
             ),
             NavigationDestination(
-              icon: Icon(Icons.menu_book_outlined),
-              selectedIcon: Icon(Icons.menu_book_rounded, color: _gold),
+              icon: const Icon(Icons.menu_book_outlined),
+              selectedIcon: Icon(
+                Icons.menu_book_rounded,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
               label: 'القرآن',
             ),
             NavigationDestination(
-              icon: Icon(Icons.auto_awesome_outlined),
-              selectedIcon: Icon(Icons.auto_awesome_rounded, color: _gold),
+              icon: const Icon(Icons.auto_awesome_outlined),
+              selectedIcon: Icon(
+                Icons.auto_awesome_rounded,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
               label: 'الأدعية والزيارات',
             ),
             NavigationDestination(
-              icon: Icon(Icons.calendar_month_outlined),
-              selectedIcon: Icon(Icons.calendar_month_rounded, color: _gold),
+              icon: const Icon(Icons.calendar_month_outlined),
+              selectedIcon: Icon(
+                Icons.calendar_month_rounded,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
               label: 'المواقيت',
             ),
           ],
@@ -551,51 +630,106 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
     children: children,
   );
 
-  Widget _drawerGridItem(IconData icon, String title, VoidCallback onTap, {bool selected = false}) =>
-      Material(
-        color: selected ? _emerald.withValues(alpha: .16) : Theme.of(context).colorScheme.surface,
+  Color _drawerAccent(String title) {
+    switch (title) {
+      case 'الرئيسية':
+      case 'القرآن الكريم':
+      case 'ختمة القرآن':
+        return const Color(0xFF2F9972);
+      case 'الأدعية والزيارات':
+      case 'أسماء الله الحسنى':
+        return const Color(0xFFD1A24A);
+      case 'التسبيح':
+        return const Color(0xFF8C78C7);
+      case 'مواقيت الصلاة':
+      case 'متابعة الصلاة':
+        return const Color(0xFF399D9A);
+      case 'الأعمال الصالحة':
+        return const Color(0xFFDA8B5C);
+      case 'قضاء العبادات':
+      case 'عداد الركعات':
+        return const Color(0xFF6F8FD0);
+      case 'حصن الأذكار':
+        return const Color(0xFF5DAD78);
+      case 'الباحث الذكي':
+        return const Color(0xFF4C91C5);
+      case 'اتجاه القبلة':
+        return const Color(0xFF3A9FAD);
+      case 'مكتبة النصوص':
+        return const Color(0xFF9677B8);
+      case 'الخدمات الإيمانية':
+        return const Color(0xFF5F9A83);
+      case 'عن التطبيق والدعم':
+        return const Color(0xFF81918B);
+      default:
+        return Theme.of(context).colorScheme.secondary;
+    }
+  }
+
+  Widget _drawerGridItem(
+    IconData icon,
+    String title,
+    VoidCallback onTap, {
+    bool selected = false,
+  }) {
+    final scheme = Theme.of(context).colorScheme;
+    final accent = _drawerAccent(title);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(17),
+      child: InkWell(
+        onTap: onTap,
         borderRadius: BorderRadius.circular(17),
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(17),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 9),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(17),
-              border: Border.all(
-                color: selected ? _gold.withValues(alpha: .55) : Theme.of(context).colorScheme.outlineVariant.withValues(alpha: .55),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 160),
+          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 9),
+          decoration: BoxDecoration(
+            color: selected
+                ? scheme.primary.withValues(alpha: isDark ? .20 : .09)
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(17),
+            border: selected
+                ? Border.all(
+                    color: scheme.secondary.withValues(alpha: .58),
+                  )
+                : Border.all(color: Colors.transparent),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 47,
+                height: 47,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: accent.withValues(alpha: isDark ? .20 : .12),
+                  border: Border.all(
+                    color: accent.withValues(alpha: selected ? .75 : .34),
+                    width: selected ? 1.4 : 1,
+                  ),
+                ),
+                child: Icon(icon, color: accent, size: 24),
               ),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 43,
-                  height: 43,
-                  decoration: BoxDecoration(
-                    color: selected ? _gold.withValues(alpha: .15) : _emerald.withValues(alpha: .16),
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: Icon(icon, color: selected ? _gold : Theme.of(context).colorScheme.secondary, size: 23),
+              const SizedBox(height: 7),
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: scheme.onSurface,
+                  fontSize: 11,
+                  height: 1.25,
+                  fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
                 ),
-                SizedBox(height: 7),
-                Text(
-                  title,
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurface,
-                    fontSize: 10.5,
-                    height: 1.25,
-                    fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
-      );
+      ),
+    );
+  }
 
   Widget _drawerBottomItem(IconData icon, String title, VoidCallback onTap) => Material(
     color: _emerald.withValues(alpha: .13),
@@ -790,6 +924,8 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
       _now, _prayerCity.latitude, _prayerCity.longitude, 3.0,
     );
     final nextPrayer = _nextPrayer(prayerTimes, _now);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final scheme = Theme.of(context).colorScheme;
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 28),
@@ -801,21 +937,29 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
           padding: const EdgeInsets.fromLTRB(20, 18, 20, 22),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(28),
-            border: Border.all(color: _gold.withValues(alpha: .30)),
-            gradient: const LinearGradient(
+            border: Border.all(
+              color: scheme.secondary.withValues(alpha: isDark ? .22 : .12),
+            ),
+            gradient: LinearGradient(
               begin: Alignment.topRight,
               end: Alignment.bottomLeft,
-              colors: [
-                Color(0xFF245A43),
-                Color(0xFF102F25),
-                Color(0xFF071713),
-              ],
+              colors: isDark
+                  ? const [
+                      Color(0xFF1E4B38),
+                      Color(0xFF0D261D),
+                      Color(0xFF071713),
+                    ]
+                  : const [
+                      Color(0xFFE1EFE2),
+                      Color(0xFFF0F5EC),
+                      Color(0xFFF7F5EF),
+                    ],
             ),
             boxShadow: [
               BoxShadow(
-                color: _emerald.withValues(alpha: .15),
-                blurRadius: 28,
-                offset: const Offset(0, 10),
+                color: _emerald.withValues(alpha: isDark ? .11 : .045),
+                blurRadius: 24,
+                offset: const Offset(0, 8),
               ),
             ],
           ),
@@ -827,7 +971,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
                 child: Icon(
                   Icons.mosque_rounded,
                   size: 150,
-                  color: _gold.withValues(alpha: .075),
+                  color: scheme.secondary.withValues(alpha: isDark ? .075 : .09),
                 ),
               ),
               Positioned(
@@ -836,7 +980,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
                 child: Icon(
                   Icons.auto_awesome,
                   size: 20,
-                  color: _gold.withValues(alpha: .55),
+                  color: scheme.secondary.withValues(alpha: .65),
                 ),
               ),
               Column(
@@ -879,7 +1023,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
                   Text(
                     hijriDateLabel(_now, correction: _hijriCorrection),
                     style: TextStyle(
-                      color: _gold,
+                      color: scheme.secondary,
                       fontSize: 22,
                       fontWeight: FontWeight.w800,
                       height: 1.5,
@@ -892,7 +1036,10 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
                       SizedBox(width: 7),
                       Text(
                         _gregorianLabel(_now),
-                        style: TextStyle(color: Color(0xFFD8E3DC), fontSize: 13),
+                        style: TextStyle(
+                          color: scheme.onSurfaceVariant,
+                          fontSize: 13,
+                        ),
                       ),
                     ],
                   ),
@@ -913,7 +1060,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
                           Flexible(
                             child: Text(
                               occasion,
-                              style: TextStyle(color: Color(0xFFF0DDAF), fontSize: 12),
+                              style: TextStyle(color: scheme.secondary, fontSize: 12),
                             ),
                           ),
                         ],

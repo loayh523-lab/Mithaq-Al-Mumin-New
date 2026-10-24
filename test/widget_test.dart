@@ -382,9 +382,32 @@ void main() {
     await tester.tap(find.text('إمساكية رمضان'));
     await tester.pumpAndSettle();
     expect(find.text('إمساكية تقديرية — قلعة سكر / العراق'), findsOneWidget);
-    // ListView builds only visible rows, so scroll through the rows rather than
-    // counting the handful of Text widgets currently mounted in the viewport.
-    for (var day = 1; day <= 29; day++) {
+    // Work out the tabular-calendar month length, then verify each row by
+    // scrolling because ListView only builds children near the viewport.
+    final reference = DateTime.now();
+    final currentHijri = hijriDateParts(reference);
+    final targetYear = currentHijri.month > 9
+        ? currentHijri.year + 1
+        : currentHijri.year;
+    DateTime? ramadanStart;
+    final scanStart = DateTime(reference.year - 1, 1, 1);
+    for (var offset = 0; offset < 800; offset++) {
+      final candidate = scanStart.add(Duration(days: offset));
+      final parts = hijriDateParts(candidate);
+      if (parts.year == targetYear && parts.month == 9 && parts.day == 1) {
+        ramadanStart = candidate;
+        break;
+      }
+    }
+    expect(ramadanStart, isNotNull);
+    var expectedRows = 0;
+    for (var offset = 0; offset < 30; offset++) {
+      final parts = hijriDateParts(ramadanStart!.add(Duration(days: offset)));
+      if (parts.year != targetYear || parts.month != 9) break;
+      expectedRows++;
+    }
+    expect(expectedRows, inInclusiveRange(29, 30));
+    for (var day = 1; day <= expectedRows; day++) {
       final dayRow = find.byWidgetPredicate(
         (widget) =>
             widget is Text &&
@@ -397,6 +420,11 @@ void main() {
       );
       expect(dayRow, findsOneWidget, reason: 'Missing Ramadan day $day');
     }
+    await tester.scrollUntilVisible(
+      find.text('التقويم الهجري'),
+      -220,
+      scrollable: find.byType(Scrollable).first,
+    );
 
     await tester.tap(find.text('التقويم الهجري'));
     await tester.pumpAndSettle();

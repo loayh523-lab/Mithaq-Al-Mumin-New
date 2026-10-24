@@ -637,7 +637,8 @@ void main() {
     ));
     await tester.pumpAndSettle();
     expect(find.text('الخدمات الإيمانية'), findsOneWidget);
-    expect(find.text('فقه المؤمن — المسائل الشرعية'), findsOneWidget);
+    expect(find.text('استفتاءات السيد علي الخامنئي'), findsOneWidget);
+    expect(find.text('استفتاءات السيد علي السيستاني'), findsOneWidget);
     expect(find.text('تفسير القرآن الكريم'), findsOneWidget);
     // The services list is longer than the test viewport; scroll the target tile
     // into view instead of assuming every ListView child is mounted immediately.

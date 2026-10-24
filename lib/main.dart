@@ -497,7 +497,7 @@ class _MainShellState extends State<MainShell> {
               children: [
                 Expanded(child: _drawerBottomItem(Icons.star_rounded, 'المفضلة', () => _openDrawerPage(const FavoritesPage()))),
                 SizedBox(width: 10),
-                Expanded(child: _drawerBottomItem(Icons.tune_rounded, 'الإعدادات', () => _openDrawerPage(SettingsPage(onLocationChanged: _handleLocationChanged)))),
+                Expanded(child: _drawerBottomItem(Icons.tune_rounded, 'الإعدادات', () => _openDrawerPage(Scaffold(body: SettingsPage(onLocationChanged: _handleLocationChanged))))),
               ],
             ),
           ),

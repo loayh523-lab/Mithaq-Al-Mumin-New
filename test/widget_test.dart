@@ -35,8 +35,9 @@ void main() {
     await tester.tap(find.text('الإعدادات'));
     await tester.pumpAndSettle();
 
-    expect(find.text('المظهر الداكن'), findsOneWidget);
-    await tester.tap(find.byType(Switch).first);
+    expect(find.text('داكن'), findsOneWidget);
+    expect(find.text('فاتح'), findsOneWidget);
+    await tester.tap(find.text('فاتح'));
     await tester.pumpAndSettle();
 
     expect(AppTheme.isDark.value, isFalse);
@@ -729,8 +730,16 @@ void main() {
     ));
     await tester.pumpAndSettle();
 
+    final settingsScroll = find.descendant(
+      of: find.byType(SettingsPage),
+      matching: find.byType(Scrollable),
+    ).first;
     final fajrSwitch = find.byKey(const ValueKey('prayer_enabled_fajr'));
-    await tester.ensureVisible(fajrSwitch);
+    await tester.scrollUntilVisible(
+      fajrSwitch,
+      220,
+      scrollable: settingsScroll,
+    );
     await tester.pumpAndSettle();
     await tester.tap(fajrSwitch);
     await tester.pumpAndSettle();
@@ -742,7 +751,11 @@ void main() {
       SwitchListTile,
       'تنبيه قبل الأذان',
     );
-    await tester.ensureVisible(earlySwitch);
+    await tester.scrollUntilVisible(
+      earlySwitch,
+      220,
+      scrollable: settingsScroll,
+    );
     await tester.pumpAndSettle();
     await tester.tap(earlySwitch);
     await tester.pumpAndSettle();
@@ -751,7 +764,11 @@ void main() {
     final minutesPicker = find.byKey(
       const ValueKey('prayer_early_alert_minutes'),
     );
-    await tester.ensureVisible(minutesPicker);
+    await tester.scrollUntilVisible(
+      minutesPicker,
+      220,
+      scrollable: settingsScroll,
+    );
     await tester.pumpAndSettle();
     await tester.tap(minutesPicker);
     await tester.pumpAndSettle();

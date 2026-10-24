@@ -282,8 +282,10 @@ class _SettingsPageState extends State<SettingsPage> {
         icon: Icons.palette_outlined,
         title: 'مظهر التطبيق',
         children: [
-          ValueListenableBuilder<bool>(
-            valueListenable: AppTheme.isDark,
+          Material(
+            color: Theme.of(context).colorScheme.surface,
+            child: ValueListenableBuilder<bool>(
+              valueListenable: AppTheme.isDark,
             builder: (context, isDark, child) => SwitchListTile(
               contentPadding: EdgeInsets.zero,
               value: isDark,
@@ -308,6 +310,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   }
                 }
               },
+              ),
             ),
           ),
           Text(

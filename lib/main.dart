@@ -624,7 +624,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
     physics: const NeverScrollableScrollPhysics(),
     mainAxisSpacing: 8,
     crossAxisSpacing: 8,
-    childAspectRatio: .88,
+    childAspectRatio: .80,
     children: children,
   );
 

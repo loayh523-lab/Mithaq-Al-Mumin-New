@@ -47,11 +47,37 @@ jobs:
         run: flutter analyze
       - name: Test
         run: flutter test
-      # Build a validation APK for direct review. This is not a Play Store release
-      # and is not signed with a production release key.
       - name: Build Android release APK for validation
         run: flutter build apk --release
-      - name: Upload validation APK
+      # The previous artifact was unsigned and Android rejected it at install time.
+      # This temporary validation certificate makes the APK installable; it is not
+      # a production signing key and must never be used for public distribution.
+      - name: Sign validation APK for Android installation
+        shell: bash
+        run: |
+          set -euo pipefail
+          APK="build/app/outputs/flutter-apk/app-release.apk"
+          KEYSTORE="$RUNNER_TEMP/mithaq-validation.keystore"
+          keytool -genkeypair -v \
+            -keystore "$KEYSTORE" \
+            -storepass android \
+            -keypass android \
+            -alias validation \
+            -dname "CN=Mithaq Al-Mumin Validation" \
+            -keyalg RSA -keysize 2048 -validity 3650 -noprompt
+          BUILD_TOOLS_VERSION="$(find "$ANDROID_HOME/build-tools" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort -V | tail -n 1)"
+          APKSIGNER="$ANDROID_HOME/build-tools/$BUILD_TOOLS_VERSION/apksigner"
+          test -x "$APKSIGNER"
+          "$APKSIGNER" sign \
+            --ks "$KEYSTORE" \
+            --ks-key-alias validation \
+            --ks-pass pass:android \
+            --key-pass pass:android \
+            --out "$RUNNER_TEMP/app-release-signed.apk" \
+            "$APK"
+          "$APKSIGNER" verify --verbose --print-certs "$RUNNER_TEMP/app-release-signed.apk"
+          mv "$RUNNER_TEMP/app-release-signed.apk" "$APK"
+      - name: Upload installable validation APK
         uses: actions/upload-artifact@v4
         with:
           name: mithaq-al-mumin-validation-apk

@@ -382,14 +382,20 @@ void main() {
     await tester.tap(find.text('إمساكية رمضان'));
     await tester.pumpAndSettle();
     expect(find.text('إمساكية تقديرية — قلعة سكر / العراق'), findsOneWidget);
-    final imsakiyahRows = tester
-        .widgetList<Text>(find.byType(Text))
-        .map((widget) => widget.data ?? '')
-        .where((value) => value.startsWith('رمضان ') && value.contains(' — '))
-        .toList();
-    expect(imsakiyahRows.length, inInclusiveRange(29, 30));
-    for (var i = 0; i < imsakiyahRows.length; i++) {
-      expect(imsakiyahRows[i], startsWith('رمضان ${i + 1} — '));
+    // ListView builds only visible rows, so scroll through the rows rather than
+    // counting the handful of Text widgets currently mounted in the viewport.
+    for (var day = 1; day <= 29; day++) {
+      final dayRow = find.byWidgetPredicate(
+        (widget) =>
+            widget is Text &&
+            (widget.data ?? '').startsWith('رمضان ${day} — '),
+      );
+      await tester.scrollUntilVisible(
+        dayRow,
+        220,
+        scrollable: find.byType(Scrollable).first,
+      );
+      expect(dayRow, findsOneWidget, reason: 'Missing Ramadan day ${day}');
     }
 
     await tester.tap(find.text('التقويم الهجري'));

@@ -601,7 +601,15 @@ class _MainShellState extends State<MainShell> {
           children: [
             Icon(icon, color: _gold, size: 19),
             SizedBox(width: 7),
-            Text(title, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800)),
+            Flexible(
+              child: Text(
+                title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                softWrap: false,
+                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800),
+              ),
+            ),
           ],
         ),
       ),

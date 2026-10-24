@@ -639,9 +639,15 @@ void main() {
     expect(find.text('الخدمات الإيمانية'), findsOneWidget);
     expect(find.text('استفتاءات السيد علي الخامنئي'), findsOneWidget);
     expect(find.text('استفتاءات السيد علي السيستاني'), findsOneWidget);
+    // The services list is longer than the test viewport; scroll each target
+    // tile into view instead of assuming every ListView child is mounted immediately.
+    await tester.scrollUntilVisible(
+      find.text('تفسير القرآن الكريم'),
+      250,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
     expect(find.text('تفسير القرآن الكريم'), findsOneWidget);
-    // The services list is longer than the test viewport; scroll the target tile
-    // into view instead of assuming every ListView child is mounted immediately.
     await tester.scrollUntilVisible(
       find.text('الاستخارة القرآنية — إرشاد شرعي'),
       250,

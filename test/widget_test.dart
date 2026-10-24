@@ -383,7 +383,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('إمساكية تقديرية — قلعة سكر / العراق'), findsOneWidget);
     // Work out the tabular-calendar month length, then verify each row by
-    // scrolling because ListView only builds children near the viewport.
+    // collecting every visible ListView row while scrolling through the month.
     final reference = DateTime.now();
     final currentHijri = hijriDateParts(reference);
     final targetYear = currentHijri.month > 9
@@ -407,24 +407,33 @@ void main() {
       expectedRows++;
     }
     expect(expectedRows, inInclusiveRange(29, 30));
-    for (var day = 1; day <= expectedRows; day++) {
-      final dayRow = find.byWidgetPredicate(
-        (widget) =>
-            widget is Text &&
-            (widget.data ?? '').startsWith('رمضان $day — '),
-      );
-      await tester.scrollUntilVisible(
-        dayRow,
-        220,
-        scrollable: find.byType(Scrollable).first,
-      );
-      expect(dayRow, findsOneWidget, reason: 'Missing Ramadan day $day');
+
+    final listScroller = find.byType(Scrollable).first;
+    final observedDays = <int>{};
+    void collectVisibleRamadanDays() {
+      for (final textWidget in tester.widgetList<Text>(find.byType(Text))) {
+        final label = textWidget.data;
+        if (label == null) continue;
+        final match = RegExp(r'^رمضان (\\d+) — ').firstMatch(label);
+        if (match != null) observedDays.add(int.parse(match.group(1)!));
+      }
     }
-    await tester.scrollUntilVisible(
-      find.text('التقويم الهجري'),
-      -220,
-      scrollable: find.byType(Scrollable).first,
+
+    for (var attempt = 0; attempt < 24 && observedDays.length < expectedRows; attempt++) {
+      collectVisibleRamadanDays();
+      await tester.drag(listScroller, const Offset(0, -220));
+      await tester.pumpAndSettle();
+    }
+    collectVisibleRamadanDays();
+    expect(
+      observedDays,
+      containsAll(List<int>.generate(expectedRows, (index) => index + 1)),
     );
+    expect(observedDays.length, expectedRows);
+
+    // Return to the top before selecting the Hijri calendar tab.
+    await tester.fling(listScroller, const Offset(0, 4000), 5000);
+    await tester.pumpAndSettle();
 
     await tester.tap(find.text('التقويم الهجري'));
     await tester.pumpAndSettle();

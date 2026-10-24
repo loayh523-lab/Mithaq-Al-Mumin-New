@@ -5,6 +5,7 @@ import 'faith_library_pages.dart';
 const _faithGold = Color(0xFFD9B66D);
 
 const _officialFiqhUrl = 'https://www.leader.ir/ar';
+const _officialSistaniFiqhUrl = 'https://www.sistani.org/arabic/qa/';
 const _tafsirUrl = 'https://almizan.wilayah.app/';
 const _hajjUrl = 'https://www.leader.ir/ar/book/240/%D9%85%D9%86%D8%A7%D8%B3%D9%83-%D8%A7%D9%84%D8%AD%D8%AC';
 
@@ -65,15 +66,17 @@ class FaithServicesPage extends StatelessWidget {
         SizedBox(height: 12),
         _ServiceTile(
           icon: Icons.menu_book_rounded,
-          title: 'فقه المؤمن — المسائل الشرعية',
-          description: 'فهرس لأبواب الطهارة والصلاة والصوم والخمس والمعاملات، مع عبارات بحث قابلة للنسخ للوصول إلى المصدر الرسمي. الفتاوى نفسها غير محفوظة دون إنترنت.',
-          actionLabel: 'تصفح أبواب المسائل',
-          onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (_) => const Directionality(
-              textDirection: TextDirection.rtl,
-              child: FiqhTopicsPage(),
-            ),
-          )),
+          title: 'استفتاءات السيد علي الخامنئي',
+          description: 'رابط مباشر إلى الموقع الرسمي لمكتب السيد علي الخامنئي. تُفتح الاستفتاءات عبر الإنترنت، ولا ينشئ التطبيق فتاوى من عنده.',
+          actionLabel: 'فتح الاستفتاءات الرسمية',
+          onTap: () => openFaithSource(context, _officialFiqhUrl),
+        ),
+        _ServiceTile(
+          icon: Icons.menu_book_rounded,
+          title: 'استفتاءات السيد علي السيستاني',
+          description: 'رابط مباشر إلى باب الاستفتاءات الرسمي حسب الموضوع. تأكد من مراجعة حكم مرجع تقليدك قبل العمل بأي جواب.',
+          actionLabel: 'فتح استفتاءات السيد السيستاني',
+          onTap: () => openFaithSource(context, _officialSistaniFiqhUrl),
         ),
         _ServiceTile(
           icon: Icons.auto_stories_rounded,

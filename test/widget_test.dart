@@ -388,14 +388,14 @@ void main() {
       final dayRow = find.byWidgetPredicate(
         (widget) =>
             widget is Text &&
-            (widget.data ?? '').startsWith('رمضان ${day} — '),
+            (widget.data ?? '').startsWith('رمضان $day — '),
       );
       await tester.scrollUntilVisible(
         dayRow,
         220,
         scrollable: find.byType(Scrollable).first,
       );
-      expect(dayRow, findsOneWidget, reason: 'Missing Ramadan day ${day}');
+      expect(dayRow, findsOneWidget, reason: 'Missing Ramadan day $day');
     }
 
     await tester.tap(find.text('التقويم الهجري'));

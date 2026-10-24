@@ -494,23 +494,19 @@ class _SettingsPageState extends State<SettingsPage> {
     ]);
   }
 
-  Widget _section({required IconData icon, required String title, required List<Widget> children}) => Container(
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: Theme.of(context).colorScheme.surface,
+  Widget _section({required IconData icon, required String title, required List<Widget> children}) => Material(
+    color: Theme.of(context).colorScheme.surface,
+    elevation: 1,
+    shadowColor: Theme.of(context).brightness == Brightness.dark
+        ? Colors.black.withValues(alpha: .10)
+        : const Color(0xFF30483D).withValues(alpha: .05),
+    shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(20),
-      border: Border.all(color: Theme.of(context).colorScheme.secondary.withValues(alpha: .18)),
-      boxShadow: [
-        BoxShadow(
-          color: Theme.of(context).brightness == Brightness.dark
-              ? Colors.black.withValues(alpha: .10)
-              : const Color(0xFF30483D).withValues(alpha: .05),
-          blurRadius: 12,
-          offset: const Offset(0, 4),
-        ),
-      ],
+      side: BorderSide(color: Theme.of(context).colorScheme.secondary.withValues(alpha: .18)),
     ),
-    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    child: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Row(children: [
         Container(
           width: 40,
@@ -532,5 +528,6 @@ class _SettingsPageState extends State<SettingsPage> {
       const SizedBox(height: 14),
       ...children,
     ]),
+    ),
   );
 }

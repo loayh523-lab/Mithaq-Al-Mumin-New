@@ -635,8 +635,10 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
       case 'الرئيسية':
       case 'القرآن الكريم':
       case 'ختمة القرآن':
+      case 'الختمة':
         return const Color(0xFF2F9972);
       case 'الأدعية والزيارات':
+      case 'الأدعية':
       case 'أسماء الله الحسنى':
         return const Color(0xFFD1A24A);
       case 'التسبيح':
@@ -655,6 +657,8 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
         return const Color(0xFF4C91C5);
       case 'اتجاه القبلة':
         return const Color(0xFF3A9FAD);
+      case 'التقويم الهجري':
+        return const Color(0xFF6F8FD0);
       case 'مكتبة النصوص':
         return const Color(0xFF9677B8);
       case 'الخدمات الإيمانية':
@@ -1398,6 +1402,9 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
     required String subtitle,
     required VoidCallback onTap,
   }) {
+    final scheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final accent = _drawerAccent(title);
     return Material(
       color: Colors.transparent,
       borderRadius: BorderRadius.circular(20),
@@ -1408,18 +1415,30 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
           constraints: const BoxConstraints(minHeight: 132),
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 15),
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
+            gradient: LinearGradient(
               begin: Alignment.topRight,
               end: Alignment.bottomLeft,
-              colors: [Color(0xFF17382C), Color(0xFF0B1C16), Color(0xFF10251E)],
+              colors: isDark
+                  ? const [
+                      Color(0xFF17382C),
+                      Color(0xFF0B1C16),
+                      Color(0xFF10251E),
+                    ]
+                  : const [
+                      Color(0xFFFFFFFF),
+                      Color(0xFFF3F7EF),
+                      Color(0xFFE8F0E6),
+                    ],
             ),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: _gold.withValues(alpha: .28)),
+            border: Border.all(
+              color: accent.withValues(alpha: isDark ? .32 : .30),
+            ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: .16),
-                blurRadius: 14,
-                offset: const Offset(0, 6),
+                color: accent.withValues(alpha: isDark ? .08 : .07),
+                blurRadius: 16,
+                offset: const Offset(0, 5),
               ),
             ],
           ),
@@ -1427,19 +1446,33 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                width: 46,
-                height: 46,
+                width: 48,
+                height: 48,
                 decoration: BoxDecoration(
-                  color: _emerald.withValues(alpha: .17),
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: _gold.withValues(alpha: .18)),
+                  shape: BoxShape.circle,
+                  color: accent.withValues(alpha: isDark ? .20 : .12),
+                  border: Border.all(color: accent.withValues(alpha: .40)),
                 ),
-                child: Icon(icon, color: _gold, size: 25),
+                child: Icon(icon, color: accent, size: 25),
               ),
-              SizedBox(height: 13),
-              Text(title, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14, height: 1.3)),
-              SizedBox(height: 4),
-              Text(subtitle, style: TextStyle(color: _themeMuted(context), fontSize: 11)),
+              const SizedBox(height: 13),
+              Text(
+                title,
+                style: TextStyle(
+                  color: scheme.onSurface,
+                  fontWeight: FontWeight.w800,
+                  fontSize: 14,
+                  height: 1.3,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                subtitle,
+                style: TextStyle(
+                  color: scheme.onSurfaceVariant,
+                  fontSize: 11,
+                ),
+              ),
             ],
           ),
         ),
@@ -1447,8 +1480,10 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
     );
   }
 
-
   Widget _homeMiniShortcut(IconData icon, String title, VoidCallback onTap) {
+    final scheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final accent = _drawerAccent(title);
     return Material(
       color: Colors.transparent,
       borderRadius: BorderRadius.circular(18),
@@ -1459,34 +1494,33 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Color(0xFF143126), Color(0xFF0D211A)],
-            ),
+            color: scheme.surface,
             borderRadius: BorderRadius.circular(18),
-            border: Border.all(color: _gold.withValues(alpha: .20)),
+            border: Border.all(
+              color: accent.withValues(alpha: isDark ? .25 : .24),
+            ),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: 44,
-                height: 44,
+                width: 46,
+                height: 46,
                 decoration: BoxDecoration(
-                  color: _emerald.withValues(alpha: .16),
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: _gold.withValues(alpha: .16)),
+                  shape: BoxShape.circle,
+                  color: accent.withValues(alpha: isDark ? .20 : .12),
+                  border: Border.all(color: accent.withValues(alpha: .36)),
                 ),
-                child: Icon(icon, color: _gold, size: 23),
+                child: Icon(icon, color: accent, size: 23),
               ),
-              SizedBox(height: 9),
+              const SizedBox(height: 9),
               Text(
                 title,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
                 style: TextStyle(
+                  color: scheme.onSurface,
                   fontSize: 12,
                   height: 1.35,
                   fontWeight: FontWeight.w800,

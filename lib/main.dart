@@ -967,39 +967,6 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
           ),
           child: Stack(
             children: [
-              Positioned.fill(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(26),
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      Image.asset(
-                        'assets/images/mithaq_home.jpg',
-                        fit: BoxFit.cover,
-                      ),
-                      DecoratedBox(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topRight,
-                            end: Alignment.bottomLeft,
-                            colors: isDark
-                                ? const [
-                                    Color(0xA8071713),
-                                    Color(0xC00D261D),
-                                    Color(0xE8071713),
-                                  ]
-                                : const [
-                                    Color(0xBDF7F5EF),
-                                    Color(0xCBE1EFE2),
-                                    Color(0xEEF7F5EF),
-                                  ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
               Positioned(
                 left: -18,
                 bottom: -24,

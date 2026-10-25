@@ -12,6 +12,8 @@ import 'package:mithaq_al_mumin/features/dhikr_fortress_page.dart';
 import 'package:mithaq_al_mumin/features/smart_search_page.dart';
 import 'package:mithaq_al_mumin/features/faith_services_page.dart';
 import 'package:mithaq_al_mumin/features/settings_page.dart';
+import 'package:mithaq_al_mumin/features/qibla_page.dart';
+import 'package:flutter_compass/flutter_compass.dart';
 import 'package:mithaq_al_mumin/features/favorites_page.dart';
 import 'package:mithaq_al_mumin/features/rakah_counter_page.dart';
 import 'package:mithaq_al_mumin/features/about_support_page.dart';
@@ -302,6 +304,27 @@ void main() {
     );
     expect(declination.isFinite, isTrue);
     expect(declination, inInclusiveRange(-180, 180));
+  });
+
+  testWidgets('Qibla compass fits a narrow phone and shows the numeric fallback', (tester) async {
+    tester.view.physicalSize = const Size(320, 720);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(const MaterialApp(
+      home: Directionality(
+        textDirection: TextDirection.rtl,
+        child: QiblaPage(compassEvents: Stream<CompassEvent?>.empty()),
+      ),
+    ));
+    await tester.pumpAndSettle();
+
+    expect(find.text('اتجاه القبلة'), findsOneWidget);
+    expect(find.text('اتجاه الكعبة المشرفة'), findsOneWidget);
+    expect(find.textContaining('من الشمال الجغرافي'), findsOneWidget);
+    expect(find.textContaining('قراءة الحساس غير متاحة'), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 
   test('Dua categories prioritize specific collections over broad date heuristics', () {

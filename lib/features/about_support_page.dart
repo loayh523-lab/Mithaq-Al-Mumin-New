@@ -18,6 +18,16 @@ class AboutSupportPage extends StatefulWidget {
 
 class _AboutSupportPageState extends State<AboutSupportPage> {
   bool _busy = false;
+  final TextEditingController _supportMessage = TextEditingController();
+  String _supportCategory = 'مشكلة فنية';
+
+  static const _supportCategories = <String>[
+    'مشكلة فنية',
+    'الإشعارات والأذان',
+    'القرآن والأدعية',
+    'اقتراح تطوير',
+    'مشكلة في البوصلة أو المواقيت',
+  ];
 
   Future<void> _shareProject() async {
     if (_busy) return;
@@ -38,6 +48,40 @@ class _AboutSupportPageState extends State<AboutSupportPage> {
     } finally {
       if (mounted) setState(() => _busy = false);
     }
+  }
+
+  Future<void> _sendSupportReport() async {
+    final details = _supportMessage.text.trim();
+    if (details.isEmpty) {
+      _message('اكتب تفاصيل المشكلة أو الاقتراح أولاً.');
+      return;
+    }
+    if (_busy) return;
+    setState(() => _busy = true);
+    try {
+      await SharePlus.instance.share(
+        ShareParams(
+          title: 'بلاغ خدمة عملاء ميثاق المؤمن',
+          subject: 'بلاغ دعم ميثاق المؤمن — $_supportCategory',
+          text: 'بلاغ دعم ميثاق المؤمن\n'
+              'التصنيف: $_supportCategory\n'
+              'تفاصيل البلاغ:\n$details\n\n'
+              'إصدار التطبيق: 0.2.0+3\n'
+              'رابط متابعة المشروع والدعم: $_supportUri\n'
+              'يمكن إرسال هذا البلاغ عبر البريد أو أي تطبيق مشاركة متاح على جهازك.',
+        ),
+      );
+    } catch (_) {
+      if (mounted) _message('تعذّر فتح خيارات إرسال البلاغ على هذا الجهاز.');
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  @override
+  void dispose() {
+    _supportMessage.dispose();
+    super.dispose();
   }
 
   Future<void> _open(Uri uri, {required String label}) async {
@@ -102,6 +146,99 @@ class _AboutSupportPageState extends State<AboutSupportPage> {
               ),
             ),
             SizedBox(height: 16),
+            _section(
+              title: 'خدمة العملاء',
+              icon: Icons.support_agent_rounded,
+              children: [
+                Text(
+                  'اكتب البلاغ واختر تصنيفه، ثم اضغط إرسال البلاغ واختر البريد أو تطبيق المشاركة المتاح على جهازك. لا تكتب كلمة مرورك أو رمز تحقق ضمن البلاغ.',
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.65),
+                ),
+                const SizedBox(height: 12),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    for (final category in _supportCategories)
+                      ChoiceChip(
+                        label: Text(category),
+                        selected: _supportCategory == category,
+                        onSelected: _busy ? null : (_) => setState(() => _supportCategory = category),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: _supportMessage,
+                  minLines: 3,
+                  maxLines: 7,
+                  textDirection: TextDirection.rtl,
+                  textInputAction: TextInputAction.newline,
+                  decoration: const InputDecoration(
+                    labelText: 'تفاصيل البلاغ أو الاقتراح',
+                    hintText: 'اكتب شنو صار، والصفحة المتأثرة، وشلون نكدر نعيد المشكلة…',
+                    alignLabelWithHint: true,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton.icon(
+                    onPressed: _busy ? null : _sendSupportReport,
+                    icon: _busy
+                        ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
+                        : const Icon(Icons.outgoing_mail),
+                    label: const Text('إرسال البلاغ'),
+                  ),
+                ),
+                const SizedBox(height: 6),
+                OutlinedButton.icon(
+                  onPressed: () => _open(Uri.parse(_supportUri), label: 'مركز الدعم الإلكتروني'),
+                  icon: const Icon(Icons.open_in_new_rounded),
+                  label: const Text('فتح مركز الدعم الإلكتروني'),
+                ),
+                Text(
+                  'الإرسال الحالي يفتح خيارات المشاركة على جهازك ولا يرسل البلاغ تلقائياً إلى خادم. يضاف بريد خدمة العملاء المباشر بعد إنشاء البريد الرسمي.',
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.55, fontSize: 11),
+                ),
+              ],
+            ),
+            const SizedBox(height: 14),
+            _section(
+              title: 'الحسابات الرسمية',
+              icon: Icons.verified_user_outlined,
+              children: [
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: const Icon(Icons.alternate_email_rounded, color: _aboutGold),
+                  title: const Text('بريد ميثاق المؤمن'),
+                  subtitle: Text(
+                    'سيظهر البريد الرسمي هنا بعد إنشائه. لا نستخدم عنواناً تجريبياً حتى لا يضيع تواصل المستخدمين.',
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.5),
+                  ),
+                ),
+                const Divider(),
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: const Icon(Icons.music_note_rounded, color: _aboutGold),
+                  title: const Text('تيك توك — الحساب الرسمي'),
+                  subtitle: Text(
+                    'نضيف رابط الحساب بعد إنشاء حساب خاص بالمشروع والتحقق من اسم المستخدم.',
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.5),
+                  ),
+                ),
+                const Divider(),
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: const Icon(Icons.login_rounded, color: _aboutGold),
+                  title: const Text('تسجيل الدخول والمزامنة'),
+                  subtitle: Text(
+                    'تسجيل الدخول بجوجل يحتاج إعداد Firebase ومفاتيح التطبيق وربط التخزين السحابي حتى تتم مزامنة المفضلة والتقدم. نفعّله بعد تجهيز مشروع الخدمة؛ الزر غير مضاف بشكل شكلي.',
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.5),
+                  ),
+                ),
+              ],
+            ),
             _section(
               title: 'المشاركة والدعم',
               icon: Icons.volunteer_activism_outlined,

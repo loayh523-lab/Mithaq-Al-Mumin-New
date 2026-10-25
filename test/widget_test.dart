@@ -166,7 +166,7 @@ void main() {
       scrollable: drawerScroll,
     );
     await tester.pumpAndSettle();
-    expect(find.text('العبادات والمتابعة'), findsOneWidget);
+    expect(find.text('الخدمات والمتابعة'), findsOneWidget);
     for (final icon in [
       Icons.bookmark_added_rounded,
       Icons.event_available_rounded,
@@ -183,7 +183,7 @@ void main() {
       scrollable: drawerScroll,
     );
     await tester.pumpAndSettle();
-    expect(find.text('المعرفة والخدمات'), findsOneWidget);
+    expect(find.text('المعرفة والمناسبات'), findsOneWidget);
     expect(find.text('نسخة قيد التطوير • راجع المصادر عند الحاجة'), findsOneWidget);
   });
 

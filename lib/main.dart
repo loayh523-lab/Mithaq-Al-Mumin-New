@@ -544,35 +544,36 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
             child: ListView(
               padding: const EdgeInsets.fromLTRB(12, 12, 12, 14),
               children: [
-                _drawerSectionTitle('الأقسام الرئيسية', Icons.grid_view_rounded),
+                _drawerSectionTitle('العبادات', Icons.spa_rounded),
                 _drawerGrid(
                   children: [
-                    _drawerGridItem(Icons.home_rounded, 'الرئيسية', () => _selectTab(0), selected: _selected == 0),
                     _drawerGridItem(Icons.auto_stories_rounded, 'القرآن الكريم', () => _selectTab(1), selected: _selected == 1),
                     _drawerGridItem(Icons.volunteer_activism_rounded, 'الأدعية والزيارات', () => _selectTab(2), selected: _selected == 2),
-                    _drawerGridItem(Icons.access_time_rounded, 'مواقيت الصلاة', () => _selectTab(3), selected: _selected == 3),
-                  ],
-                ),
-                SizedBox(height: 8),
-                _drawerSectionTitle('العبادات والمتابعة', Icons.spa_rounded),
-                _drawerGrid(
-                  children: [
                     _drawerGridItem(Icons.fingerprint_rounded, 'التسبيح', () => _openDrawerPage(const TasbeehPage())),
-                    _drawerGridItem(Icons.bookmark_added_rounded, 'ختمة القرآن', () => _openDrawerPage(const KhatmaPage())),
-                    _drawerGridItem(Icons.event_available_rounded, 'متابعة الصلاة', () => _openDrawerPage(const PrayerTrackerPage())),
                     _drawerGridItem(Icons.handshake_rounded, 'الأعمال الصالحة', () => _openDrawerPage(const GoodDeedsPage())),
-                    _drawerGridItem(Icons.history_edu_rounded, 'قضاء العبادات', () => _openDrawerPage(const QadaTrackerPage())),
                     _drawerGridItem(Icons.shield_moon_rounded, 'حصن الأذكار', () => _openDrawerPage(const DhikrFortressPage())),
                     _drawerGridItem(Icons.calculate_rounded, 'عداد الركعات', () => _openDrawerPage(const RakahCounterPage())),
                   ],
                 ),
                 SizedBox(height: 8),
-                _drawerSectionTitle('المعرفة والخدمات', Icons.local_library_rounded),
+                _drawerSectionTitle('الخدمات والمتابعة', Icons.grid_view_rounded),
                 _drawerGrid(
                   children: [
-                    _drawerGridItem(Icons.manage_search_rounded, 'الباحث الذكي', () => _openDrawerPage(const SmartSearchPage())),
-                    _drawerGridItem(Icons.brightness_5_rounded, 'أسماء الله الحسنى', () => _openDrawerPage(const NamesOfAllahPage())),
+                    _drawerGridItem(Icons.home_rounded, 'الرئيسية', () => _selectTab(0), selected: _selected == 0),
+                    _drawerGridItem(Icons.access_time_rounded, 'مواقيت الصلاة', () => _selectTab(3), selected: _selected == 3),
                     _drawerGridItem(Icons.explore_rounded, 'اتجاه القبلة', () => _openDrawerPage(QiblaPage(onLocationChanged: _handleLocationChanged))),
+                    _drawerGridItem(Icons.bookmark_added_rounded, 'ختمة القرآن', () => _openDrawerPage(const KhatmaPage())),
+                    _drawerGridItem(Icons.event_available_rounded, 'متابعة الصلاة', () => _openDrawerPage(const PrayerTrackerPage())),
+                    _drawerGridItem(Icons.history_edu_rounded, 'قضاء العبادات', () => _openDrawerPage(const QadaTrackerPage())),
+                  ],
+                ),
+                SizedBox(height: 8),
+                _drawerSectionTitle('المعرفة والمناسبات', Icons.local_library_rounded),
+                _drawerGrid(
+                  children: [
+                    _drawerGridItem(Icons.calendar_month_rounded, 'التقويم الهجري', () => _selectTab(3), selected: _selected == 3),
+                    _drawerGridItem(Icons.brightness_5_rounded, 'أسماء الله الحسنى', () => _openDrawerPage(const NamesOfAllahPage())),
+                    _drawerGridItem(Icons.manage_search_rounded, 'الباحث الذكي', () => _openDrawerPage(const SmartSearchPage())),
                     _drawerGridItem(Icons.collections_bookmark_rounded, 'مكتبة النصوص', () => _openDrawerPage(const ShiaTextLibraryPage())),
                     _drawerGridItem(Icons.support_agent_rounded, 'الخدمات الإيمانية', () => _openDrawerPage(const FaithServicesPage())),
                     _drawerGridItem(Icons.info_outline_rounded, 'عن التطبيق والدعم', () => _openDrawerPage(const AboutSupportPage())),

@@ -152,28 +152,28 @@ void main() {
 
   test('exact-alarm permission changes trigger a schedule refresh', () {
     expect(
-      PrayerNotificationService.exactAlarmModeNeedsRefreshForTesting(
+      PrayerNotificationService.shouldRefreshScheduleForExactAlarmMode(
         exactPermissionGranted: true,
         lastScheduleUsedExactAlarms: false,
       ),
       isTrue,
     );
     expect(
-      PrayerNotificationService.exactAlarmModeNeedsRefreshForTesting(
+      PrayerNotificationService.shouldRefreshScheduleForExactAlarmMode(
         exactPermissionGranted: false,
         lastScheduleUsedExactAlarms: true,
       ),
       isTrue,
     );
     expect(
-      PrayerNotificationService.exactAlarmModeNeedsRefreshForTesting(
+      PrayerNotificationService.shouldRefreshScheduleForExactAlarmMode(
         exactPermissionGranted: true,
         lastScheduleUsedExactAlarms: true,
       ),
       isFalse,
     );
     expect(
-      PrayerNotificationService.exactAlarmModeNeedsRefreshForTesting(
+      PrayerNotificationService.shouldRefreshScheduleForExactAlarmMode(
         exactPermissionGranted: null,
         lastScheduleUsedExactAlarms: false,
       ),

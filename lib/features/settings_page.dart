@@ -163,6 +163,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Future<void> _checkNotificationSchedule() async {
     final count = await PrayerNotificationService.pendingPrayerReminderCount();
     final allowed = await PrayerNotificationService.notificationsAreEnabled();
+    final exactAlarms = await PrayerNotificationService.exactAlarmsAreEnabled();
     if (!mounted) return;
     if (allowed == false) {
       _message('إذن الإشعارات مرفوض من أندرويد. فعّله من إعدادات التطبيق ثم جرّب مجدداً.');
@@ -170,8 +171,10 @@ class _SettingsPageState extends State<SettingsPage> {
       _message('تعذّر قراءة مواعيد الإشعارات من النظام. جرّب إعادة تشغيل التطبيق.');
     } else if (!_notificationsEnabled || count == 0) {
       _message('ماكو مواعيد أذان مجدولة حالياً. فعّل إشعارات الصلاة أولاً.');
+    } else if (exactAlarms == false) {
+      _message('أكو $count موعد أذان محفوظ، لكن إذن «المنبهات والتذكيرات» غير مفعّل وقد يتأخر التنبيه. افحص أيضاً قيود البطارية والتشغيل بالخلفية.');
     } else {
-      _message('النظام يحتفظ حالياً بـ$count موعد أذان مجدول. إذا لا يظهر التنبيه، افحص السماح بالتشغيل بالخلفية وتوفير الطاقة.');
+      _message('النظام يحتفظ حالياً بـ$count موعد أذان مجدول. افحص أيضاً قيود البطارية والتشغيل بالخلفية إذا لم يظهر التنبيه.');
     }
   }
 
@@ -207,10 +210,20 @@ class _SettingsPageState extends State<SettingsPage> {
         requestExactPermission: true,
       );
       if (!mounted) return;
+      final exactAlarms = ok
+          ? await PrayerNotificationService.exactAlarmsAreEnabled()
+          : false;
+      if (!mounted) return;
       setState(() => _notificationsEnabled = ok);
-      _message(ok
-        ? 'تم تفعيل إشعارات الصلاة وجدولة المواعيد للأيام الثلاثين القادمة'
-        : 'ما اكتمل التفعيل. اسمح بإشعارات ميثاق المؤمن من إعدادات أندرويد ثم اضغط تفعيل مرة ثانية.');
+      if (!ok) {
+        _message('ما اكتمل التفعيل. اسمح بإشعارات ميثاق المؤمن من إعدادات أندرويد ثم اضغط تفعيل مرة ثانية.');
+      } else if (exactAlarms == false) {
+        _message('إشعارات الصلاة مفعّلة، لكن أندرويد لم يمنح إذن «المنبهات والتذكيرات»؛ قد يتأخر الأذان عن وقته. فعّل الإذن من وصول خاص للتطبيقات ثم أعد تفعيل الإشعارات.');
+      } else if (exactAlarms == true) {
+        _message('تم تفعيل إشعارات الصلاة وجدولة المواعيد الثلاثين يوماً القادمة بالتوقيت الدقيق، بحسب قيود الجهاز والنظام.');
+      } else {
+        _message('تم تفعيل إشعارات الصلاة وجدولة المواعيد للأيام الثلاثين القادمة. تعذّر التحقق من صلاحية التوقيت الدقيق على هذا الجهاز.');
+      }
     } catch (_) {
       if (mounted) _message('صار خطأ أثناء تفعيل الإشعارات. تحقق من إذن أندرويد ثم حاول مجدداً.');
     } finally {

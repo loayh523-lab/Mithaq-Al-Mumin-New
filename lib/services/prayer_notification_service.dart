@@ -33,8 +33,9 @@ class PrayerNotificationService {
     await _plugin.initialize(
       settings,
       onDidReceiveNotificationResponse: (response) {
-        if (isPrayerNotificationId(response.id)) {
-          notificationTap.value = response.id;
+        final responseId = response.id;
+        if (responseId != null && isPrayerNotificationId(responseId)) {
+          notificationTap.value = responseId;
         }
       },
     );

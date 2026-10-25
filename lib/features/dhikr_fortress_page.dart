@@ -107,6 +107,8 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
   bool _loading = true;
   int _period = 0;
   String _selectedCategory = 'الكل';
+  Set<String> _favoriteIds = <String>{};
+  bool _favoritesOnly = false;
   static const _categoryNames = ['الكل', 'التسبيحات', 'المناجاة', 'العوذات'];
 
   String get _periodName => _period == 0 ? 'صباح' : 'مساء';
@@ -127,8 +129,10 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
   Future<void> _load() async {
     try {
       final prefs = await SharedPreferences.getInstance();
+      final favorites = (prefs.getStringList('dhikr_favorite_ids') ?? const <String>[]).toSet();
       if (!mounted) return;
       setState(() {
+        _favoriteIds = favorites;
         for (final item in _visibleItems) {
           _counts[item.id] = (prefs.getInt(_key(item.id)) ?? 0);
           if (item.target != null) {
@@ -164,6 +168,22 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('تعذّر حفظ عدّاد الذكر')),
+        );
+      }
+    }
+  }
+
+  Future<void> _toggleFavorite(_DhikrItem item) async {
+    final next = Set<String>.from(_favoriteIds);
+    if (!next.add(item.id)) next.remove(item.id);
+    setState(() => _favoriteIds = next);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setStringList('dhikr_favorite_ids', next.toList()..sort());
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('تعذّر حفظ المفضلة على الجهاز')),
         );
       }
     }
@@ -209,7 +229,8 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
       final queryMatches = query.isEmpty ||
           item.title.toLowerCase().contains(query) ||
           item.textFor(_period).toLowerCase().contains(query);
-      return categoryMatches && queryMatches;
+      final favoriteMatches = !_favoritesOnly || _favoriteIds.contains(item.id);
+      return categoryMatches && queryMatches && favoriteMatches;
     }).toList();
 
     return Scaffold(
@@ -217,11 +238,9 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
         title: const Text('حصن الأذكار'),
         actions: [
           IconButton(
-            tooltip: 'المفضلة قريباً',
-            onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('يمكنك حفظ الأذكار المهمة ضمن المفضلة بعد تفعيل هذه الميزة.')),
-            ),
-            icon: const Icon(Icons.bookmark_border_rounded),
+            tooltip: _favoritesOnly ? 'عرض كل الأذكار' : 'عرض الأذكار المفضلة',
+            onPressed: () => setState(() => _favoritesOnly = !_favoritesOnly),
+            icon: Icon(_favoritesOnly ? Icons.bookmark_added_rounded : Icons.bookmark_border_rounded),
           ),
         ],
       ),
@@ -235,14 +254,16 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
             decoration: InputDecoration(
               hintText: 'ابحث عن الأذكار',
               prefixIcon: const Icon(Icons.search_rounded),
-              suffixIcon: IconButton(
-                tooltip: 'مسح البحث',
-                onPressed: () {
-                  _searchController.clear();
-                  setState(() {});
-                },
-                icon: const Icon(Icons.mic_none_rounded),
-              ),
+              suffixIcon: _searchController.text.isEmpty
+                  ? null
+                  : IconButton(
+                      tooltip: 'مسح البحث',
+                      onPressed: () {
+                        _searchController.clear();
+                        setState(() {});
+                      },
+                      icon: const Icon(Icons.close_rounded),
+                    ),
               filled: true,
               fillColor: theme.colorScheme.surface,
               border: OutlineInputBorder(
@@ -253,7 +274,7 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
           ),
           const SizedBox(height: 24),
           Text(
-            'الأذكار المخصصة باليوم',
+            _favoritesOnly ? 'الأذكار المفضلة' : 'الأذكار المخصصة باليوم',
             style: theme.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.w800,
               color: theme.colorScheme.onSurfaceVariant,
@@ -296,7 +317,7 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
           else if (filtered.isEmpty)
             Padding(
               padding: const EdgeInsets.all(24),
-              child: Center(child: Text('ما لقينا ذكر يطابق بحثك.', style: theme.textTheme.bodyLarge)),
+              child: Center(child: Text(_favoritesOnly && _favoriteIds.isEmpty ? 'ما حفظت أي ذكر بالمفضلة بعد.' : 'ما لقينا ذكر يطابق بحثك.', textAlign: TextAlign.center, style: theme.textTheme.bodyLarge)),
             )
           else
             ...filtered.map((item) {
@@ -365,6 +386,14 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
                             onPressed: complete || _loading ? null : () => _increment(item),
                             icon: const Icon(Icons.touch_app_rounded),
                             label: const Text('تسبيح'),
+                          ),
+                        ),
+                        IconButton(
+                          tooltip: _favoriteIds.contains(item.id) ? 'إزالة من المفضلة' : 'إضافة إلى المفضلة',
+                          onPressed: _loading ? null : () => _toggleFavorite(item),
+                          icon: Icon(
+                            _favoriteIds.contains(item.id) ? Icons.bookmark_added_rounded : Icons.bookmark_add_outlined,
+                            color: _favoriteIds.contains(item.id) ? _dhikrGold : null,
                           ),
                         ),
                         IconButton(

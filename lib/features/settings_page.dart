@@ -472,6 +472,56 @@ class _SettingsPageState extends State<SettingsPage> {
           Text('التسجيل المضمّن هو الأذان الذي اختاره صاحب التطبيق: الأذان من العتبة العلوية المقدسة بصوت القارئ الشيخ شبّر معلة.', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11, height: 1.5)),
           const SizedBox(height: 4),
           Text('يلزم السماح بإشعارات التطبيق من أندرويد. إذا وصل الإشعار بلا صوت، ارفع صوت التنبيهات وافحص إعداد قناة «أذان الصلاة».', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11, height: 1.5)),
+          const SizedBox(height: 12),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary.withValues(alpha: .07),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: Theme.of(context).colorScheme.primary.withValues(alpha: .22),
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.mobile_friendly_rounded,
+                        color: Theme.of(context).colorScheme.primary, size: 20),
+                    const SizedBox(width: 8),
+                    const Expanded(
+                      child: Text(
+                        'حتى يوصل الأذان والتطبيق مغلق',
+                        style: TextStyle(fontWeight: FontWeight.w800),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  '١. اسمح بإشعارات ميثاق المؤمن. ٢. فعّل «المنبهات والتذكيرات» الدقيقة إذا ظهر الخيار. ٣. اجعل استخدام البطارية للتطبيق «غير مقيّد» أو اسمح بالنشاط بالخلفية.',
+                  style: TextStyle(height: 1.65, fontSize: 12),
+                ),
+                const SizedBox(height: 6),
+                const Text(
+                  'على بعض أجهزة TECNO وHiOS: افتح Phone Master أو Battery Lab واسمح بالتشغيل التلقائي والخلفي، واستثنِ التطبيق من توفير الطاقة، وثبّته في التطبيقات الأخيرة إذا توفر الخيار. تختلف أسماء القوائم حسب إصدار الجهاز.',
+                  style: TextStyle(height: 1.65, fontSize: 12),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'فحص الجدولة يؤكد أن النظام يحتفظ بالمواعيد، لكنه لا يضمن وحده وصول الصوت إذا كان النظام يقيّد التطبيق.',
+                  style: TextStyle(
+                    height: 1.55,
+                    fontSize: 11,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
         ],
       ),
       const SizedBox(height: 14),

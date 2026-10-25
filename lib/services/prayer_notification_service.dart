@@ -171,6 +171,7 @@ class PrayerNotificationService {
       final earlyAlertMinutes =
           (prefs.getInt('prayer_early_alert_minutes') ?? 5).clamp(1, 30).toInt();
       final now = tz.TZDateTime.now(tz.local);
+      final scheduledTasks = <Future<void>>[];
       for (var dayOffset = 0; dayOffset < _daysToSchedule; dayOffset++) {
         final date = DateTime(now.year, now.month, now.day).add(Duration(days: dayOffset));
         final times = SolarPrayerTimes.forDate(date, city.latitude, city.longitude, 3.0);
@@ -189,7 +190,7 @@ class PrayerNotificationService {
           );
           final id = _idStart + dayOffset * 10 + index;
           if (scheduled.isAfter(now.add(const Duration(seconds: 15)))) {
-            await _plugin.zonedSchedule(
+            scheduledTasks.add(_plugin.zonedSchedule(
               id,
               'حان وقت الصلاة — ${prayerLabels[index]}',
               'حان وقت ${prayerLabels[index]} وفق الحساب الفلكي التقديري داخل ميثاق المؤمن.',
@@ -206,7 +207,7 @@ class PrayerNotificationService {
                 ),
               ),
               androidScheduleMode: scheduleMode,
-            );
+            ));
           }
 
           if (earlyAlertEnabled) {
@@ -214,7 +215,7 @@ class PrayerNotificationService {
               Duration(minutes: earlyAlertMinutes),
             );
             if (earlyAt.isAfter(now.add(const Duration(seconds: 15)))) {
-              await _plugin.zonedSchedule(
+              scheduledTasks.add(_plugin.zonedSchedule(
                 id + 5,
                 'تنبيه قبل الصلاة — ${prayerLabels[index]}',
                 'باقي $earlyAlertMinutes دقائق على وقت صلاة ${prayerLabels[index]}.',
@@ -230,11 +231,12 @@ class PrayerNotificationService {
                   ),
                 ),
                 androidScheduleMode: scheduleMode,
-              );
+              ));
             }
           }
         }
       }
+      await Future.wait(scheduledTasks);
       final scheduled = await _plugin.pendingNotificationRequests();
       final prayerReminders = scheduled
           .where((request) => _isPrayerReminderId(request.id))

@@ -20,6 +20,7 @@ class _SettingsPageState extends State<SettingsPage> {
   double _fontSize = 24;
   bool _loaded = false;
   bool _notificationsEnabled = false;
+  bool _notificationBusy = false;
   bool _gpsBusy = false;
   bool _earlyAlertEnabled = false;
   int _earlyAlertMinutes = 5;
@@ -182,28 +183,38 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<void> _toggleNotifications(bool enabled) async {
-    if (!enabled) {
-      await PrayerNotificationService.cancelAll();
-      if (mounted) {
-        setState(() => _notificationsEnabled = false);
-        _message('تم إيقاف تذكيرات الصلاة');
-      }
-      return;
-    }
-    if (!_prayerEnabled.values.any((value) => value)) {
+    if (_notificationBusy) return;
+    if (enabled && !_prayerEnabled.values.any((value) => value)) {
       _message('فعّل صلاة واحدة على الأقل قبل تشغيل التذكيرات');
       return;
     }
-    final ok = await PrayerNotificationService.configure(
-      enabled: true,
-      city: _currentCity,
-      requestExactPermission: true,
-    );
-    if (!mounted) return;
-    setState(() => _notificationsEnabled = ok);
-    _message(ok
-      ? 'تمت جدولة تذكيرات الصلوات المختارة للأيام الثلاثين القادمة'
-      : 'تعذّر التفعيل. تحقق من إذن الإشعارات وإعدادات الجهاز.');
+    setState(() => _notificationBusy = true);
+    try {
+      if (!enabled) {
+        await PrayerNotificationService.cancelAll();
+        if (!mounted) return;
+        setState(() => _notificationsEnabled = false);
+        _message('تم إيقاف تذكيرات الصلاة');
+        return;
+      }
+
+      // Ask for Android permission first; do not wait through schedule creation
+      // without showing the user that activation is in progress.
+      final ok = await PrayerNotificationService.configure(
+        enabled: true,
+        city: _currentCity,
+        requestExactPermission: true,
+      );
+      if (!mounted) return;
+      setState(() => _notificationsEnabled = ok);
+      _message(ok
+        ? 'تم تفعيل إشعارات الصلاة وجدولة المواعيد للأيام الثلاثين القادمة'
+        : 'ما اكتمل التفعيل. اسمح بإشعارات ميثاق المؤمن من إعدادات أندرويد ثم اضغط تفعيل مرة ثانية.');
+    } catch (_) {
+      if (mounted) _message('صار خطأ أثناء تفعيل الإشعارات. تحقق من إذن أندرويد ثم حاول مجدداً.');
+    } finally {
+      if (mounted) setState(() => _notificationBusy = false);
+    }
   }
 
   Future<void> _refreshReminderSchedule() async {
@@ -353,9 +364,9 @@ class _SettingsPageState extends State<SettingsPage> {
             child: SwitchListTile(
               contentPadding: EdgeInsets.zero,
               title: Text('إشعارات الصلاة'),
-              subtitle: Text('تذكيرات محلية للأيام الثلاثين القادمة وفق حساب فلكي تقديري. قد تتأخر التنبيهات بسبب قيود توفير الطاقة أو أذونات أندرويد.', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.5, fontSize: 12)),
+              subtitle: Text(_notificationBusy ? 'جارٍ طلب الإذن وجدولة مواقيت الصلاة…' : (_notificationsEnabled ? 'الإشعارات مفعّلة. إذا لا يصل الأذان، افحص إذن أندرويد وقناة صوت الأذان.' : 'اضغط لتفعيل إشعارات الصلاة. سيطلب أندرويد الإذن عند الحاجة، ثم تُجدول المواعيد للأيام الثلاثين القادمة.'), style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.5, fontSize: 12)),
               value: _notificationsEnabled,
-              onChanged: _loaded ? _toggleNotifications : null,
+              onChanged: _loaded && !_notificationBusy ? _toggleNotifications : null,
               activeThumbColor: _settingsGold,
             ),
           ),

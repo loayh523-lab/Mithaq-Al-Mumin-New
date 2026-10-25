@@ -209,7 +209,8 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
     final theme = Theme.of(context);
     final query = _searchController.text.trim().toLowerCase();
     final daysFromAnchor = DateTime.now().difference(DateTime(2024, 1, 1)).inDays;
-    final dailyItem = _items[daysFromAnchor % _items.length];
+    final dailyIndex = ((daysFromAnchor % _items.length) + _items.length) % _items.length;
+    final dailyItem = _items[dailyIndex];
     final filtered = _visibleItems.where((item) {
       final categoryMatches = _selectedCategory == 'الكل' || item.category == _selectedCategory;
       final queryMatches = query.isEmpty ||

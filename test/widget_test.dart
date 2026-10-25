@@ -69,6 +69,11 @@ void main() {
 
     expect(find.text('الأدعية والزيارات'), findsOneWidget);
     expect(find.text('تعقيبات الصلاة'), findsNothing);
+    expect(find.text('نهج البلاغة والحِكم'), findsOneWidget);
+
+    await tester.tap(find.text('نهج البلاغة والحِكم'));
+    await tester.pumpAndSettle();
+    expect(find.text('مختارات من الحكم'), findsOneWidget);
   });
 
   testWidgets('home and section grid stay inside a narrow phone in both themes', (tester) async {

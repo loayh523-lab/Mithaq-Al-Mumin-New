@@ -811,6 +811,15 @@ void main() {
     expect(find.text('عن التطبيق والدعم'), findsOneWidget);
     expect(find.text('ميثاق المؤمن'), findsOneWidget);
     expect(find.text('مشاركة ميثاق المؤمن'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('خدمة العملاء'),
+      220,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('خدمة العملاء'), findsOneWidget);
+    expect(find.text('إرسال البلاغ'), findsOneWidget);
+    expect(find.text('الحسابات الرسمية'), findsOneWidget);
     expect(find.text('الدعم الفني والإبلاغ عن مشكلة'), findsOneWidget);
     await tester.scrollUntilVisible(
       find.text('مصدر نص القرآن — Tanzil'),

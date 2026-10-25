@@ -809,43 +809,18 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
   );
 
   Color _drawerAccent(String title) {
-    switch (title) {
-      case 'الرئيسية':
-      case 'القرآن الكريم':
-      case 'ختمة القرآن':
-      case 'الختمة':
-        return const Color(0xFF2F9972);
-      case 'الأدعية والزيارات':
-      case 'الأدعية':
-      case 'أسماء الله الحسنى':
-        return const Color(0xFFD1A24A);
-      case 'التسبيح':
-        return const Color(0xFF8C78C7);
-      case 'مواقيت الصلاة':
-      case 'متابعة الصلاة':
-        return const Color(0xFF399D9A);
-      case 'الأعمال الصالحة':
-        return const Color(0xFFDA8B5C);
-      case 'قضاء العبادات':
-      case 'عداد الركعات':
-        return const Color(0xFF6F8FD0);
-      case 'حصن الأذكار':
-        return const Color(0xFF5DAD78);
-      case 'الباحث الذكي':
-        return const Color(0xFF4C91C5);
-      case 'اتجاه القبلة':
-        return const Color(0xFF3A9FAD);
-      case 'التقويم الهجري':
-        return const Color(0xFF6F8FD0);
-      case 'مكتبة النصوص':
-        return const Color(0xFF9677B8);
-      case 'الخدمات الإيمانية':
-        return const Color(0xFF5F9A83);
-      case 'عن التطبيق والدعم':
-        return const Color(0xFF81918B);
-      default:
-        return Theme.of(context).colorScheme.secondary;
-    }
+    const worshipAndText = <String>{
+      'الأدعية والزيارات',
+      'الأدعية',
+      'التسبيح',
+      'الأعمال الصالحة',
+      'قضاء العبادات',
+      'عداد الركعات',
+      'حصن الأذكار',
+      'أسماء الله الحسنى',
+    };
+    final scheme = Theme.of(context).colorScheme;
+    return worshipAndText.contains(title) ? scheme.secondary : scheme.primary;
   }
 
   Widget _drawerGridItem(

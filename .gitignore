@@ -1,0 +1,12 @@
+# Flutter/Dart build products
+.dart_tool/
+.packages
+.pub/
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+android/.gradle/
+android/local.properties
+
+# Generated during the build from the retained Sheikh Shabbar Maalla source audio.
+assets/audio/adhan_shabbar_maalla_preview.mp3

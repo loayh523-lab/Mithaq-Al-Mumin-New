@@ -9,8 +9,9 @@ import '../services/app_theme.dart';
 const _settingsGold = Color(0xFFD9B66D);
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key, this.onLocationChanged});
+  const SettingsPage({super.key, this.onLocationChanged, this.embedded = false});
   final Future<void> Function()? onLocationChanged;
+  final bool embedded;
   @override State<SettingsPage> createState() => _SettingsPageState();
 }
 
@@ -285,10 +286,12 @@ class _SettingsPageState extends State<SettingsPage> {
   @override Widget build(BuildContext context) {
     final city = _currentCity;
     return ListView(padding: const EdgeInsets.fromLTRB(18, 14, 18, 24), children: [
-      Text('الإعدادات', style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800)),
-      const SizedBox(height: 5),
-      Text('خصّص التطبيق بما يناسبك، وتُحفظ هذه الخيارات على جهازك.', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.6)),
-      const SizedBox(height: 18),
+      if (!widget.embedded) ...[
+        Text('الإعدادات', style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800)),
+        const SizedBox(height: 5),
+        Text('خصّص التطبيق بما يناسبك، وتُحفظ هذه الخيارات على جهازك.', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.6)),
+        const SizedBox(height: 18),
+      ],
       _section(
         icon: Icons.palette_outlined,
         title: 'مظهر التطبيق',

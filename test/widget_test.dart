@@ -32,7 +32,7 @@ void main() {
     expect(AppTheme.isDark.value, isTrue);
     await tester.tap(find.byIcon(Icons.menu));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('الإعدادات'));
+    await tester.tap(find.descendant(of: find.byType(Drawer), matching: find.text('الإعدادات')));
     await tester.pumpAndSettle();
 
     expect(find.text('داكن'), findsOneWidget);
@@ -159,9 +159,9 @@ void main() {
       matching: find.byType(Scrollable),
     ).first;
 
-    expect(find.text('الأقسام الرئيسية'), findsOneWidget);
+    expect(find.text('العبادات'), findsOneWidget);
     await tester.scrollUntilVisible(
-      find.descendant(of: find.byType(Drawer), matching: find.text('العبادات والمتابعة')),
+      find.descendant(of: find.byType(Drawer), matching: find.text('الخدمات والمتابعة')),
       180,
       scrollable: drawerScroll,
     );
@@ -178,7 +178,7 @@ void main() {
       expect(finder, findsOneWidget);
     }
     await tester.scrollUntilVisible(
-      find.descendant(of: find.byType(Drawer), matching: find.text('المعرفة والخدمات')),
+      find.descendant(of: find.byType(Drawer), matching: find.text('المعرفة والمناسبات')),
       180,
       scrollable: drawerScroll,
     );

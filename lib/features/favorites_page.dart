@@ -5,7 +5,8 @@ import 'shia_text_library_page.dart';
 const _favoritesGold = Color(0xFFD9B66D);
 
 class FavoritesPage extends StatefulWidget {
-  const FavoritesPage({super.key});
+  const FavoritesPage({super.key, this.embedded = false});
+  final bool embedded;
 
   @override
   State<FavoritesPage> createState() => _FavoritesPageState();
@@ -96,7 +97,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: Text('المفضلة المباركة')),
+        appBar: widget.embedded ? null : AppBar(title: const Text('المفضلة المباركة')),
         body: _loading
             ? Center(
                 child: CircularProgressIndicator(color: _favoritesGold),

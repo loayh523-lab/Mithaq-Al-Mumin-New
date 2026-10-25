@@ -341,9 +341,14 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
     if (id == null) return;
     PrayerNotificationService.notificationTap.value = null;
     if (!PrayerNotificationService.isPrayerNotificationId(id) || !mounted) return;
-    setState(() => _selected = 3);
+    setState(() => _selected = 2);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) _notice('تم فتح مواقيت الصلاة من الإشعار');
+      if (!mounted) return;
+      _pushPage(PrayerCalendarPage(
+        onLocationChanged: _handleLocationChanged,
+        onHijriCorrectionChanged: _loadDashboardData,
+      ));
+      _notice('تم فتح مواقيت الصلاة من الإشعار');
     });
   }
 
@@ -384,20 +389,25 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
     return Scaffold(
       drawer: _navigationDrawer(),
       appBar: AppBar(
-        title: Row(
-          children: [
-            const MithaqBrandMark(size: 36),
-            SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                'ميثاق المؤمن',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontWeight: FontWeight.w800),
+        title: _selected == 0
+            ? Row(
+                children: [
+                  const MithaqBrandMark(size: 36),
+                  const SizedBox(width: 10),
+                  const Expanded(
+                    child: Text(
+                      'ميثاق المؤمن',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontWeight: FontWeight.w800),
+                    ),
+                  ),
+                ],
+              )
+            : Text(
+                _selected == 1 ? 'المفضلة المباركة' : _selected == 2 ? 'الأقسام' : 'الإعدادات',
+                style: const TextStyle(fontWeight: FontWeight.w800),
               ),
-            ),
-          ],
-        ),
         actions: [
           IconButton(
             tooltip: 'الباحث الذكي',
@@ -411,13 +421,10 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
           index: _selected,
           children: [
             _homePage(),
-            _selected == 1 ? const QuranIndexPage() : const SizedBox.shrink(),
-            _selected == 2 ? _duaPage() : const SizedBox.shrink(),
+            _selected == 1 ? const FavoritesPage(embedded: true) : const SizedBox.shrink(),
+            _selected == 2 ? _sectionsPage() : const SizedBox.shrink(),
             _selected == 3
-                ? PrayerCalendarPage(
-                    onLocationChanged: _handleLocationChanged,
-                    onHijriCorrectionChanged: _loadDashboardData,
-                  )
+                ? SettingsPage(onLocationChanged: _handleLocationChanged, embedded: true)
                 : const SizedBox.shrink(),
           ],
         ),
@@ -438,41 +445,168 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
           destinations: [
             NavigationDestination(
               icon: const Icon(Icons.home_outlined),
-              selectedIcon: Icon(
-                Icons.home_rounded,
-                color: Theme.of(context).colorScheme.secondary,
-              ),
+              selectedIcon: Icon(Icons.home_rounded, color: Theme.of(context).colorScheme.secondary),
               label: 'الرئيسية',
             ),
             NavigationDestination(
-              icon: const Icon(Icons.menu_book_outlined),
-              selectedIcon: Icon(
-                Icons.menu_book_rounded,
-                color: Theme.of(context).colorScheme.secondary,
-              ),
-              label: 'القرآن',
+              icon: const Icon(Icons.star_border_rounded),
+              selectedIcon: Icon(Icons.star_rounded, color: Theme.of(context).colorScheme.secondary),
+              label: 'المفضلة',
             ),
             NavigationDestination(
-              icon: const Icon(Icons.auto_awesome_outlined),
-              selectedIcon: Icon(
-                Icons.auto_awesome_rounded,
-                color: Theme.of(context).colorScheme.secondary,
-              ),
-              label: 'الأدعية والزيارات',
+              icon: const Icon(Icons.grid_view_outlined),
+              selectedIcon: Icon(Icons.grid_view_rounded, color: Theme.of(context).colorScheme.secondary),
+              label: 'الأقسام',
             ),
             NavigationDestination(
-              icon: const Icon(Icons.calendar_month_outlined),
-              selectedIcon: Icon(
-                Icons.calendar_month_rounded,
-                color: Theme.of(context).colorScheme.secondary,
-              ),
-              label: 'المواقيت',
+              icon: const Icon(Icons.settings_outlined),
+              selectedIcon: Icon(Icons.settings_rounded, color: Theme.of(context).colorScheme.secondary),
+              label: 'الإعدادات',
             ),
+
           ],
         ),
       ),
     );
   }
+
+  Widget _sectionsPage() {
+    final groups = <({String title, List<Widget> items})>[
+      (
+        title: 'العبادات',
+        items: [
+          _sectionGridItem(icon: Icons.menu_book_rounded, title: 'القرآن الكريم', color: const Color(0xFFD4EEE0), onTap: () => _pushPage(const QuranIndexPage())),
+          _sectionGridItem(icon: Icons.auto_awesome_rounded, title: 'الأدعية والزيارات', color: const Color(0xFFF1DDF0), onTap: () => _pushPage(_duaPage())),
+          _sectionGridItem(icon: Icons.shield_moon_rounded, title: 'حصن الأذكار', color: const Color(0xFFD8E6F8), onTap: () => _pushPage(const DhikrFortressPage())),
+          _sectionGridItem(icon: Icons.fingerprint_rounded, title: 'التسبيح', color: const Color(0xFFE9EAC0), onTap: () => _pushPage(const TasbeehPage())),
+          _sectionGridItem(icon: Icons.menu_book_rounded, title: 'تعقيبات الصلاة', color: const Color(0xFFE6F0D8), onTap: () => _pushPage(const ShiaTextLibraryPage(initialCategory: 'التعقيبات بعد الصلاة'))),
+          _sectionGridItem(icon: Icons.volunteer_activism_rounded, title: 'الأعمال الصالحة', color: const Color(0xFFD8E6F8), onTap: () => _pushPage(const GoodDeedsPage())),
+          _sectionGridItem(icon: Icons.calculate_rounded, title: 'عداد الركعات', color: const Color(0xFFF2D7E7), onTap: () => _pushPage(const RakahCounterPage())),
+          _sectionGridItem(icon: Icons.history_edu_rounded, title: 'قضاء العبادات', color: const Color(0xFFEDE0D1), onTap: () => _pushPage(const QadaTrackerPage())),
+          _sectionGridItem(icon: Icons.event_available_rounded, title: 'متابعة الصلاة', color: const Color(0xFFD9F0E9), onTap: () => _pushPage(const PrayerTrackerPage())),
+        ],
+      ),
+      (
+        title: 'الخدمات',
+        items: [
+          _sectionGridItem(icon: Icons.access_time_rounded, title: 'أوقات الصلاة', color: const Color(0xFFE9EAC0), onTap: () => _pushPage(PrayerCalendarPage(onLocationChanged: _handleLocationChanged, onHijriCorrectionChanged: _loadDashboardData))),
+          _sectionGridItem(icon: Icons.explore_rounded, title: 'اتجاه القبلة', color: const Color(0xFFD8E6F8), onTap: () => _pushPage(QiblaPage(onLocationChanged: _handleLocationChanged))),
+          _sectionGridItem(icon: Icons.bookmark_added_rounded, title: 'ختمة القرآن', color: const Color(0xFFD4EEE0), onTap: () => _pushPage(const KhatmaPage())),
+          _sectionGridItem(icon: Icons.manage_search_rounded, title: 'الباحث الذكي', color: const Color(0xFFDCD9F6), onTap: () => _pushPage(const SmartSearchPage())),
+          _sectionGridItem(icon: Icons.brightness_5_rounded, title: 'أسماء الله الحسنى', color: const Color(0xFFE9EAC0), onTap: () => _pushPage(const NamesOfAllahPage())),
+          _sectionGridItem(icon: Icons.collections_bookmark_rounded, title: 'مكتبة النصوص', color: const Color(0xFFEDE0D1), onTap: () => _pushPage(const ShiaTextLibraryPage())),
+          _sectionGridItem(icon: Icons.support_agent_rounded, title: 'الخدمات الإيمانية', color: const Color(0xFFD4EEE0), onTap: () => _pushPage(const FaithServicesPage())),
+          _sectionGridItem(icon: Icons.info_outline_rounded, title: 'عن التطبيق والدعم', color: const Color(0xFFF2D7E7), onTap: () => _pushPage(const AboutSupportPage())),
+        ],
+      ),
+      (
+        title: 'المناسبات',
+        items: [
+          _sectionGridItem(icon: Icons.calendar_month_rounded, title: 'أعمال المناسبات', color: const Color(0xFFDCD9F6), onTap: () => _pushPage(const ShiaTextLibraryPage(initialCategory: 'الأعمال والمناسبات'))),
+          _sectionGridItem(icon: Icons.location_on_rounded, title: 'زيارة الأربعين', color: const Color(0xFFD8E6F8), onTap: () => _pushPage(const ArbaeenGuidePage())),
+          _sectionGridItem(icon: Icons.explore_rounded, title: 'الاستخارة القرآنية', color: const Color(0xFFF1DDF0), onTap: () => _pushPage(const IstikharaGuidePage())),
+          _sectionGridItem(icon: Icons.mosque_rounded, title: 'الزيارات الشريفة', color: const Color(0xFFD4EEE0), onTap: () => _pushPage(const ShiaTextLibraryPage(initialCategory: 'الزيارات الشريفة'))),
+        ],
+      ),
+    ];
+
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(16, 10, 16, 26),
+      children: [
+        Container(
+          padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              colors: Theme.of(context).brightness == Brightness.dark
+                  ? const [Color(0xFF163C2D), Color(0xFF0E241C)]
+                  : const [Color(0xFFE7F0E5), Color(0xFFF6F4EC)],
+            ),
+            border: Border.all(color: _gold.withValues(alpha: .18)),
+          ),
+          child: Text(
+            'خدمات ميثاق المؤمن مرتبة حسب العبادة والمعرفة والمناسبات',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              fontWeight: FontWeight.w700,
+              height: 1.5,
+            ),
+          ),
+        ),
+        const SizedBox(height: 20),
+        for (var index = 0; index < groups.length; index++) ...[
+          Padding(
+            padding: const EdgeInsets.fromLTRB(2, 0, 2, 10),
+            child: Text(
+              groups[index].title,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                fontSize: 20,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ),
+          GridView.count(
+            crossAxisCount: 4,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 4,
+            childAspectRatio: .76,
+            children: groups[index].items,
+          ),
+          if (index < groups.length - 1) ...[
+            const SizedBox(height: 4),
+            Divider(color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: .65), height: 18),
+            const SizedBox(height: 10),
+          ],
+        ],
+      ],
+    );
+  }
+
+  Widget _sectionGridItem({
+    required IconData icon,
+    required String title,
+    required Color color,
+    required VoidCallback onTap,
+  }) => InkWell(
+    onTap: onTap,
+    borderRadius: BorderRadius.circular(18),
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 5),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Container(
+            width: 54,
+            height: 54,
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+            child: Icon(icon, color: const Color(0xFF375F4D), size: 27),
+          ),
+          const SizedBox(height: 7),
+          SizedBox(
+            height: 34,
+            child: Text(
+              title,
+              maxLines: 2,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
+                fontSize: 11.5,
+                height: 1.15,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 
   Widget _navigationDrawer() => Drawer(
     backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -561,8 +695,8 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
                 _drawerSectionTitle('العبادات', Icons.spa_rounded),
                 _drawerGrid(
                   children: [
-                    _drawerGridItem(Icons.auto_stories_rounded, 'القرآن الكريم', () => _selectTab(1), selected: _selected == 1),
-                    _drawerGridItem(Icons.volunteer_activism_rounded, 'الأدعية والزيارات', () => _selectTab(2), selected: _selected == 2),
+                    _drawerGridItem(Icons.auto_stories_rounded, 'القرآن الكريم', () => _openDrawerPage(const QuranIndexPage())),
+                    _drawerGridItem(Icons.volunteer_activism_rounded, 'الأدعية والزيارات', () => _openDrawerPage(_duaPage())),
                     _drawerGridItem(Icons.fingerprint_rounded, 'التسبيح', () => _openDrawerPage(const TasbeehPage())),
                     _drawerGridItem(Icons.handshake_rounded, 'الأعمال الصالحة', () => _openDrawerPage(const GoodDeedsPage())),
                     _drawerGridItem(Icons.shield_moon_rounded, 'حصن الأذكار', () => _openDrawerPage(const DhikrFortressPage())),
@@ -574,7 +708,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
                 _drawerGrid(
                   children: [
                     _drawerGridItem(Icons.home_rounded, 'الرئيسية', () => _selectTab(0), selected: _selected == 0),
-                    _drawerGridItem(Icons.access_time_rounded, 'مواقيت الصلاة', () => _selectTab(3), selected: _selected == 3),
+                    _drawerGridItem(Icons.access_time_rounded, 'مواقيت الصلاة', () => _openDrawerPage(PrayerCalendarPage(onLocationChanged: _handleLocationChanged, onHijriCorrectionChanged: _loadDashboardData))),
                     _drawerGridItem(Icons.explore_rounded, 'اتجاه القبلة', () => _openDrawerPage(QiblaPage(onLocationChanged: _handleLocationChanged))),
                     _drawerGridItem(Icons.bookmark_added_rounded, 'ختمة القرآن', () => _openDrawerPage(const KhatmaPage())),
                     _drawerGridItem(Icons.event_available_rounded, 'متابعة الصلاة', () => _openDrawerPage(const PrayerTrackerPage())),
@@ -585,7 +719,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
                 _drawerSectionTitle('المعرفة والمناسبات', Icons.local_library_rounded),
                 _drawerGrid(
                   children: [
-                    _drawerGridItem(Icons.calendar_month_rounded, 'التقويم الهجري', () => _selectTab(3), selected: _selected == 3),
+                    _drawerGridItem(Icons.calendar_month_rounded, 'التقويم الهجري', () => _openDrawerPage(PrayerCalendarPage(onLocationChanged: _handleLocationChanged, onHijriCorrectionChanged: _loadDashboardData))),
                     _drawerGridItem(Icons.brightness_5_rounded, 'أسماء الله الحسنى', () => _openDrawerPage(const NamesOfAllahPage())),
                     _drawerGridItem(Icons.manage_search_rounded, 'الباحث الذكي', () => _openDrawerPage(const SmartSearchPage())),
                     _drawerGridItem(Icons.collections_bookmark_rounded, 'مكتبة النصوص', () => _openDrawerPage(const ShiaTextLibraryPage())),
@@ -600,9 +734,9 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
             padding: const EdgeInsets.fromLTRB(12, 0, 12, 10),
             child: Row(
               children: [
-                Expanded(child: _drawerBottomItem(Icons.star_rounded, 'المفضلة', () => _openDrawerPage(const FavoritesPage()))),
+                Expanded(child: _drawerBottomItem(Icons.star_rounded, 'المفضلة', () => _selectTab(1))),
                 SizedBox(width: 10),
-                Expanded(child: _drawerBottomItem(Icons.tune_rounded, 'الإعدادات', () => _openDrawerPage(Scaffold(body: SettingsPage(onLocationChanged: _handleLocationChanged))))),
+                Expanded(child: _drawerBottomItem(Icons.tune_rounded, 'الإعدادات', () => _selectTab(3))),
               ],
             ),
           ),

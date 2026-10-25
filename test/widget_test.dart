@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mithaq_al_mumin/main.dart';
 import 'package:mithaq_al_mumin/quran/quran_pages.dart';
 import 'package:mithaq_al_mumin/features/prayer_calendar_page.dart';
+import 'package:mithaq_al_mumin/features/faith_library_pages.dart';
 import 'package:mithaq_al_mumin/features/shia_text_library_page.dart';
 import 'package:mithaq_al_mumin/features/good_deeds_page.dart';
 import 'package:mithaq_al_mumin/features/names_of_allah_page.dart';
@@ -356,6 +357,38 @@ void main() {
     expect(find.textContaining('من الشمال الجغرافي'), findsOneWidget);
     expect(find.textContaining('قراءة الحساس غير متاحة'), findsOneWidget);
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Nahj wisdom text follows the active light theme instead of forcing white', (tester) async {
+    final theme = ThemeData.light();
+    await tester.pumpWidget(MaterialApp(
+      theme: theme,
+      home: const Directionality(
+        textDirection: TextDirection.rtl,
+        child: NahjAlBalaghaPage(),
+      ),
+    ));
+    final quote = tester.widget<Text>(
+      find.text('قِيمَةُ كُلِّ امْرِئٍ مَا يُحْسِنُهُ'),
+    );
+    expect(quote.style?.color, theme.colorScheme.onSurface);
+    expect(find.text('فتح نهج البلاغة الكامل عبر المصدر الخارجي'), findsOneWidget);
+  });
+
+  testWidgets('prayer countdown uses theme colors in light mode', (tester) async {
+    final theme = ThemeData.light();
+    await tester.pumpWidget(MaterialApp(
+      theme: theme,
+      home: const Directionality(
+        textDirection: TextDirection.rtl,
+        child: PrayerCalendarPage(),
+      ),
+    ));
+    await tester.pumpAndSettle();
+    final nextPrayer = tester.widget<Text>(
+      find.textContaining('الصلاة القادمة:').first,
+    );
+    expect(nextPrayer.style?.color, theme.colorScheme.secondary);
   });
 
   test('Dua categories prioritize specific collections over broad date heuristics', () {

@@ -49,6 +49,26 @@ jobs:
         run: flutter test
       - name: Build Android release APK for validation
         run: flutter build apk --release
+      - name: Report release APK size for the completeness budget
+        shell: bash
+        run: |
+          set -euo pipefail
+          APK="build/app/outputs/flutter-apk/app-release.apk"
+          test -s "$APK"
+          BYTES="$(stat -c '%s' "$APK")"
+          MIB="$(awk -v bytes="$BYTES" 'BEGIN { printf "%.2f", bytes / 1048576 }')"
+          SHA256="$(sha256sum "$APK" | cut -d ' ' -f 1)"
+          echo "Release APK: $MIB MiB ($BYTES bytes)"
+          echo "SHA-256: $SHA256"
+          {
+            echo "### Android release build size"
+            echo "- APK size: $MIB MiB ($BYTES bytes)"
+            echo "- SHA-256: `$SHA256`"
+            echo "- Size budget: warn above 80 MiB; keep the full Shia feature set."
+          } >> "$GITHUB_STEP_SUMMARY"
+          if (( BYTES > 80 * 1024 * 1024 )); then
+            echo "::warning::Release APK exceeds the 80 MiB review threshold. Inspect bundled assets before adding more large files."
+          fi
       # The previous artifact was unsigned and Android rejected it at install time.
       # This temporary validation certificate makes the APK installable; it is not
       # a production signing key and must never be used for public distribution.

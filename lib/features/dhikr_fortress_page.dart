@@ -283,7 +283,7 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
             children: [
               for (final category in _categoryNames)
                 ChoiceChip(
-                  label: Text(category == 'الكل' ? 'كل الأذكار' : category + ' (' + _items.where((item) => item.category == category).length.toString() + ')'),
+                  label: Text(category == 'الكل' ? 'كل الأذكار' : '$category (${_items.where((item) => item.category == category).length})'),
                   selected: _selectedCategory == category,
                   onSelected: (_) => setState(() => _selectedCategory = category),
                   avatar: Icon(category == 'التسبيحات' ? Icons.fingerprint_rounded : category == 'المناجاة' ? Icons.volunteer_activism_rounded : category == 'العوذات' ? Icons.shield_moon_rounded : Icons.grid_view_rounded, size: 18, color: _dhikrGold),

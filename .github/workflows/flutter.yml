@@ -10,6 +10,12 @@ on:
 permissions:
   contents: read
 
+# Cancel stale runs on the same branch so each commit is validated against
+# the current tree instead of consuming runners with obsolete APK builds.
+concurrency:
+  group: flutter-ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     runs-on: ubuntu-latest

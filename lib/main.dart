@@ -497,7 +497,6 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
           _sectionGridItem(icon: Icons.auto_awesome_rounded, title: 'الأدعية والزيارات', onTap: () => _pushPage(_duaPage())),
           _sectionGridItem(icon: Icons.shield_moon_rounded, title: 'حصن الأذكار', onTap: () => _pushPage(const DhikrFortressPage())),
           _sectionGridItem(icon: Icons.fingerprint_rounded, title: 'التسبيح', onTap: () => _pushPage(const TasbeehPage())),
-          _sectionGridItem(icon: Icons.menu_book_rounded, title: 'تعقيبات الصلاة', onTap: () => _pushPage(const ShiaTextLibraryPage(initialCategory: 'التعقيبات بعد الصلاة'))),
           _sectionGridItem(icon: Icons.volunteer_activism_rounded, title: 'الأعمال الصالحة', onTap: () => _pushPage(const GoodDeedsPage())),
           _sectionGridItem(icon: Icons.calculate_rounded, title: 'عداد الركعات', onTap: () => _pushPage(const RakahCounterPage())),
           _sectionGridItem(icon: Icons.history_edu_rounded, title: 'قضاء العبادات', onTap: () => _pushPage(const QadaTrackerPage())),

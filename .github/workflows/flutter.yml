@@ -35,7 +35,12 @@ jobs:
         run: python3 tool/prepare_android_project.py
       - name: Generate the redesigned Mithaq vector launcher icon
         run: python3 tool/prepare_android_branding.py
-      - name: Prepare licensed adhan sound and offline playback asset
+      - name: Install audio encoder for compact adhan packaging
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y ffmpeg
+          ffmpeg -version | head -n 1
+      - name: Prepare selected adhan sound and offline playback asset
         run: python3 tool/prepare_adhan.py
       - name: Prepare full offline Quran text
         run: python3 tool/prepare_quran.py

@@ -732,7 +732,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
                     _drawerGridItem(Icons.volunteer_activism_rounded, 'الأدعية والزيارات', () => _openDrawerPage(_duaPage())),
                     _drawerGridItem(Icons.fingerprint_rounded, 'التسبيح', () => _openDrawerPage(const TasbeehPage())),
                     _drawerGridItem(Icons.handshake_rounded, 'الأعمال الصالحة', () => _openDrawerPage(const GoodDeedsPage())),
-                    _drawerGridItem(Icons.shield_moon_rounded, 'حصن الأذكار', () => _openDrawerPage(const DhikrFortressPage())),
+                    _drawerGridItem(Icons.shield_moon_rounded, 'الأذكار', () => _openDrawerPage(const DhikrFortressPage())),
                     _drawerGridItem(Icons.calculate_rounded, 'عداد الركعات', () => _openDrawerPage(const RakahCounterPage())),
                   ],
                 ),
@@ -818,7 +818,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
       'الأعمال الصالحة',
       'قضاء العبادات',
       'عداد الركعات',
-      'حصن الأذكار',
+      'الأذكار',
       'أسماء الله الحسنى',
     };
     final scheme = Theme.of(context).colorScheme;
@@ -1431,7 +1431,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
                   () => _pushPage(const TasbeehPage()),
                 ),
                 _homeMiniShortcut(
-                  Icons.shield_moon_rounded, 'حصن الأذكار',
+                  Icons.shield_moon_rounded, 'الأذكار',
                   () => _pushPage(const DhikrFortressPage()),
                 ),
                 _homeMiniShortcut(

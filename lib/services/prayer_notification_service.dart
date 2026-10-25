@@ -13,11 +13,11 @@ class PrayerNotificationService {
   static bool _initialized = false;
   static const int _idStart = 4000;
   static const int _daysToSchedule = 30;
-  static const String _adhanChannelId = 'mithaq_adhan_shabbar_v12';
+  static const String _adhanChannelId = 'mithaq_adhan_shabbar_v13';
   // Increment this when the Android notification channel or schedule format changes.
   // Android keeps channel sound settings immutable, so a new channel ID is needed
   // when migrating the bundled adhan sound on existing installations.
-  static const int _scheduleRevision = 12;
+  static const int _scheduleRevision = 13;
 
   static bool isPrayerNotificationId(int id) => _isPrayerReminderId(id);
 
@@ -306,6 +306,21 @@ class PrayerNotificationService {
   }
 
   /// Returns the Android app-level notification permission state when available.
+  /// Whether Android currently allows precise alarm scheduling.
+  /// False means alarms fall back to an inexact schedule and may be delayed.
+  static Future<bool?> exactAlarmsAreEnabled() async {
+    try {
+      await _initialize();
+      if (defaultTargetPlatform != TargetPlatform.android) return null;
+      final android = _plugin.resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>();
+      return await android?.canScheduleExactNotifications();
+    } catch (error, stackTrace) {
+      debugPrint('Reading exact alarm permission failed: $error\\n$stackTrace');
+      return null;
+    }
+  }
+
   static Future<bool?> notificationsAreEnabled() async {
     try {
       await _initialize();

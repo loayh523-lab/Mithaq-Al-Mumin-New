@@ -624,7 +624,11 @@ void main() {
       home: Directionality(textDirection: TextDirection.rtl, child: DhikrFortressPage()),
     ));
     await tester.pumpAndSettle();
-    expect(find.text('أذكار الصباح والمساء'), findsOneWidget);
+    expect(find.text('حصن الأذكار'), findsOneWidget);
+    expect(find.text('أقسام الأذكار'), findsOneWidget);
+    expect(find.textContaining('التسبيحات'), findsWidgets);
+    expect(find.textContaining('المناجاة'), findsWidgets);
+    expect(find.textContaining('العوذات'), findsWidgets);
     expect(find.text('أذكار الصباح'), findsOneWidget);
     await tester.tap(find.text('أذكار المساء'));
     await tester.pumpAndSettle();

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 const _dhikrGold = Color(0xFFD9B66D);
 const _dhikrSourceUrl = 'https://tableegh.imamali.net/?id=3117';
@@ -8,6 +9,7 @@ const _dhikrSourceUrl = 'https://tableegh.imamali.net/?id=3117';
 class _DhikrItem {
   const _DhikrItem({
     required this.id,
+    required this.category,
     required this.title,
     required this.text,
     required this.target,
@@ -16,6 +18,7 @@ class _DhikrItem {
   });
 
   final String id;
+  final String category;
   final String title;
   final String text;
   final int? target;
@@ -35,6 +38,7 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
   static const _items = <_DhikrItem>[
     _DhikrItem(
       id: 'shield-prayer',
+      category: 'المناجاة',
       title: 'دعاء الدرع الحصينة',
       text: 'اللهم اجعلني في درعك الحصينة التي تجعل فيها من تريد',
       target: 3,
@@ -42,6 +46,7 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
     ),
     _DhikrItem(
       id: 'salawat-prophetic',
+      category: 'المناجاة',
       title: 'الصلاة على النبي وآله',
       text: 'اللهم صل على محمد وآل محمد في الأولين، وصل على محمد وآل محمد في الآخرين، وصل على محمد وآل محمد في الملأ الأعلى، وصل على محمد وآل محمد في المرسلين. اللهم أعط محمداً الوسيلة والشرف والفضيلة والدرجة الكبيرة. اللهم إني آمنت بمحمد ولم أره، فلا تحرمني يوم القيامة رؤيته، وارزقني صحبته وتوفني على ملته، واسقني من حوضه مشرباً روياً سائغاً هنيئاً لا أظمأ بعده أبداً، إنك على كل شيء قدير. اللهم كما آمنت بمحمد ولم أره، فعرفني في الجنان وجهه. اللهم بلغ روح محمد عني تحية كثيرة وسلاماً.',
       target: 3,
@@ -49,6 +54,7 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
     ),
     _DhikrItem(
       id: 'mutaqallib',
+      category: 'المناجاة',
       title: 'دعاء تثبيت القلب',
       text: 'اللهم مقلب القلوب والأبصار، ثبت قلبي على دينك، ولا تزغ قلبي بعد إذ هديتني، وهب لي من لدنك رحمة إنك أنت الوهاب، وأجرني من النار برحمتك. اللهم امدد لي في عمري، وأوسع علي من رزقي، وانشر علي من رحمتك، وإن كنت عندك في أم الكتاب شقياً فاجعلني سعيداً، فإنك تمحو ما تشاء وتثبت وعندك أم الكتاب.',
       target: 3,
@@ -56,6 +62,7 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
     ),
     _DhikrItem(
       id: 'allah-allah',
+      category: 'التسبيحات',
       title: 'ذكر التوحيد',
       text: 'الله الله الله ربي الرحمن الرحيم، لا أشرك به شيئاً',
       target: null,
@@ -63,6 +70,7 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
     ),
     _DhikrItem(
       id: 'la-yadurru',
+      category: 'العوذات',
       title: 'بسم الله الذي لا يضر',
       text: 'بسم الله الذي لا يضر مع اسمه شيء في الأرض ولا في السماء وهو السميع العليم',
       target: 3,
@@ -70,6 +78,7 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
     ),
     _DhikrItem(
       id: 'la-hawla',
+      category: 'التسبيحات',
       title: 'لا حول ولا قوة إلا بالله',
       text: 'لا حول ولا قوة إلا بالله العلي العظيم',
       target: 10,
@@ -77,6 +86,7 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
     ),
     _DhikrItem(
       id: 'maqalid',
+      category: 'التسبيحات',
       title: 'دعاء المقاليد',
       text: 'لا إله إلا الله، والله أكبر، سبحان الله، والحمد لله، أستغفر الله، ولا حول ولا قوة إلا بالله، هو الأول والآخر، والظاهر والباطن، له الملك وله الحمد، يحيي ويميت وهو حي لا يموت، بيده الخير وهو على كل شيء قدير',
       target: 10,
@@ -84,6 +94,7 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
     ),
     _DhikrItem(
       id: 'nimat',
+      category: 'العوذات',
       title: 'دعاء النعمة والعافية والستر',
       text: 'اللهم إني أصبحت في نعمة منك وعافية وستر، فصل على محمد وآل محمد، وأتمم علي نعمتك وعافيتك وسترك',
       eveningText: 'اللهم إني أمسيت في نعمة منك وعافية وستر، فصل على محمد وآل محمد، وأتمم علي نعمتك وعافيتك وسترك',
@@ -95,9 +106,11 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
   final Map<String, int> _counts = <String, int>{};
   bool _loading = true;
   int _period = 0;
+  String _selectedCategory = 'الكل';
+  static const _categoryNames = ['الكل', 'التسبيحات', 'المناجاة', 'العوذات'];
 
   String get _periodName => _period == 0 ? 'صباح' : 'مساء';
-  List<_DhikrItem> get _visibleItems => _items;
+  List<_DhikrItem> get _visibleItems => _items.where((item) => _selectedCategory == 'الكل' || item.category == _selectedCategory).toList();
 
   String _key(String id) {
     final now = DateTime.now();
@@ -172,6 +185,15 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
 
   final TextEditingController _searchController = TextEditingController();
 
+  Future<void> _openSource() async {
+    try {
+      final opened = await launchUrl(Uri.parse(_dhikrSourceUrl), mode: LaunchMode.externalApplication);
+      if (!opened && mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('تعذّر فتح مصدر الأذكار.')));
+    } catch (_) {
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('تعذّر فتح مصدر الأذكار.')));
+    }
+  }
+
   @override
   void dispose() {
     _searchController.dispose();
@@ -190,7 +212,7 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('الأذكار'),
+        title: const Text('حصن الأذكار'),
         actions: [
           IconButton(
             tooltip: 'المفضلة قريباً',
@@ -253,6 +275,20 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
             ),
           ),
           const SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              for (final category in _categoryNames)
+                ChoiceChip(
+                  label: Text(category == 'الكل' ? 'كل الأذكار' : category + ' (' + _items.where((item) => item.category == category).length.toString() + ')'),
+                  selected: _selectedCategory == category,
+                  onSelected: (_) => setState(() => _selectedCategory = category),
+                  avatar: Icon(category == 'التسبيحات' ? Icons.fingerprint_rounded : category == 'المناجاة' ? Icons.volunteer_activism_rounded : category == 'العوذات' ? Icons.shield_moon_rounded : Icons.grid_view_rounded, size: 18, color: _dhikrGold),
+                ),
+            ],
+          ),
+          const SizedBox(height: 12),
           if (_loading)
             const Center(child: Padding(padding: EdgeInsets.all(24), child: CircularProgressIndicator()))
           else if (filtered.isEmpty)
@@ -273,12 +309,12 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
                     width: 44,
                     height: 44,
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.primary.withValues(alpha: .12),
+                      color: _dhikrGold.withValues(alpha: .14),
                       borderRadius: BorderRadius.circular(13),
                     ),
                     child: Icon(
                       complete ? Icons.check_circle_rounded : Icons.autorenew_rounded,
-                      color: theme.colorScheme.primary,
+                      color: _dhikrGold,
                     ),
                   ),
                   title: Text(item.title, style: const TextStyle(fontWeight: FontWeight.w700)),
@@ -310,7 +346,16 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
                       alignment: Alignment.centerRight,
                       child: Text('المصدر: ${item.source}', style: theme.textTheme.bodySmall?.copyWith(height: 1.5)),
                     ),
-                    const SizedBox(height: 12),
+                    Align(
+                      alignment: AlignmentDirectional.centerStart,
+                      child: TextButton.icon(
+                        onPressed: _openSource,
+                        icon: const Icon(Icons.open_in_new_rounded, size: 17),
+                        label: const Text('فتح مصدر الأذكار'),
+                        style: TextButton.styleFrom(foregroundColor: _dhikrGold),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
                     Row(
                       children: [
                         Expanded(

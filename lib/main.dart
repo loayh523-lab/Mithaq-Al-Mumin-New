@@ -251,6 +251,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    PrayerNotificationService.notificationTap.addListener(_handlePrayerNotificationTap);
     _refreshPrayerReminders();
     _loadDashboardData();
     _dashboardClock = Timer.periodic(const Duration(seconds: 30), (_) {
@@ -266,6 +267,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    PrayerNotificationService.notificationTap.removeListener(_handlePrayerNotificationTap);
     _dashboardClock?.cancel();
     super.dispose();
   }
@@ -334,8 +336,20 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
     }
   }
 
+  void _handlePrayerNotificationTap() {
+    final id = PrayerNotificationService.notificationTap.value;
+    if (id == null) return;
+    PrayerNotificationService.notificationTap.value = null;
+    if (!PrayerNotificationService.isPrayerNotificationId(id) || !mounted) return;
+    setState(() => _selected = 3);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _notice('تم فتح مواقيت الصلاة من الإشعار');
+    });
+  }
+
   Future<void> _refreshPrayerReminders() async {
     try {
+      await PrayerNotificationService.initialize();
       final prefs = await SharedPreferences.getInstance();
       if (prefs.getBool('prayer_notifications_enabled') ?? false) {
         final city = await PrayerLocations.load();

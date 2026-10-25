@@ -9,6 +9,7 @@ import 'prayer_locations.dart';
 class PrayerNotificationService {
   PrayerNotificationService._();
   static final FlutterLocalNotificationsPlugin _plugin = FlutterLocalNotificationsPlugin();
+  static final ValueNotifier<int?> notificationTap = ValueNotifier<int?>(null);
   static bool _initialized = false;
   static const int _idStart = 4000;
   static const int _daysToSchedule = 30;
@@ -18,6 +19,10 @@ class PrayerNotificationService {
   // when migrating the bundled adhan sound on existing installations.
   static const int _scheduleRevision = 12;
 
+  static bool isPrayerNotificationId(int id) => id >= _idStart && id < _idStart + _daysToSchedule * 10;
+
+  static Future<void> initialize() => _initialize();
+
   static Future<void> _initialize() async {
     if (_initialized) return;
     tz_data.initializeTimeZones();
@@ -25,7 +30,21 @@ class PrayerNotificationService {
     const settings = InitializationSettings(
       android: AndroidInitializationSettings('@mipmap/ic_launcher'),
     );
-    await _plugin.initialize(settings);
+    await _plugin.initialize(
+      settings,
+      onDidReceiveNotificationResponse: (response) {
+        if (isPrayerNotificationId(response.id)) {
+          notificationTap.value = response.id;
+        }
+      },
+    );
+    final launchDetails = await _plugin.getNotificationAppLaunchDetails();
+    final launchId = launchDetails?.notificationResponse?.id;
+    if ((launchDetails?.didNotificationLaunchApp ?? false) &&
+        launchId != null &&
+        isPrayerNotificationId(launchId)) {
+      notificationTap.value = launchId;
+    }
     _initialized = true;
   }
 

@@ -110,7 +110,7 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
   static const _categoryNames = ['الكل', 'التسبيحات', 'المناجاة', 'العوذات'];
 
   String get _periodName => _period == 0 ? 'صباح' : 'مساء';
-  List<_DhikrItem> get _visibleItems => _items.where((item) => _selectedCategory == 'الكل' || item.category == _selectedCategory).toList();
+  List<_DhikrItem> get _visibleItems => _items;
 
   String _key(String id) {
     final now = DateTime.now();
@@ -205,9 +205,11 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
     final theme = Theme.of(context);
     final query = _searchController.text.trim().toLowerCase();
     final filtered = _visibleItems.where((item) {
-      return query.isEmpty ||
+      final categoryMatches = _selectedCategory == 'الكل' || item.category == _selectedCategory;
+      final queryMatches = query.isEmpty ||
           item.title.toLowerCase().contains(query) ||
           item.textFor(_period).toLowerCase().contains(query);
+      return categoryMatches && queryMatches;
     }).toList();
 
     return Scaffold(

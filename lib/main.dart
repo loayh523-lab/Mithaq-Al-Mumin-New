@@ -1781,8 +1781,10 @@ class _TasbeehPageState extends State<TasbeehPage> {
       setState(() {
         _zahraMode = prefs.getBool('tasbeeh_zahra_mode') ?? true;
         _step = (prefs.getInt('tasbeeh_zahra_step') ?? 0).clamp(0, 2);
-        _count = (prefs.getInt('tasbeeh_zahra_count') ?? 0).clamp(0, 34);
-        _generalCount = prefs.getInt('tasbeeh_general_count') ?? 0;
+        _count = (prefs.getInt('tasbeeh_zahra_count') ?? 0)
+            .clamp(0, _steps[_step].target);
+        _generalCount = (prefs.getInt('tasbeeh_general_count') ?? 0)
+            .clamp(0, 2147483647);
         _loading = false;
       });
     } catch (_) {
@@ -1852,7 +1854,12 @@ class _TasbeehPageState extends State<TasbeehPage> {
       children: [
         Text('التسبيح', style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800)),
         SizedBox(height: 6),
-        if (_zahraMode) Text('عداد محفوظ على جهازك، مع تسبيح الزهراء عليها السلام بالترتيب', style: TextStyle(color: _themeMuted(context), height: 1.6)),
+        Text(
+          _zahraMode
+              ? 'عداد محفوظ على جهازك، مع تسبيح الزهراء عليها السلام بالترتيب'
+              : 'عداد عام مستقل محفوظ على جهازك، ويمكنك تصفيره متى شئت',
+          style: TextStyle(color: _themeMuted(context), height: 1.6),
+        ),
         SizedBox(height: 18),
         SegmentedButton<bool>(
           segments: const [
@@ -1886,7 +1893,7 @@ class _TasbeehPageState extends State<TasbeehPage> {
                       size: 20,
                     ),
                     SizedBox(width: 9),
-                    Expanded(child: Text('${_steps[i].title}: ${_steps[i].phrase}', style: TextStyle(color: i == _step ? Colors.white : _themeMuted(context), fontWeight: i == _step ? FontWeight.bold : FontWeight.normal))),
+                    Expanded(child: Text('${_steps[i].title}: ${_steps[i].phrase}', style: TextStyle(color: i == _step ? Theme.of(context).colorScheme.onSurface : _themeMuted(context), fontWeight: i == _step ? FontWeight.bold : FontWeight.normal))),
                     Text('${i == _step ? _count : i < _step ? _steps[i].target : 0}/${_steps[i].target}', style: TextStyle(color: _gold, fontWeight: FontWeight.bold)),
                   ]),
                 ),
@@ -1942,7 +1949,15 @@ class _TasbeehPageState extends State<TasbeehPage> {
               ),
             ),
             SizedBox(height: 10),
-            if (_zahraMode) Text('اضغط على الدائرة للتسبيح', style: TextStyle(color: _themeMuted(context))),
+            Text(
+              _zahraMode
+                  ? (_step == 2 && _count >= 33
+                      ? 'اكتمل التسبيح؛ يمكنك إعادة البدء لجولة جديدة'
+                      : 'اضغط على الدائرة للتسبيح')
+                  : 'اضغط على الدائرة لزيادة العداد',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: _themeMuted(context), height: 1.5),
+            ),
             SizedBox(height: 18),
             Wrap(alignment: WrapAlignment.center, spacing: 10, children: [
               OutlinedButton.icon(

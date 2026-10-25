@@ -19,6 +19,15 @@ class PrayerNotificationService {
   // when migrating the bundled adhan sound on existing installations.
   static const int _scheduleRevision = 13;
 
+  @visibleForTesting
+  static bool exactAlarmModeNeedsRefreshForTesting({
+    required bool? exactPermissionGranted,
+    required bool lastScheduleUsedExactAlarms,
+  }) {
+    if (exactPermissionGranted == null) return false;
+    return exactPermissionGranted != lastScheduleUsedExactAlarms;
+  }
+
   static bool isPrayerNotificationId(int id) => _isPrayerReminderId(id);
 
   @visibleForTesting
@@ -94,10 +103,20 @@ class PrayerNotificationService {
       if (prefs.getInt('prayer_schedule_revision') != _scheduleRevision) {
         return await configure(enabled: true, city: city);
       }
+      bool? exactPermissionGranted;
       if (defaultTargetPlatform == TargetPlatform.android) {
         final android = _plugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
         final enabled = await android?.areNotificationsEnabled();
         if (enabled == false) {
+          return await configure(enabled: true, city: city);
+        }
+        exactPermissionGranted = await android?.canScheduleExactNotifications();
+        final lastScheduleUsedExactAlarms =
+            prefs.getBool('prayer_schedule_exact_mode') ?? false;
+        if (exactAlarmModeNeedsRefreshForTesting(
+          exactPermissionGranted: exactPermissionGranted,
+          lastScheduleUsedExactAlarms: lastScheduleUsedExactAlarms,
+        )) {
           return await configure(enabled: true, city: city);
         }
       }
@@ -133,6 +152,7 @@ class PrayerNotificationService {
       await _initialize();
       final prefs = await SharedPreferences.getInstance();
       var scheduleMode = AndroidScheduleMode.inexactAllowWhileIdle;
+      var usesExactAlarms = false;
       if (defaultTargetPlatform == TargetPlatform.android) {
         final android = _plugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
         if (enabled) {
@@ -168,6 +188,7 @@ class PrayerNotificationService {
         }
         if (canScheduleExact) {
           scheduleMode = AndroidScheduleMode.exactAllowWhileIdle;
+          usesExactAlarms = true;
         }
       }
 
@@ -179,6 +200,7 @@ class PrayerNotificationService {
       }
       if (!enabled) {
         await prefs.setBool('prayer_notifications_enabled', false);
+        await prefs.setBool('prayer_schedule_exact_mode', false);
         await prefs.setInt('prayer_schedule_revision', _scheduleRevision);
         return true;
       }
@@ -281,8 +303,10 @@ class PrayerNotificationService {
           .length;
       if (prayerReminders == 0) {
         await prefs.setBool('prayer_notifications_enabled', false);
+        await prefs.setBool('prayer_schedule_exact_mode', usesExactAlarms);
         return false;
       }
+      await prefs.setBool('prayer_schedule_exact_mode', usesExactAlarms);
       await prefs.setInt('prayer_schedule_revision', _scheduleRevision);
       await prefs.setBool('prayer_notifications_enabled', true);
       return true;

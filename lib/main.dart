@@ -493,37 +493,36 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
       (
         title: 'العبادات',
         items: [
-          _sectionGridItem(icon: Icons.menu_book_rounded, title: 'القرآن الكريم', color: const Color(0xFFD4EEE0), onTap: () => _pushPage(const QuranIndexPage())),
-          _sectionGridItem(icon: Icons.auto_awesome_rounded, title: 'الأدعية والزيارات', color: const Color(0xFFF1DDF0), onTap: () => _pushPage(_duaPage())),
-          _sectionGridItem(icon: Icons.shield_moon_rounded, title: 'حصن الأذكار', color: const Color(0xFFD8E6F8), onTap: () => _pushPage(const DhikrFortressPage())),
-          _sectionGridItem(icon: Icons.fingerprint_rounded, title: 'التسبيح', color: const Color(0xFFE9EAC0), onTap: () => _pushPage(const TasbeehPage())),
-          _sectionGridItem(icon: Icons.menu_book_rounded, title: 'تعقيبات الصلاة', color: const Color(0xFFE6F0D8), onTap: () => _pushPage(const ShiaTextLibraryPage(initialCategory: 'التعقيبات بعد الصلاة'))),
-          _sectionGridItem(icon: Icons.volunteer_activism_rounded, title: 'الأعمال الصالحة', color: const Color(0xFFD8E6F8), onTap: () => _pushPage(const GoodDeedsPage())),
-          _sectionGridItem(icon: Icons.calculate_rounded, title: 'عداد الركعات', color: const Color(0xFFF2D7E7), onTap: () => _pushPage(const RakahCounterPage())),
-          _sectionGridItem(icon: Icons.history_edu_rounded, title: 'قضاء العبادات', color: const Color(0xFFEDE0D1), onTap: () => _pushPage(const QadaTrackerPage())),
-          _sectionGridItem(icon: Icons.event_available_rounded, title: 'متابعة الصلاة', color: const Color(0xFFD9F0E9), onTap: () => _pushPage(const PrayerTrackerPage())),
+          _sectionGridItem(icon: Icons.menu_book_rounded, title: 'القرآن الكريم', onTap: () => _pushPage(const QuranIndexPage())),
+          _sectionGridItem(icon: Icons.auto_awesome_rounded, title: 'الأدعية والزيارات', onTap: () => _pushPage(_duaPage())),
+          _sectionGridItem(icon: Icons.shield_moon_rounded, title: 'حصن الأذكار', onTap: () => _pushPage(const DhikrFortressPage())),
+          _sectionGridItem(icon: Icons.fingerprint_rounded, title: 'التسبيح', onTap: () => _pushPage(const TasbeehPage())),
+          _sectionGridItem(icon: Icons.menu_book_rounded, title: 'تعقيبات الصلاة', onTap: () => _pushPage(const ShiaTextLibraryPage(initialCategory: 'التعقيبات بعد الصلاة'))),
+          _sectionGridItem(icon: Icons.volunteer_activism_rounded, title: 'الأعمال الصالحة', onTap: () => _pushPage(const GoodDeedsPage())),
+          _sectionGridItem(icon: Icons.calculate_rounded, title: 'عداد الركعات', onTap: () => _pushPage(const RakahCounterPage())),
+          _sectionGridItem(icon: Icons.history_edu_rounded, title: 'قضاء العبادات', onTap: () => _pushPage(const QadaTrackerPage())),
+          _sectionGridItem(icon: Icons.event_available_rounded, title: 'متابعة الصلاة', onTap: () => _pushPage(const PrayerTrackerPage())),
         ],
       ),
       (
         title: 'الخدمات',
         items: [
-          _sectionGridItem(icon: Icons.access_time_rounded, title: 'أوقات الصلاة', color: const Color(0xFFE9EAC0), onTap: () => _pushPage(PrayerCalendarPage(onLocationChanged: _handleLocationChanged, onHijriCorrectionChanged: _loadDashboardData))),
-          _sectionGridItem(icon: Icons.explore_rounded, title: 'اتجاه القبلة', color: const Color(0xFFD8E6F8), onTap: () => _pushPage(QiblaPage(onLocationChanged: _handleLocationChanged))),
-          _sectionGridItem(icon: Icons.bookmark_added_rounded, title: 'ختمة القرآن', color: const Color(0xFFD4EEE0), onTap: () => _pushPage(const KhatmaPage())),
-          _sectionGridItem(icon: Icons.manage_search_rounded, title: 'الباحث الذكي', color: const Color(0xFFDCD9F6), onTap: () => _pushPage(const SmartSearchPage())),
-          _sectionGridItem(icon: Icons.brightness_5_rounded, title: 'أسماء الله الحسنى', color: const Color(0xFFE9EAC0), onTap: () => _pushPage(const NamesOfAllahPage())),
-          _sectionGridItem(icon: Icons.collections_bookmark_rounded, title: 'مكتبة النصوص', color: const Color(0xFFEDE0D1), onTap: () => _pushPage(const ShiaTextLibraryPage())),
-          _sectionGridItem(icon: Icons.support_agent_rounded, title: 'الخدمات الإيمانية', color: const Color(0xFFD4EEE0), onTap: () => _pushPage(const FaithServicesPage())),
-          _sectionGridItem(icon: Icons.info_outline_rounded, title: 'عن التطبيق والدعم', color: const Color(0xFFF2D7E7), onTap: () => _pushPage(const AboutSupportPage())),
+          _sectionGridItem(icon: Icons.access_time_rounded, title: 'أوقات الصلاة', onTap: () => _pushPage(PrayerCalendarPage(onLocationChanged: _handleLocationChanged, onHijriCorrectionChanged: _loadDashboardData))),
+          _sectionGridItem(icon: Icons.explore_rounded, title: 'اتجاه القبلة', onTap: () => _pushPage(QiblaPage(onLocationChanged: _handleLocationChanged))),
+          _sectionGridItem(icon: Icons.bookmark_added_rounded, title: 'ختمة القرآن', onTap: () => _pushPage(const KhatmaPage())),
+          _sectionGridItem(icon: Icons.manage_search_rounded, title: 'الباحث الذكي', onTap: () => _pushPage(const SmartSearchPage())),
+          _sectionGridItem(icon: Icons.brightness_5_rounded, title: 'أسماء الله الحسنى', onTap: () => _pushPage(const NamesOfAllahPage())),
+          _sectionGridItem(icon: Icons.support_agent_rounded, title: 'الخدمات الإيمانية', onTap: () => _pushPage(const FaithServicesPage())),
+          _sectionGridItem(icon: Icons.info_outline_rounded, title: 'عن التطبيق والدعم', onTap: () => _pushPage(const AboutSupportPage())),
         ],
       ),
       (
         title: 'المناسبات',
         items: [
-          _sectionGridItem(icon: Icons.calendar_month_rounded, title: 'أعمال المناسبات', color: const Color(0xFFDCD9F6), onTap: () => _pushPage(const ShiaTextLibraryPage(initialCategory: 'الأعمال والمناسبات'))),
-          _sectionGridItem(icon: Icons.location_on_rounded, title: 'زيارة الأربعين', color: const Color(0xFFD8E6F8), onTap: () => _pushPage(const ArbaeenGuidePage())),
-          _sectionGridItem(icon: Icons.explore_rounded, title: 'الاستخارة القرآنية', color: const Color(0xFFF1DDF0), onTap: () => _pushPage(const IstikharaGuidePage())),
-          _sectionGridItem(icon: Icons.mosque_rounded, title: 'الزيارات الشريفة', color: const Color(0xFFD4EEE0), onTap: () => _pushPage(const ShiaTextLibraryPage(initialCategory: 'الزيارات الشريفة'))),
+          _sectionGridItem(icon: Icons.calendar_month_rounded, title: 'أعمال المناسبات', onTap: () => _pushPage(const ShiaTextLibraryPage(initialCategory: 'الأعمال والمناسبات'))),
+          _sectionGridItem(icon: Icons.location_on_rounded, title: 'زيارة الأربعين', onTap: () => _pushPage(const ArbaeenGuidePage())),
+          _sectionGridItem(icon: Icons.explore_rounded, title: 'الاستخارة القرآنية', onTap: () => _pushPage(const IstikharaGuidePage())),
+          _sectionGridItem(icon: Icons.mosque_rounded, title: 'الزيارات الشريفة', onTap: () => _pushPage(const ShiaTextLibraryPage(initialCategory: 'الزيارات الشريفة'))),
         ],
       ),
     ];
@@ -568,12 +567,16 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
             ),
           ),
           GridView.count(
-            crossAxisCount: 4,
+            crossAxisCount: MediaQuery.sizeOf(context).width >= 700
+                ? 5
+                : MediaQuery.sizeOf(context).width >= 480
+                    ? 4
+                    : 3,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             mainAxisSpacing: 10,
             crossAxisSpacing: 4,
-            childAspectRatio: .76,
+            childAspectRatio: .90,
             children: groups[index].items,
           ),
           if (index < groups.length - 1) ...[
@@ -589,7 +592,6 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
   Widget _sectionGridItem({
     required IconData icon,
     required String title,
-    required Color color,
     required VoidCallback onTap,
   }) => InkWell(
     onTap: onTap,
@@ -603,7 +605,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
             width: 54,
             height: 54,
             decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-            child: Icon(icon, color: const Color(0xFF375F4D), size: 27),
+            child: Icon(icon, size: 27),
           ),
           const SizedBox(height: 7),
           SizedBox(
@@ -737,10 +739,9 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
                 _drawerSectionTitle('المعرفة والمناسبات', Icons.local_library_rounded),
                 _drawerGrid(
                   children: [
-                    _drawerGridItem(Icons.calendar_month_rounded, 'التقويم الهجري', () => _openDrawerPage(PrayerCalendarPage(onLocationChanged: _handleLocationChanged, onHijriCorrectionChanged: _loadDashboardData))),
+                    _drawerGridItem(Icons.calendar_month_rounded, 'التقويم الهجري', () => _openDrawerPage(PrayerCalendarPage(initialTab: 2, onLocationChanged: _handleLocationChanged, onHijriCorrectionChanged: _loadDashboardData))),
                     _drawerGridItem(Icons.brightness_5_rounded, 'أسماء الله الحسنى', () => _openDrawerPage(const NamesOfAllahPage())),
                     _drawerGridItem(Icons.manage_search_rounded, 'الباحث الذكي', () => _openDrawerPage(const SmartSearchPage())),
-                    _drawerGridItem(Icons.collections_bookmark_rounded, 'مكتبة النصوص', () => _openDrawerPage(const ShiaTextLibraryPage())),
                     _drawerGridItem(Icons.support_agent_rounded, 'الخدمات الإيمانية', () => _openDrawerPage(const FaithServicesPage())),
                     _drawerGridItem(Icons.info_outline_rounded, 'عن التطبيق والدعم', () => _openDrawerPage(const AboutSupportPage())),
                   ],
@@ -1278,7 +1279,10 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
               Align(
                 alignment: AlignmentDirectional.centerEnd,
                 child: TextButton.icon(
-                  onPressed: () => setState(() => _selected = 3),
+                  onPressed: () => _pushPage(PrayerCalendarPage(
+                    onLocationChanged: _handleLocationChanged,
+                    onHijriCorrectionChanged: _loadDashboardData,
+                  )),
                   icon: Icon(Icons.calendar_month_rounded, size: 18),
                   label: Text('عرض مواقيت الصلوات الخمس'),
                   style: TextButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.secondary),

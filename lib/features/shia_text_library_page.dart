@@ -733,23 +733,54 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
                   );
                 }),
                 const Divider(color: Color(0x334A7562)),
-                Text('هذا النص منقول من قاعدة البيانات المذكورة أدناه. رقم السجل والرابط يحدّدان موضعه في مجموعة البيانات، ولا يغنيان عن مراجعة الكتاب الأصلي وتوثيق الرواية. قد تختلف الضبطات أو ترتيب الفقرات بين الطبعات.', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.7, fontSize: 11)),
-                if (widget.entry.sourceReference.isNotEmpty) ...[
-                  const SizedBox(height: 6),
-                  SelectableText(
-                    'موضع السجل في قاعدة البيانات: ${widget.entry.sourceReference}',
-                    textDirection: TextDirection.rtl,
-                    style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11, height: 1.6),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: _shiaGold.withValues(alpha: .22)),
                   ),
-                ],
-                if (widget.entry.sourceUrl.isNotEmpty) ...[
-                  const SizedBox(height: 6),
-                  SelectableText(
-                    'رابط قاعدة البيانات: ${widget.entry.sourceUrl}',
-                    textDirection: TextDirection.ltr,
-                    style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.entry.sourceReference.trim().isNotEmpty
+                            ? 'المرجع المنقول عنه: ${widget.entry.sourceReference}'
+                            : 'المرجع الأصلي: غير موثّق في بيانات هذا النص',
+                        textDirection: TextDirection.rtl,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface,
+                          fontWeight: FontWeight.w700,
+                          height: 1.7,
+                          fontSize: 12,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'يُعرض موضع المرجع كما ورد في بيانات النص، ولا يُعدّ توثيقاً مستقلاً للرواية ما لم يتضمن كتاباً وموضعاً يمكن مراجعتهما.',
+                        textDirection: TextDirection.rtl,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          height: 1.6,
+                          fontSize: 11,
+                        ),
+                      ),
+                      if (widget.entry.sourceUrl.trim().isNotEmpty) ...[
+                        const SizedBox(height: 8),
+                        SelectableText(
+                          'مصدر البيانات الإلكتروني: ${widget.entry.sourceUrl}',
+                          textDirection: TextDirection.ltr,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            fontSize: 10,
+                            height: 1.5,
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
-                ],
+                ),
               ],
             )),
       ]),

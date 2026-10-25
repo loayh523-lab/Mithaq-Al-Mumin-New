@@ -150,6 +150,37 @@ void main() {
     expect(arabicLine.isPersian, isFalse);
   });
 
+  test('exact-alarm permission changes trigger a schedule refresh', () {
+    expect(
+      PrayerNotificationService.exactAlarmModeNeedsRefreshForTesting(
+        exactPermissionGranted: true,
+        lastScheduleUsedExactAlarms: false,
+      ),
+      isTrue,
+    );
+    expect(
+      PrayerNotificationService.exactAlarmModeNeedsRefreshForTesting(
+        exactPermissionGranted: false,
+        lastScheduleUsedExactAlarms: true,
+      ),
+      isTrue,
+    );
+    expect(
+      PrayerNotificationService.exactAlarmModeNeedsRefreshForTesting(
+        exactPermissionGranted: true,
+        lastScheduleUsedExactAlarms: true,
+      ),
+      isFalse,
+    );
+    expect(
+      PrayerNotificationService.exactAlarmModeNeedsRefreshForTesting(
+        exactPermissionGranted: null,
+        lastScheduleUsedExactAlarms: false,
+      ),
+      isFalse,
+    );
+  });
+
   test('prayer notification IDs keep early alerts separate from adhan reminders', () {
     expect(PrayerNotificationService.isPrayerReminderNotificationIdForTesting(3999), isFalse);
     expect(PrayerNotificationService.isPrayerReminderNotificationIdForTesting(4000), isTrue);

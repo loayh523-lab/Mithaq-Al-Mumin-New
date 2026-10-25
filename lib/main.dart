@@ -602,10 +602,22 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
-            width: 54,
-            height: 54,
-            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-            child: Icon(icon, size: 27),
+            width: 52,
+            height: 52,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary.withValues(
+                    alpha: Theme.of(context).brightness == Brightness.dark ? .22 : .12,
+                  ),
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: Theme.of(context).colorScheme.primary.withValues(alpha: .24),
+              ),
+            ),
+            child: Icon(
+              icon,
+              color: Theme.of(context).colorScheme.primary,
+              size: 26,
+            ),
           ),
           const SizedBox(height: 7),
           SizedBox(

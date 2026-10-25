@@ -62,6 +62,15 @@ void main() {
     expect(find.text('التاريخ الهجري'), findsNothing);
   });
 
+  testWidgets('sections grid does not duplicate the prayer-taqibat library shortcut', (tester) async {
+    await tester.pumpWidget(const MithaqApp());
+    await tester.tap(find.text('الأقسام').last);
+    await tester.pumpAndSettle();
+
+    expect(find.text('الأدعية والزيارات'), findsOneWidget);
+    expect(find.text('تعقيبات الصلاة'), findsNothing);
+  });
+
   testWidgets('home screen shows the agreed dashboard and drawer navigation opens tasbeeh', (tester) async {
     await tester.pumpWidget(const MithaqApp());
     expect(find.text('ميثاق المؤمن'), findsWidgets);

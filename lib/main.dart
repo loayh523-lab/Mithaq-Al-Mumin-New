@@ -240,11 +240,29 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
 
   static const _dailyTasks = <String>[
     'اقرأ صفحة من القرآن الكريم بتدبّر',
-    'استغفر الله 100 مرة',
+    'استغفر الله وأتوب إليه، واجعل لك وقتاً للاستغفار',
     'صلِّ على محمد وآل محمد 100 مرة',
     'اقرأ سورة الإخلاص وتدبّر معناها',
     'قدّم مساعدة لأحد من أهلك',
     'راجع صلواتك الخمس واهتم بأدائها في وقتها',
+    'اقرأ تسبيح الزهراء عليها السلام بعد إحدى الصلوات',
+    'اقرأ دعاءً قصيراً وتمعّن بمعناه',
+    'تصدّق بما تستطيع أو اقضِ حاجة محتاج',
+    'صِل رحماً أو اتصل بقريب للاطمئنان عليه',
+    'اقرأ آية الكرسي بتدبّر',
+    'سبّح الله واحمده وهلّله وكبّره',
+    'اقرأ زيارة قصيرة لأحد أهل البيت عليهم السلام',
+    'راجع عملاً صالحاً تستطيع المداومة عليه',
+    'أصلح خلافاً أو اعتذر إذا أخطأت',
+    'أكثر من الصلاة على محمد وآل محمد يوم الجمعة',
+    'اقرأ دعاء الندبة يوم الجمعة إن تيسّر',
+    'تذكّر إمام الزمان عجل الله فرجه وادعُ بتعجيل الفرج',
+    'خصّص دقائق لمحاسبة النفس من دون قسوة عليها',
+    'اقرأ حديثاً موثوقاً وتعلّم منه عملاً',
+    'ساعد في عمل منزلي من دون انتظار طلب',
+    'اقرأ شيئاً من نهج البلاغة وتدبّر حكمته',
+    'أحسن إلى جار أو زميل بكلمة طيبة',
+    'اختم يومك بالشكر على نعمة تتذكرها',
   ];
 
   @override
@@ -1068,7 +1086,9 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
   Widget _homePage() {
     final dayOfYear = DateTime(_now.year, _now.month, _now.day)
         .difference(DateTime(_now.year, 1, 1)).inDays;
-    final dailyTask = _dailyTasks[dayOfYear % _dailyTasks.length];
+    final hijriParts = hijriDateParts(_now, correction: _hijriCorrection);
+    final hijriDayIndex = ((hijriParts.month - 1) * 30) + hijriParts.day - 1;
+    final dailyTask = _dailyTasks[hijriDayIndex % _dailyTasks.length];
     final inspiration = _dailyInspirations[(dayOfYear + _inspirationOffset) % _dailyInspirations.length];
     final occasion = hijriOccasionLabel(_now, correction: _hijriCorrection);
     final prayerTimes = SolarPrayerTimes.forDate(
@@ -1536,7 +1556,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
                       children: [
                         Text('وِرد اليوم', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900)),
                         SizedBox(height: 2),
-                        Text('أعمال تتجدّد كل يوم', style: TextStyle(color: _themeMuted(context), fontSize: 12)),
+                        Text('عمل يتجدّد بحسب التاريخ الهجري', style: TextStyle(color: _themeMuted(context), fontSize: 12)),
                       ],
                     ),
                   ),
@@ -1560,13 +1580,13 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
                   activeColor: _emerald,
                   checkColor: Colors.white,
                   controlAffinity: ListTileControlAffinity.leading,
-                  title: Text('عمل اليوم المختار', style: TextStyle(fontWeight: FontWeight.w800)),
+                  title: Text('عمل اليوم الهجري', style: TextStyle(fontWeight: FontWeight.w800)),
                   subtitle: Text(dailyTask, style: TextStyle(color: _themeMuted(context), height: 1.6)),
                 ),
               ),
               SizedBox(height: 2),
               Text(
-                'تتغيّر الأعمال المقترحة تلقائياً مع تغيّر اليوم، وتُحفظ علامة إنجاز العمل المختار لكل يوم.',
+                'يتغيّر العمل المقترح بحسب اليوم الهجري بعد تطبيق تصحيح التاريخ، وتُحفظ علامة الإنجاز لكل يوم ميلادي حتى لا تضيع متابعة إنجازك.',
                 style: TextStyle(color: _themeMuted(context), fontSize: 11, height: 1.6),
               ),
             ],

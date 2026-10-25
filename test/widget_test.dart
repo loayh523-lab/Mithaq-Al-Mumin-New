@@ -71,6 +71,64 @@ void main() {
     expect(find.text('تعقيبات الصلاة'), findsNothing);
   });
 
+  testWidgets('home and section grid stay inside a narrow phone in both themes', (tester) async {
+    tester.view.physicalSize = const Size(320, 720);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(const MithaqApp());
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull, reason: 'dark home dashboard');
+
+    await AppTheme.setDark(false);
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull, reason: 'light home dashboard');
+
+    await tester.tap(find.text('الأقسام').last);
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull, reason: 'light sections grid');
+
+    await tester.tap(find.byIcon(Icons.menu));
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull, reason: 'light navigation drawer');
+  });
+
+  test('generic prayer-taqibat labels are derived from their own Arabic text', () {
+    const first = ShiaTextEntry(
+      slug: 'taqib-after-salaat-01',
+      title: 'تعقيبات الصلاة',
+      alternateName: '',
+      type: 'taqibat',
+      sourceUrl: '',
+      lines: <ShiaTextLine>[
+        ShiaTextLine(
+          index: 1,
+          kind: 'arabic',
+          text: 'بسم الله الرحمن الرحيم اللهم إني أسألك من فضلك ورحمتك',
+        ),
+      ],
+    );
+    const second = ShiaTextEntry(
+      slug: 'taqib-after-salaat-02',
+      title: 'تعقيبات الصلاة',
+      alternateName: '',
+      type: 'taqibat',
+      sourceUrl: '',
+      lines: <ShiaTextLine>[
+        ShiaTextLine(
+          index: 1,
+          kind: 'arabic',
+          text: 'بسم الله الرحمن الرحيم اللهم ارزقني التوفيق لما تحب وترضى',
+        ),
+      ],
+    );
+
+    expect(first.displayTitle, startsWith('تعقيب بعد الصلاة — '));
+    expect(second.displayTitle, startsWith('تعقيب بعد الصلاة — '));
+    expect(first.displayTitle, isNot(second.displayTitle));
+  });
+
   testWidgets('home screen shows the agreed dashboard and drawer navigation opens tasbeeh', (tester) async {
     await tester.pumpWidget(const MithaqApp());
     expect(find.text('ميثاق المؤمن'), findsWidgets);

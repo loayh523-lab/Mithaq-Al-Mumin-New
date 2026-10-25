@@ -119,6 +119,7 @@ class _FiqhTopicsPageState extends State<FiqhTopicsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     final query = _search.text.trim();
     final visibleTopics = _fiqhTopics.where((topic) {
       if (query.isEmpty) return true;
@@ -135,25 +136,25 @@ class _FiqhTopicsPageState extends State<FiqhTopicsPage> {
           Container(
             padding: const EdgeInsets.all(17),
             decoration: BoxDecoration(
-              color: _libraryPanel,
+              color: scheme.surface,
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: _libraryGold.withValues(alpha: .32)),
+              border: Border.all(color: scheme.secondary.withValues(alpha: .32)),
             ),
-            child: const Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'دليل أبواب الفقه',
                   style: TextStyle(
-                    color: _libraryGold,
+                    color: scheme.secondary,
                     fontWeight: FontWeight.w800,
                     fontSize: 21,
                   ),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
                   'هذا فهرس يساعدك على تحديد موضوع المسألة، وليس موسوعة فتاوى محفوظة دون إنترنت. افتح المصدر الرسمي لمكتب السيد علي الخامنئي، ثم طابق الجواب مع مرجع تقليدك قبل العمل به.',
-                  style: TextStyle(color: _libraryMuted, height: 1.7),
+                  style: TextStyle(color: scheme.onSurfaceVariant, height: 1.7),
                 ),
               ],
             ),
@@ -166,7 +167,7 @@ class _FiqhTopicsPageState extends State<FiqhTopicsPage> {
               hintText: 'ابحث عن باب فقهي...',
               prefixIcon: const Icon(Icons.search_rounded),
               filled: true,
-              fillColor: _libraryPanel,
+              fillColor: scheme.surfaceContainerHighest.withValues(alpha: .45),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15),
                 borderSide: BorderSide.none,
@@ -176,7 +177,7 @@ class _FiqhTopicsPageState extends State<FiqhTopicsPage> {
           const SizedBox(height: 10),
           for (final topic in visibleTopics)
             Card(
-              color: _libraryPanel,
+              color: scheme.surface,
               margin: const EdgeInsets.only(bottom: 9),
               child: Padding(
                 padding: const EdgeInsets.all(14),
@@ -185,12 +186,13 @@ class _FiqhTopicsPageState extends State<FiqhTopicsPage> {
                   children: [
                     Row(
                       children: [
-                        Icon(topic.icon, color: _libraryGold, size: 25),
+                        Icon(topic.icon, color: scheme.secondary, size: 25),
                         const SizedBox(width: 10),
                         Expanded(
                           child: Text(
                             topic.title,
-                            style: const TextStyle(
+                            style: TextStyle(
+                              color: scheme.onSurface,
                               fontWeight: FontWeight.w800,
                               fontSize: 16,
                             ),
@@ -201,8 +203,8 @@ class _FiqhTopicsPageState extends State<FiqhTopicsPage> {
                     const SizedBox(height: 7),
                     Text(
                       topic.description,
-                      style: const TextStyle(
-                        color: _libraryMuted,
+                      style: TextStyle(
+                        color: scheme.onSurfaceVariant,
                         height: 1.55,
                       ),
                     ),
@@ -228,16 +230,20 @@ class _FiqhTopicsPageState extends State<FiqhTopicsPage> {
               ),
             ),
           if (visibleTopics.isEmpty)
-            const Padding(
-              padding: EdgeInsets.all(24),
+            Padding(
+              padding: const EdgeInsets.all(24),
               child: Center(
-                child: Text('ما لقينا باباً مطابقاً لبحثك.'),
+                child: Text(
+                  'ما لقينا باباً مطابقاً لبحثك.',
+                  style: TextStyle(color: scheme.onSurfaceVariant),
+                ),
               ),
             ),
         ],
       ),
     );
   }
+
 }
 
 class _NahjWisdom {
@@ -334,6 +340,7 @@ class _NahjAlBalaghaPageState extends State<NahjAlBalaghaPage> {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     final query = _search.text.trim().toLowerCase();
     final visible = _nahjWisdoms.where((item) =>
         query.isEmpty ||
@@ -348,25 +355,34 @@ class _NahjAlBalaghaPageState extends State<NahjAlBalaghaPage> {
           Container(
             padding: const EdgeInsets.all(17),
             decoration: BoxDecoration(
-              color: _libraryPanel,
+              color: scheme.surface,
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: _libraryGold.withValues(alpha: .32)),
+              border: Border.all(color: scheme.secondary.withValues(alpha: .32)),
             ),
-            child: const Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'مختارات من الحكم',
                   style: TextStyle(
-                    color: _libraryGold,
+                    color: scheme.secondary,
                     fontWeight: FontWeight.w800,
                     fontSize: 21,
                   ),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
-                  'هذه بداية لمختارات عربية مع شرح مبسّط وروابط توثيق. ليست النسخة الكاملة من نهج البلاغة؛ وقد يختلف ترقيم الحكم بين الطبعات. تحتاج المكتبة الكاملة إلى إدراج نص عربي موثوق ومراجعته.',
-                  style: TextStyle(color: _libraryMuted, height: 1.7),
+                  'المتوفر دون إنترنت هنا ثماني حكم مختارة مع شرح مبسّط، وليس النص الكامل لنهج البلاغة. افتح المصدر الخارجي لقراءة الخطب والرسائل والحِكم كاملة؛ يحتاج ذلك إلى الإنترنت.',
+                  style: TextStyle(color: scheme.onSurfaceVariant, height: 1.7),
+                ),
+                const SizedBox(height: 12),
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton.tonalIcon(
+                    onPressed: () => _openSource('https://arabic.balaghah.net/'),
+                    icon: const Icon(Icons.open_in_new_rounded),
+                    label: const Text('فتح نهج البلاغة الكامل عبر المصدر الخارجي'),
+                  ),
                 ),
               ],
             ),
@@ -379,7 +395,7 @@ class _NahjAlBalaghaPageState extends State<NahjAlBalaghaPage> {
               hintText: 'ابحث في الحكم ومعانيها...',
               prefixIcon: const Icon(Icons.search_rounded),
               filled: true,
-              fillColor: _libraryPanel,
+              fillColor: scheme.surfaceContainerHighest.withValues(alpha: .45),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15),
                 borderSide: BorderSide.none,
@@ -389,7 +405,7 @@ class _NahjAlBalaghaPageState extends State<NahjAlBalaghaPage> {
           const SizedBox(height: 10),
           for (var i = 0; i < visible.length; i++)
             Card(
-              color: _libraryPanel,
+              color: scheme.surface,
               margin: const EdgeInsets.only(bottom: 10),
               child: Padding(
                 padding: const EdgeInsets.all(16),
@@ -400,11 +416,11 @@ class _NahjAlBalaghaPageState extends State<NahjAlBalaghaPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         CircleAvatar(
-                          backgroundColor: _libraryGold.withValues(alpha: .15),
+                          backgroundColor: scheme.secondary.withValues(alpha: .15),
                           child: Text(
                             '${i + 1}',
-                            style: const TextStyle(
-                              color: _libraryGold,
+                            style: TextStyle(
+                              color: scheme.secondary,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -414,11 +430,11 @@ class _NahjAlBalaghaPageState extends State<NahjAlBalaghaPage> {
                           child: Text(
                             visible[i].text,
                             textAlign: TextAlign.right,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 21,
                               height: 1.9,
                               fontWeight: FontWeight.w700,
-                              color: Colors.white,
+                              color: scheme.onSurface,
                             ),
                           ),
                         ),
@@ -427,14 +443,15 @@ class _NahjAlBalaghaPageState extends State<NahjAlBalaghaPage> {
                     const SizedBox(height: 10),
                     Text(
                       visible[i].meaning,
-                      style: const TextStyle(
-                        color: _libraryMuted,
+                      style: TextStyle(
+                        color: scheme.onSurfaceVariant,
                         height: 1.7,
                       ),
                     ),
                     const SizedBox(height: 10),
                     Wrap(
                       spacing: 8,
+                      runSpacing: 4,
                       children: [
                         TextButton.icon(
                           onPressed: () => _copyWisdom(visible[i].text),
@@ -453,12 +470,18 @@ class _NahjAlBalaghaPageState extends State<NahjAlBalaghaPage> {
               ),
             ),
           if (visible.isEmpty)
-            const Padding(
-              padding: EdgeInsets.all(24),
-              child: Center(child: Text('ما لقينا حكمة مطابقة.')),
+            Padding(
+              padding: const EdgeInsets.all(24),
+              child: Center(
+                child: Text(
+                  'ما لقينا حكمة مطابقة.',
+                  style: TextStyle(color: scheme.onSurfaceVariant),
+                ),
+              ),
             ),
         ],
       ),
     );
   }
+
 }

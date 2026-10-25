@@ -386,6 +386,27 @@ class _SettingsPageState extends State<SettingsPage> {
               activeThumbColor: _settingsGold,
             ),
           ),
+          ExpansionTile(
+            key: const ValueKey('advanced-prayer-notifications'),
+            tilePadding: EdgeInsets.zero,
+            childrenPadding: const EdgeInsets.only(bottom: 10),
+            leading: Icon(
+              Icons.tune_rounded,
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+            title: const Text(
+              'خيارات الأذان المتقدمة',
+              style: TextStyle(fontWeight: FontWeight.w800),
+            ),
+            subtitle: Text(
+              'تخصيص الصلوات، تجربة الصوت، فحص الجدولة وحلول الخلفية',
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                fontSize: 12,
+                height: 1.5,
+              ),
+            ),
+            children: [
           const SizedBox(height: 10),
           Text(
             'تخصيص تنبيهات كل صلاة',
@@ -522,6 +543,9 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ),
 
+
+            ],
+          ),
         ],
       ),
       const SizedBox(height: 14),

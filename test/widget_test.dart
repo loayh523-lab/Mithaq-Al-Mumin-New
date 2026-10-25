@@ -109,7 +109,9 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('تسبيح الزهراء'), findsOneWidget);
     expect(find.text('تسبيح عام'), findsOneWidget);
-    expect(find.text('مراحل تسبيح الزهراء عليها السلام'), findsOneWidget);
+    expect(find.text('مراحل التسبيح'), findsOneWidget);
+    expect(find.text('34 تكبيرة، ثم 33 تحميدة، ثم 33 تسبيحة'), findsOneWidget);
+    expect(find.text('اضغط على الدائرة للتسبيح'), findsOneWidget);
   });
  
 

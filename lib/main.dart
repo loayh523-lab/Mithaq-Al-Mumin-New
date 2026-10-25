@@ -1101,90 +1101,19 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 28),
       children: [
-        // The two calendars are integrated into the atmospheric home background,
-        // rather than being presented as a separate date card.
-        Container(
-          constraints: const BoxConstraints(minHeight: 220),
-          padding: const EdgeInsets.fromLTRB(20, 18, 20, 22),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(28),
-            border: Border.all(
-              color: scheme.secondary.withValues(alpha: isDark ? .22 : .12),
-            ),
-            gradient: LinearGradient(
-              begin: Alignment.topRight,
-              end: Alignment.bottomLeft,
-              colors: isDark
-                  ? const [
-                      Color(0xFF1E4B38),
-                      Color(0xFF0D261D),
-                      Color(0xFF071713),
-                    ]
-                  : const [
-                      Color(0xFFE1EFE2),
-                      Color(0xFFF0F5EC),
-                      Color(0xFFF7F5EF),
-                    ],
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: _emerald.withValues(alpha: isDark ? .11 : .045),
-                blurRadius: 24,
-                offset: const Offset(0, 8),
-              ),
-            ],
-          ),
+        // Transparent date header: the calendar belongs to the page background,
+        // not to a separate card or boxed panel.
+        Padding(
+          padding: const EdgeInsets.fromLTRB(8, 14, 8, 20),
           child: Stack(
             children: [
-              Positioned.fill(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(26),
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      Image.asset(
-                        'assets/images/mithaq_home.jpg',
-                        fit: BoxFit.cover,
-                      ),
-                      DecoratedBox(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topRight,
-                            end: Alignment.bottomLeft,
-                            colors: isDark
-                                ? const [
-                                    Color(0xA8071713),
-                                    Color(0xC00D261D),
-                                    Color(0xE8071713),
-                                  ]
-                                : const [
-                                    Color(0xBDF7F5EF),
-                                    Color(0xCBE1EFE2),
-                                    Color(0xEEF7F5EF),
-                                  ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
               Positioned(
-                left: -18,
-                bottom: -24,
+                left: 0,
+                bottom: 2,
                 child: Icon(
                   Icons.mosque_rounded,
-                  size: 150,
-                  color: scheme.secondary.withValues(alpha: isDark ? .075 : .09),
-                ),
-              ),
-              Positioned(
-                left: 22,
-                top: 4,
-                child: Icon(
-                  Icons.auto_awesome,
-                  size: 20,
-                  color: scheme.secondary.withValues(alpha: .65),
+                  size: 126,
+                  color: scheme.secondary.withValues(alpha: isDark ? .055 : .07),
                 ),
               ),
               Column(
@@ -1193,7 +1122,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
                   Row(
                     children: [
                       const MithaqBrandMark(size: 42),
-                      SizedBox(width: 11),
+                      const SizedBox(width: 11),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1201,43 +1130,48 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
                             Text(
                               'ميثاق المؤمن',
                               style: TextStyle(
-                                color: Theme.of(context).colorScheme.onSurface,
+                                color: scheme.onSurface,
                                 fontSize: 20,
                                 fontWeight: FontWeight.w900,
                                 letterSpacing: .2,
                               ),
                             ),
-                            SizedBox(height: 2),
+                            const SizedBox(height: 2),
                             Text(
                               'درب العبادة والطمأنينة',
-                              style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11),
+                              style: TextStyle(
+                                color: scheme.onSurfaceVariant,
+                                fontSize: 11,
+                              ),
                             ),
                           ],
                         ),
                       ),
-                      Icon(Icons.nights_stay_outlined, color: _gold.withValues(alpha: .8)),
+                      Icon(
+                        Icons.nights_stay_outlined,
+                        color: _gold.withValues(alpha: .8),
+                      ),
                     ],
                   ),
-                  SizedBox(height: 26),
-                  Text(
-                    'التاريخ الهجري',
-                    style: TextStyle(color: _themeMuted(context), fontSize: 11, fontWeight: FontWeight.w600),
-                  ),
-                  SizedBox(height: 4),
+                  const SizedBox(height: 24),
                   Text(
                     hijriDateLabel(_now, correction: _hijriCorrection),
                     style: TextStyle(
                       color: scheme.secondary,
-                      fontSize: 22,
+                      fontSize: 23,
                       fontWeight: FontWeight.w800,
-                      height: 1.5,
+                      height: 1.45,
                     ),
                   ),
-                  SizedBox(height: 3),
+                  const SizedBox(height: 4),
                   Row(
                     children: [
-                      Icon(Icons.calendar_today_rounded, size: 14, color: _themeMuted(context)),
-                      SizedBox(width: 7),
+                      Icon(
+                        Icons.calendar_today_rounded,
+                        size: 14,
+                        color: _themeMuted(context),
+                      ),
+                      const SizedBox(width: 7),
                       Text(
                         _gregorianLabel(_now),
                         style: TextStyle(
@@ -1248,27 +1182,27 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
                     ],
                   ),
                   if (occasion != null) ...[
-                    SizedBox(height: 12),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 7),
-                      decoration: BoxDecoration(
-                        color: _gold.withValues(alpha: .10),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: _gold.withValues(alpha: .18)),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.event_available_rounded, size: 15, color: _gold),
-                          SizedBox(width: 7),
-                          Flexible(
-                            child: Text(
-                              occasion,
-                              style: TextStyle(color: scheme.secondary, fontSize: 12),
+                    const SizedBox(height: 10),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.event_available_rounded,
+                          size: 16,
+                          color: _gold,
+                        ),
+                        const SizedBox(width: 7),
+                        Expanded(
+                          child: Text(
+                            occasion,
+                            style: TextStyle(
+                              color: scheme.secondary,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ],
                 ],

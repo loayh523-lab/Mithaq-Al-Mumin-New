@@ -289,6 +289,89 @@ class ShiaTextLibraryPage extends StatefulWidget {
 }
 
 class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
+  Widget _categoryCard(BuildContext context, String category, int count) {
+    final theme = Theme.of(context);
+    IconData icon;
+    String description;
+    if (category == 'الصحيفة السجادية والمناجيات') {
+      icon = Icons.menu_book_rounded;
+      description = 'أدعية الصحيفة ومناجاة التوبة والرجاء';
+    } else if (category == 'التعقيبات بعد الصلاة') {
+      icon = Icons.self_improvement_rounded;
+      description = 'أذكار وأعمال بعد الفرائض';
+    } else if (category == 'الأدعية والأذكار اليومية') {
+      icon = Icons.wb_sunny_rounded;
+      description = 'أوراد يومية وأذكار متجددة';
+    } else if (category == 'الأدعية العامة وأدعية الفرج وصاحب الزمان') {
+      icon = Icons.volunteer_activism_rounded;
+      description = 'أدعية عامة ودعاء الفرج وصاحب الزمان';
+    } else if (category == 'الأعمال والمناسبات') {
+      icon = Icons.calendar_month_rounded;
+      description = 'أعمال الشهور والمناسبات الدينية';
+    } else {
+      icon = Icons.mosque_rounded;
+      description = 'زيارات شريفة مع مصادرها المتاحة';
+    }
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: () => setState(() => _category = category),
+        child: Padding(
+          padding: const EdgeInsets.all(14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color: _shiaGold.withValues(alpha: .15),
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: Icon(icon, color: _shiaGold, size: 24),
+                  ),
+                  const Spacer(),
+                  Icon(Icons.chevron_left_rounded, color: theme.colorScheme.onSurfaceVariant),
+                ],
+              ),
+              const Spacer(),
+              Text(
+                category,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 14,
+                  height: 1.25,
+                  color: theme.colorScheme.onSurface,
+                ),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                description,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 11,
+                  height: 1.3,
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                '$count نصاً',
+                style: const TextStyle(color: _shiaGold, fontWeight: FontWeight.w800, fontSize: 12),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+
   final _controller = TextEditingController();
   late Future<ShiaTextData> _future;
   late bool _sahifaOnly;
@@ -346,6 +429,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
           return header.contains(_query) ||
               entry.lines.where((line) => line.isArabic).any((line) => _normalize(line.text).contains(_query));
         }).toList();
+        final showCategoryOverview = !_sahifaOnly && _category == 'كل النصوص' && _query.isEmpty;
         final sahifaCount = data.entries.where((entry) => entry.category == 'الصحيفة السجادية والمناجيات').length;
         final dailyCount = data.entries.where((entry) => entry.category == 'الأدعية والأذكار اليومية').length;
         final taqibatCount = data.entries.where((entry) => entry.category == 'التعقيبات بعد الصلاة').length;
@@ -411,48 +495,65 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
             )).toList()),
           ),
           Expanded(
-            child: filtered.isEmpty
-              ? Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(mainAxisSize: MainAxisSize.min, children: [
-                      Text(
-                        'ماكو نصوص ضمن هذا القسم في مصدر الأدعية الحالي.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.6),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'جرّب البحث باسم الدعاء أو اختر قسماً آخر من الأقسام المعروضة.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 12, height: 1.6),
-                      ),
-                    ]),
-                  ),
-                )
-              : ListView.separated(
-                  padding: const EdgeInsets.all(16), itemCount: filtered.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 8),
-                  itemBuilder: (context, index) {
-                    final entry = filtered[index];
-                    final arabicLineCount = entry.lines.where((line) => line.isArabic).length;
-                    return Card(
-                      color: Theme.of(context).colorScheme.surface,
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: _shiaGold.withValues(alpha: .15),
-                          child: Icon(entry.isSahifa ? Icons.menu_book_rounded : Icons.auto_awesome_rounded, color: _shiaGold),
+            child: showCategoryOverview
+                ? GridView.count(
+                    padding: const EdgeInsets.all(14),
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    childAspectRatio: 1.05,
+                    children: [
+                      for (final category in _categories.skip(1))
+                        _categoryCard(
+                          context,
+                          category,
+                          data.entries.where((entry) => entry.category == category).length,
                         ),
-                        title: Text(entry.displayTitle, style: const TextStyle(fontWeight: FontWeight.bold)),
-                        subtitle: Text('${entry.isSahifa ? 'الصحيفة السجادية' : 'دعاء / زيارة'} • $arabicLineCount أسطر عربية', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
-                        trailing: const Icon(Icons.chevron_left_rounded, color: _shiaGold),
-                        onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-                          builder: (_) => Directionality(textDirection: TextDirection.rtl, child: ShiaTextReaderPage(entry: entry)),
-                        )),
+                    ],
+                  )
+                : filtered.isEmpty
+                    ? Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(24),
+                          child: Column(mainAxisSize: MainAxisSize.min, children: [
+                            Text(
+                              'ماكو نصوص ضمن هذا القسم في مصدر الأدعية الحالي.',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.6),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'جرّب البحث باسم الدعاء أو اختر قسماً آخر من الأقسام المعروضة.',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 12, height: 1.6),
+                            ),
+                          ]),
+                        ),
+                      )
+                    : ListView.separated(
+                        padding: const EdgeInsets.all(16),
+                        itemCount: filtered.length,
+                        separatorBuilder: (_, __) => const SizedBox(height: 8),
+                        itemBuilder: (context, index) {
+                          final entry = filtered[index];
+                          final arabicLineCount = entry.lines.where((line) => line.isArabic).length;
+                          return Card(
+                            color: Theme.of(context).colorScheme.surface,
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                backgroundColor: _shiaGold.withValues(alpha: .15),
+                                child: Icon(entry.isSahifa ? Icons.menu_book_rounded : Icons.auto_awesome_rounded, color: _shiaGold),
+                              ),
+                              title: Text(entry.displayTitle, style: const TextStyle(fontWeight: FontWeight.bold)),
+                              subtitle: Text('${entry.isSahifa ? 'الصحيفة السجادية' : 'دعاء / زيارة'} • $arabicLineCount أسطر عربية', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
+                              trailing: const Icon(Icons.chevron_left_rounded, color: _shiaGold),
+                              onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+                                builder: (_) => Directionality(textDirection: TextDirection.rtl, child: ShiaTextReaderPage(entry: entry)),
+                              )),
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(12, 0, 12, 10),

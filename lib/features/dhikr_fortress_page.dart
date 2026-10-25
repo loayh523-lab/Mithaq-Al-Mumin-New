@@ -170,84 +170,177 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
     }
   }
 
+  final TextEditingController _searchController = TextEditingController();
+
   @override
-  Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: Text('أذكار الصباح والمساء')),
-    body: ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        Container(
-          padding: const EdgeInsets.all(17),
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: _dhikrGold.withValues(alpha: .3)),
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final query = _searchController.text.trim().toLowerCase();
+    final filtered = _visibleItems.where((item) {
+      return query.isEmpty ||
+          item.title.toLowerCase().contains(query) ||
+          item.textFor(_period).toLowerCase().contains(query);
+    }).toList();
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('الأذكار'),
+        actions: [
+          IconButton(
+            tooltip: 'المفضلة قريباً',
+            onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('يمكنك حفظ الأذكار المهمة ضمن المفضلة بعد تفعيل هذه الميزة.')),
+            ),
+            icon: const Icon(Icons.bookmark_border_rounded),
           ),
-          child: Text(
-            'نصوص أذكار منقولة مع مراجعها. إذا لم يحدد المصدر عدداً للتكرار، يظهر العداد مفتوحاً ولا يعني الرقم المقترح حكماً شرعياً.',
-            style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.7),
+        ],
+      ),
+      body: ListView(
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+        children: [
+          TextField(
+            controller: _searchController,
+            textDirection: TextDirection.rtl,
+            onChanged: (_) => setState(() {}),
+            decoration: InputDecoration(
+              hintText: 'ابحث عن الأذكار',
+              prefixIcon: const Icon(Icons.search_rounded),
+              suffixIcon: IconButton(
+                tooltip: 'مسح البحث',
+                onPressed: () {
+                  _searchController.clear();
+                  setState(() {});
+                },
+                icon: const Icon(Icons.mic_none_rounded),
+              ),
+              filled: true,
+              fillColor: theme.colorScheme.surface,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(28),
+                borderSide: BorderSide(color: theme.colorScheme.outlineVariant),
+              ),
+            ),
           ),
-        ),
-        SizedBox(height: 14),
-        SegmentedButton<int>(
-          segments: [
-            ButtonSegment(value: 0, label: Text('أذكار الصباح'), icon: Icon(Icons.wb_sunny_outlined)),
-            ButtonSegment(value: 1, label: Text('أذكار المساء'), icon: Icon(Icons.nights_stay_outlined)),
-          ],
-          selected: {_period},
-          onSelectionChanged: (selected) => _setPeriod(selected.first),
-        ),
-        SizedBox(height: 12),
-        if (_loading)
-          Center(child: Padding(padding: EdgeInsets.all(24), child: CircularProgressIndicator(color: _dhikrGold)))
-        else
-          ..._visibleItems.map((item) {
-            final count = _counts[item.id] ?? 0;
-            final target = item.target;
-            return Card(
-              color: Theme.of(context).colorScheme.surface,
-              margin: const EdgeInsets.only(bottom: 10),
-              child: Padding(
-                padding: const EdgeInsets.all(15),
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Row(children: [
-                    Expanded(child: Text(item.title, style: TextStyle(color: _dhikrGold, fontWeight: FontWeight.w800, fontSize: 17))),
-                    Text(target == null ? '$count' : '$count / $target', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontWeight: FontWeight.bold)),
-                  ]),
-                  SizedBox(height: 10),
-                  Text(item.textFor(_period), textDirection: TextDirection.rtl, textAlign: TextAlign.right, style: TextStyle(fontSize: 19, height: 1.9)),
-                  if (target != null) ...[
-                    SizedBox(height: 12),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: LinearProgressIndicator(value: (count / target).clamp(0, 1).toDouble(), minHeight: 7, backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest, color: _dhikrGold),
+          const SizedBox(height: 24),
+          Text(
+            'الأذكار المخصصة باليوم',
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w800,
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 12),
+          SegmentedButton<int>(
+            segments: const [
+              ButtonSegment(value: 0, label: Text('أذكار الصباح'), icon: Icon(Icons.wb_sunny_outlined)),
+              ButtonSegment(value: 1, label: Text('أذكار المساء'), icon: Icon(Icons.nights_stay_outlined)),
+            ],
+            selected: {_period},
+            onSelectionChanged: (selected) => _setPeriod(selected.first),
+          ),
+          const SizedBox(height: 20),
+          Text(
+            'أقسام الأذكار',
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w800,
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 12),
+          if (_loading)
+            const Center(child: Padding(padding: EdgeInsets.all(24), child: CircularProgressIndicator()))
+          else if (filtered.isEmpty)
+            Padding(
+              padding: const EdgeInsets.all(24),
+              child: Center(child: Text('ما لقينا ذكر يطابق بحثك.', style: theme.textTheme.bodyLarge)),
+            )
+          else
+            ...filtered.map((item) {
+              final count = _counts[item.id] ?? 0;
+              final target = item.target;
+              final complete = target != null && count >= target;
+              return Card(
+                margin: const EdgeInsets.only(bottom: 10),
+                clipBehavior: Clip.antiAlias,
+                child: ExpansionTile(
+                  leading: Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.primary.withValues(alpha: .12),
+                      borderRadius: BorderRadius.circular(13),
                     ),
-                  ],
-                  SizedBox(height: 8),
-                  Text('المصدر: ${item.source}', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.5, fontSize: 12)),
-                  SizedBox(height: 4),
-                  const SelectableText(_dhikrSourceUrl, style: TextStyle(color: _dhikrGold, fontSize: 11)),
-                  SizedBox(height: 10),
-                  Row(children: [
-                    Expanded(
-                      child: FilledButton.icon(
-                        onPressed: (target != null && count >= target) || _loading ? null : () => _increment(item),
-                        icon: Icon(Icons.fingerprint_rounded),
-                        label: Text('تسبيح'),
+                    child: Icon(
+                      complete ? Icons.check_circle_rounded : Icons.autorenew_rounded,
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+                  title: Text(item.title, style: const TextStyle(fontWeight: FontWeight.w700)),
+                  subtitle: Text(target == null ? 'عداد مفتوح' : (complete ? 'اكتمل الورد' : '$count من $target')),
+                  trailing: const Icon(Icons.chevron_left_rounded),
+                  childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                  children: [
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        item.textFor(_period),
+                        textDirection: TextDirection.rtl,
+                        textAlign: TextAlign.right,
+                        style: theme.textTheme.titleMedium?.copyWith(height: 1.9),
                       ),
                     ),
-                    SizedBox(width: 10),
-                    IconButton(
-                      tooltip: 'إعادة العداد',
-                      onPressed: _loading ? null : () => _reset(item),
-                      icon: Icon(Icons.restart_alt_rounded),
+                    if (target != null) ...[
+                      const SizedBox(height: 12),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: LinearProgressIndicator(
+                          value: (count / target).clamp(0, 1).toDouble(),
+                          minHeight: 6,
+                        ),
+                      ),
+                    ],
+                    const SizedBox(height: 12),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Text('المصدر: ${item.source}', style: theme.textTheme.bodySmall?.copyWith(height: 1.5)),
                     ),
-                  ]),
-                ]),
-              ),
-            );
-          }),
-      ],
-    ),
-  );
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: FilledButton.icon(
+                            onPressed: complete || _loading ? null : () => _increment(item),
+                            icon: const Icon(Icons.touch_app_rounded),
+                            label: const Text('تسبيح'),
+                          ),
+                        ),
+                        IconButton(
+                          tooltip: 'إعادة العداد',
+                          onPressed: _loading ? null : () => _reset(item),
+                          icon: const Icon(Icons.restart_alt_rounded),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            }),
+          const SizedBox(height: 8),
+          Text(
+            'تنبيه: تُعرض الأعداد كما وردت في المصدر عند توفرها، والعداد المفتوح للتتبع فقط وليس تحديداً لحكم شرعي.',
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+              height: 1.6,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

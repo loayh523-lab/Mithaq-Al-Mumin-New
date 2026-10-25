@@ -786,11 +786,8 @@ void main() {
       ),
     ));
     await tester.pumpAndSettle();
-    await tester.scrollUntilVisible(
-      find.text('خيارات الأذان المتقدمة'),
-      220,
-      scrollable: find.byType(Scrollable).first,
-    );
+    await tester.ensureVisible(find.text('خيارات الأذان المتقدمة'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('خيارات الأذان المتقدمة'));
     await tester.pumpAndSettle();
     await tester.scrollUntilVisible(

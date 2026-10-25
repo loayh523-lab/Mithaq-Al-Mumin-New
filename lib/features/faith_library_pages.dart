@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-const _libraryPanel = Color(0xFF10251E);
-const _libraryGold = Color(0xFFD9B66D);
-const _libraryMuted = Color(0xFF9EB5A9);
 const _officialOfficeUrl = 'https://www.leader.ir/ar';
 
 class _FiqhTopic {

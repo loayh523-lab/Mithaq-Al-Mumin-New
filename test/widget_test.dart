@@ -786,6 +786,15 @@ void main() {
       ),
     ));
     await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.text('حتى يوصل الأذان والتطبيق مغلق'),
+      220,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(find.text('حتى يوصل الأذان والتطبيق مغلق'), findsOneWidget);
+    expect(find.textContaining('Phone Master أو Battery Lab'), findsOneWidget);
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, 1600));
+    await tester.pumpAndSettle();
 
     final settingsScroll = find.descendant(
       of: find.byType(SettingsPage),

@@ -16,6 +16,7 @@ import 'features/names_of_allah_page.dart';
 import 'features/qada_tracker_page.dart';
 import 'features/dhikr_fortress_page.dart';
 import 'features/faith_services_page.dart';
+import 'features/faith_library_pages.dart';
 import 'features/favorites_page.dart';
 import 'features/rakah_counter_page.dart';
 import 'features/about_support_page.dart';
@@ -511,6 +512,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
           _sectionGridItem(icon: Icons.bookmark_added_rounded, title: 'ختمة القرآن', onTap: () => _pushPage(const KhatmaPage())),
           _sectionGridItem(icon: Icons.manage_search_rounded, title: 'الباحث الذكي', onTap: () => _pushPage(const SmartSearchPage())),
           _sectionGridItem(icon: Icons.brightness_5_rounded, title: 'أسماء الله الحسنى', onTap: () => _pushPage(const NamesOfAllahPage())),
+          _sectionGridItem(icon: Icons.format_quote_rounded, title: 'نهج البلاغة والحِكم', onTap: () => _pushPage(const NahjAlBalaghaPage())),
           _sectionGridItem(icon: Icons.support_agent_rounded, title: 'الخدمات الإيمانية', onTap: () => _pushPage(const FaithServicesPage())),
           _sectionGridItem(icon: Icons.info_outline_rounded, title: 'عن التطبيق والدعم', onTap: () => _pushPage(const AboutSupportPage())),
         ],
@@ -753,6 +755,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
                     _drawerGridItem(Icons.calendar_month_rounded, 'التقويم الهجري', () => _openDrawerPage(PrayerCalendarPage(initialTab: 2, onLocationChanged: _handleLocationChanged, onHijriCorrectionChanged: _loadDashboardData))),
                     _drawerGridItem(Icons.brightness_5_rounded, 'أسماء الله الحسنى', () => _openDrawerPage(const NamesOfAllahPage())),
                     _drawerGridItem(Icons.manage_search_rounded, 'الباحث الذكي', () => _openDrawerPage(const SmartSearchPage())),
+                    _drawerGridItem(Icons.format_quote_rounded, 'نهج البلاغة والحِكم', () => _openDrawerPage(const NahjAlBalaghaPage())),
                     _drawerGridItem(Icons.support_agent_rounded, 'الخدمات الإيمانية', () => _openDrawerPage(const FaithServicesPage())),
                     _drawerGridItem(Icons.info_outline_rounded, 'عن التطبيق والدعم', () => _openDrawerPage(const AboutSupportPage())),
                   ],

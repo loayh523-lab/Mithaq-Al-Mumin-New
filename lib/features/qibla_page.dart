@@ -249,10 +249,10 @@ class _QiblaPageState extends State<QiblaPage> {
   }
 
   Widget _staticCompass(BuildContext context, double bearing) {
-    return _compassFace(context, bearing, rotateFace: false);
+    return _compassFace(context, bearing);
   }
 
-  Widget _compassFace(BuildContext context, double bearing, {bool rotateFace = true}) {
+  Widget _compassFace(BuildContext context, double bearing) {
     final theme = Theme.of(context);
     final muted = theme.colorScheme.onSurfaceVariant;
     return Stack(

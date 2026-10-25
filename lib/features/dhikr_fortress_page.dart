@@ -14,7 +14,6 @@ class _DhikrItem {
     required this.text,
     required this.target,
     required this.source,
-    this.eveningText,
   });
 
   final String id;
@@ -23,9 +22,6 @@ class _DhikrItem {
   final String text;
   final int? target;
   final String source;
-  final String? eveningText;
-
-  String textFor(int period) => period == 1 ? (eveningText ?? text) : text;
 }
 
 class DhikrFortressPage extends StatefulWidget {
@@ -97,7 +93,6 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
       category: 'العوذات',
       title: 'دعاء النعمة والعافية والستر',
       text: 'اللهم إني أصبحت في نعمة منك وعافية وستر، فصل على محمد وآل محمد، وأتمم علي نعمتك وعافيتك وسترك',
-      eveningText: 'اللهم إني أمسيت في نعمة منك وعافية وستر، فصل على محمد وآل محمد، وأتمم علي نعمتك وعافيتك وسترك',
       target: 3,
       source: 'ثلاث مرات صباحاً ومساءً. بحار الأنوار، ج 83، ص 283.',
     ),
@@ -105,19 +100,17 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
 
   final Map<String, int> _counts = <String, int>{};
   bool _loading = true;
-  int _period = 0;
   String _selectedCategory = 'الكل';
   Set<String> _favoriteIds = <String>{};
   bool _favoritesOnly = false;
   static const _categoryNames = ['الكل', 'التسبيحات', 'المناجاة', 'العوذات'];
 
-  String get _periodName => _period == 0 ? 'صباح' : 'مساء';
   List<_DhikrItem> get _visibleItems => _items;
 
   String _key(String id) {
     final now = DateTime.now();
     final day = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
-    return 'fortress_v3_${_periodName}_${day}_$id';
+    return 'fortress_v4_${day}_$id';
   }
 
   @override
@@ -144,15 +137,6 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
     } catch (_) {
       if (mounted) setState(() => _loading = false);
     }
-  }
-
-  Future<void> _setPeriod(int period) async {
-    setState(() {
-      _period = period;
-      _loading = true;
-      _counts.clear();
-    });
-    await _load();
   }
 
   Future<void> _increment(_DhikrItem item) async {
@@ -224,18 +208,22 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final query = _searchController.text.trim().toLowerCase();
+    final daysFromAnchor = DateTime.now().difference(DateTime(2024, 1, 1)).inDays;
+    final dailyItem = _items[daysFromAnchor % _items.length];
     final filtered = _visibleItems.where((item) {
       final categoryMatches = _selectedCategory == 'الكل' || item.category == _selectedCategory;
       final queryMatches = query.isEmpty ||
           item.title.toLowerCase().contains(query) ||
-          item.textFor(_period).toLowerCase().contains(query);
+          item.text.toLowerCase().contains(query);
       final favoriteMatches = !_favoritesOnly || _favoriteIds.contains(item.id);
-      return categoryMatches && queryMatches && favoriteMatches;
+      final isDefaultFullList = !_favoritesOnly && _selectedCategory == 'الكل' && query.isEmpty;
+      final notDuplicatedBelowDailyFeature = !isDefaultFullList || item.id != dailyItem.id;
+      return categoryMatches && queryMatches && favoriteMatches && notDuplicatedBelowDailyFeature;
     }).toList();
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('حصن الأذكار'),
+        title: const Text('الأذكار'),
         actions: [
           IconButton(
             tooltip: _favoritesOnly ? 'عرض كل الأذكار' : 'عرض الأذكار المفضلة',
@@ -272,24 +260,56 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
               ),
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 18),
+          if (!_favoritesOnly && _selectedCategory == 'الكل' && query.isEmpty)
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surface,
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(color: _dhikrGold.withValues(alpha: .36)),
+                gradient: LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  colors: theme.brightness == Brightness.dark
+                      ? const [Color(0xFF15382B), Color(0xFF10251E)]
+                      : const [Color(0xFFF4EDDA), Color(0xFFFFFFFF)],
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(Icons.auto_awesome_rounded, color: _dhikrGold),
+                      const SizedBox(width: 8),
+                      Text('ذِكر اليوم', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800)),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(dailyItem.title, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800)),
+                  const SizedBox(height: 8),
+                  Text(dailyItem.text, textDirection: TextDirection.rtl, textAlign: TextAlign.right,
+                    style: theme.textTheme.titleMedium?.copyWith(height: 1.9)),
+                  const SizedBox(height: 8),
+                  Text('المصدر: ${dailyItem.source}', style: theme.textTheme.bodySmall?.copyWith(height: 1.5)),
+                  const SizedBox(height: 6),
+                  Text(
+                    'يتبدّل الذكر المعروض تلقائياً حسب التاريخ. هذا اختيار يومي من المجموعة، وليس دليلاً على اختصاص هذا الذكر بهذا اليوم.',
+                    style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant, height: 1.5),
+                  ),
+                ],
+              ),
+            ),
+          const SizedBox(height: 20),
           Text(
-            _favoritesOnly ? 'الأذكار المفضلة' : 'الأذكار المخصصة باليوم',
+            _favoritesOnly ? 'الأذكار المفضلة' : 'مجموعة الأذكار',
             style: theme.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.w800,
               color: theme.colorScheme.onSurfaceVariant,
             ),
           ),
           const SizedBox(height: 12),
-          SegmentedButton<int>(
-            segments: const [
-              ButtonSegment(value: 0, label: Text('أذكار الصباح'), icon: Icon(Icons.wb_sunny_outlined)),
-              ButtonSegment(value: 1, label: Text('أذكار المساء'), icon: Icon(Icons.nights_stay_outlined)),
-            ],
-            selected: {_period},
-            onSelectionChanged: (selected) => _setPeriod(selected.first),
-          ),
-          const SizedBox(height: 20),
           Text(
             'أقسام الأذكار',
             style: theme.textTheme.titleLarge?.copyWith(
@@ -348,7 +368,7 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
                     Align(
                       alignment: Alignment.centerRight,
                       child: Text(
-                        item.textFor(_period),
+                        item.text,
                         textDirection: TextDirection.rtl,
                         textAlign: TextAlign.right,
                         style: theme.textTheme.titleMedium?.copyWith(height: 1.9),

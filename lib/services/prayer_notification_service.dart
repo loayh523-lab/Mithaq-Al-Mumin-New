@@ -283,7 +283,10 @@ class PrayerNotificationService {
                     audioAttributesUsage: AudioAttributesUsage.notification,
                   ),
                 ),
-                androidScheduleMode: scheduleMode,
+                // Keep the early heads-up inexact. Android can throttle
+                // exact-while-idle alarms that are only a few minutes apart;
+                // the actual prayer adhan must retain the exact alarm slot.
+                androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
               ));
             }
           }

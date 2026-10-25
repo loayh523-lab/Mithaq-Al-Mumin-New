@@ -68,7 +68,7 @@ class _SettingsPageState extends State<SettingsPage> {
         if (mounted) setState(() => _isPlayingAdhan = false);
       });
       await player.stop();
-      await player.play(AssetSource('audio/adhan_shabbar_maalla.mp3'));
+      await player.play(AssetSource('audio/adhan_shabbar_maalla_preview.mp3'));
       if (mounted) setState(() => _isPlayingAdhan = true);
     } catch (error) {
       if (mounted) _message('تعذّر تشغيل التسجيل الصوتي. جرّب إعادة فتح التطبيق أو تحقق من الملف المرفق.');

@@ -562,25 +562,26 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
     final remaining = nextTime.difference(clock);
     final hours = remaining.inHours;
     final minutes = remaining.inMinutes % 60;
+    final scheme = Theme.of(context).colorScheme;
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF16372B),
+        color: scheme.surface,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: _gold.withValues(alpha: .35)),
+        border: Border.all(color: scheme.secondary.withValues(alpha: .35)),
       ),
       child: Row(children: [
-        Icon(Icons.hourglass_bottom_rounded, color: _gold, size: 28),
+        Icon(Icons.hourglass_bottom_rounded, color: scheme.secondary, size: 28),
         const SizedBox(width: 12),
         Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text('الصلاة القادمة: $nextName', style: TextStyle(fontWeight: FontWeight.bold, color: _gold, fontSize: 16)),
+          Text('الصلاة القادمة: $nextName', style: TextStyle(fontWeight: FontWeight.bold, color: scheme.secondary, fontSize: 16)),
           const SizedBox(height: 4),
-          Text('الوقت المحسوب: ${formatPrayerTime12Hour(nextTimeText)}', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 12)),
+          Text('الوقت المحسوب: ${formatPrayerTime12Hour(nextTimeText)}', style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 12)),
         ])),
         Text(
           hours > 0 ? '$hoursس $minutesد' : '$minutes دقيقة',
-          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 17),
+          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 17, color: scheme.onSurface),
         ),
       ]),
     );

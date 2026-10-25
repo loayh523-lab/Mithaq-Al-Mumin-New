@@ -160,6 +160,14 @@ void main() {
     ).first;
 
     expect(find.text('العبادات'), findsOneWidget);
+    final goodDeedsIcon = find.descendant(
+      of: find.byType(Drawer),
+      matching: find.byIcon(Icons.handshake_rounded),
+    );
+    await tester.scrollUntilVisible(goodDeedsIcon, 130, scrollable: drawerScroll);
+    await tester.pumpAndSettle();
+    expect(goodDeedsIcon, findsOneWidget);
+
     await tester.scrollUntilVisible(
       find.descendant(of: find.byType(Drawer), matching: find.text('الخدمات والمتابعة')),
       180,
@@ -170,7 +178,6 @@ void main() {
     for (final icon in [
       Icons.bookmark_added_rounded,
       Icons.event_available_rounded,
-      Icons.handshake_rounded,
     ]) {
       final finder = find.descendant(of: find.byType(Drawer), matching: find.byIcon(icon));
       await tester.scrollUntilVisible(finder, 130, scrollable: drawerScroll);

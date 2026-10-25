@@ -49,10 +49,20 @@ void main() {
     expect(prefs.getBool('app_theme_dark'), isFalse);
   });
 
+  testWidgets('home prayer-time action opens the prayer calendar rather than settings', (tester) async {
+    await tester.pumpWidget(const MithaqApp());
+    final prayerTimesAction = find.text('عرض مواقيت الصلوات الخمس');
+    expect(prayerTimesAction, findsOneWidget);
+    await tester.tap(prayerTimesAction);
+    await tester.pumpAndSettle();
+    expect(find.text('المواقيت والتقويم'), findsOneWidget);
+    expect(find.text('التاريخ الهجري'), findsNothing);
+  });
+
   testWidgets('home screen shows the agreed dashboard and drawer navigation opens tasbeeh', (tester) async {
     await tester.pumpWidget(const MithaqApp());
     expect(find.text('ميثاق المؤمن'), findsWidgets);
-    expect(find.text('التاريخ الهجري'), findsOneWidget);
+    expect(find.text(hijriDateLabel(DateTime.now())), findsOneWidget);
     expect(find.text('الصلاة القادمة'), findsOneWidget);
     expect(find.text('مواقيت الصلاة'), findsOneWidget);
 

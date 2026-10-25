@@ -69,6 +69,11 @@ void main() {
 
     expect(find.text('الأدعية والزيارات'), findsOneWidget);
     expect(find.text('تعقيبات الصلاة'), findsNothing);
+    await tester.scrollUntilVisible(
+      find.text('نهج البلاغة والحِكم'),
+      180,
+      scrollable: find.byType(Scrollable).first,
+    );
     expect(find.text('نهج البلاغة والحِكم'), findsOneWidget);
 
     await tester.tap(find.text('نهج البلاغة والحِكم'));

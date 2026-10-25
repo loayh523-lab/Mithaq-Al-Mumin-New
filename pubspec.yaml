@@ -35,7 +35,7 @@ flutter:
     - assets/quran/verse_metadata.json
     - assets/shia_duas/shia_duas.json
     - assets/shia_duas/sahifa_sajjadiya.json
-    - assets/audio/adhan_shabbar_maalla.mp3
+    - assets/audio/adhan_shabbar_maalla_preview.mp3
     - assets/images/mithaq_logo.jpg
     - assets/images/mithaq_home.jpg
     - assets/fonts/OFL.txt

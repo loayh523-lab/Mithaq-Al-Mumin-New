@@ -73,6 +73,18 @@ void main() {
     // destinations are covered by their own navigation tests.
   });
 
+  testWidgets('adhkar page is a broad collection, not morning/evening tabs', (tester) async {
+    await tester.pumpWidget(const MaterialApp(home: DhikrFortressPage()));
+    await tester.pumpAndSettle();
+
+    expect(find.text('الأذكار'), findsOneWidget);
+    expect(find.text('ذِكر اليوم'), findsOneWidget);
+    expect(find.text('أقسام الأذكار'), findsOneWidget);
+    expect(find.text('أذكار الصباح'), findsNothing);
+    expect(find.text('أذكار المساء'), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('home and section grid stay inside a narrow phone in both themes', (tester) async {
     tester.view.physicalSize = const Size(320, 720);
     tester.view.devicePixelRatio = 1;

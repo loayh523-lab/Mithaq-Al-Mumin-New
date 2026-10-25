@@ -1848,141 +1848,301 @@ class _TasbeehPageState extends State<TasbeehPage> {
     final step = _steps[_step];
     final current = _zahraMode ? _count : _generalCount;
     final target = _zahraMode ? step.target : null;
-    final progress = target == null ? 0.0 : current / target;
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(20, 18, 20, 30),
-      children: [
-        Text('التسبيح', style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800)),
-        SizedBox(height: 6),
-        Text(
-          _zahraMode
-              ? 'عداد محفوظ على جهازك، مع تسبيح الزهراء عليها السلام بالترتيب'
-              : 'عداد عام مستقل محفوظ على جهازك، ويمكنك تصفيره متى شئت',
-          style: TextStyle(color: _themeMuted(context), height: 1.6),
-        ),
-        SizedBox(height: 18),
-        SegmentedButton<bool>(
-          segments: const [
-            ButtonSegment(value: true, label: Text('تسبيح الزهراء'), icon: Icon(Icons.auto_awesome_rounded)),
-            ButtonSegment(value: false, label: Text('تسبيح عام'), icon: Icon(Icons.fingerprint_rounded)),
-          ],
-          selected: {_zahraMode},
-          onSelectionChanged: _loading ? null : (selection) => _setMode(selection.first),
-        ),
-        SizedBox(height: 18),
-        if (_zahraMode) ...[
-          Container(
-            padding: const EdgeInsets.all(15),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              borderRadius: BorderRadius.circular(18),
-              border: Border.all(color: _gold.withValues(alpha: .28)),
-            ),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('مراحل تسبيح الزهراء عليها السلام', style: TextStyle(color: _gold, fontWeight: FontWeight.w800)),
-              SizedBox(height: 12),
-              for (var i = 0; i < _steps.length; i++)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Row(children: [
-                    Icon(
-                      i < _step || (i == _step && _count >= _steps[i].target)
-                          ? Icons.check_circle_rounded
-                          : i == _step ? Icons.radio_button_checked_rounded : Icons.radio_button_unchecked_rounded,
-                      color: i == _step ? _gold : _themeMuted(context),
-                      size: 20,
-                    ),
-                    SizedBox(width: 9),
-                    Expanded(child: Text('${_steps[i].title}: ${_steps[i].phrase}', style: TextStyle(color: i == _step ? Theme.of(context).colorScheme.onSurface : _themeMuted(context), fontWeight: i == _step ? FontWeight.bold : FontWeight.normal))),
-                    Text('${i == _step ? _count : i < _step ? _steps[i].target : 0}/${_steps[i].target}', style: TextStyle(color: _gold, fontWeight: FontWeight.bold)),
-                  ]),
-                ),
-              SizedBox(height: 4),
-              Text('التكبير 34 مرة، ثم الحمد 33 مرة، ثم التسبيح 33 مرة.', style: TextStyle(color: _themeMuted(context), fontSize: 12, height: 1.6)),
-            ]),
+    final progress = target == null ? 0.0 : (current / target).clamp(0.0, 1.0);
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+    final dialSize = (MediaQuery.sizeOf(context).width * .42).clamp(132.0, 164.0).toDouble();
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('التسبيح'),
+        actions: [
+          IconButton(
+            tooltip: 'إعادة العداد',
+            onPressed: _loading ? null : _reset,
+            icon: const Icon(Icons.restart_alt_rounded),
           ),
-          SizedBox(height: 20),
         ],
-        Center(
-          child: Column(children: [
-            if (_zahraMode)
-              Text(
-                current >= (target ?? 0) && _step == 2 ? 'اكتمل تسبيح الزهراء' : step.phrase,
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 20, height: 1.8, color: _gold, fontWeight: FontWeight.w800),
-              ),
-            SizedBox(height: 18),
-            if (_zahraMode) ...[
-              Text('$_count', style: TextStyle(fontSize: 54, fontWeight: FontWeight.w800)),
-              SizedBox(height: 8),
-              ClipRRect(
+      ),
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(16, 10, 16, 24),
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                child: LinearProgressIndicator(
-                  value: progress < 0.0 ? 0.0 : (progress > 1.0 ? 1.0 : progress),
-                  minHeight: 7,
-                  backgroundColor: Theme.of(context).colorScheme.surface,
-                  color: _gold,
+                gradient: LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  colors: theme.brightness == Brightness.dark
+                      ? const [Color(0xFF18392B), Color(0xFF111A15)]
+                      : const [Color(0xFFE8F1E6), Color(0xFFF7F3E8)],
                 ),
+                border: Border.all(color: _gold.withValues(alpha: .22)),
               ),
-              SizedBox(height: 8),
-              Text('المرحلة ${_step + 1} من 3 • المطلوب ${step.target}', style: TextStyle(color: _themeMuted(context))),
-            ] else
-              Text('$_generalCount', style: TextStyle(fontSize: 58, fontWeight: FontWeight.w800)),
-            SizedBox(height: 22),
-            Semantics(
-              button: true,
-              label: 'زيادة عداد التسبيح',
-              child: InkWell(
-                onTap: _loading || (_zahraMode && _step == 2 && _count >= 33) ? null : _increment,
-                customBorder: const CircleBorder(),
-                child: Container(
-                  width: 190,
-                  height: 190,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Theme.of(context).colorScheme.surface,
-                    border: Border.all(color: _gold, width: 2),
-                    boxShadow: [BoxShadow(color: _emerald.withValues(alpha: .2), blurRadius: 28, spreadRadius: 4)],
+              child: Row(
+                children: [
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: _gold.withValues(alpha: .15),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: const Icon(Icons.fingerprint_rounded, color: _gold, size: 28),
                   ),
-                  child: Center(child: Icon(Icons.fingerprint_rounded, color: _gold, size: 76)),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          _zahraMode ? 'تسبيح الزهراء عليها السلام' : 'المسبحة المفتوحة',
+                          style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w800,
+                            color: colors.onSurface,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          _zahraMode
+                              ? '34 تكبيرة، ثم 33 تحميدة، ثم 33 تسبيحة'
+                              : 'عداد مستقل لحساب الذكر الذي تختاره',
+                          style: TextStyle(fontSize: 12, height: 1.45, color: colors.onSurfaceVariant),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 14),
+            SegmentedButton<bool>(
+              segments: const [
+                ButtonSegment(
+                  value: true,
+                  label: Text('تسبيح الزهراء'),
+                  icon: Icon(Icons.auto_awesome_rounded),
+                ),
+                ButtonSegment(
+                  value: false,
+                  label: Text('تسبيح عام'),
+                  icon: Icon(Icons.fingerprint_rounded),
+                ),
+              ],
+              selected: {_zahraMode},
+              onSelectionChanged: _loading ? null : (selection) => _setMode(selection.first),
+            ),
+            if (_zahraMode) ...[
+              const SizedBox(height: 14),
+              Card(
+                margin: EdgeInsets.zero,
+                elevation: 0,
+                color: colors.surface,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18),
+                  side: BorderSide(color: colors.outlineVariant.withValues(alpha: .6)),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'مراحل التسبيح',
+                        style: TextStyle(color: _gold, fontSize: 15, fontWeight: FontWeight.w800),
+                      ),
+                      const SizedBox(height: 10),
+                      for (var i = 0; i < _steps.length; i++)
+                        Padding(
+                          padding: EdgeInsets.only(bottom: i == _steps.length - 1 ? 0 : 8),
+                          child: Row(
+                            children: [
+                              Icon(
+                                i < _step || (i == _step && _count >= _steps[i].target)
+                                    ? Icons.check_circle_rounded
+                                    : i == _step
+                                        ? Icons.radio_button_checked_rounded
+                                        : Icons.radio_button_unchecked_rounded,
+                                color: i == _step ? _gold : colors.onSurfaceVariant,
+                                size: 20,
+                              ),
+                              const SizedBox(width: 9),
+                              Expanded(
+                                child: Text(
+                                  '${_steps[i].title}: ${_steps[i].phrase}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: colors.onSurface,
+                                    fontSize: 14,
+                                    fontWeight: i == _step ? FontWeight.w800 : FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                '${i == _step ? _count : i < _step ? _steps[i].target : 0}/${_steps[i].target}',
+                                style: TextStyle(color: colors.onSurfaceVariant, fontSize: 12, fontWeight: FontWeight.w700),
+                              ),
+                            ],
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+            const SizedBox(height: 14),
+            Card(
+              margin: EdgeInsets.zero,
+              elevation: 0,
+              color: colors.surface,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24),
+                side: BorderSide(color: _gold.withValues(alpha: .28)),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(18, 18, 18, 18),
+                child: Column(
+                  children: [
+                    Text(
+                      _zahraMode
+                          ? (_step == 2 && _count >= 33 ? 'اكتمل تسبيح الزهراء' : step.phrase)
+                          : 'اضغط على المسبحة لزيادة العدد',
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 19,
+                        height: 1.45,
+                        color: colors.onSurface,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      current.toString(),
+                      style: TextStyle(
+                        fontSize: 44,
+                        height: 1.1,
+                        color: _gold,
+                        fontWeight: FontWeight.w900,
+                        fontFeatures: const [FontFeature.tabularFigures()],
+                      ),
+                    ),
+                    if (_zahraMode) ...[
+                      const SizedBox(height: 8),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: LinearProgressIndicator(
+                          value: progress,
+                          minHeight: 6,
+                          backgroundColor: colors.surfaceContainerHighest,
+                          color: _gold,
+                        ),
+                      ),
+                      const SizedBox(height: 7),
+                      Text(
+                        'المرحلة ${_step + 1} من 3  •  المطلوب ${step.target}',
+                        style: TextStyle(fontSize: 12, color: colors.onSurfaceVariant),
+                      ),
+                    ],
+                    const SizedBox(height: 18),
+                    Center(
+                      child: Semantics(
+                        button: true,
+                        label: 'زيادة عداد التسبيح',
+                        child: InkWell(
+                          onTap: _loading || (_zahraMode && _step == 2 && _count >= 33)
+                              ? null
+                              : _increment,
+                          customBorder: const CircleBorder(),
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 160),
+                            width: dialSize,
+                            height: dialSize,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: theme.brightness == Brightness.dark
+                                  ? const Color(0xFF17231B)
+                                  : const Color(0xFFF2F5EC),
+                              border: Border.all(color: _gold, width: 2),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: _emerald.withValues(alpha: .14),
+                                  blurRadius: 18,
+                                  spreadRadius: 1,
+                                ),
+                              ],
+                            ),
+                            child: Center(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.fingerprint_rounded, color: _gold, size: dialSize * .34),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    _zahraMode && _step == 2 && _count >= 33 ? 'تمّ' : 'سبّح',
+                                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: colors.onSurface),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      _zahraMode && _step == 2 && _count >= 33
+                          ? 'تقبّل الله طاعتكم'
+                          : 'اضغط على الدائرة للتسبيح',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 12, height: 1.45, color: colors.onSurfaceVariant),
+                    ),
+                    const SizedBox(height: 14),
+                    Wrap(
+                      alignment: WrapAlignment.center,
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        OutlinedButton.icon(
+                          onPressed: _loading ? null : _reset,
+                          icon: const Icon(Icons.restart_alt_rounded, size: 19),
+                          label: const Text('إعادة من البداية'),
+                        ),
+                        if (_zahraMode && _step > 0)
+                          OutlinedButton.icon(
+                            onPressed: _loading
+                                ? null
+                                : () {
+                                    setState(() {
+                                      _step--;
+                                      _count = 0;
+                                    });
+                                    _persist();
+                                  },
+                            icon: const Icon(Icons.undo_rounded, size: 19),
+                            label: const Text('المرحلة السابقة'),
+                          ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 12),
             Text(
-              _zahraMode
-                  ? (_step == 2 && _count >= 33
-                      ? 'اكتمل التسبيح؛ يمكنك إعادة البدء لجولة جديدة'
-                      : 'اضغط على الدائرة للتسبيح')
-                  : 'اضغط على الدائرة لزيادة العداد',
+              'يُحفظ العداد على هذا الجهاز. يمكنك التبديل بين تسبيح الزهراء عليها السلام والعداد العام دون خلط العددين.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: _themeMuted(context), height: 1.5),
+              style: TextStyle(fontSize: 12, height: 1.6, color: colors.onSurfaceVariant),
             ),
-            SizedBox(height: 18),
-            Wrap(alignment: WrapAlignment.center, spacing: 10, children: [
-              OutlinedButton.icon(
-                onPressed: _loading ? null : _reset,
-                icon: Icon(Icons.refresh_rounded),
-                label: Text('إعادة من البداية'),
-              ),
-              if (_zahraMode && _step > 0)
-                OutlinedButton.icon(
-                  onPressed: _loading ? null : () {
-                    setState(() { _step--; _count = 0; });
-                    _persist();
-                  },
-                  icon: Icon(Icons.undo_rounded),
-                  label: Text('المرحلة السابقة'),
-                ),
-            ]),
-            if (_zahraMode && _step == 2 && _count >= 33)
-              Padding(
-                padding: EdgeInsets.only(top: 14),
-                child: Text('تقبّل الله طاعتكم', style: TextStyle(color: _gold, fontSize: 18, fontWeight: FontWeight.bold)),
-              ),
-          ]),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

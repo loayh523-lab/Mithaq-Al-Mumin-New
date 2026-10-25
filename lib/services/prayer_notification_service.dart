@@ -20,7 +20,7 @@ class PrayerNotificationService {
   static const int _scheduleRevision = 13;
 
   @visibleForTesting
-  static bool exactAlarmModeNeedsRefreshForTesting({
+  static bool shouldRefreshScheduleForExactAlarmMode({
     required bool? exactPermissionGranted,
     required bool lastScheduleUsedExactAlarms,
   }) {
@@ -113,7 +113,7 @@ class PrayerNotificationService {
         exactPermissionGranted = await android?.canScheduleExactNotifications();
         final lastScheduleUsedExactAlarms =
             prefs.getBool('prayer_schedule_exact_mode') ?? false;
-        if (exactAlarmModeNeedsRefreshForTesting(
+        if (shouldRefreshScheduleForExactAlarmMode(
           exactPermissionGranted: exactPermissionGranted,
           lastScheduleUsedExactAlarms: lastScheduleUsedExactAlarms,
         )) {

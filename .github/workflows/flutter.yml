@@ -69,7 +69,7 @@ jobs:
           {
             echo "### Android release build size"
             echo "- APK size: $MIB MiB ($BYTES bytes)"
-            echo "- SHA-256: `$SHA256`"
+            echo "- SHA-256: ${SHA256}"
             echo "- Size budget: warn above 80 MiB; keep the full Shia feature set."
           } >> "$GITHUB_STEP_SUMMARY"
           if (( BYTES > 80 * 1024 * 1024 )); then

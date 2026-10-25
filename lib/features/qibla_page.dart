@@ -1,16 +1,23 @@
 import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_compass/flutter_compass.dart';
+
 import '../services/prayer_locations.dart';
 import '../services/qibla_calculation.dart';
 
 const _qiblaGold = Color(0xFFD9B66D);
+const _qiblaGreen = Color(0xFF367B58);
 
-/// Live compass direction for the configured approximate Qal'at Sukar location.
+/// Live compass direction. The numeric bearing remains available if the
+/// device has no compass sensor or the sensor has not initialized yet.
 class QiblaPage extends StatefulWidget {
   const QiblaPage({super.key, this.onLocationChanged});
+
   final Future<void> Function()? onLocationChanged;
-  @override State<QiblaPage> createState() => _QiblaPageState();
+
+  @override
+  State<QiblaPage> createState() => _QiblaPageState();
 }
 
 class _QiblaPageState extends State<QiblaPage> {
@@ -20,41 +27,65 @@ class _QiblaPageState extends State<QiblaPage> {
   double? _declinationDegrees;
   String? _locationMessage;
 
-  @override void initState() { super.initState(); _loadCity(); }
+  @override
+  void initState() {
+    super.initState();
+    _loadCity();
+  }
 
   Future<void> _loadCity() async {
     try {
       final selected = await PrayerLocations.load();
       if (!mounted) return;
+      double? accuracy;
+      if (selected.id == 'current_location') {
+        accuracy = await PrayerLocations.currentLocationAccuracy();
+      }
+      if (!mounted) return;
       setState(() {
         _city = selected;
+        _gpsAccuracy = accuracy;
         _declinationDegrees = _tryDeclination(selected);
       });
-      if (selected.id == 'current_location') {
-        _gpsAccuracy = await PrayerLocations.currentLocationAccuracy();
-        if (mounted) setState(() {});
-      }
-    } catch (_) {}
+    } catch (_) {
+      // Keep the default city and the numeric Qibla bearing available.
+    }
   }
 
   Future<void> _refreshLocation() async {
-    setState(() { _gpsBusy = true; _locationMessage = null; });
-    final precise = await PrayerLocations.acquirePreciseLocation();
-    if (!mounted) return;
-    if (precise == null) {
-      setState(() => _locationMessage = 'تعذّر تحديد GPS دقيق. فعّل الموقع واسمح للتطبيق بالوصول إليه.');
-    } else {
-      final accuracy = await PrayerLocations.currentLocationAccuracy();
+    if (_gpsBusy) return;
+    setState(() {
+      _gpsBusy = true;
+      _locationMessage = null;
+    });
+    try {
+      final precise = await PrayerLocations.acquirePreciseLocation();
       if (!mounted) return;
-      setState(() {
-        _city = precise;
-        _gpsAccuracy = accuracy;
-        _declinationDegrees = _tryDeclination(precise);
-        _locationMessage = accuracy == null ? 'تم تحديث الموقع من GPS.' : 'دقة الموقع المعلنة من الجهاز نحو ${accuracy.round()} متر.';
-      });
-      await widget.onLocationChanged?.call();
+      if (precise == null) {
+        setState(() {
+          _locationMessage =
+              'ما قدرنا نحدد الموقع بدقة. فعّل الموقع واسمح للتطبيق باستخدامه، أو اعتمد إحداثيات المدينة المختارة.';
+        });
+      } else {
+        final accuracy = await PrayerLocations.currentLocationAccuracy();
+        if (!mounted) return;
+        setState(() {
+          _city = precise;
+          _gpsAccuracy = accuracy;
+          _declinationDegrees = _tryDeclination(precise);
+          _locationMessage = accuracy == null
+              ? 'تم تحديث الموقع من GPS.'
+              : 'تم تحديث الموقع؛ دقة GPS المعلنة نحو ${accuracy.round()} متر.';
+        });
+        await widget.onLocationChanged?.call();
+      }
+    } catch (_) {
+      if (mounted) {
+        setState(() => _locationMessage = 'تعذّر تحديث الموقع حالياً. تحقق من صلاحيات الموقع وحاول مجدداً.');
+      }
+    } finally {
+      if (mounted) setState(() => _gpsBusy = false);
     }
-    if (mounted) setState(() => _gpsBusy = false);
   }
 
   double? _tryDeclination(PrayerCity city) {
@@ -69,85 +100,203 @@ class _QiblaPageState extends State<QiblaPage> {
     }
   }
 
-  double get _bearing => qiblaBearingDegrees(
-    latitude: _city.latitude,
-    longitude: _city.longitude,
-  );
+  double get _trueBearing => qiblaBearingDegrees(
+        latitude: _city.latitude,
+        longitude: _city.longitude,
+      );
 
   double get _magneticBearing => magneticQiblaBearingDegrees(
-    trueBearing: _bearing,
-    declinationDegrees: _declinationDegrees ?? 0,
-  );
+        trueBearing: _trueBearing,
+        declinationDegrees: _declinationDegrees ?? 0,
+      );
 
   String get _declinationLabel {
     final value = _declinationDegrees;
-    if (value == null) return 'تعذّر حساب تصحيح الشمال المغناطيسي';
+    if (value == null) return 'تعذّر حساب تصحيح الشمال المغناطيسي؛ السهم يستخدم التصحيح الصفري مؤقتاً.';
     final direction = value >= 0 ? 'شرقاً' : 'غرباً';
     return 'تصحيح الشمال المغناطيسي: ${value.abs().toStringAsFixed(1)}° $direction';
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: Text('اتجاه القبلة'),
-      actions: [
-        IconButton(
-          tooltip: 'تحديث الموقع الدقيق',
-          onPressed: _gpsBusy ? null : _refreshLocation,
-          icon: _gpsBusy
-            ? SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
-            : Icon(Icons.my_location_rounded),
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.colorScheme.onSurfaceVariant;
+    final surface = theme.colorScheme.surface;
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('اتجاه القبلة'),
+        actions: [
+          IconButton(
+            tooltip: 'تحديث الموقع الدقيق',
+            onPressed: _gpsBusy ? null : _refreshLocation,
+            icon: _gpsBusy
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.my_location_rounded),
+          ),
+        ],
+      ),
+      body: StreamBuilder<CompassEvent?>(
+        stream: FlutterCompass.events,
+        builder: (context, snapshot) {
+          final heading = snapshot.data?.heading;
+          final sensorUnavailable = heading == null || !heading.isFinite;
+          return ListView(
+            padding: const EdgeInsets.fromLTRB(18, 12, 18, 28),
+            children: [
+              Container(
+                padding: const EdgeInsets.all(18),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(24),
+                  gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: theme.brightness == Brightness.dark
+                        ? const [Color(0xFF19392B), Color(0xFF111B16)]
+                        : const [Color(0xFFE7F2E9), Color(0xFFF8F5EB)],
+                  ),
+                  border: Border.all(color: _qiblaGold.withValues(alpha: .28)),
+                ),
+                child: Column(
+                  children: [
+                    const Icon(Icons.mosque_rounded, size: 34, color: _qiblaGold),
+                    const SizedBox(height: 8),
+                    Text(
+                      'اتجاه الكعبة المشرفة',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: theme.colorScheme.onSurface),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      '${_trueBearing.round()}° من الشمال الجغرافي',
+                      style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: _qiblaGold),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(_declinationLabel, textAlign: TextAlign.center, style: TextStyle(color: muted, fontSize: 12, height: 1.5)),
+                    const SizedBox(height: 18),
+                    SizedBox(
+                      width: 270,
+                      height: 270,
+                      child: sensorUnavailable
+                          ? _staticCompass(context, _magneticBearing)
+                          : Transform.rotate(
+                              angle: -heading * math.pi / 180,
+                              child: _compassFace(context, _magneticBearing),
+                            ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      sensorUnavailable
+                          ? 'قراءة الحساس غير متاحة؛ الاتجاه الرقمي أعلاه محسوب من موقعك.'
+                          : 'اتجاه الهاتف: ${heading.round()}° من الشمال المغناطيسي',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: muted, fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 14),
+              Card(
+                elevation: 0,
+                color: surface,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(Icons.location_on_rounded, color: _qiblaGold),
+                          const SizedBox(width: 8),
+                          Expanded(child: Text('الموقع المعتمد', style: TextStyle(fontWeight: FontWeight.w800, color: theme.colorScheme.onSurface))),
+                          TextButton.icon(
+                            onPressed: _gpsBusy ? null : _refreshLocation,
+                            icon: const Icon(Icons.gps_fixed_rounded, size: 18),
+                            label: const Text('تحديث'),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        '${_city.name} · ${_city.id == 'current_location' ? 'موقع الجهاز' : 'إحداثيات المدينة المختارة'}',
+                        style: TextStyle(color: muted, height: 1.5),
+                      ),
+                      if (_gpsAccuracy != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4),
+                          child: Text('دقة GPS المعلنة نحو ${_gpsAccuracy!.round()} متر', style: TextStyle(color: muted, fontSize: 12)),
+                        ),
+                      if (_locationMessage != null) ...[
+                        const SizedBox(height: 8),
+                        Text(_locationMessage!, style: const TextStyle(color: _qiblaGreen, height: 1.5)),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                'لتحسين الدقة: أبعد الهاتف عن المغناطيس والأغطية المغناطيسية والمعادن، وحرّكه بهدوء على شكل رقم 8. اتجاه السهم يعتمد على حساس الهاتف ومعايرته؛ إذا لم يتوفر الحساس، استخدم الدرجة الرقمية ولا تعتمد على السهم.',
+                style: TextStyle(color: muted, fontSize: 12, height: 1.65),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _staticCompass(BuildContext context, double bearing) {
+    return _compassFace(context, bearing, rotateFace: false);
+  }
+
+  Widget _compassFace(BuildContext context, double bearing, {bool rotateFace = true}) {
+    final theme = Theme.of(context);
+    final muted = theme.colorScheme.onSurfaceVariant;
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: _qiblaGold.withValues(alpha: .55), width: 2),
+          ),
         ),
-      ],
-    ),
-    body: StreamBuilder<CompassEvent?>(
-      stream: FlutterCompass.events,
-      builder: (context, snapshot) {
-        final heading = snapshot.data?.heading;
-        if (heading == null) {
-          return Center(child: Padding(padding: EdgeInsets.all(28), child: Column(mainAxisSize: MainAxisSize.min, children: [
-            Icon(Icons.explore_off_outlined, size: 58, color: _qiblaGold), SizedBox(height: 14),
-            Text('البوصلة غير متاحة', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)), SizedBox(height: 8),
-            Text('تأكد أن جهازك يحتوي على حساس بوصلة، وابتعد عن المغناطيس والأغطية المغناطيسية. جرّب تحريك الهاتف بشكل رقم 8 لمعايرة الحساس.', textAlign: TextAlign.center, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.6)),
-          ])));
-        }
-        return ListView(padding: const EdgeInsets.all(24), children: [
-          Container(padding: const EdgeInsets.all(24), decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface, borderRadius: BorderRadius.circular(28), border: Border.all(color: _qiblaGold.withValues(alpha: .3))), child: Column(children: [
-            Text('اتجاه الكعبة المشرفة', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)), SizedBox(height: 6),
-            Text('${_bearing.round()}° من الشمال الجغرافي', style: TextStyle(color: _qiblaGold, fontSize: 21, fontWeight: FontWeight.bold)),
-            SizedBox(height: 4),
-            Text(_declinationLabel, textAlign: TextAlign.center, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 12)),
-            SizedBox(height: 28),
-            SizedBox(
-              width: 250,
-              height: 250,
-              child: Transform.rotate(
-                angle: -heading * math.pi / 180,
-                child: Stack(alignment: Alignment.center, children: [
-                  Container(decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: _qiblaGold.withValues(alpha: .5), width: 2))),
-                  Positioned(top: 12, child: Text('شمال', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11, fontWeight: FontWeight.bold))),
-                  Positioned(bottom: 12, child: Text('جنوب', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11))),
-                  Positioned(left: 8, child: Text('غرب', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11))),
-                  Positioned(right: 8, child: Text('شرق', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11))),
-                  Transform.rotate(angle: _magneticBearing * math.pi / 180, child: Icon(Icons.navigation_rounded, size: 120, color: _qiblaGold)),
-                  Container(width: 16, height: 16, decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle)),
-                ]),
+        for (var degree = 0; degree < 360; degree += 30)
+          Transform.rotate(
+            angle: degree * math.pi / 180,
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                margin: const EdgeInsets.only(top: 7),
+                width: degree % 90 == 0 ? 3 : 1.5,
+                height: degree % 90 == 0 ? 15 : 8,
+                color: degree % 90 == 0 ? _qiblaGold : muted.withValues(alpha: .45),
               ),
             ),
-            SizedBox(height: 20), Text('اتجاه الهاتف: ${heading.round()}°', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
-          ])),
-          SizedBox(height: 18),
-          Text(
-            'الموقع المعتمد: ${_city.name} — ${_city.id == 'current_location' ? 'GPS من الجهاز' : 'إحداثيات مدينة تقريبية'}${_gpsAccuracy == null ? '' : ' (دقة GPS نحو ${_gpsAccuracy!.round()} م)'}. يُصحّح اتجاه السهم بفرق الشمال المغناطيسي وفق نموذج WMM2025 المحلي. دقة القراءة تعتمد أيضاً على حساس الهاتف ومعايرته؛ ابتعد عن المغناطيس والمعادن وحرّك الهاتف بشكل رقم 8.',
-            style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.6, fontSize: 12),
           ),
-          if (_locationMessage != null)
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Text(_locationMessage!, style: TextStyle(color: _qiblaGold, height: 1.5)),
+        Positioned(top: 24, child: Text('شمال', style: TextStyle(color: muted, fontWeight: FontWeight.bold, fontSize: 12))),
+        Positioned(bottom: 24, child: Text('جنوب', style: TextStyle(color: muted, fontSize: 12))),
+        Positioned(left: 18, child: Text('غرب', style: TextStyle(color: muted, fontSize: 12))),
+        Positioned(right: 18, child: Text('شرق', style: TextStyle(color: muted, fontSize: 12))),
+        Transform.rotate(
+          angle: bearing * math.pi / 180,
+          child: const Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: EdgeInsets.only(top: 44),
+              child: Icon(Icons.navigation_rounded, size: 92, color: _qiblaGold),
             ),
-        ]);
-      },
-    ),
-  );
+          ),
+        ),
+        Container(
+          width: 18,
+          height: 18,
+          decoration: BoxDecoration(color: theme.colorScheme.surface, shape: BoxShape.circle, border: Border.all(color: _qiblaGold, width: 2)),
+        ),
+      ],
+    );
+  }
 }

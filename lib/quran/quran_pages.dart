@@ -121,9 +121,37 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
               icon: Icon(Icons.bookmarks_outlined, color: _gold),
             ),
           ]),
-          const SizedBox(height: 5),
-          Text(_loading ? 'جارٍ تجهيز فهرس القرآن الكريم...' : '114 سورة • $verseCount آية', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
-          const SizedBox(height: 14),
+          const SizedBox(height: 8),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              borderRadius: BorderRadius.circular(15),
+              border: Border.all(color: _gold.withValues(alpha: .24)),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.menu_book_rounded, color: _gold, size: 21),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    _loading ? 'جارٍ تجهيز فهرس القرآن الكريم...' : 'القرآن الكريم',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                _QuranCountPill(label: 'السور', value: _loading ? '—' : '114'),
+                const SizedBox(width: 6),
+                _QuranCountPill(label: 'الآيات', value: _loading ? '—' : '$verseCount'),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
           TextField(
             controller: _search, onChanged: (_) => setState(() {}),
             decoration: InputDecoration(
@@ -142,7 +170,7 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
             : filtered.isEmpty
               ? Center(child: Text('ماكو سورة تطابق البحث', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)))
               : ListView.separated(
-                  padding: const EdgeInsets.fromLTRB(18, 8, 18, 18),
+                  padding: const EdgeInsets.fromLTRB(18, 4, 18, 18),
                   itemCount: filtered.length,
                   separatorBuilder: (_, __) => const SizedBox(height: 8),
                   itemBuilder: (context, i) {
@@ -151,7 +179,7 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
                       margin: EdgeInsets.zero, color: Theme.of(context).colorScheme.surface,
                       child: ListTile(
                         leading: CircleAvatar(backgroundColor: _emerald.withValues(alpha: .24), child: Text('${s.id}', style: TextStyle(color: _gold))),
-                        title: Text(s.name, style: TextStyle(fontSize: 19, fontWeight: FontWeight.w700)),
+                        title: Text(s.name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, height: 1.3)),
                         subtitle: Text('${s.type == 'meccan' ? 'مكية' : 'مدنية'} • ${s.totalVerses} آية', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 12)),
                         trailing: Icon(Icons.chevron_left_rounded, color: _gold),
                         onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
@@ -170,6 +198,28 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
   }
 }
 
+
+class _QuranCountPill extends StatelessWidget {
+  const _QuranCountPill({required this.label, required this.value});
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
+    decoration: BoxDecoration(
+      color: _emerald.withValues(alpha: .14),
+      borderRadius: BorderRadius.circular(10),
+    ),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(value, style: const TextStyle(color: _gold, fontSize: 13, fontWeight: FontWeight.w800)),
+        Text(label, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 9)),
+      ],
+    ),
+  );
+}
 
 class _QuranVerseMeta {
   const _QuranVerseMeta({required this.juz, required this.hizb, required this.page, this.rub});

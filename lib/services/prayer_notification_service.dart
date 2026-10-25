@@ -19,7 +19,10 @@ class PrayerNotificationService {
   // when migrating the bundled adhan sound on existing installations.
   static const int _scheduleRevision = 12;
 
-  static bool isPrayerNotificationId(int id) => id >= _idStart && id < _idStart + _daysToSchedule * 10;
+  static bool isPrayerNotificationId(int id) => _isPrayerReminderId(id);
+
+  @visibleForTesting
+  static bool isPrayerNotificationIdForTesting(int id) => isPrayerNotificationId(id);
 
   static Future<void> initialize() => _initialize();
 

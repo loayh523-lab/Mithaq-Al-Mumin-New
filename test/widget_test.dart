@@ -149,6 +149,9 @@ void main() {
     expect(PrayerNotificationService.isPrayerReminderNotificationIdForTesting(4295), isFalse);
     expect(PrayerNotificationService.isPrayerReminderNotificationIdForTesting(4299), isFalse);
     expect(PrayerNotificationService.isPrayerReminderNotificationIdForTesting(4300), isFalse);
+    expect(PrayerNotificationService.isPrayerNotificationIdForTesting(4000), isTrue);
+    expect(PrayerNotificationService.isPrayerNotificationIdForTesting(4005), isFalse);
+    expect(PrayerNotificationService.isPrayerNotificationIdForTesting(4010), isTrue);
   });
 
   testWidgets('drawer groups features and distinguishes the daily actions', (tester) async {

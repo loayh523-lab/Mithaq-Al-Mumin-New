@@ -53,22 +53,35 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
   }
 
   Future<void> _refreshLocation() async {
-    setState(() { _gpsBusy = true; _locationMessage = null; });
-    final precise = await PrayerLocations.acquirePreciseLocation();
-    if (!mounted) return;
-    if (precise == null) {
-      setState(() => _locationMessage = 'تعذّر تحديد GPS. فعّل الموقع واسمح للتطبيق بالوصول إليه.');
-    } else {
+    if (_gpsBusy) return;
+    setState(() {
+      _gpsBusy = true;
+      _locationMessage = null;
+    });
+    try {
+      final precise = await PrayerLocations.acquirePreciseLocation();
+      if (!mounted) return;
+      if (precise == null) {
+        setState(() => _locationMessage = 'تعذّر تحديد GPS. فعّل الموقع واسمح للتطبيق بالوصول إليه.');
+        return;
+      }
       final accuracy = await PrayerLocations.currentLocationAccuracy();
       if (!mounted) return;
       setState(() {
         city = precise;
         _gpsAccuracy = accuracy;
-        _locationMessage = accuracy == null ? 'تم تحديث الموقع بواسطة GPS.' : 'دقة الموقع المعلنة من الجهاز نحو ${accuracy.round()} متر.';
+        _locationMessage = accuracy == null
+            ? 'تم تحديث الموقع بواسطة GPS.'
+            : 'دقة الموقع المعلنة من الجهاز نحو ${accuracy.round()} متر.';
       });
       await widget.onLocationChanged?.call();
+    } catch (_) {
+      if (mounted) {
+        setState(() => _locationMessage = 'تعذّر تحديث الموقع حالياً. تحقق من إذن الموقع وحاول مرة أخرى.');
+      }
+    } finally {
+      if (mounted) setState(() => _gpsBusy = false);
     }
-    if (mounted) setState(() => _gpsBusy = false);
   }
   Future<void> _loadCorrection() async {
     final p = await SharedPreferences.getInstance();

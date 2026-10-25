@@ -12,9 +12,12 @@ const _qiblaGreen = Color(0xFF367B58);
 /// Live compass direction. The numeric bearing remains available if the
 /// device has no compass sensor or the sensor has not initialized yet.
 class QiblaPage extends StatefulWidget {
-  const QiblaPage({super.key, this.onLocationChanged});
+  const QiblaPage({super.key, this.onLocationChanged, this.compassEvents});
 
   final Future<void> Function()? onLocationChanged;
+
+  @visibleForTesting
+  final Stream<CompassEvent?>? compassEvents;
 
   @override
   State<QiblaPage> createState() => _QiblaPageState();
@@ -122,6 +125,9 @@ class _QiblaPageState extends State<QiblaPage> {
     final theme = Theme.of(context);
     final muted = theme.colorScheme.onSurfaceVariant;
     final surface = theme.colorScheme.surface;
+    final compassSize = (MediaQuery.sizeOf(context).width - 72)
+        .clamp(200.0, 270.0)
+        .toDouble();
     return Scaffold(
       appBar: AppBar(
         title: const Text('اتجاه القبلة'),
@@ -140,7 +146,7 @@ class _QiblaPageState extends State<QiblaPage> {
         ],
       ),
       body: StreamBuilder<CompassEvent?>(
-        stream: FlutterCompass.events,
+        stream: widget.compassEvents ?? FlutterCompass.events,
         builder: (context, snapshot) {
           final heading = snapshot.data?.heading;
           final sensorUnavailable = heading == null || !heading.isFinite;
@@ -177,8 +183,8 @@ class _QiblaPageState extends State<QiblaPage> {
                     Text(_declinationLabel, textAlign: TextAlign.center, style: TextStyle(color: muted, fontSize: 12, height: 1.5)),
                     const SizedBox(height: 18),
                     SizedBox(
-                      width: 270,
-                      height: 270,
+                      width: compassSize,
+                      height: compassSize,
                       child: sensorUnavailable
                           ? _staticCompass(context, _magneticBearing)
                           : Transform.rotate(

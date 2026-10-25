@@ -15,7 +15,7 @@ class SettingsPage extends StatefulWidget {
   @override State<SettingsPage> createState() => _SettingsPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
+class _SettingsPageState extends State<SettingsPage> with WidgetsBindingObserver {
   String _cityId = PrayerLocations.cities.first.id;
   PrayerCity _currentCity = PrayerLocations.cities.first;
   double _fontSize = 24;
@@ -43,10 +43,25 @@ class _SettingsPageState extends State<SettingsPage> {
   StreamSubscription<void>? _adhanCompleteSubscription;
   bool _isPlayingAdhan = false;
 
-  @override void initState() { super.initState(); _load(); }
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _load();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // Refresh settings after the user returns from Android's notification,
+      // exact-alarm, or battery-optimization screens.
+      unawaited(_load());
+    }
+  }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _adhanCompleteSubscription?.cancel();
     final player = _adhanPlayer;
     if (player != null) unawaited(player.dispose());
@@ -78,12 +93,16 @@ class _SettingsPageState extends State<SettingsPage> {
     try {
       final prefs = await SharedPreferences.getInstance();
       final savedCity = await PrayerLocations.load();
+      final actualNotificationPermission =
+          await PrayerNotificationService.notificationsAreEnabled();
       if (!mounted) return;
       setState(() {
         _currentCity = savedCity;
         _cityId = savedCity.id;
         _fontSize = (prefs.getDouble('quran_font_size') ?? 24).clamp(16, 34).toDouble();
-        _notificationsEnabled = prefs.getBool('prayer_notifications_enabled') ?? false;
+        _notificationsEnabled =
+            (prefs.getBool('prayer_notifications_enabled') ?? false) &&
+            actualNotificationPermission != false;
         _earlyAlertEnabled = prefs.getBool('prayer_early_alert_enabled') ?? false;
         _earlyAlertMinutes =
             (prefs.getInt('prayer_early_alert_minutes') ?? 5).clamp(1, 30).toInt();

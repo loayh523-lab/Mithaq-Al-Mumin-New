@@ -194,7 +194,9 @@ class PrayerNotificationService {
       final earlyAlertMinutes =
           (prefs.getInt('prayer_early_alert_minutes') ?? 5).clamp(1, 30).toInt();
       final now = tz.TZDateTime.now(tz.local);
-      final scheduledTasks = <Future<void>>[];
+      // Bound concurrent platform-channel calls. Scheduling up to 300 alarms
+      // all at once can make slower Android devices unresponsive during refresh.
+      final scheduledTasks = <Future<void> Function()>[];
       for (var dayOffset = 0; dayOffset < _daysToSchedule; dayOffset++) {
         final date = DateTime(now.year, now.month, now.day).add(Duration(days: dayOffset));
         final times = SolarPrayerTimes.forDate(date, city.latitude, city.longitude, 3.0);
@@ -213,10 +215,13 @@ class PrayerNotificationService {
           );
           final id = _idStart + dayOffset * 10 + index;
           if (scheduled.isAfter(now.add(const Duration(seconds: 15)))) {
-            scheduledTasks.add(_plugin.zonedSchedule(
+            final prayerTitle = 'حان وقت الصلاة — ${prayerLabels[index]}';
+            final prayerBody =
+                'حان وقت ${prayerLabels[index]} وفق الحساب الفلكي التقديري داخل ميثاق المؤمن.';
+            scheduledTasks.add(() => _plugin.zonedSchedule(
               id,
-              'حان وقت الصلاة — ${prayerLabels[index]}',
-              'حان وقت ${prayerLabels[index]} وفق الحساب الفلكي التقديري داخل ميثاق المؤمن.',
+              prayerTitle,
+              prayerBody,
               scheduled,
               const NotificationDetails(
                 android: AndroidNotificationDetails(
@@ -238,10 +243,13 @@ class PrayerNotificationService {
               Duration(minutes: earlyAlertMinutes),
             );
             if (earlyAt.isAfter(now.add(const Duration(seconds: 15)))) {
-              scheduledTasks.add(_plugin.zonedSchedule(
+              final earlyTitle = 'تنبيه قبل الصلاة — ${prayerLabels[index]}';
+              final earlyBody =
+                  'باقي $earlyAlertMinutes دقائق على وقت صلاة ${prayerLabels[index]}.';
+              scheduledTasks.add(() => _plugin.zonedSchedule(
                 id + 5,
-                'تنبيه قبل الصلاة — ${prayerLabels[index]}',
-                'باقي $earlyAlertMinutes دقائق على وقت صلاة ${prayerLabels[index]}.',
+                earlyTitle,
+                earlyBody,
                 earlyAt,
                 const NotificationDetails(
                   android: AndroidNotificationDetails(
@@ -259,7 +267,14 @@ class PrayerNotificationService {
           }
         }
       }
-      await Future.wait(scheduledTasks);
+      for (var start = 0; start < scheduledTasks.length; start += 8) {
+        final end = start + 8 < scheduledTasks.length
+            ? start + 8
+            : scheduledTasks.length;
+        await Future.wait(
+          scheduledTasks.getRange(start, end).map((schedule) => schedule()),
+        );
+      }
       final scheduled = await _plugin.pendingNotificationRequests();
       final prayerReminders = scheduled
           .where((request) => _isPrayerReminderId(request.id))

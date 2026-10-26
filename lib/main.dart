@@ -1411,49 +1411,6 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
           ],
         ),
         SizedBox(height: 10),
-        LayoutBuilder(
-          builder: (context, constraints) {
-            final columns = constraints.maxWidth >= 410 ? 3 : 2;
-            return GridView.count(
-              crossAxisCount: columns,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              childAspectRatio: columns == 2 ? 1.22 : 1.02,
-              children: [
-                _homeMiniShortcut(
-                  Icons.explore_rounded, 'اتجاه القبلة',
-                  () => _pushPage(QiblaPage(onLocationChanged: _handleLocationChanged)),
-                ),
-                _homeMiniShortcut(
-                  Icons.fingerprint_rounded, 'التسبيح',
-                  () => _pushPage(const TasbeehPage()),
-                ),
-                _homeMiniShortcut(
-                  Icons.shield_moon_rounded, 'الأذكار',
-                  () => _pushPage(const DhikrFortressPage()),
-                ),
-                _homeMiniShortcut(
-                  Icons.handshake_rounded, 'الأعمال الصالحة',
-                  () => _pushPage(const GoodDeedsPage()),
-                ),
-                _homeMiniShortcut(
-                  Icons.bookmark_added_rounded, 'الختمة',
-                  () => _pushPage(const KhatmaPage()),
-                ),
-                _homeMiniShortcut(
-                  Icons.event_note_rounded, 'التقويم الهجري',
-                  () => _pushPage(PrayerCalendarPage(
-                    initialTab: 2,
-                    onLocationChanged: _handleLocationChanged,
-                    onHijriCorrectionChanged: _loadDashboardData,
-                  )),
-                ),
-              ],
-            );
-          },
-        ),
         SizedBox(height: 20),
         Container(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
@@ -1483,7 +1440,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
                       children: [
                         Text('وِرد اليوم', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900)),
                         SizedBox(height: 2),
-                        Text('عمل يتجدّد بحسب التاريخ الهجري', style: TextStyle(color: _themeMuted(context), fontSize: 12)),
+                        Text('تذكير بعمل مقترح', style: TextStyle(color: _themeMuted(context), fontSize: 12)),
                       ],
                     ),
                   ),
@@ -1494,10 +1451,6 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
                 ],
               ),
               SizedBox(height: 13),
-              _dailyDhikrRow(Icons.check_circle_outline_rounded, 'الحوقلة', 'لا حول ولا قوة إلا بالله'),
-              _dailyDhikrRow(Icons.favorite_border_rounded, 'الاستغفار', 'أستغفر الله وأتوب إليه'),
-              _dailyDhikrRow(Icons.spa_outlined, 'الصلاة على محمد وآل محمد', 'اللهم صلِّ على محمد وآل محمد'),
-              Divider(height: 20, color: Color(0x224EB58B)),
               Material(
                 type: MaterialType.transparency,
                 child: CheckboxListTile(
@@ -1513,7 +1466,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
               ),
               SizedBox(height: 2),
               Text(
-                'يتغيّر العمل المقترح بحسب اليوم الهجري بعد تطبيق تصحيح التاريخ، وتُحفظ علامة الإنجاز لكل يوم ميلادي حتى لا تضيع متابعة إنجازك.',
+                'يتغيّر الاقتراح بحسب التاريخ الهجري للتذكير فقط؛ ولا يعني تخصيص العمل بهذا اليوم من دون مصدر شرعي. تُحفظ علامة الإنجاز لكل يوم ميلادي.',
                 style: TextStyle(color: _themeMuted(context), fontSize: 11, height: 1.6),
               ),
             ],

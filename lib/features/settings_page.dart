@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/prayer_locations.dart';
@@ -151,7 +152,17 @@ class _SettingsPageState extends State<SettingsPage> with WidgetsBindingObserver
       final city = await PrayerLocations.acquirePreciseLocation();
       if (!mounted) return;
       if (city == null) {
-        _message('ما حصلنا GPS بدقة كافية. فعّل الموقع واسمح للتطبيق بالموقع، ثم جرّب مجدداً.');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Text('ما حصلنا GPS بدقة كافية. فعّل الموقع واسمح للتطبيق بالموقع، ثم جرّب مجدداً.'),
+              action: SnackBarAction(
+                label: 'أذونات التطبيق',
+                onPressed: () => unawaited(_openAppPermissionsSettings()),
+              ),
+            ),
+          );
+        }
         return;
       }
       setState(() { _currentCity = city; _cityId = city.id; });
@@ -313,6 +324,48 @@ class _SettingsPageState extends State<SettingsPage> with WidgetsBindingObserver
     await prefs.setDouble('quran_font_size', value);
   }
 
+  Future<void> _openAppPermissionsSettings() async {
+    try {
+      await AppSettings.openAppSettings();
+    } catch (_) {
+      if (mounted) _message('تعذّر فتح إعدادات التطبيق. افتحها يدوياً من إعدادات أندرويد.');
+    }
+  }
+
+  Future<void> _openNotificationSettings() async {
+    try {
+      await AppSettings.openAppSettings(type: AppSettingsType.notification);
+    } catch (_) {
+      await _openAppPermissionsSettings();
+      if (mounted) _message('افتح قسم الإشعارات داخل إعدادات التطبيق واسمح بعرضها.');
+    }
+  }
+
+  Future<void> _openDeviceLocationSettings() async {
+    try {
+      await AppSettings.openAppSettings(type: AppSettingsType.location);
+    } catch (_) {
+      if (mounted) _message('تعذّر فتح إعدادات الموقع. فعّل الموقع من لوحة الإعدادات السريعة.');
+    }
+  }
+
+  Future<void> _openExactAlarmSettings() async {
+    try {
+      final granted = await PrayerNotificationService.requestExactAlarmsPermission();
+      if (granted == true) {
+        if (_notificationsEnabled) await _refreshReminderSchedule();
+        if (mounted) _message('تم منح إذن المنبهات الدقيقة. افحص جدولة الأذان مرة ثانية.');
+      } else {
+        if (mounted) {
+          _message('إذا ما ظهرت صفحة الإذن، افتح إعدادات أذونات التطبيق وابحث عن «المنبهات والتذكيرات».');
+        }
+        await _openAppPermissionsSettings();
+      }
+    } catch (_) {
+      if (mounted) _message('تعذّر فتح إذن المنبهات الدقيقة. افتح إعدادات التطبيق وتحقق منه يدوياً.');
+    }
+  }
+
   void _message(String text) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
 
   @override Widget build(BuildContext context) {
@@ -381,6 +434,24 @@ class _SettingsPageState extends State<SettingsPage> with WidgetsBindingObserver
               label: Text(_gpsBusy ? 'جارٍ تحديد الموقع...' : 'استخدام موقعي الحالي تلقائياً'),
             ),
           ),
+          const SizedBox(height: 8),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: _loaded ? _openAppPermissionsSettings : null,
+              icon: const Icon(Icons.admin_panel_settings_outlined),
+              label: const Text('فتح إعدادات أذونات التطبيق'),
+            ),
+          ),
+          const SizedBox(height: 6),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: _loaded ? _openDeviceLocationSettings : null,
+              icon: const Icon(Icons.location_searching_rounded),
+              label: const Text('فتح إعدادات الموقع في الجهاز'),
+            ),
+          ),
           Text(
             city.id == 'current_location'
                 ? 'الموقع الحالي: ${city.latitude.toStringAsFixed(4)}, ${city.longitude.toStringAsFixed(4)} — محفوظ على الجهاز'
@@ -403,6 +474,15 @@ class _SettingsPageState extends State<SettingsPage> with WidgetsBindingObserver
               value: _notificationsEnabled,
               onChanged: _loaded && !_notificationBusy ? _toggleNotifications : null,
               activeThumbColor: _settingsGold,
+            ),
+          ),
+          const SizedBox(height: 6),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: _loaded ? _openNotificationSettings : null,
+              icon: const Icon(Icons.notifications_outlined),
+              label: const Text('فتح إعدادات إشعارات أندرويد'),
             ),
           ),
           ExpansionTile(
@@ -507,6 +587,15 @@ class _SettingsPageState extends State<SettingsPage> with WidgetsBindingObserver
               onPressed: _loaded ? _checkNotificationSchedule : null,
               icon: const Icon(Icons.fact_check_outlined),
               label: Text('فحص جدولة الأذان'),
+            ),
+          ),
+          const SizedBox(height: 8),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: _loaded ? _openExactAlarmSettings : null,
+              icon: const Icon(Icons.alarm_on_rounded),
+              label: const Text('فتح إذن المنبهات والتذكيرات الدقيقة'),
             ),
           ),
           Text('التسجيل المضمّن هو الأذان الذي اختاره صاحب التطبيق: الأذان من العتبة العلوية المقدسة بصوت القارئ الشيخ شبّر معلة.', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11, height: 1.5)),

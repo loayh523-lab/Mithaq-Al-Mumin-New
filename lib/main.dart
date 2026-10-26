@@ -7,6 +7,7 @@ import 'package:share_plus/share_plus.dart';
 import 'data/religious_content.dart';
 import 'quran/quran_pages.dart';
 import 'features/prayer_calendar_page.dart';
+import 'features/religious_occasions_page.dart';
 import 'features/qibla_page.dart';
 import 'features/settings_page.dart';
 import 'features/smart_search_page.dart';
@@ -520,6 +521,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
       (
         title: 'المناسبات',
         items: [
+          _sectionGridItem(icon: Icons.event_available_rounded, title: 'تقويم المناسبات', onTap: () => _pushPage(const ReligiousOccasionsPage())),
           _sectionGridItem(icon: Icons.calendar_month_rounded, title: 'أعمال المناسبات', onTap: () => _pushPage(const ShiaTextLibraryPage(initialCategory: 'الأعمال والمناسبات'))),
           _sectionGridItem(icon: Icons.location_on_rounded, title: 'زيارة الأربعين', onTap: () => _pushPage(const ArbaeenGuidePage())),
           _sectionGridItem(icon: Icons.explore_rounded, title: 'الاستخارة القرآنية', onTap: () => _pushPage(const IstikharaGuidePage())),
@@ -752,6 +754,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
                 _drawerSectionTitle('المعرفة والمناسبات', Icons.local_library_rounded),
                 _drawerGrid(
                   children: [
+                    _drawerGridItem(Icons.event_available_rounded, 'المناسبات الدينية', () => _openDrawerPage(const ReligiousOccasionsPage())),
                     _drawerGridItem(Icons.calendar_month_rounded, 'التقويم الهجري', () => _openDrawerPage(PrayerCalendarPage(initialTab: 2, onLocationChanged: _handleLocationChanged, onHijriCorrectionChanged: _loadDashboardData))),
                     _drawerGridItem(Icons.brightness_5_rounded, 'أسماء الله الحسنى', () => _openDrawerPage(const NamesOfAllahPage())),
                     _drawerGridItem(Icons.manage_search_rounded, 'الباحث الذكي', () => _openDrawerPage(const SmartSearchPage())),

@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mithaq_al_mumin/main.dart';
 import 'package:mithaq_al_mumin/quran/quran_pages.dart';
 import 'package:mithaq_al_mumin/features/prayer_calendar_page.dart';
+import 'package:mithaq_al_mumin/data/religious_occasions.dart';
 import 'package:mithaq_al_mumin/features/faith_library_pages.dart';
 import 'package:mithaq_al_mumin/features/shia_text_library_page.dart';
 import 'package:mithaq_al_mumin/features/good_deeds_page.dart';
@@ -24,6 +25,44 @@ import 'package:mithaq_al_mumin/services/app_theme.dart';
 import 'package:mithaq_al_mumin/services/prayer_locations.dart';
 
 void main() {
+  test('Fatima al-Zahra martyrdom preserves both calendar narrations', () {
+    final seventyFiveDayNarration = religiousOccasionsForHijriDate(13, 5);
+    final ninetyFiveDayNarration = religiousOccasionsForHijriDate(3, 6);
+
+    expect(seventyFiveDayNarration, hasLength(1));
+    expect(ninetyFiveDayNarration, hasLength(1));
+    expect(
+      seventyFiveDayNarration.single.title,
+      'شهادة السيدة فاطمة الزهراء عليها السلام',
+    );
+    expect(
+      ninetyFiveDayNarration.single.title,
+      'شهادة السيدة فاطمة الزهراء عليها السلام',
+    );
+    expect(
+      seventyFiveDayNarration.single.qualification,
+      contains('خمسة وسبعون يوماً'),
+    );
+    expect(
+      ninetyFiveDayNarration.single.qualification,
+      contains('خمسة وتسعون يوماً'),
+    );
+    expect(
+      seventyFiveDayNarration.single.displayTitle,
+      isNot(ninetyFiveDayNarration.single.displayTitle),
+    );
+  });
+
+  test('religious occasion data has valid Hijri date fields and Arabic titles', () {
+    expect(shiaReligiousOccasions.length, greaterThanOrEqualTo(40));
+    for (final occasion in shiaReligiousOccasions) {
+      expect(occasion.hijriDay, inInclusiveRange(1, 30));
+      expect(occasion.hijriMonth, inInclusiveRange(1, 12));
+      expect(occasion.title.trim(), isNotEmpty);
+      expect(occasion.kindLabel.trim(), isNotEmpty);
+    }
+  });
+
   setUp(() async {
     SharedPreferences.setMockInitialValues({});
     await AppTheme.load();

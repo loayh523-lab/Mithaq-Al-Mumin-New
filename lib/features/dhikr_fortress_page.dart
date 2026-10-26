@@ -30,7 +30,8 @@ class DhikrFortressPage extends StatefulWidget {
   State<DhikrFortressPage> createState() => _DhikrFortressPageState();
 }
 
-class _DhikrFortressPageState extends State<DhikrFortressPage> {
+class _DhikrFortressPageState extends State<DhikrFortressPage>
+    with WidgetsBindingObserver {
   static const _items = <_DhikrItem>[
     _DhikrItem(
       id: 'shield-prayer',
@@ -116,7 +117,17 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _load();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // The app may stay open overnight; refresh the date-picked item when it
+    // returns to the foreground so the daily selection is not stale.
+    if (state == AppLifecycleState.resumed && mounted) {
+      setState(() {});
+    }
   }
 
   Future<void> _load() async {
@@ -200,6 +211,7 @@ class _DhikrFortressPageState extends State<DhikrFortressPage> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _searchController.dispose();
     super.dispose();
   }

@@ -81,8 +81,15 @@ void main() {
     await tester.enterText(find.byType(TextField), 'فاطمة الزهراء');
     await tester.pumpAndSettle();
 
-    expect(find.text('شهادة السيدة فاطمة الزهراء عليها السلام'), findsNWidgets(2));
+    expect(find.text('شهادة السيدة فاطمة الزهراء عليها السلام'), findsOneWidget);
     expect(find.textContaining('خمسة وسبعون يوماً'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.textContaining('خمسة وتسعون يوماً'),
+      160,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('شهادة السيدة فاطمة الزهراء عليها السلام'), findsOneWidget);
     expect(find.textContaining('خمسة وتسعون يوماً'), findsOneWidget);
   });
 
@@ -402,15 +409,21 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(find.text('الخدمات والمتابعة'), findsOneWidget);
-    for (final icon in [
-      Icons.bookmark_added_rounded,
-      Icons.event_available_rounded,
-    ]) {
-      final finder = find.descendant(of: find.byType(Drawer), matching: find.byIcon(icon));
-      await tester.scrollUntilVisible(finder, 130, scrollable: drawerScroll);
-      await tester.pumpAndSettle();
-      expect(finder, findsOneWidget);
-    }
+    final bookmarksIcon = find.descendant(
+      of: find.byType(Drawer),
+      matching: find.byIcon(Icons.bookmark_added_rounded),
+    );
+    await tester.scrollUntilVisible(bookmarksIcon, 130, scrollable: drawerScroll);
+    await tester.pumpAndSettle();
+    expect(bookmarksIcon, findsOneWidget);
+
+    final occasionsEntry = find.descendant(
+      of: find.byType(Drawer),
+      matching: find.text('المناسبات الدينية'),
+    );
+    await tester.scrollUntilVisible(occasionsEntry, 130, scrollable: drawerScroll);
+    await tester.pumpAndSettle();
+    expect(occasionsEntry, findsOneWidget);
     await tester.scrollUntilVisible(
       find.descendant(of: find.byType(Drawer), matching: find.text('المعرفة والمناسبات')),
       180,

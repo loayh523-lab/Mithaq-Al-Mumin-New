@@ -1410,7 +1410,6 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
             ),
           ],
         ),
-        SizedBox(height: 10),
         SizedBox(height: 20),
         Container(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
@@ -1556,89 +1555,6 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _homeMiniShortcut(IconData icon, String title, VoidCallback onTap) {
-    final scheme = Theme.of(context).colorScheme;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final accent = _drawerAccent(title);
-    return Material(
-      color: Colors.transparent,
-      borderRadius: BorderRadius.circular(18),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(18),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-          decoration: BoxDecoration(
-            color: scheme.surface,
-            borderRadius: BorderRadius.circular(18),
-            border: Border.all(
-              color: accent.withValues(alpha: isDark ? .25 : .24),
-            ),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: 46,
-                height: 46,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: accent.withValues(alpha: isDark ? .20 : .12),
-                  border: Border.all(color: accent.withValues(alpha: .36)),
-                ),
-                child: Icon(icon, color: accent, size: 23),
-              ),
-              const SizedBox(height: 9),
-              Text(
-                title,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: scheme.onSurface,
-                  fontSize: 12,
-                  height: 1.35,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _dailyDhikrRow(IconData icon, String title, String text) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5),
-      child: Row(
-        children: [
-          Container(
-            width: 34,
-            height: 34,
-            decoration: BoxDecoration(
-              color: _emerald.withValues(alpha: .13),
-              borderRadius: BorderRadius.circular(11),
-            ),
-            child: Icon(icon, color: _gold, size: 19),
-          ),
-          SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13)),
-                SizedBox(height: 2),
-                Text(text, style: TextStyle(color: _themeMuted(context), fontSize: 12)),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }

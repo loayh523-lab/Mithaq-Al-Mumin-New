@@ -40,7 +40,7 @@ class PrayerNotificationService {
     tz_data.initializeTimeZones();
     tz.setLocalLocation(tz.getLocation('Asia/Baghdad'));
     const settings = InitializationSettings(
-      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+      android: AndroidInitializationSettings('mithaq_notification'),
     );
     await _plugin.initialize(
       settings,
@@ -78,6 +78,7 @@ class PrayerNotificationService {
         const NotificationDetails(
           android: AndroidNotificationDetails(
             _adhanChannelId, 'أذان الصلاة',
+            icon: 'mithaq_notification',
             channelDescription: 'أذان الصلاة من التسجيل المرفق بالتطبيق. إذا لم تسمع الصوت فتحقق من إعدادات قناة أذان الصلاة ومستوى صوت التنبيهات.',
             importance: Importance.high, priority: Priority.high,
             sound: RawResourceAndroidNotificationSound('adhan_shabbar_maalla'),
@@ -249,7 +250,8 @@ class PrayerNotificationService {
                 android: AndroidNotificationDetails(
                   _adhanChannelId,
                   'أذان الصلاة',
-                  channelDescription: 'أذان الصلاة من التسجيل المرفق بالتطبيق. إذا لم تسمع الصوت فتحقق من إعدادات قناة أذان الصلاة ومستوى صوت التنبيهات.',
+                  icon: 'mithaq_notification',
+            channelDescription: 'أذان الصلاة من التسجيل المرفق بالتطبيق. إذا لم تسمع الصوت فتحقق من إعدادات قناة أذان الصلاة ومستوى صوت التنبيهات.',
                   importance: Importance.high,
                   priority: Priority.high,
                   sound: RawResourceAndroidNotificationSound('adhan_shabbar_maalla'),
@@ -277,6 +279,7 @@ class PrayerNotificationService {
                   android: AndroidNotificationDetails(
                     'mithaq_prayer_early_v1',
                     'التنبيه قبل الصلاة',
+                    icon: 'mithaq_notification',
                     channelDescription: 'تنبيه هادئ قبل موعد الصلاة',
                     importance: Importance.defaultImportance,
                     priority: Priority.defaultPriority,

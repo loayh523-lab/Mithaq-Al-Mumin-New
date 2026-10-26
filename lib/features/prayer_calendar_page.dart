@@ -534,15 +534,18 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
             final day = index + 1;
             final gregorian = DateTime(year, month, day);
             final hijri = _Hijri.fromGregorian(gregorian.add(Duration(days: correction)));
-            final occasion = _occasion(hijri);
+            final occasions = _occasions(hijri);
             final hijriLabel = '${hijri.day} ${hijri.monthName} ${hijri.year} هـ';
+            final subtitle = occasions.isEmpty
+                ? hijriLabel
+                : '$hijriLabel\n${occasions.join('\n')}';
             return ListTile(
               dense: true,
               leading: SizedBox(width: 30, child: Text('$day', textAlign: TextAlign.center, style: TextStyle(color: _gold, fontWeight: FontWeight.bold))),
               title: Text('$day ${_gregorianMonthName(month)} $year م'),
-              subtitle: Text(occasion == null ? hijriLabel : '$hijriLabel\n$occasion', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.5)),
-              isThreeLine: occasion != null,
-              trailing: occasion == null ? null : Icon(Icons.event_available_rounded, color: _gold, size: 18),
+              subtitle: Text(subtitle, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.5)),
+              isThreeLine: occasions.isNotEmpty,
+              trailing: occasions.isEmpty ? null : Icon(Icons.event_available_rounded, color: _gold, size: 18),
               onTap: () => setState(() { date = gregorian; tab = 0; }),
             );
           }),

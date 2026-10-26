@@ -19,11 +19,13 @@ class _ReligiousOccasionsPageState extends State<ReligiousOccasionsPage> {
   ReligiousOccasionKind? _kind;
   int _hijriCorrection = 0;
   late DateTime _today;
+  Map<String, DateTime> _nextDates = <String, DateTime>{};
 
   @override
   void initState() {
     super.initState();
     _today = DateUtils.dateOnly(DateTime.now());
+    _rebuildNextDates();
     _loadHijriCorrection();
   }
 
@@ -37,23 +39,38 @@ class _ReligiousOccasionsPageState extends State<ReligiousOccasionsPage> {
     try {
       final prefs = await SharedPreferences.getInstance();
       if (!mounted) return;
-      setState(() => _hijriCorrection = prefs.getInt('hijri_correction') ?? 0);
+      setState(() {
+        _hijriCorrection = prefs.getInt('hijri_correction') ?? 0;
+        _rebuildNextDates();
+      });
     } catch (_) {
       // The page still works with the default civil-calendar estimate.
     }
   }
 
-  DateTime? _nextGregorianDate(ReligiousOccasion occasion) {
+  String _dateKey(int day, int month) => '$month-$day';
+
+  void _rebuildNextDates() {
+    final wantedDates = shiaReligiousOccasions
+        .map((occasion) => _dateKey(occasion.hijriDay, occasion.hijriMonth))
+        .toSet();
+    final nextDates = <String, DateTime>{};
+
+    // Scan the calendar once, not once per event on every rebuild.
     for (var offset = 0; offset <= 400; offset++) {
       final candidate = _today.add(Duration(days: offset));
       final hijri = hijriDateParts(candidate, correction: _hijriCorrection);
-      if (hijri.day == occasion.hijriDay &&
-          hijri.month == occasion.hijriMonth) {
-        return candidate;
+      final key = _dateKey(hijri.day, hijri.month);
+      if (wantedDates.contains(key)) {
+        nextDates.putIfAbsent(key, () => candidate);
       }
+      if (nextDates.length == wantedDates.length) break;
     }
-    return null;
+    _nextDates = nextDates;
   }
+
+  DateTime? _nextGregorianDate(ReligiousOccasion occasion) =>
+      _nextDates[_dateKey(occasion.hijriDay, occasion.hijriMonth)];
 
   List<({ReligiousOccasion occasion, DateTime? date})> get _visibleOccasions {
     final query = _normalize(_query);

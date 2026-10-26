@@ -5,6 +5,7 @@ import 'package:mithaq_al_mumin/main.dart';
 import 'package:mithaq_al_mumin/quran/quran_pages.dart';
 import 'package:mithaq_al_mumin/features/prayer_calendar_page.dart';
 import 'package:mithaq_al_mumin/data/religious_occasions.dart';
+import 'package:mithaq_al_mumin/features/religious_occasions_page.dart';
 import 'package:mithaq_al_mumin/features/faith_library_pages.dart';
 import 'package:mithaq_al_mumin/features/shia_text_library_page.dart';
 import 'package:mithaq_al_mumin/features/good_deeds_page.dart';
@@ -66,6 +67,40 @@ void main() {
   setUp(() async {
     SharedPreferences.setMockInitialValues({});
     await AppTheme.load();
+  });
+
+  testWidgets('religious occasions search keeps both Fatima Zahra narrations visible', (tester) async {
+    await tester.pumpWidget(const MaterialApp(
+      home: Directionality(
+        textDirection: TextDirection.rtl,
+        child: ReligiousOccasionsPage(),
+      ),
+    ));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField), 'فاطمة الزهراء');
+    await tester.pumpAndSettle();
+
+    expect(find.text('شهادة السيدة فاطمة الزهراء عليها السلام'), findsNWidgets(2));
+    expect(find.textContaining('خمسة وسبعون يوماً'), findsOneWidget);
+    expect(find.textContaining('خمسة وتسعون يوماً'), findsOneWidget);
+  });
+
+  testWidgets('religious occasions category filters the list', (tester) async {
+    await tester.pumpWidget(const MaterialApp(
+      home: Directionality(
+        textDirection: TextDirection.rtl,
+        child: ReligiousOccasionsPage(),
+      ),
+    ));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('ولادات'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('ذكرى ولادة أمير المؤمنين الإمام علي عليه السلام'), findsOneWidget);
+    expect(find.text('شهادة السيدة فاطمة الزهراء عليها السلام'), findsNothing);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('settings theme switch updates the app and persists the choice', (tester) async {

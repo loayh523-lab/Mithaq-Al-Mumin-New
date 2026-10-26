@@ -201,6 +201,12 @@ void main() {
 
   testWidgets('home screen shows the agreed dashboard and drawer navigation opens tasbeeh', (tester) async {
     await tester.pumpWidget(const MithaqApp());
+    // Service destinations stay in the drawer/sections instead of crowding the home screen.
+    expect(find.text('اتجاه القبلة'), findsNothing);
+    expect(find.text('التسبيح'), findsNothing);
+    expect(find.text('الأذكار'), findsNothing);
+    expect(find.text('الختمة'), findsNothing);
+    expect(find.text('التقويم الهجري'), findsNothing);
     expect(find.text('ميثاق المؤمن'), findsWidgets);
     expect(find.text(hijriDateLabel(DateTime.now())), findsOneWidget);
     expect(find.text('الصلاة القادمة'), findsOneWidget);

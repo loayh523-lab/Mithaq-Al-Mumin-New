@@ -52,6 +52,27 @@ void main() {
     expect(prefs.getBool('app_theme_dark'), isFalse);
   });
 
+  testWidgets('settings expose direct routes for notification and location permissions', (tester) async {
+    await tester.pumpWidget(const MithaqApp());
+    await tester.tap(find.byIcon(Icons.menu));
+    await tester.pumpAndSettle();
+    await tester.tap(find.descendant(
+      of: find.byType(Drawer),
+      matching: find.text('الإعدادات'),
+    ));
+    await tester.pumpAndSettle();
+
+    expect(find.text('فتح إعدادات أذونات التطبيق'), findsOneWidget);
+    expect(find.text('فتح إعدادات الموقع في الجهاز'), findsOneWidget);
+    expect(find.text('فتح إعدادات إشعارات أندرويد'), findsOneWidget);
+
+    await tester.ensureVisible(find.text('خيارات الأذان المتقدمة'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('خيارات الأذان المتقدمة'));
+    await tester.pumpAndSettle();
+    expect(find.text('فتح إذن المنبهات والتذكيرات الدقيقة'), findsOneWidget);
+  });
+
   testWidgets('home prayer-time action opens the prayer calendar rather than settings', (tester) async {
     await tester.pumpWidget(const MithaqApp());
     final prayerTimesAction = find.text('عرض مواقيت الصلوات الخمس');

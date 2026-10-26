@@ -327,7 +327,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('اتجاه القبلة'), findsOneWidget);
-    expect(find.text('حصن الأذكار'), findsOneWidget);
+    expect(find.text('الأذكار'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 

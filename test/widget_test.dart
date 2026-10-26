@@ -386,7 +386,7 @@ void main() {
     expect(find.text('نسخة قيد التطوير • راجع المصادر عند الحاجة'), findsOneWidget);
   });
 
-  testWidgets('quick actions adapt to a narrow phone width without layout errors', (tester) async {
+  testWidgets('quiet home stays uncluttered on a narrow phone and services remain in the drawer', (tester) async {
     tester.view.physicalSize = const Size(360, 800);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
@@ -400,8 +400,29 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('اتجاه القبلة'), findsOneWidget);
-    expect(find.text('الأذكار'), findsOneWidget);
+    // Secondary services were intentionally moved off the home dashboard.
+    expect(find.text('اتجاه القبلة'), findsNothing);
+    expect(find.text('الأذكار'), findsNothing);
+    expect(tester.takeException(), isNull);
+
+    await tester.tap(find.byIcon(Icons.menu));
+    await tester.pumpAndSettle();
+    final drawer = find.byType(Drawer);
+    final drawerScroll = find.descendant(
+      of: drawer,
+      matching: find.byType(Scrollable),
+    ).first;
+    final qiblaItem = find.descendant(
+      of: drawer,
+      matching: find.text('اتجاه القبلة'),
+    );
+    await tester.scrollUntilVisible(
+      qiblaItem,
+      180,
+      scrollable: drawerScroll,
+    );
+    await tester.pumpAndSettle();
+    expect(qiblaItem, findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 

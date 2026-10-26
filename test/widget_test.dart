@@ -62,13 +62,21 @@ void main() {
     ));
     await tester.pumpAndSettle();
 
-    expect(find.text('فتح إعدادات أذونات التطبيق'), findsOneWidget);
-    expect(find.text('فتح إعدادات الموقع في الجهاز'), findsOneWidget);
-    expect(find.text('فتح إعدادات إشعارات أندرويد'), findsOneWidget);
+    for (final label in [
+      'فتح إعدادات أذونات التطبيق',
+      'فتح إعدادات الموقع في الجهاز',
+      'فتح إعدادات إشعارات أندرويد',
+    ]) {
+      await tester.ensureVisible(find.text(label));
+      await tester.pumpAndSettle();
+      expect(find.text(label), findsOneWidget);
+    }
 
     await tester.ensureVisible(find.text('خيارات الأذان المتقدمة'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('خيارات الأذان المتقدمة'));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('فتح إذن المنبهات والتذكيرات الدقيقة'));
     await tester.pumpAndSettle();
     expect(find.text('فتح إذن المنبهات والتذكيرات الدقيقة'), findsOneWidget);
   });

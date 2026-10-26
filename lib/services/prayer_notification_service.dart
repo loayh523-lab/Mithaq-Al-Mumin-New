@@ -350,6 +350,21 @@ class PrayerNotificationService {
   /// Returns the Android app-level notification permission state when available.
   /// Whether Android currently allows precise alarm scheduling.
   /// False means alarms fall back to an inexact schedule and may be delayed.
+  /// Opens Android's per-app exact-alarm access screen when supported.
+  /// Returns the permission state after the user leaves that screen, when available.
+  static Future<bool?> requestExactAlarmsPermission() async {
+    try {
+      await _initialize();
+      if (defaultTargetPlatform != TargetPlatform.android) return null;
+      final android = _plugin.resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>();
+      return await android?.requestExactAlarmsPermission();
+    } catch (error, stackTrace) {
+      debugPrint('Requesting exact-alarm permission failed: $error\\n$stackTrace');
+      return false;
+    }
+  }
+
   static Future<bool?> exactAlarmsAreEnabled() async {
     try {
       await _initialize();

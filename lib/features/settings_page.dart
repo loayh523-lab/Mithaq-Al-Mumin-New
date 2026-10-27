@@ -17,8 +17,32 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> with WidgetsBindingObserver {
-  String _cityId = PrayerLocations.cities.first.id;
   PrayerCity _currentCity = PrayerLocations.cities.first;
+  List<PrayerAdministrativeDivision> _administrativeDivisions =
+      const <PrayerAdministrativeDivision>[];
+  String? _selectedGovernorateId;
+  String? _selectedDistrictId;
+  String? _selectedSubdistrictId;
+  static const _districtCenterValue = '__district_center__';
+
+  List<PrayerAdministrativeDivision> get _governorates =>
+      PrayerLocations.governoratesFrom(_administrativeDivisions);
+
+  List<PrayerAdministrativeDivision> get _districtOptions =>
+      _selectedGovernorateId == null
+          ? const <PrayerAdministrativeDivision>[]
+          : PrayerLocations.districtsFrom(
+              _administrativeDivisions,
+              _selectedGovernorateId!,
+            );
+
+  List<PrayerAdministrativeDivision> get _subdistrictOptions =>
+      _selectedDistrictId == null
+          ? const <PrayerAdministrativeDivision>[]
+          : PrayerLocations.subdistrictsFrom(
+              _administrativeDivisions,
+              _selectedDistrictId!,
+            );
   double _fontSize = 24;
   bool _loaded = false;
   bool _notificationsEnabled = false;
@@ -113,58 +137,127 @@ class _SettingsPageState extends State<SettingsPage> with WidgetsBindingObserver
     }
   }
   Future<void> _load() async {
+    final prefs = await SharedPreferences.getInstance();
+    var savedCity = PrayerLocations.cities.first;
+    var divisions = <PrayerAdministrativeDivision>[];
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final savedCity = await PrayerLocations.load();
-      final actualNotificationPermission =
-          await PrayerNotificationService.notificationsAreEnabled();
-      if (!mounted) return;
-      setState(() {
-        _currentCity = savedCity;
-        _cityId = savedCity.id;
-        _fontSize = (prefs.getDouble('quran_font_size') ?? 24).clamp(16, 34).toDouble();
-        _notificationsEnabled =
-            (prefs.getBool('prayer_notifications_enabled') ?? false) &&
-            actualNotificationPermission != false;
-        _earlyAlertEnabled = prefs.getBool('prayer_early_alert_enabled') ?? false;
-        _earlyAlertMinutes =
-            (prefs.getInt('prayer_early_alert_minutes') ?? 5).clamp(1, 30).toInt();
-        _prayerEnabled = {
-          for (final option in _prayerOptions)
-            option.key: prefs.getBool('prayer_enabled_${option.key}') ?? true,
-        };
-        _loaded = true;
-      });
+      divisions = await PrayerLocations.administrativeDivisions();
+      savedCity = await PrayerLocations.load();
     } catch (_) {
-      if (mounted) setState(() => _loaded = true);
+      // The rest of settings stays usable if the optional place list fails.
     }
+
+    bool? actualNotificationPermission;
+    try {
+      actualNotificationPermission =
+          await PrayerNotificationService.notificationsAreEnabled();
+    } catch (_) {
+      // Permission availability is platform-dependent in widget tests.
+    }
+    final selected = PrayerLocations.divisionById(divisions, savedCity.id) ??
+        PrayerLocations.nearestDivision(
+          divisions,
+          latitude: savedCity.latitude,
+          longitude: savedCity.longitude,
+          level: 3,
+        );
+    final defaultGovernorate =
+        divisions.where((item) => item.level == 1).firstOrNull;
+    if (!mounted) return;
+    setState(() {
+      _administrativeDivisions = divisions;
+      _currentCity = savedCity;
+      _selectedGovernorateId =
+          selected?.governorateId ?? defaultGovernorate?.id;
+      _selectedDistrictId = selected?.level == 3
+          ? selected?.districtId
+          : selected?.level == 2
+              ? selected?.id
+              : null;
+      _selectedSubdistrictId =
+          selected?.level == 3 ? selected?.id : null;
+      _fontSize = (prefs.getDouble('quran_font_size') ?? 24)
+          .clamp(16, 34)
+          .toDouble();
+      _notificationsEnabled =
+          (prefs.getBool('prayer_notifications_enabled') ?? false) &&
+              actualNotificationPermission != false;
+      _earlyAlertEnabled =
+          prefs.getBool('prayer_early_alert_enabled') ?? false;
+      _earlyAlertMinutes =
+          (prefs.getInt('prayer_early_alert_minutes') ?? 5)
+              .clamp(1, 30)
+              .toInt();
+      _prayerEnabled = {
+        for (final option in _prayerOptions)
+          option.key: prefs.getBool('prayer_enabled_${option.key}') ?? true,
+      };
+      _loaded = true;
+    });
   }
 
-  Future<void> _saveCity(String? id) async {
+  void _selectGovernorate(String? id) {
     if (id == null) return;
-    if (id == 'current_location') {
-      await _useCurrentLocation();
+    setState(() {
+      _selectedGovernorateId = id;
+      _selectedDistrictId = null;
+      _selectedSubdistrictId = null;
+    });
+  }
+
+  void _selectDistrict(String? id) {
+    if (id == null) return;
+    setState(() {
+      _selectedDistrictId = id;
+      _selectedSubdistrictId = null;
+    });
+  }
+
+  void _selectSubdistrict(String? id) {
+    setState(() {
+      _selectedSubdistrictId =
+          id == _districtCenterValue ? null : id;
+    });
+  }
+
+  Future<void> _saveSelectedPlace() async {
+    final targetId = _selectedSubdistrictId ?? _selectedDistrictId;
+    if (targetId == null) {
+      _message('اختَر المحافظة والقضاء أولاً، ثم احفظ الموقع.');
       return;
     }
-    setState(() { _cityId = id; _currentCity = PrayerLocations.byId(id); });
+    final target = PrayerLocations.divisionById(
+      _administrativeDivisions,
+      targetId,
+    );
+    if (target == null ||
+        target.governorateId != _selectedGovernorateId ||
+        (target.level == 3 && target.districtId != _selectedDistrictId)) {
+      _message('اختيار الموقع غير مكتمل. راجع المحافظة والقضاء ثم حاول مجدداً.');
+      return;
+    }
+
+    final city = PrayerLocations.cityForDivision(target);
     try {
-      await PrayerLocations.save(id);
+      await PrayerLocations.savePlace(target);
+      if (!mounted) return;
+      setState(() => _currentCity = city);
+
       if (widget.onLocationChanged != null) {
-        // The parent refreshes the dashboard and reschedules reminders. Avoid
-        // rebuilding the 30-day schedule a second time from this page.
         await widget.onLocationChanged!.call();
       } else if (_notificationsEnabled) {
         final ok = await PrayerNotificationService.configure(
           enabled: true,
-          city: PrayerLocations.byId(id),
+          city: city,
         );
         if (!ok && mounted) {
-          _message('تم حفظ المدينة لكن تعذّر تحديث التذكيرات. افتح إعدادات الإشعارات وتحقق من الإذن.');
+          _message('تم حفظ الموقع لكن تعذّر تحديث تذكيرات الصلاة. افحص الأذونات.');
+          return;
         }
       }
-      if (mounted) _message('تم حفظ المدينة للمواقيت والقبلة');
+      if (mounted) _message('تم حفظ الموقع للمواقيت والقبلة');
     } catch (_) {
-      if (mounted) _message('تعذّر حفظ المدينة على الجهاز');
+      if (mounted) _message('تعذّر حفظ الموقع على الجهاز');
     }
   }
 
@@ -187,7 +280,7 @@ class _SettingsPageState extends State<SettingsPage> with WidgetsBindingObserver
         }
         return;
       }
-      setState(() { _currentCity = city; _cityId = city.id; });
+      setState(() => _currentCity = city);
       if (widget.onLocationChanged != null) {
         // Let the parent update prayer times and notifications exactly once.
         await widget.onLocationChanged!.call();
@@ -436,14 +529,82 @@ class _SettingsPageState extends State<SettingsPage> with WidgetsBindingObserver
           Text('اختر أقرب مدينة إليك. الحسابات الفلكية المعروضة تقريبية ويجب مقارنتها بمواقيت مكتب مرجعك.', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.6, fontSize: 12)),
           const SizedBox(height: 12),
           DropdownButtonFormField<String>(
-            key: ValueKey(_cityId),
-            initialValue: _cityId,
-            decoration: const InputDecoration(labelText: 'مدينة الحساب', border: OutlineInputBorder()),
+            key: ValueKey('prayer-governorate-${_selectedGovernorateId ?? 'none'}'),
+            initialValue: _selectedGovernorateId,
+            decoration: const InputDecoration(
+              labelText: 'المحافظة',
+              border: OutlineInputBorder(),
+            ),
+            items: _governorates
+                .map((item) => DropdownMenuItem(
+                      value: item.id,
+                      child: Text(item.name),
+                    ))
+                .toList(),
+            onChanged: _loaded ? _selectGovernorate : null,
+          ),
+          const SizedBox(height: 10),
+          DropdownButtonFormField<String>(
+            key: ValueKey('prayer-district-${_selectedDistrictId ?? 'none'}'),
+            initialValue: _selectedDistrictId,
+            decoration: const InputDecoration(
+              labelText: 'القضاء',
+              border: OutlineInputBorder(),
+            ),
+            items: _districtOptions
+                .map((item) => DropdownMenuItem(
+                      value: item.id,
+                      child: Text(item.name),
+                    ))
+                .toList(),
+            onChanged: _loaded && _selectedGovernorateId != null
+                ? _selectDistrict
+                : null,
+          ),
+          const SizedBox(height: 10),
+          DropdownButtonFormField<String>(
+            key: ValueKey('prayer-subdistrict-${_selectedDistrictId ?? 'none'}-${_selectedSubdistrictId ?? _districtCenterValue}'),
+            initialValue: _selectedDistrictId == null
+                ? null
+                : (_selectedSubdistrictId ?? _districtCenterValue),
+            decoration: const InputDecoration(
+              labelText: 'الناحية / مركز القضاء',
+              border: OutlineInputBorder(),
+            ),
             items: [
-              const DropdownMenuItem(value: 'current_location', child: Text('موقعي الحالي')),
-              ...PrayerLocations.cities.map((c) => DropdownMenuItem(value: c.id, child: Text(c.name))),
+              const DropdownMenuItem(
+                value: _districtCenterValue,
+                child: Text('مركز القضاء'),
+              ),
+              ..._subdistrictOptions.map((item) => DropdownMenuItem(
+                    value: item.id,
+                    child: Text(item.name),
+                  )),
             ],
-            onChanged: _loaded ? _saveCity : null,
+            onChanged:
+                _loaded && _selectedDistrictId != null
+                    ? _selectSubdistrict
+                    : null,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'اختر المحافظة ثم القضاء، ويمكنك تحديد ناحية أدق إن كانت متاحة. تستخدم المراكز الإدارية وإحداثياتها التقديرية؛ GPS أدق عند توفره.',
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              fontSize: 11,
+              height: 1.55,
+            ),
+          ),
+          const SizedBox(height: 10),
+          SizedBox(
+            width: double.infinity,
+            child: FilledButton.icon(
+              onPressed: _loaded && _selectedDistrictId != null
+                  ? _saveSelectedPlace
+                  : null,
+              icon: const Icon(Icons.save_location_alt_rounded),
+              label: const Text('حفظ موقع الحساب'),
+            ),
           ),
           const SizedBox(height: 8),
           SizedBox(

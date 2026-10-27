@@ -6,6 +6,7 @@ from pathlib import Path
 
 ASSETS = (
     Path("assets/quran/chapters.json"),
+    Path("assets/locations/iraq_administrative_divisions.json"),
     Path("assets/quran/uthmani_surahs.json"),
     Path("assets/quran/verse_metadata.json"),
     Path("assets/shia_duas/shia_duas.json"),

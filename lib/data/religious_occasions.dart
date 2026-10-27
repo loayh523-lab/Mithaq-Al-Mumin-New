@@ -12,6 +12,8 @@ class ReligiousOccasion {
     required this.title,
     required this.kind,
     this.qualification,
+    this.sourceLabel,
+    this.sourceUrl,
   });
 
   final int hijriDay;
@@ -19,6 +21,8 @@ class ReligiousOccasion {
   final String title;
   final ReligiousOccasionKind kind;
   final String? qualification;
+  final String? sourceLabel;
+  final String? sourceUrl;
 
   String get displayTitle =>
       qualification == null ? title : '$title — $qualification';
@@ -40,8 +44,8 @@ const List<ReligiousOccasion> shiaReligiousOccasions = [
   ReligiousOccasion(hijriDay: 7, hijriMonth: 1, title: 'ذكرى منع الماء عن الإمام الحسين عليه السلام وأهل بيته وأصحابه', kind: ReligiousOccasionKind.historical, qualification: 'مشهور في المجالس'),
   ReligiousOccasion(hijriDay: 9, hijriMonth: 1, title: 'تاسوعاء — من أيام الحزن على الإمام الحسين عليه السلام', kind: ReligiousOccasionKind.historical),
   ReligiousOccasion(hijriDay: 10, hijriMonth: 1, title: 'يوم عاشوراء — ذكرى استشهاد الإمام الحسين عليه السلام وأهل بيته وأصحابه', kind: ReligiousOccasionKind.martyrdom),
-  ReligiousOccasion(hijriDay: 13, hijriMonth: 5, title: 'شهادة السيدة فاطمة الزهراء عليها السلام', kind: ReligiousOccasionKind.martyrdom, qualification: 'الرواية الأولى: خمسة وسبعون يوماً بعد وفاة النبي صلى الله عليه وآله'),
-  ReligiousOccasion(hijriDay: 3, hijriMonth: 6, title: 'شهادة السيدة فاطمة الزهراء عليها السلام', kind: ReligiousOccasionKind.martyrdom, qualification: 'الرواية الثانية: خمسة وتسعون يوماً بعد وفاة النبي صلى الله عليه وآله'),
+  ReligiousOccasion(hijriDay: 13, hijriMonth: 5, title: 'شهادة السيدة فاطمة الزهراء عليها السلام', kind: ReligiousOccasionKind.martyrdom, qualification: 'الرواية الأولى: خمسة وسبعون يوماً بعد وفاة النبي صلى الله عليه وآله', sourceLabel: 'Al-Islam.org — After Her Death', sourceUrl: 'https://al-islam.org/fatimah-al-zahra-cradle-grave-sayyid-muhammad-kadhim-al-qazwini/chapter-20-after-her-death'),
+  ReligiousOccasion(hijriDay: 3, hijriMonth: 6, title: 'شهادة السيدة فاطمة الزهراء عليها السلام', kind: ReligiousOccasionKind.martyrdom, qualification: 'الرواية الثانية: خمسة وتسعون يوماً بعد وفاة النبي صلى الله عليه وآله', sourceLabel: 'Al-Islam.org — After Her Death', sourceUrl: 'https://al-islam.org/fatimah-al-zahra-cradle-grave-sayyid-muhammad-kadhim-al-qazwini/chapter-20-after-her-death'),
   ReligiousOccasion(hijriDay: 20, hijriMonth: 2, title: 'زيارة الأربعين للإمام الحسين عليه السلام', kind: ReligiousOccasionKind.ziyara),
   ReligiousOccasion(hijriDay: 25, hijriMonth: 1, title: 'ذكرى استشهاد الإمام زين العابدين عليه السلام', kind: ReligiousOccasionKind.martyrdom, qualification: 'على رواية مشهورة'),
   ReligiousOccasion(hijriDay: 7, hijriMonth: 2, title: 'ذكرى استشهاد الإمام الحسن المجتبى عليه السلام', kind: ReligiousOccasionKind.martyrdom, qualification: 'على رواية مشهورة'),

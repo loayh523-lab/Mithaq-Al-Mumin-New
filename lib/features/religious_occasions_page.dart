@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../data/religious_occasions.dart';
 import 'prayer_calendar_page.dart';
@@ -222,6 +223,52 @@ class _ReligiousOccasionsPageState extends State<ReligiousOccasionsPage> {
                     title: const Text('التاريخ الميلادي الحسابي المتوقع'),
                     subtitle: Text(_gregorianLabel(estimatedDate)),
                   ),
+                  if (occasion.sourceUrl != null) ...[
+                    const SizedBox(height: 8),
+                    Align(
+                      alignment: AlignmentDirectional.centerStart,
+                      child: TextButton.icon(
+                        onPressed: () async {
+                          final uri = Uri.tryParse(occasion.sourceUrl!);
+                          if (uri == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('رابط المصدر غير صالح')),
+                            );
+                            return;
+                          }
+                          try {
+                            final opened = await launchUrl(
+                              uri,
+                              mode: LaunchMode.externalApplication,
+                            );
+                            if (!opened && context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('تعذّر فتح المصدر على هذا الجهاز')),
+                              );
+                            }
+                          } catch (_) {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('تعذّر فتح المصدر على هذا الجهاز')),
+                              );
+                            }
+                          }
+                        },
+                        icon: const Icon(Icons.open_in_new_rounded, size: 18),
+                        label: Text('المصدر: ${occasion.sourceLabel ?? 'مرجع خارجي'}'),
+                      ),
+                    ),
+                  ] else ...[
+                    const SizedBox(height: 8),
+                    Text(
+                      'لم يُربط مصدر تفصيلي بهذه المناسبة بعد؛ ينبغي مراجعة تاريخها قبل إضافة أعمال خاصة بها.',
+                      style: TextStyle(
+                        color: scheme.onSurfaceVariant,
+                        fontSize: 11,
+                        height: 1.6,
+                      ),
+                    ),
+                  ],
                   const SizedBox(height: 6),
                   Text(
                     'التاريخ الهجري هنا حسابي للتقويم فقط، وقد يختلف يومًا عن إعلان ثبوت الهلال في العراق. بعض المناسبات لها روايات متعددة؛ لذلك عُرضت صفة الرواية بوضوح ولا يُعرض التاريخ الحسابي باعتباره إثباتًا شرعيًا.',

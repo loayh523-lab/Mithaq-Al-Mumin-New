@@ -824,16 +824,29 @@ void main() {
     expect(find.text('1 كانون الثاني ${DateTime.now().year} م'), findsOneWidget);
   });
 
-  testWidgets('occasion details show selected Gregorian date with uncertainty note', (tester) async {
+  testWidgets(
+      'occasion details show selected Gregorian date with uncertainty note',
+      (tester) async {
     final year = DateTime.now().year;
     const gregorianMonths = [
-      'كانون الثاني', 'شباط', 'آذار', 'نيسان', 'أيار', 'حزيران',
-      'تموز', 'آب', 'أيلول', 'تشرين الأول', 'تشرين الثاني', 'كانون الأول',
+      'كانون الثاني',
+      'شباط',
+      'آذار',
+      'نيسان',
+      'أيار',
+      'حزيران',
+      'تموز',
+      'آب',
+      'أيلول',
+      'تشرين الأول',
+      'تشرين الثاني',
+      'كانون الأول',
     ];
     DateTime? targetDate;
-    for (var dayOffset = 0;
-        dayOffset < (DateTime(year + 1, 1, 1).difference(DateTime(year, 1, 1)).inDays);
-        dayOffset++) {
+    final daysInYear = DateTime(year + 1, 1, 1)
+        .difference(DateTime(year, 1, 1))
+        .inDays;
+    for (var dayOffset = 0; dayOffset < daysInYear; dayOffset++) {
       final candidate = DateTime(year, 1, 1).add(Duration(days: dayOffset));
       final hijri = hijriDateParts(candidate);
       if (hijri.day == 13 && hijri.month == 5) {
@@ -841,7 +854,11 @@ void main() {
         break;
       }
     }
-    expect(targetDate, isNotNull, reason: '13 Jumada al-Ula should occur within the Gregorian year');
+    expect(
+      targetDate,
+      isNotNull,
+      reason: '13 Jumada al-Ula should occur within the Gregorian year',
+    );
     final selectedDate = targetDate!;
 
     await tester.pumpWidget(const MaterialApp(
@@ -855,7 +872,9 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('عرض التقويم السنوي'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text(gregorianMonths[selectedDate.month - 1]).first);
+    await tester.tap(
+      find.text(gregorianMonths[selectedDate.month - 1]).first,
+    );
     await tester.pumpAndSettle();
 
     final selectedDateLabel =
@@ -867,7 +886,11 @@ void main() {
     );
     await tester.tap(find.text(selectedDateLabel));
     await tester.pumpAndSettle();
-    await tester.fling(find.byType(Scrollable).first, const Offset(0, 4000), 5000);
+    await tester.fling(
+      find.byType(Scrollable).first,
+      const Offset(0, 4000),
+      5000,
+    );
     await tester.pumpAndSettle();
 
     final displayedDate =
@@ -877,10 +900,17 @@ void main() {
     await tester.ensureVisible(narration);
     await tester.tap(narration);
     await tester.pumpAndSettle();
-    expect(find.text('التاريخ الميلادي المحسوب: $displayedDate م'), findsOneWidget);
-    expect(find.textContaining('قد يختلف مع ثبوت الهلال'), findsOneWidget);
+    expect(
+      find.text('التاريخ الميلادي المحسوب: $displayedDate م'),
+      findsOneWidget,
+    );
+    expect(
+      find.textContaining('قد يختلف مع ثبوت الهلال'),
+      findsOneWidget,
+    );
     expect(tester.takeException(), isNull);
   });
+
   testWidgets('surah reader opens its bundled text without internet', (tester) async {
     await tester.pumpWidget(const MaterialApp(
       home: Directionality(

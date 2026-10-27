@@ -910,11 +910,47 @@ Future<void> _showOccasionDetails(
               FilledButton.icon(
                 onPressed: () async {
                   final uri = Uri.tryParse(occasion.sourceUrl!);
-                  if (uri == null || uri.scheme != 'https' || uri.host.isEmpty) return;
-                  await launchUrl(uri, mode: LaunchMode.externalApplication);
+                  if (uri == null || uri.scheme != 'https' || uri.host.isEmpty) {
+                    ScaffoldMessenger.of(sheetContext).showSnackBar(
+                      const SnackBar(content: Text('رابط المصدر غير صالح')),
+                    );
+                    return;
+                  }
+                  try {
+                    final opened = await launchUrl(
+                      uri,
+                      mode: LaunchMode.externalApplication,
+                    );
+                    if (!opened && sheetContext.mounted) {
+                      ScaffoldMessenger.of(sheetContext).showSnackBar(
+                        const SnackBar(
+                          content: Text('تعذّر فتح المصدر على هذا الجهاز'),
+                        ),
+                      );
+                    }
+                  } catch (_) {
+                    if (sheetContext.mounted) {
+                      ScaffoldMessenger.of(sheetContext).showSnackBar(
+                        const SnackBar(
+                          content: Text('تعذّر فتح المصدر على هذا الجهاز'),
+                        ),
+                      );
+                    }
+                  }
                 },
                 icon: const Icon(Icons.open_in_new_rounded),
                 label: const Text('فتح المصدر'),
+              ),
+            ],
+            if (occasion.sourceUrl == null) ...[
+              const SizedBox(height: 14),
+              Text(
+                'لم يُربط مصدر تفصيلي بهذه المناسبة بعد؛ ينبغي مراجعة تاريخها قبل إضافة أعمال خاصة بها.',
+                style: TextStyle(
+                  color: Theme.of(sheetContext).colorScheme.onSurfaceVariant,
+                  fontSize: 11,
+                  height: 1.6,
+                ),
               ),
             ],
           ],

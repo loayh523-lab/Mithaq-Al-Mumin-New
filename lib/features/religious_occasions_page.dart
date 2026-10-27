@@ -230,9 +230,13 @@ class _ReligiousOccasionsPageState extends State<ReligiousOccasionsPage> {
                       child: TextButton.icon(
                         onPressed: () async {
                           final uri = Uri.tryParse(occasion.sourceUrl!);
-                          if (uri == null) {
+                          if (uri == null ||
+                              uri.scheme != 'https' ||
+                              uri.host.isEmpty) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('رابط المصدر غير صالح')),
+                              const SnackBar(
+                                content: Text('رابط المصدر غير صالح'),
+                              ),
                             );
                             return;
                           }

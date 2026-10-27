@@ -23,6 +23,7 @@ class _SettingsPageState extends State<SettingsPage> with WidgetsBindingObserver
   String? _selectedGovernorateId;
   String? _selectedDistrictId;
   String? _selectedSubdistrictId;
+  bool _placeSelectionDirty = false;
   static const _districtCenterValue = '__district_center__';
 
   List<PrayerAdministrativeDivision> get _governorates =>
@@ -161,8 +162,10 @@ class _SettingsPageState extends State<SettingsPage> with WidgetsBindingObserver
           longitude: savedCity.longitude,
           level: 3,
         );
+    final governorates =
+        divisions.where((item) => item.level == 1).toList(growable: false);
     final defaultGovernorate =
-        divisions.where((item) => item.level == 1).firstOrNull;
+        governorates.isEmpty ? null : governorates.first;
     if (!mounted) return;
     setState(() {
       _administrativeDivisions = divisions;
@@ -176,6 +179,9 @@ class _SettingsPageState extends State<SettingsPage> with WidgetsBindingObserver
               : null;
       _selectedSubdistrictId =
           selected?.level == 3 ? selected?.id : null;
+      _placeSelectionDirty = !savedCity.isCurrentLocation &&
+          selected != null &&
+          selected.id != savedCity.id;
       _fontSize = (prefs.getDouble('quran_font_size') ?? 24)
           .clamp(16, 34)
           .toDouble();
@@ -202,6 +208,7 @@ class _SettingsPageState extends State<SettingsPage> with WidgetsBindingObserver
       _selectedGovernorateId = id;
       _selectedDistrictId = null;
       _selectedSubdistrictId = null;
+      _placeSelectionDirty = true;
     });
   }
 
@@ -210,6 +217,7 @@ class _SettingsPageState extends State<SettingsPage> with WidgetsBindingObserver
     setState(() {
       _selectedDistrictId = id;
       _selectedSubdistrictId = null;
+      _placeSelectionDirty = true;
     });
   }
 
@@ -217,6 +225,7 @@ class _SettingsPageState extends State<SettingsPage> with WidgetsBindingObserver
     setState(() {
       _selectedSubdistrictId =
           id == _districtCenterValue ? null : id;
+      _placeSelectionDirty = true;
     });
   }
 
@@ -241,7 +250,10 @@ class _SettingsPageState extends State<SettingsPage> with WidgetsBindingObserver
     try {
       await PrayerLocations.savePlace(target);
       if (!mounted) return;
-      setState(() => _currentCity = city);
+      setState(() {
+        _currentCity = city;
+        _placeSelectionDirty = false;
+      });
 
       if (widget.onLocationChanged != null) {
         await widget.onLocationChanged!.call();
@@ -280,7 +292,21 @@ class _SettingsPageState extends State<SettingsPage> with WidgetsBindingObserver
         }
         return;
       }
-      setState(() => _currentCity = city);
+      final nearest = PrayerLocations.nearestDivision(
+        _administrativeDivisions,
+        latitude: city.latitude,
+        longitude: city.longitude,
+        level: 3,
+      );
+      setState(() {
+        _currentCity = city;
+        if (nearest != null) {
+          _selectedGovernorateId = nearest.governorateId;
+          _selectedDistrictId = nearest.districtId;
+          _selectedSubdistrictId = nearest.id;
+        }
+        _placeSelectionDirty = false;
+      });
       if (widget.onLocationChanged != null) {
         // Let the parent update prayer times and notifications exactly once.
         await widget.onLocationChanged!.call();
@@ -599,7 +625,9 @@ class _SettingsPageState extends State<SettingsPage> with WidgetsBindingObserver
           SizedBox(
             width: double.infinity,
             child: FilledButton.icon(
-              onPressed: _loaded && _selectedDistrictId != null
+              onPressed: _loaded &&
+                      _selectedDistrictId != null &&
+                      _placeSelectionDirty
                   ? _saveSelectedPlace
                   : null,
               icon: const Icon(Icons.save_location_alt_rounded),
@@ -636,10 +664,25 @@ class _SettingsPageState extends State<SettingsPage> with WidgetsBindingObserver
             ),
           ),
           Text(
-            city.id == 'current_location'
-                ? 'الموقع الحالي: ${city.latitude.toStringAsFixed(4)}, ${city.longitude.toStringAsFixed(4)} — محفوظ على الجهاز'
-                : 'الإحداثيات التقريبية: ${city.latitude.toStringAsFixed(3)}, ${city.longitude.toStringAsFixed(3)}',
-            style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11),
+            city.isCurrentLocation
+                ? 'يُستخدم GPS حالياً: ${city.latitude.toStringAsFixed(4)}, ${city.longitude.toStringAsFixed(4)} — محفوظ على الجهاز'
+                : city.administrativeLabel.isNotEmpty
+                    ? '${city.administrativeLabel}\nالإحداثيات: ${city.latitude.toStringAsFixed(3)}, ${city.longitude.toStringAsFixed(3)}'
+                    : 'الموقع المحفوظ: ${city.name} • الإحداثيات التقريبية: ${city.latitude.toStringAsFixed(3)}, ${city.longitude.toStringAsFixed(3)}',
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              fontSize: 11,
+              height: 1.5,
+            ),
+          ),
+          const SizedBox(height: 5),
+          Text(
+            'بيانات التقسيم الإداري: Open Admin Data (CC BY 4.0). إحداثيات المراكز تقريبية؛ GPS أدق عند توفره.',
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              fontSize: 10,
+              height: 1.5,
+            ),
           ),
         ],
       ),

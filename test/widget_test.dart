@@ -427,6 +427,21 @@ void main() {
     );
   });
 
+  test('prayer schedule health check accounts for past alarms today', () {
+    expect(
+      PrayerNotificationService.minimumHealthyPrayerReminderCount(5),
+      145,
+    );
+    expect(
+      PrayerNotificationService.minimumHealthyPrayerReminderCount(3),
+      87,
+    );
+    expect(
+      PrayerNotificationService.minimumHealthyPrayerReminderCount(0),
+      0,
+    );
+  });
+
   test('prayer notification IDs keep early alerts separate from adhan reminders', () {
     expect(PrayerNotificationService.isPrayerReminderNotificationIdForTesting(3999), isFalse);
     expect(PrayerNotificationService.isPrayerReminderNotificationIdForTesting(4000), isTrue);

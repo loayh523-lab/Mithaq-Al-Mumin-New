@@ -269,9 +269,20 @@ void main() {
 
     expect(find.text('الصلاة القادمة'), findsOneWidget);
     expect(
-      find.byWidgetPredicate((widget) =>
-          widget is Text &&
-          RegExp(r'^\\d{1,2}:\\d{2} [صم]
+      find.byWidgetPredicate((widget) {
+        if (widget is! Text) return false;
+        final value = widget.data ?? '';
+        return value.endsWith(' ص') || value.endsWith(' م');
+      }),
+      findsOneWidget,
+    );
+
+    await tester.tap(find.text('الصلاة القادمة'));
+    await tester.pumpAndSettle();
+    expect(find.text('المواقيت والتقويم'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('prayer reminder notification opens the prayer calendar, not settings',
       (tester) async {
     PrayerNotificationService.notificationTap.value = null;

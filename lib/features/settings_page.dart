@@ -630,7 +630,7 @@ class _SettingsPageState extends State<SettingsPage> with WidgetsBindingObserver
                       _placeSelectionDirty
                   ? _saveSelectedPlace
                   : null,
-              icon: const Icon(Icons.save_location_alt_rounded),
+              icon: const Icon(Icons.location_on_outlined),
               label: const Text('حفظ موقع الحساب'),
             ),
           ),

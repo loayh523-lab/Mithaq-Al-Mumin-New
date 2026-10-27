@@ -118,6 +118,12 @@ void main() {
       ),
     ));
     await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.byKey(const ValueKey('prayer-governorate-IQG17')),
+      220,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
 
     expect(find.byType(DropdownButtonFormField<String>), findsNWidgets(3));
     expect(

@@ -141,12 +141,12 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Expanded(child: Text(occasion.displayTitle, style: const TextStyle(height: 1.5))),
-                            if (occasion.sourceUrl != null)
-                              const Padding(
-                                padding: EdgeInsets.only(top: 3, right: 5),
-                                child: Icon(Icons.open_in_new_rounded, size: 15),
-                              ),
+                              Expanded(child: Text(occasion.displayTitle, style: const TextStyle(height: 1.5))),
+                              if (occasion.sourceUrl != null)
+                                const Padding(
+                                  padding: EdgeInsets.only(top: 3, right: 5),
+                                  child: Icon(Icons.open_in_new_rounded, size: 15),
+                                ),
                           ],
                         ),
                       ),

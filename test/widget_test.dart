@@ -285,15 +285,39 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('sections grid does not duplicate the prayer-taqibat library shortcut', (tester) async {
+  testWidgets('sections grid groups knowledge and avoids duplicate library/search shortcuts', (tester) async {
     await tester.pumpWidget(const MithaqApp());
     await tester.tap(find.text('الأقسام').last);
     await tester.pumpAndSettle();
 
+    expect(find.text('المعرفة الدينية'), findsOneWidget);
+    expect(find.text('أسماء الله الحسنى'), findsOneWidget);
+    expect(find.text('نهج البلاغة والحِكم'), findsOneWidget);
     expect(find.text('الأدعية والزيارات'), findsOneWidget);
     expect(find.text('تعقيبات الصلاة'), findsNothing);
-    // This test guards the sections-grid duplicate only. Lazily built off-screen
-    // destinations are covered by their own navigation tests.
+    expect(find.text('أعمال المناسبات'), findsNothing);
+    expect(find.text('الزيارات الشريفة'), findsNothing);
+    expect(find.text('الباحث الذكي'), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('faith services page avoids duplicating dedicated knowledge and occasion destinations', (tester) async {
+    await tester.pumpWidget(const MaterialApp(
+      home: Directionality(
+        textDirection: TextDirection.rtl,
+        child: FaithServicesPage(),
+      ),
+    ));
+    await tester.pumpAndSettle();
+
+    expect(find.text('استفتاءات السيد علي الخامنئي'), findsOneWidget);
+    expect(find.text('استفتاءات السيد علي السيستاني'), findsOneWidget);
+    expect(find.text('تفسير القرآن الكريم'), findsOneWidget);
+    expect(find.text('دليل مناسك الحج والعمرة'), findsOneWidget);
+    expect(find.text('نهج البلاغة والحِكم'), findsNothing);
+    expect(find.text('الاستخارة القرآنية — إرشاد شرعي'), findsNothing);
+    expect(find.text('دليل المشاية وزوار الأربعين'), findsNothing);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('home and section grid stay inside a narrow phone in both themes', (tester) async {

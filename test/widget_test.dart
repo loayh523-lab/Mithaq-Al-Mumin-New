@@ -1248,21 +1248,13 @@ void main() {
   });
 
   testWidgets('settings save per-prayer reminders and pre-prayer alert options', (tester) async {
-    // Preload the administrative asset so the asynchronous settings initializer
-    // can finish deterministically before the reminder switch is interacted with.
-    await tester.runAsync(() async {
-      await PrayerLocations.administrativeDivisions();
-    });
     await tester.pumpWidget(const MaterialApp(
       home: Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(body: SettingsPage()),
       ),
     ));
-    await tester.pumpAndSettle();
-    await tester.runAsync(() async {
-      await Future<void>.delayed(const Duration(milliseconds: 50));
-    });
+    await tester.pump(const Duration(milliseconds: 150));
     await tester.pumpAndSettle();
     await tester.scrollUntilVisible(
       find.text('خيارات الأذان المتقدمة'),

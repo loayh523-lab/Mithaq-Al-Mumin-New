@@ -56,6 +56,21 @@ void main() {
     );
   });
 
+  test('Hijri occasion helpers preserve every entry for each date', () {
+    for (var offset = 0; offset < 370; offset++) {
+      final date = DateTime(2026, 1, 1).add(Duration(days: offset));
+      final parts = hijriDateParts(date);
+      final expected = religiousOccasionsForHijriDate(parts.day, parts.month)
+          .map((occasion) => occasion.displayTitle)
+          .toList(growable: false);
+      expect(hijriOccasionLabels(date), expected);
+      expect(
+        hijriOccasionLabel(date),
+        expected.isEmpty ? isNull : expected.join(' • '),
+      );
+    }
+  });
+
   test('religious occasion data has valid Hijri date fields and Arabic titles', () {
     expect(shiaReligiousOccasions.length, greaterThanOrEqualTo(40));
     for (final occasion in shiaReligiousOccasions) {

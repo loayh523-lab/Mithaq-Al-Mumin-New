@@ -108,15 +108,13 @@ void main() {
   });
 
   testWidgets('settings cascade from governorate to subdistrict and save its coordinates', (tester) async {
-    await tester.runAsync(() async {
-      await PrayerLocations.administrativeDivisions();
-    });
     await tester.pumpWidget(const MaterialApp(
       home: Directionality(
         textDirection: TextDirection.rtl,
         child: SettingsPage(),
       ),
     ));
+    await tester.pump(const Duration(milliseconds: 150));
     await tester.pumpAndSettle();
     await tester.scrollUntilVisible(
       find.byKey(const ValueKey('prayer-governorate-IQG17')),

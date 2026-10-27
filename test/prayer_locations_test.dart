@@ -108,6 +108,11 @@ void main() {
   });
 
   testWidgets('settings cascade from governorate to subdistrict and save its coordinates', (tester) async {
+    tester.view.physicalSize = const Size(800, 1400);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
     await tester.pumpWidget(const MaterialApp(
       home: Directionality(
         textDirection: TextDirection.rtl,
@@ -147,10 +152,12 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(find.text('بابل'), findsOneWidget);
-    await tester.ensureVisible(find.text('بابل').last);
-    await tester.pumpAndSettle();
     await tester.tap(find.text('بابل').last);
     await tester.pumpAndSettle();
+    expect(
+      find.byKey(const ValueKey('prayer-governorate-IQG07')),
+      findsOneWidget,
+    );
 
     await tester.ensureVisible(
       find.byKey(const ValueKey('prayer-district-none')),
@@ -158,10 +165,12 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('prayer-district-none')));
     await tester.pumpAndSettle();
     expect(find.text('الحلة'), findsOneWidget);
-    await tester.ensureVisible(find.text('الحلة').last);
-    await tester.pumpAndSettle();
     await tester.tap(find.text('الحلة').last);
     await tester.pumpAndSettle();
+    expect(
+      find.byKey(const ValueKey('prayer-district-IQG07Q02')),
+      findsOneWidget,
+    );
 
     await tester.ensureVisible(
       find.byKey(const ValueKey(
@@ -173,10 +182,14 @@ void main() {
     )));
     await tester.pumpAndSettle();
     expect(find.text('ابي غرق'), findsOneWidget);
-    await tester.ensureVisible(find.text('ابي غرق').last);
-    await tester.pumpAndSettle();
     await tester.tap(find.text('ابي غرق').last);
     await tester.pumpAndSettle();
+    expect(
+      find.byKey(const ValueKey(
+        'prayer-subdistrict-IQG07Q02-IQG07Q02N02',
+      )),
+      findsOneWidget,
+    );
 
     await tester.ensureVisible(find.text('حفظ موقع الحساب'));
     await tester.tap(find.text('حفظ موقع الحساب'));

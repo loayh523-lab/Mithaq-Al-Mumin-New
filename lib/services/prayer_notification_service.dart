@@ -28,6 +28,15 @@ class PrayerNotificationService {
     return exactPermissionGranted != lastScheduleUsedExactAlarms;
   }
 
+  @visibleForTesting
+  static int minimumHealthyPrayerReminderCount(int selectedPrayerCount) {
+    if (selectedPrayerCount <= 0) return 0;
+    // The current day may already have passed every prayer time. Requiring
+    // 29 full days detects a partly-lost schedule without rebuilding a healthy
+    // one merely because today's past alarms are no longer pending.
+    return selectedPrayerCount * (_daysToSchedule - 1);
+  }
+
   static bool isPrayerNotificationId(int id) => _isPrayerReminderId(id);
 
   @visibleForTesting
@@ -129,7 +138,8 @@ class PrayerNotificationService {
       if (selectedCount == 0) {
         return await configure(enabled: true, city: city);
       }
-      final minimumHealthyCount = selectedCount * 20;
+      final minimumHealthyCount =
+          minimumHealthyPrayerReminderCount(selectedCount);
       final pending = await _plugin.pendingNotificationRequests();
       final activeCount = pending
           .where((request) => _isPrayerReminderId(request.id))

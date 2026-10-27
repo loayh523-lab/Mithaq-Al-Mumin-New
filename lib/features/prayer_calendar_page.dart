@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../services/prayer_locations.dart';
 import '../data/religious_occasions.dart';
 
@@ -129,10 +130,27 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                for (final occasion in _occasions(hijri))
+                for (final occasion in religiousOccasionsForHijriDate(hijri.day, hijri.month))
                   Padding(
                     padding: const EdgeInsets.only(top: 4),
-                    child: Text(occasion, style: const TextStyle(height: 1.5)),
+                    child: InkWell(
+                      onTap: () => _showOccasionDetails(context, occasion),
+                      borderRadius: BorderRadius.circular(8),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 3),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(child: Text(occasion.displayTitle, style: const TextStyle(height: 1.5))),
+                            if (occasion.sourceUrl != null)
+                              const Padding(
+                                padding: EdgeInsets.only(top: 3, right: 5),
+                                child: Icon(Icons.open_in_new_rounded, size: 15),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
               ],
             ),
@@ -252,7 +270,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
     while (cells.length % 7 != 0) {
       cells.add(null);
     }
-    final selectedOccasions = _occasions(selectedHijri);
+    final selectedOccasions = religiousOccasionsForHijriDate(selectedHijri.day, selectedHijri.month);
     const weekdays = <String>['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
 
     return [
@@ -434,9 +452,28 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
                 for (final occasion in selectedOccasions)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 7),
-                    child: Text(
-                      occasion,
-                      style: TextStyle(color: _gold, fontSize: 15, height: 1.5, fontWeight: FontWeight.w800),
+                    child: InkWell(
+                      onTap: () => _showOccasionDetails(context, occasion),
+                      borderRadius: BorderRadius.circular(8),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 2),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                occasion.displayTitle,
+                                style: TextStyle(color: _gold, fontSize: 15, height: 1.5, fontWeight: FontWeight.w800),
+                              ),
+                            ),
+                            if (occasion.sourceUrl != null)
+                              const Padding(
+                                padding: EdgeInsets.only(top: 4, right: 5),
+                                child: Icon(Icons.open_in_new_rounded, size: 15),
+                              ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
               ] else ...[
@@ -810,6 +847,70 @@ List<Widget> _ramadanRows(
   }
   return rows;
 }
+
+Future<void> _showOccasionDetails(
+  BuildContext context,
+  ReligiousOccasion occasion,
+) async {
+  await showModalBottomSheet<void>(
+    context: context,
+    showDragHandle: true,
+    isScrollControlled: true,
+    builder: (sheetContext) => SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              occasion.title,
+              style: Theme.of(sheetContext).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              '${occasion.hijriDay} ${_hijriMonthName(occasion.hijriMonth)} هـ • ${occasion.kindLabel}',
+              style: TextStyle(color: Theme.of(sheetContext).colorScheme.secondary),
+            ),
+            if (occasion.qualification != null) ...[
+              const SizedBox(height: 10),
+              Text(
+                occasion.qualification!,
+                style: TextStyle(color: Theme.of(sheetContext).colorScheme.onSurfaceVariant, height: 1.6),
+              ),
+            ],
+            if (occasion.sourceLabel != null) ...[
+              const SizedBox(height: 14),
+              Text(
+                'المصدر: ${occasion.sourceLabel}',
+                style: TextStyle(color: Theme.of(sheetContext).colorScheme.onSurfaceVariant, height: 1.5),
+              ),
+            ],
+            if (occasion.sourceUrl != null) ...[
+              const SizedBox(height: 12),
+              FilledButton.icon(
+                onPressed: () async {
+                  final uri = Uri.tryParse(occasion.sourceUrl!);
+                  if (uri == null || uri.scheme != 'https' || uri.host.isEmpty) return;
+                  await launchUrl(uri, mode: LaunchMode.externalApplication);
+                },
+                icon: const Icon(Icons.open_in_new_rounded),
+                label: const Text('فتح المصدر'),
+              ),
+            ],
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+String _hijriMonthName(int month) => const [
+      'المحرم', 'صفر', 'ربيع الأول', 'ربيع الآخر', 'جمادى الأولى',
+      'جمادى الآخرة', 'رجب', 'شعبان', 'رمضان', 'شوال', 'ذو القعدة', 'ذو الحجة',
+    ][month - 1];
 
 List<String> _occasions(_Hijri h) => religiousOccasionsForHijriDate(
       h.day,

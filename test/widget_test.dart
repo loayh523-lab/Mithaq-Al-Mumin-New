@@ -104,6 +104,20 @@ void main() {
     expect(alternateRidhaDate, hasLength(1));
     expect(alternateRidhaDate.single.qualification, contains('آخر صفر'));
     expect(alternateRidhaDate.single.sourceUrl, startsWith('https://'));
+
+    final prophetDeath = religiousOccasionsForHijriDate(28, 2)
+        .where((occasion) => occasion.title.contains('وفاة النبي محمد'))
+        .toList(growable: false);
+    expect(prophetDeath, hasLength(1));
+    expect(prophetDeath.single.sourceUrl, contains('al-islam.org'));
+
+    final fatimaBirth = religiousOccasionsForHijriDate(20, 6)
+        .where((occasion) =>
+            occasion.kind == ReligiousOccasionKind.birth &&
+            occasion.title.contains('فاطمة الزهراء'))
+        .toList(growable: false);
+    expect(fatimaBirth, hasLength(1));
+    expect(fatimaBirth.single.sourceUrl, contains('al-islam.org'));
   });
 
   test('religious occasion display text avoids Persian letters and source links are secure', () {

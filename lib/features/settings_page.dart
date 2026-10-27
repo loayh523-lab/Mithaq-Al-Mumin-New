@@ -139,13 +139,41 @@ class _SettingsPageState extends State<SettingsPage> with WidgetsBindingObserver
   }
   Future<void> _load() async {
     final prefs = await SharedPreferences.getInstance();
+    if (!mounted) return;
+
+    // Load local settings first so notification switches and unrelated settings
+    // remain usable while the larger optional administrative dataset is parsed.
+    setState(() {
+      _fontSize = (prefs.getDouble('quran_font_size') ?? 24)
+          .clamp(16, 34)
+          .toDouble();
+      _notificationsEnabled =
+          prefs.getBool('prayer_notifications_enabled') ?? false;
+      _earlyAlertEnabled =
+          prefs.getBool('prayer_early_alert_enabled') ?? false;
+      _earlyAlertMinutes =
+          (prefs.getInt('prayer_early_alert_minutes') ?? 5)
+              .clamp(1, 30)
+              .toInt();
+      _prayerEnabled = {
+        for (final option in _prayerOptions)
+          option.key: prefs.getBool('prayer_enabled_${option.key}') ?? true,
+      };
+      _loaded = true;
+    });
+
+    unawaited(_loadSavedAdministrativePlace());
+    unawaited(_reconcileNotificationPermission());
+  }
+
+  Future<void> _loadSavedAdministrativePlace() async {
     var savedCity = PrayerLocations.cities.first;
     var divisions = <PrayerAdministrativeDivision>[];
     try {
       divisions = await PrayerLocations.administrativeDivisions();
       savedCity = await PrayerLocations.load();
     } catch (_) {
-      // The rest of settings stays usable if the optional place list fails.
+      // The settings screen remains usable if the optional place list is missing.
     }
 
     final selected = PrayerLocations.divisionById(divisions, savedCity.id) ??
@@ -159,7 +187,8 @@ class _SettingsPageState extends State<SettingsPage> with WidgetsBindingObserver
         divisions.where((item) => item.level == 1).toList(growable: false);
     final defaultGovernorate =
         governorates.isEmpty ? null : governorates.first;
-    if (!mounted) return;
+
+    if (!mounted || _placeSelectionDirty) return;
     setState(() {
       _administrativeDivisions = divisions;
       _currentCity = savedCity;
@@ -175,27 +204,7 @@ class _SettingsPageState extends State<SettingsPage> with WidgetsBindingObserver
       _placeSelectionDirty = !savedCity.isCurrentLocation &&
           selected != null &&
           selected.id != savedCity.id;
-      _fontSize = (prefs.getDouble('quran_font_size') ?? 24)
-          .clamp(16, 34)
-          .toDouble();
-      // Enable settings controls as soon as local settings are loaded. Android
-      // notification APIs are reconciled separately so a slow/unavailable plugin
-      // cannot leave reminder switches disabled indefinitely.
-      _notificationsEnabled =
-          prefs.getBool('prayer_notifications_enabled') ?? false;
-      _earlyAlertEnabled =
-          prefs.getBool('prayer_early_alert_enabled') ?? false;
-      _earlyAlertMinutes =
-          (prefs.getInt('prayer_early_alert_minutes') ?? 5)
-              .clamp(1, 30)
-              .toInt();
-      _prayerEnabled = {
-        for (final option in _prayerOptions)
-          option.key: prefs.getBool('prayer_enabled_${option.key}') ?? true,
-      };
-      _loaded = true;
     });
-    unawaited(_reconcileNotificationPermission());
   }
 
   Future<void> _reconcileNotificationPermission() async {

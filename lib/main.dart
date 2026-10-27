@@ -506,12 +506,16 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
         ],
       ),
       (
-        title: 'الخدمات',
+        title: 'الصلاة والخدمات',
         items: [
           _sectionGridItem(icon: Icons.access_time_rounded, title: 'أوقات الصلاة', onTap: () => _pushPage(PrayerCalendarPage(onLocationChanged: _handleLocationChanged, onHijriCorrectionChanged: _loadDashboardData))),
           _sectionGridItem(icon: Icons.explore_rounded, title: 'اتجاه القبلة', onTap: () => _pushPage(QiblaPage(onLocationChanged: _handleLocationChanged))),
           _sectionGridItem(icon: Icons.bookmark_added_rounded, title: 'ختمة القرآن', onTap: () => _pushPage(const KhatmaPage())),
-          _sectionGridItem(icon: Icons.manage_search_rounded, title: 'الباحث الذكي', onTap: () => _pushPage(const SmartSearchPage())),
+        ],
+      ),
+      (
+        title: 'المعرفة الدينية',
+        items: [
           _sectionGridItem(icon: Icons.brightness_5_rounded, title: 'أسماء الله الحسنى', onTap: () => _pushPage(const NamesOfAllahPage())),
           _sectionGridItem(icon: Icons.format_quote_rounded, title: 'نهج البلاغة والحِكم', onTap: () => _pushPage(const NahjAlBalaghaPage())),
           _sectionGridItem(icon: Icons.support_agent_rounded, title: 'الخدمات الإيمانية', onTap: () => _pushPage(const FaithServicesPage())),
@@ -522,10 +526,8 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
         title: 'المناسبات',
         items: [
           _sectionGridItem(icon: Icons.event_available_rounded, title: 'تقويم المناسبات', onTap: () => _pushPage(const ReligiousOccasionsPage())),
-          _sectionGridItem(icon: Icons.calendar_month_rounded, title: 'أعمال المناسبات', onTap: () => _pushPage(const ShiaTextLibraryPage(initialCategory: 'الأعمال والمناسبات'))),
           _sectionGridItem(icon: Icons.location_on_rounded, title: 'زيارة الأربعين', onTap: () => _pushPage(const ArbaeenGuidePage())),
           _sectionGridItem(icon: Icons.explore_rounded, title: 'الاستخارة القرآنية', onTap: () => _pushPage(const IstikharaGuidePage())),
-          _sectionGridItem(icon: Icons.mosque_rounded, title: 'الزيارات الشريفة', onTap: () => _pushPage(const ShiaTextLibraryPage(initialCategory: 'الزيارات الشريفة'))),
         ],
       ),
     ];

@@ -81,10 +81,26 @@ void main() {
       );
       final sourceUrl = occasion.sourceUrl;
       if (sourceUrl != null) {
+        final uri = Uri.tryParse(sourceUrl);
         expect(
-          Uri.tryParse(sourceUrl)?.scheme,
+          uri,
+          isNotNull,
+          reason: 'Religious occasion source must be a valid URI: ${occasion.title}',
+        );
+        expect(
+          uri!.scheme,
           'https',
           reason: 'Religious occasion sources must use HTTPS: ${occasion.title}',
+        );
+        expect(
+          uri.host,
+          isNotEmpty,
+          reason: 'Religious occasion source needs a host: ${occasion.title}',
+        );
+        expect(
+          occasion.sourceLabel?.trim(),
+          isNotEmpty,
+          reason: 'Religious occasion source needs a visible label: ${occasion.title}',
         );
       }
     }

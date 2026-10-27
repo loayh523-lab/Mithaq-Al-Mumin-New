@@ -684,9 +684,15 @@ String hijriDateLabel(DateTime date, {int correction = 0}) {
 
 /// Returns the devotional occasion recorded for the estimated Hijri date, if any.
 /// The result follows this app's approximate civil Hijri calendar.
-String? hijriOccasionLabel(DateTime date, {int correction = 0}) {
+List<String> hijriOccasionLabels(DateTime date, {int correction = 0}) {
   final hijri = _Hijri.fromGregorian(date.add(Duration(days: correction)));
-  return _occasion(hijri);
+  return _occasions(hijri);
+}
+
+/// Returns all recorded occasion labels, not just the first event on that day.
+String? hijriOccasionLabel(DateTime date, {int correction = 0}) {
+  final labels = hijriOccasionLabels(date, correction: correction);
+  return labels.isEmpty ? null : labels.join(' • ');
 }
 
 /// Structured tabular Hijri date for features that need month/day matching.

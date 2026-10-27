@@ -134,7 +134,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
                   Padding(
                     padding: const EdgeInsets.only(top: 4),
                     child: InkWell(
-                      onTap: () => _showOccasionDetails(context, occasion),
+                      onTap: () => _showOccasionDetails(context, occasion, gregorianDate: date),
                       borderRadius: BorderRadius.circular(8),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 3),
@@ -453,7 +453,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 7),
                     child: InkWell(
-                      onTap: () => _showOccasionDetails(context, occasion),
+                      onTap: () => _showOccasionDetails(context, occasion, gregorianDate: selectedDate),
                       borderRadius: BorderRadius.circular(8),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 2),
@@ -850,8 +850,9 @@ List<Widget> _ramadanRows(
 
 Future<void> _showOccasionDetails(
   BuildContext context,
-  ReligiousOccasion occasion,
-) async {
+  ReligiousOccasion occasion, {
+  required DateTime gregorianDate,
+}) async {
   await showModalBottomSheet<void>(
     context: context,
     showDragHandle: true,
@@ -873,6 +874,22 @@ Future<void> _showOccasionDetails(
             Text(
               '${occasion.hijriDay} ${_hijriMonthName(occasion.hijriMonth)} هـ • ${occasion.kindLabel}',
               style: TextStyle(color: Theme.of(sheetContext).colorScheme.secondary),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'التاريخ الميلادي المحسوب: ${_dateLabel(gregorianDate)} م',
+              style: TextStyle(
+                color: Theme.of(sheetContext).colorScheme.onSurfaceVariant,
+                height: 1.5,
+              ),
+            ),
+            Text(
+              'التاريخ تقريبي وفق حساب التطبيق وقد يختلف مع ثبوت الهلال أو التصحيح اليدوي.',
+              style: TextStyle(
+                color: Theme.of(sheetContext).colorScheme.onSurfaceVariant,
+                fontSize: 11,
+                height: 1.5,
+              ),
             ),
             if (occasion.qualification != null) ...[
               const SizedBox(height: 10),

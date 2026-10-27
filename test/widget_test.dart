@@ -90,6 +90,12 @@ void main() {
       sourced.every((occasion) => occasion.sourceLabel?.trim().isNotEmpty == true),
       isTrue,
     );
+    expect(
+      sourced.every((occasion) =>
+          !RegExp(r'[A-Za-z]').hasMatch(occasion.sourceLabel ?? '')),
+      isTrue,
+      reason: 'Source labels should follow the Arabic-first interface language.',
+    );
 
     final iraqiRidhaDate = religiousOccasionsForHijriDate(17, 2)
         .where((occasion) => occasion.title.contains('الرضا'))

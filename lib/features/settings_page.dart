@@ -54,9 +54,31 @@ class _SettingsPageState extends State<SettingsPage> with WidgetsBindingObserver
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      // Refresh settings after the user returns from Android's notification,
-      // exact-alarm, or battery-optimization screens.
-      unawaited(_load());
+      // Refresh Android permission state and reconcile the saved prayer schedule
+      // after returning from notification/exact-alarm settings.
+      unawaited(_refreshAfterSystemSettings());
+    }
+  }
+
+  Future<void> _refreshAfterSystemSettings() async {
+    await _load();
+    if (!mounted) return;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      if (prefs.getBool('prayer_notifications_enabled') != true) return;
+
+      final city = await PrayerLocations.load();
+      final scheduled = await PrayerNotificationService.ensureScheduled(city: city);
+      if (!mounted) return;
+      final exactAlarms = await PrayerNotificationService.exactAlarmsAreEnabled();
+
+      if (!scheduled) {
+        _message('رجعت من إعدادات أندرويد، لكن تعذّر التحقق من جدولة الأذان. افتح فحص جدولة الأذان وحاول مرة ثانية.');
+      } else if (exactAlarms == false) {
+        _message('الإشعارات مفعّلة، لكن إذن المنبهات الدقيقة غير مفعّل؛ قد يتأخر الأذان. فعّل الإذن ثم ارجع للتطبيق.');
+      }
+    } catch (_) {
+      // Keep settings usable even if Android does not expose permission state.
     }
   }
 

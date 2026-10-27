@@ -865,39 +865,39 @@ Future<void> _showOccasionDetails(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-            Text(
-              occasion.title,
-              style: Theme.of(sheetContext).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              '${occasion.hijriDay} ${_hijriMonthName(occasion.hijriMonth)} هـ • ${occasion.kindLabel}',
-              style: TextStyle(color: Theme.of(sheetContext).colorScheme.secondary),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'التاريخ الميلادي المحسوب: ${_dateLabel(gregorianDate)} م',
-              style: TextStyle(
-                color: Theme.of(sheetContext).colorScheme.onSurfaceVariant,
-                height: 1.5,
+              Text(
+                occasion.title,
+                style: Theme.of(sheetContext).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
-            ),
-            Text(
-              'التاريخ تقريبي وفق حساب التطبيق وقد يختلف مع ثبوت الهلال أو التصحيح اليدوي.',
-              style: TextStyle(
-                color: Theme.of(sheetContext).colorScheme.onSurfaceVariant,
-                fontSize: 11,
-                height: 1.5,
-              ),
-            ),
-            if (occasion.qualification != null) ...[
               const SizedBox(height: 10),
               Text(
-                occasion.qualification!,
-                style: TextStyle(color: Theme.of(sheetContext).colorScheme.onSurfaceVariant, height: 1.6),
+                '${occasion.hijriDay} ${_hijriMonthName(occasion.hijriMonth)} هـ • ${occasion.kindLabel}',
+                style: TextStyle(color: Theme.of(sheetContext).colorScheme.secondary),
               ),
+              const SizedBox(height: 8),
+              Text(
+                'التاريخ الميلادي المحسوب: ${_dateLabel(gregorianDate)} م',
+                style: TextStyle(
+                  color: Theme.of(sheetContext).colorScheme.onSurfaceVariant,
+                  height: 1.5,
+                ),
+              ),
+              Text(
+                'التاريخ تقريبي وفق حساب التطبيق وقد يختلف مع ثبوت الهلال أو التصحيح اليدوي.',
+                style: TextStyle(
+                  color: Theme.of(sheetContext).colorScheme.onSurfaceVariant,
+                  fontSize: 11,
+                  height: 1.5,
+                ),
+              ),
+              if (occasion.qualification != null) ...[
+                const SizedBox(height: 10),
+                Text(
+                  occasion.qualification!,
+                  style: TextStyle(color: Theme.of(sheetContext).colorScheme.onSurfaceVariant, height: 1.6),
+                ),
             ],
             if (occasion.sourceLabel != null) ...[
               const SizedBox(height: 14),

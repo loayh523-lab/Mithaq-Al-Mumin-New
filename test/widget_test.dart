@@ -925,9 +925,14 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('عرض التقويم السنوي'));
     await tester.pumpAndSettle();
-    await tester.tap(
-      find.text(gregorianMonths[selectedDate.month - 1]).first,
+    final selectedGregorianMonth =
+        find.text(gregorianMonths[selectedDate.month - 1]);
+    await tester.scrollUntilVisible(
+      selectedGregorianMonth,
+      200,
+      scrollable: find.byType(Scrollable).first,
     );
+    await tester.tap(selectedGregorianMonth.first);
     await tester.pumpAndSettle();
 
     final selectedDateLabel =

@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mithaq_al_mumin/main.dart';
@@ -91,6 +93,30 @@ void main() {
   setUp(() async {
     SharedPreferences.setMockInitialValues({});
     await AppTheme.load();
+  });
+
+  test('Quran catalog contains all 114 unique surahs and 6236 verses', () async {
+    final source = await rootBundle.loadString('assets/quran/chapters.json');
+    final decoded = jsonDecode(source) as Map<String, dynamic>;
+    final chapters = (decoded['chapters'] as List<dynamic>)
+        .cast<Map<String, dynamic>>();
+
+    expect(chapters, hasLength(114));
+    expect(chapters.map((chapter) => chapter['id']).toSet(), hasLength(114));
+    expect(
+      chapters.map((chapter) => chapter['id']).toList()..sort(),
+      List<int>.generate(114, (index) => index + 1),
+    );
+    expect(
+      chapters.fold<int>(
+        0,
+        (total, chapter) => total + (chapter['total_verses'] as int),
+      ),
+      6236,
+    );
+    expect(chapters.every((chapter) =>
+      (chapter['name'] as String).trim().isNotEmpty &&
+      (chapter['total_verses'] as int) > 0), isTrue);
   });
 
   testWidgets('religious occasions search keeps both Fatima Zahra narrations visible', (tester) async {

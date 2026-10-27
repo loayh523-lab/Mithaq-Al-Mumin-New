@@ -81,6 +81,31 @@ void main() {
     }
   });
 
+  test('religious occasion sources cover key dates without pretending every date is settled', () {
+    final sourced = shiaReligiousOccasions
+        .where((occasion) => occasion.sourceUrl != null)
+        .toList(growable: false);
+    expect(sourced.length, greaterThanOrEqualTo(20));
+    expect(
+      sourced.every((occasion) => occasion.sourceLabel?.trim().isNotEmpty == true),
+      isTrue,
+    );
+
+    final iraqiRidhaDate = religiousOccasionsForHijriDate(17, 2)
+        .where((occasion) => occasion.title.contains('الرضا'))
+        .toList(growable: false);
+    final alternateRidhaDate = religiousOccasionsForHijriDate(29, 2)
+        .where((occasion) => occasion.title.contains('الرضا'))
+        .toList(growable: false);
+
+    expect(iraqiRidhaDate, hasLength(1));
+    expect(iraqiRidhaDate.single.qualification, contains('العراق'));
+    expect(iraqiRidhaDate.single.sourceUrl, startsWith('https://'));
+    expect(alternateRidhaDate, hasLength(1));
+    expect(alternateRidhaDate.single.qualification, contains('آخر صفر'));
+    expect(alternateRidhaDate.single.sourceUrl, startsWith('https://'));
+  });
+
   test('religious occasion display text avoids Persian letters and source links are secure', () {
     final persianLetters = RegExp(r'[\u067E\u0686\u0698\u06AF]');
     for (final occasion in shiaReligiousOccasions) {

@@ -248,6 +248,28 @@ void main() {
     expect(find.text('التاريخ الهجري'), findsNothing);
   });
 
+  testWidgets('prayer reminder notification opens the prayer calendar, not settings',
+      (tester) async {
+    PrayerNotificationService.notificationTap.value = null;
+    addTearDown(() {
+      PrayerNotificationService.notificationTap.value = null;
+    });
+
+    await tester.pumpWidget(const MithaqApp());
+    await tester.pumpAndSettle();
+
+    // Early heads-up IDs must not be handled as the actual adhan notification.
+    PrayerNotificationService.notificationTap.value = 4005;
+    await tester.pumpAndSettle();
+    expect(find.text('المواقيت والتقويم'), findsNothing);
+
+    PrayerNotificationService.notificationTap.value = 4000;
+    await tester.pumpAndSettle();
+    expect(find.text('المواقيت والتقويم'), findsOneWidget);
+    expect(find.text('الإعدادات'), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('sections grid does not duplicate the prayer-taqibat library shortcut', (tester) async {
     await tester.pumpWidget(const MithaqApp());
     await tester.tap(find.text('الأقسام').last);

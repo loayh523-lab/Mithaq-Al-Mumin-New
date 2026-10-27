@@ -824,6 +824,63 @@ void main() {
     expect(find.text('1 كانون الثاني ${DateTime.now().year} م'), findsOneWidget);
   });
 
+  testWidgets('occasion details show selected Gregorian date with uncertainty note', (tester) async {
+    final year = DateTime.now().year;
+    const gregorianMonths = [
+      'كانون الثاني', 'شباط', 'آذار', 'نيسان', 'أيار', 'حزيران',
+      'تموز', 'آب', 'أيلول', 'تشرين الأول', 'تشرين الثاني', 'كانون الأول',
+    ];
+    DateTime? targetDate;
+    for (var dayOffset = 0;
+        dayOffset < (DateTime(year + 1, 1, 1).difference(DateTime(year, 1, 1)).inDays);
+        dayOffset++) {
+      final candidate = DateTime(year, 1, 1).add(Duration(days: dayOffset));
+      final hijri = hijriDateParts(candidate);
+      if (hijri.day == 13 && hijri.month == 5) {
+        targetDate = candidate;
+        break;
+      }
+    }
+    expect(targetDate, isNotNull, reason: '13 Jumada al-Ula should occur within the Gregorian year');
+    final selectedDate = targetDate!;
+
+    await tester.pumpWidget(const MaterialApp(
+      home: Directionality(
+        textDirection: TextDirection.rtl,
+        child: PrayerCalendarPage(),
+      ),
+    ));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('التقويم الهجري'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('عرض التقويم السنوي'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(gregorianMonths[selectedDate.month - 1]).first);
+    await tester.pumpAndSettle();
+
+    final selectedDateLabel =
+        '${selectedDate.day} ${gregorianMonths[selectedDate.month - 1]} $year م';
+    await tester.scrollUntilVisible(
+      find.text(selectedDateLabel),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.tap(find.text(selectedDateLabel));
+    await tester.pumpAndSettle();
+    await tester.fling(find.byType(Scrollable).first, const Offset(0, 4000), 5000);
+    await tester.pumpAndSettle();
+
+    final displayedDate =
+        '${selectedDate.day.toString().padLeft(2, '0')}/'
+        '${selectedDate.month.toString().padLeft(2, '0')}/$year';
+    final narration = find.textContaining('خمسة وسبعون يوماً').first;
+    await tester.ensureVisible(narration);
+    await tester.tap(narration);
+    await tester.pumpAndSettle();
+    expect(find.text('التاريخ الميلادي المحسوب: $displayedDate م'), findsOneWidget);
+    expect(find.textContaining('قد يختلف مع ثبوت الهلال'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
   testWidgets('surah reader opens its bundled text without internet', (tester) async {
     await tester.pumpWidget(const MaterialApp(
       home: Directionality(

@@ -64,6 +64,30 @@ void main() {
     }
   });
 
+  test('religious occasion display text avoids Persian letters and source links are secure', () {
+    final persianLetters = RegExp(r'[\\u067E\\u0686\\u0698\\u06AF]');
+    for (final occasion in shiaReligiousOccasions) {
+      final displayText = [
+        occasion.title,
+        occasion.qualification ?? '',
+        occasion.sourceLabel ?? '',
+      ].join(' ');
+      expect(
+        displayText,
+        isNot(matches(persianLetters)),
+        reason: 'Unexpected Persian letters in: ${occasion.title}',
+      );
+      final sourceUrl = occasion.sourceUrl;
+      if (sourceUrl != null) {
+        expect(
+          Uri.tryParse(sourceUrl)?.scheme,
+          'https',
+          reason: 'Religious occasion sources must use HTTPS: ${occasion.title}',
+        );
+      }
+    }
+  });
+
   setUp(() async {
     SharedPreferences.setMockInitialValues({});
     await AppTheme.load();

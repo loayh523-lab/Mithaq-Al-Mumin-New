@@ -753,16 +753,21 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
                   ],
                 ),
                 SizedBox(height: 8),
-                _drawerSectionTitle('المعرفة والمناسبات', Icons.local_library_rounded),
+                _drawerSectionTitle('المعرفة الدينية', Icons.local_library_rounded),
+                _drawerGrid(
+                  children: [
+                    _drawerGridItem(Icons.brightness_5_rounded, 'أسماء الله الحسنى', () => _openDrawerPage(const NamesOfAllahPage())),
+                    _drawerGridItem(Icons.format_quote_rounded, 'نهج البلاغة والحِكم', () => _openDrawerPage(const NahjAlBalaghaPage())),
+                    _drawerGridItem(Icons.support_agent_rounded, 'الخدمات الإيمانية', () => _openDrawerPage(const FaithServicesPage())),
+                    _drawerGridItem(Icons.info_outline_rounded, 'عن التطبيق والدعم', () => _openDrawerPage(const AboutSupportPage())),
+                  ],
+                ),
+                SizedBox(height: 8),
+                _drawerSectionTitle('المناسبات والتقويم', Icons.calendar_month_rounded),
                 _drawerGrid(
                   children: [
                     _drawerGridItem(Icons.event_available_rounded, 'المناسبات الدينية', () => _openDrawerPage(const ReligiousOccasionsPage())),
                     _drawerGridItem(Icons.calendar_month_rounded, 'التقويم الهجري', () => _openDrawerPage(PrayerCalendarPage(initialTab: 2, onLocationChanged: _handleLocationChanged, onHijriCorrectionChanged: _loadDashboardData))),
-                    _drawerGridItem(Icons.brightness_5_rounded, 'أسماء الله الحسنى', () => _openDrawerPage(const NamesOfAllahPage())),
-                    _drawerGridItem(Icons.manage_search_rounded, 'الباحث الذكي', () => _openDrawerPage(const SmartSearchPage())),
-                    _drawerGridItem(Icons.format_quote_rounded, 'نهج البلاغة والحِكم', () => _openDrawerPage(const NahjAlBalaghaPage())),
-                    _drawerGridItem(Icons.support_agent_rounded, 'الخدمات الإيمانية', () => _openDrawerPage(const FaithServicesPage())),
-                    _drawerGridItem(Icons.info_outline_rounded, 'عن التطبيق والدعم', () => _openDrawerPage(const AboutSupportPage())),
                   ],
                 ),
               ],
@@ -965,7 +970,6 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
     ));
   }
 
-  // ignore: unused_element
   ({String name, DateTime at}) _nextPrayer(SolarPrayerTimes times, DateTime clock) {
     final prayers = <({String name, String value})>[
       (name: 'الفجر', value: times.fajr),
@@ -1000,11 +1004,10 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
     );
   }
 
-  // ignore: unused_element
-  String _clockLabel(DateTime value) =>
-      '${value.hour.toString().padLeft(2, '0')}:${value.minute.toString().padLeft(2, '0')}';
+  String _clockLabel(DateTime value) => formatPrayerTime12Hour(
+        '${value.hour.toString().padLeft(2, '0')}:${value.minute.toString().padLeft(2, '0')}',
+      );
 
-  // ignore: unused_element
   String _countdownLabel(DateTime target, DateTime current) {
     final minutes = target.difference(current).inMinutes.clamp(0, 999999);
     final hours = minutes ~/ 60;
@@ -1233,40 +1236,50 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
                 ],
               ),
               SizedBox(height: 12),
-              Container(
-                padding: const EdgeInsets.all(13),
-                decoration: BoxDecoration(
-                  color: _emerald.withValues(alpha: .15),
+              Material(
+                color: _emerald.withValues(alpha: .15),
+                shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: _emerald.withValues(alpha: .35)),
+                  side: BorderSide(color: _emerald.withValues(alpha: .35)),
                 ),
-                child: Row(
-                  children: [
-                    Icon(Icons.notifications_active_outlined, color: _gold, size: 25),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('الصلاة القادمة', style: TextStyle(color: _themeMuted(context), fontSize: 11)),
-                          SizedBox(height: 3),
-                          Text(
-                            nextPrayer.name,
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
+                clipBehavior: Clip.antiAlias,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(16),
+                  onTap: () => _pushPage(PrayerCalendarPage(
+                    onLocationChanged: _handleLocationChanged,
+                    onHijriCorrectionChanged: _loadDashboardData,
+                  )),
+                  child: Padding(
+                    padding: const EdgeInsets.all(13),
+                    child: Row(
+                      children: [
+                        Icon(Icons.notifications_active_outlined, color: _gold, size: 25),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('الصلاة القادمة', style: TextStyle(color: _themeMuted(context), fontSize: 11)),
+                              SizedBox(height: 3),
+                              Text(
+                                nextPrayer.name,
+                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
+                              ),
+                              SizedBox(height: 3),
+                              Text(
+                                'المتبقي ${_countdownLabel(nextPrayer.at, _now)}',
+                                style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 12),
+                              ),
+                            ],
                           ),
-                          SizedBox(height: 3),
-                          Text(
-                            'المتبقي ${_countdownLabel(nextPrayer.at, _now)}',
-                            style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 12),
-                          ),
-                        ],
-                      ),
+                        ),
+                        Text(
+                          _clockLabel(nextPrayer.at),
+                          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: Theme.of(context).colorScheme.secondary),
+                        ),
+                      ],
                     ),
-                    Text(
-                      _clockLabel(nextPrayer.at),
-                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: Theme.of(context).colorScheme.secondary),
-                    ),
-                  ],
+                  ),
                 ),
               ),
               SizedBox(height: 12),

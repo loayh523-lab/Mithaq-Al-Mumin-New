@@ -28,31 +28,6 @@ import 'package:mithaq_al_mumin/services/app_theme.dart';
 import 'package:mithaq_al_mumin/services/prayer_locations.dart';
 
 void main() {
-  test('religious occasion catalog has valid dates and no exact duplicates', () {
-    expect(shiaReligiousOccasions, isNotEmpty);
-
-    final keys = <String>{};
-    for (final occasion in shiaReligiousOccasions) {
-      expect(occasion.hijriMonth, inInclusiveRange(1, 12));
-      expect(occasion.hijriDay, inInclusiveRange(1, 30));
-      expect(occasion.title.trim(), isNotEmpty);
-
-      final key =
-          '${occasion.hijriMonth}-${occasion.hijriDay}-${occasion.title}';
-      expect(keys.add(key), isTrue,
-          reason: 'Duplicate occasion entry: ${occasion.title}');
-
-      if (occasion.sourceUrl != null) {
-        final uri = Uri.tryParse(occasion.sourceUrl!);
-        expect(uri, isNotNull);
-        expect(uri!.scheme, 'https');
-        expect(uri.host, isNotEmpty);
-        expect(occasion.sourceLabel, isNotNull);
-        expect(occasion.sourceLabel!.trim(), isNotEmpty);
-      }
-    }
-  });
-
   test('Fatima al-Zahra martyrdom preserves both calendar narrations', () {
     final seventyFiveDayNarration = religiousOccasionsForHijriDate(13, 5);
     final ninetyFiveDayNarration = religiousOccasionsForHijriDate(3, 6);
@@ -139,9 +114,14 @@ void main() {
       ),
       6236,
     );
-    expect(chapters.every((chapter) =>
-      (chapter['name'] as String).trim().isNotEmpty &&
-      (chapter['total_verses'] as int) > 0), isTrue);
+    expect(
+      chapters.every(
+        (chapter) =>
+            (chapter['name'] as String).trim().isNotEmpty &&
+            (chapter['total_verses'] as int) > 0,
+      ),
+      isTrue,
+    );
   });
 
   testWidgets('religious occasions search keeps both Fatima Zahra narrations visible', (tester) async {

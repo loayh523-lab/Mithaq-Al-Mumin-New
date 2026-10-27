@@ -148,13 +148,6 @@ class _SettingsPageState extends State<SettingsPage> with WidgetsBindingObserver
       // The rest of settings stays usable if the optional place list fails.
     }
 
-    bool? actualNotificationPermission;
-    try {
-      actualNotificationPermission =
-          await PrayerNotificationService.notificationsAreEnabled();
-    } catch (_) {
-      // Permission availability is platform-dependent in widget tests.
-    }
     final selected = PrayerLocations.divisionById(divisions, savedCity.id) ??
         PrayerLocations.nearestDivision(
           divisions,
@@ -185,9 +178,11 @@ class _SettingsPageState extends State<SettingsPage> with WidgetsBindingObserver
       _fontSize = (prefs.getDouble('quran_font_size') ?? 24)
           .clamp(16, 34)
           .toDouble();
+      // Enable settings controls as soon as local settings are loaded. Android
+      // notification APIs are reconciled separately so a slow/unavailable plugin
+      // cannot leave reminder switches disabled indefinitely.
       _notificationsEnabled =
-          (prefs.getBool('prayer_notifications_enabled') ?? false) &&
-              actualNotificationPermission != false;
+          prefs.getBool('prayer_notifications_enabled') ?? false;
       _earlyAlertEnabled =
           prefs.getBool('prayer_early_alert_enabled') ?? false;
       _earlyAlertMinutes =
@@ -200,6 +195,21 @@ class _SettingsPageState extends State<SettingsPage> with WidgetsBindingObserver
       };
       _loaded = true;
     });
+    unawaited(_reconcileNotificationPermission());
+  }
+
+  Future<void> _reconcileNotificationPermission() async {
+    try {
+      final actualPermission =
+          await PrayerNotificationService.notificationsAreEnabled();
+      if (!mounted || actualPermission != false) return;
+      // Reflect an OS-level denial without blocking unrelated settings.
+      if (_notificationsEnabled) {
+        setState(() => _notificationsEnabled = false);
+      }
+    } catch (_) {
+      // Permission state is platform-dependent; keep saved settings usable.
+    }
   }
 
   void _selectGovernorate(String? id) {

@@ -108,6 +108,9 @@ void main() {
   });
 
   testWidgets('settings cascade from governorate to subdistrict and save its coordinates', (tester) async {
+    await tester.runAsync(() async {
+      await PrayerLocations.administrativeDivisions();
+    });
     await tester.pumpWidget(const MaterialApp(
       home: Directionality(
         textDirection: TextDirection.rtl,
@@ -116,9 +119,21 @@ void main() {
     ));
     await tester.pumpAndSettle();
 
-    expect(find.text('المحافظة'), findsOneWidget);
-    expect(find.text('القضاء'), findsOneWidget);
-    expect(find.text('الناحية / مركز القضاء'), findsOneWidget);
+    expect(find.byType(DropdownButtonFormField<String>), findsNWidgets(3));
+    expect(
+      find.byKey(const ValueKey('prayer-governorate-IQG17')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('prayer-district-IQG17Q02')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey(
+        'prayer-subdistrict-IQG17Q02-IQG17Q02N04',
+      )),
+      findsOneWidget,
+    );
 
     await tester.ensureVisible(
       find.byKey(const ValueKey('prayer-governorate-IQG17')),

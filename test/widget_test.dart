@@ -65,7 +65,7 @@ void main() {
   });
 
   test('religious occasion display text avoids Persian letters and source links are secure', () {
-    final persianLetters = RegExp(r'[\\u067E\\u0686\\u0698\\u06AF]');
+    final persianLetters = RegExp(r'[\u067E\u0686\u0698\u06AF]');
     for (final occasion in shiaReligiousOccasions) {
       final displayText = [
         occasion.title,

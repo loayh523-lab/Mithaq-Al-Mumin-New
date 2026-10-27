@@ -860,10 +860,11 @@ Future<void> _showOccasionDetails(
     builder: (sheetContext) => SafeArea(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
             Text(
               occasion.title,
               style: Theme.of(sheetContext).textTheme.titleLarge?.copyWith(
@@ -954,6 +955,7 @@ Future<void> _showOccasionDetails(
               ),
             ],
           ],
+          ),
         ),
       ),
     ),

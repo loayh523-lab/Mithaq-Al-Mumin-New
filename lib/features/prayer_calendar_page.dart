@@ -704,7 +704,10 @@ String? hijriOccasionLabel(DateTime date, {int correction = 0}) {
   );
 }
 
-String _dateLabel(DateTime d) => '${d.day.toString().padLeft(2, '0')}/${d.month.toString().padLeft(2, '0')}/${d.year}';
+String prayerCalendarGregorianDateLabel(DateTime d) =>
+    '${d.day.toString().padLeft(2, '0')}/${d.month.toString().padLeft(2, '0')}/${d.year}';
+
+String _dateLabel(DateTime d) => prayerCalendarGregorianDateLabel(d);
 
 String _gregorianMonthName(int month) => const [
   'كانون الثاني', 'شباط', 'آذار', 'نيسان', 'أيار', 'حزيران',

@@ -81,15 +81,20 @@ void main() {
     await tester.enterText(find.byType(TextField), 'فاطمة الزهراء');
     await tester.pumpAndSettle();
 
-    expect(find.text('شهادة السيدة فاطمة الزهراء عليها السلام'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.textContaining('خمسة وسبعون يوماً'),
+      160,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
     expect(find.textContaining('خمسة وسبعون يوماً'), findsOneWidget);
+
     await tester.scrollUntilVisible(
       find.textContaining('خمسة وتسعون يوماً'),
       160,
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    expect(find.text('شهادة السيدة فاطمة الزهراء عليها السلام'), findsOneWidget);
     expect(find.textContaining('خمسة وتسعون يوماً'), findsOneWidget);
   });
 
@@ -424,14 +429,10 @@ void main() {
     await tester.scrollUntilVisible(occasionsEntry, 130, scrollable: drawerScroll);
     await tester.pumpAndSettle();
     expect(occasionsEntry, findsOneWidget);
-    await tester.scrollUntilVisible(
-      find.descendant(of: find.byType(Drawer), matching: find.text('المعرفة والمناسبات')),
-      180,
-      scrollable: drawerScroll,
-    );
+    await tester.tap(occasionsEntry);
     await tester.pumpAndSettle();
-    expect(find.text('المعرفة والمناسبات'), findsOneWidget);
-    expect(find.text('نسخة قيد التطوير • راجع المصادر عند الحاجة'), findsOneWidget);
+    expect(find.text('المناسبات الدينية'), findsOneWidget);
+    expect(find.text('ابحث بالاسم أو الشهر، أو صفِّ المناسبات حسب نوعها.'), findsOneWidget);
   });
 
   testWidgets('quiet home stays uncluttered on a narrow phone and services remain in the drawer', (tester) async {

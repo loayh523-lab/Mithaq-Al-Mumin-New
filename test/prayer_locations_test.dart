@@ -114,7 +114,7 @@ void main() {
         child: SettingsPage(),
       ),
     ));
-    await tester.pump(const Duration(milliseconds: 150));
+    await tester.pump(const Duration(milliseconds: 500));
     await tester.pumpAndSettle();
     await tester.scrollUntilVisible(
       find.byKey(const ValueKey('prayer-governorate-IQG17')),
@@ -147,6 +147,8 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(find.text('بابل'), findsOneWidget);
+    await tester.ensureVisible(find.text('بابل').last);
+    await tester.pumpAndSettle();
     await tester.tap(find.text('بابل').last);
     await tester.pumpAndSettle();
 
@@ -156,6 +158,8 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('prayer-district-none')));
     await tester.pumpAndSettle();
     expect(find.text('الحلة'), findsOneWidget);
+    await tester.ensureVisible(find.text('الحلة').last);
+    await tester.pumpAndSettle();
     await tester.tap(find.text('الحلة').last);
     await tester.pumpAndSettle();
 
@@ -169,6 +173,8 @@ void main() {
     )));
     await tester.pumpAndSettle();
     expect(find.text('ابي غرق'), findsOneWidget);
+    await tester.ensureVisible(find.text('ابي غرق').last);
+    await tester.pumpAndSettle();
     await tester.tap(find.text('ابي غرق').last);
     await tester.pumpAndSettle();
 

@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../services/prayer_locations.dart';
+import '../data/religious_occasions.dart';
 
 const _gold = Color(0xFFD9B66D);
 
@@ -118,7 +120,42 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
         Row(children: [const Expanded(child: Text('تصحيح يدوي للتاريخ')), IconButton(onPressed: () => _correct(-1), icon: Icon(Icons.remove_circle_outline)), Text('$correction يوم'), IconButton(onPressed: () => _correct(1), icon: Icon(Icons.add_circle_outline))]),
         Text('التاريخ محسوب بالتقويم الهجري الجدولي وقد يختلف يوماً عن إعلان ثبوت الهلال في العراق. يمكنك ضبطه إذا اعتمد مكتب مرجعك تاريخاً مختلفاً.', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11, height: 1.5)),
       ])),
-      if (_occasion(hijri) != null) Card(color: Theme.of(context).colorScheme.surface, child: ListTile(leading: Icon(Icons.event, color: _gold), title: Text('مناسبة دينية'), subtitle: Text(_occasion(hijri)!, style: TextStyle(height: 1.5)))),
+      if (_occasions(hijri).isNotEmpty)
+        Card(
+          color: Theme.of(context).colorScheme.surface,
+          child: ListTile(
+            leading: Icon(Icons.event, color: _gold),
+            title: Text(_occasions(hijri).length == 1 ? 'مناسبة دينية' : 'المناسبات الدينية'),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                for (final occasion in religiousOccasionsForHijriDate(hijri.day, hijri.month))
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: InkWell(
+                      onTap: () => _showOccasionDetails(context, occasion, gregorianDate: date),
+                      borderRadius: BorderRadius.circular(8),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 3),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                              Expanded(child: Text(occasion.displayTitle, style: const TextStyle(height: 1.5))),
+                              if (occasion.sourceUrl != null)
+                                const Padding(
+                                  padding: EdgeInsets.only(top: 3, right: 5),
+                                  child: Icon(Icons.open_in_new_rounded, size: 15),
+                                ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
       const SizedBox(height: 14),
       SegmentedButton<int>(segments: const [ButtonSegment(value: 0, label: Text('مواقيت الصلاة'), icon: Icon(Icons.access_time)), ButtonSegment(value: 1, label: Text('إمساكية رمضان'), icon: Icon(Icons.nights_stay_outlined)), ButtonSegment(value: 2, label: Text('التقويم الهجري'), icon: Icon(Icons.calendar_month_rounded))], selected: {tab}, onSelectionChanged: (v) => setState(() => tab = v.first)),
       const SizedBox(height: 12),
@@ -233,7 +270,7 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
     while (cells.length % 7 != 0) {
       cells.add(null);
     }
-    final selectedOccasion = _occasion(selectedHijri);
+    final selectedOccasions = religiousOccasionsForHijriDate(selectedHijri.day, selectedHijri.month);
     const weekdays = <String>['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
 
     return [
@@ -410,12 +447,35 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
                 '${_dateLabel(selectedDate)} م',
                 style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 12),
               ),
-              if (selectedOccasion != null) ...[
+              if (selectedOccasions.isNotEmpty) ...[
                 const SizedBox(height: 10),
-                Text(
-                  selectedOccasion,
-                  style: TextStyle(color: _gold, fontSize: 15, height: 1.5, fontWeight: FontWeight.w800),
-                ),
+                for (final occasion in selectedOccasions)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 7),
+                    child: InkWell(
+                      onTap: () => _showOccasionDetails(context, occasion, gregorianDate: selectedDate),
+                      borderRadius: BorderRadius.circular(8),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 2),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                occasion.displayTitle,
+                                style: TextStyle(color: _gold, fontSize: 15, height: 1.5, fontWeight: FontWeight.w800),
+                              ),
+                            ),
+                            if (occasion.sourceUrl != null)
+                              const Padding(
+                                padding: EdgeInsets.only(top: 4, right: 5),
+                                child: Icon(Icons.open_in_new_rounded, size: 15),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
               ] else ...[
                 const SizedBox(height: 8),
                 Text(
@@ -511,15 +571,18 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
             final day = index + 1;
             final gregorian = DateTime(year, month, day);
             final hijri = _Hijri.fromGregorian(gregorian.add(Duration(days: correction)));
-            final occasion = _occasion(hijri);
+            final occasions = _occasions(hijri);
             final hijriLabel = '${hijri.day} ${hijri.monthName} ${hijri.year} هـ';
+            final subtitle = occasions.isEmpty
+                ? hijriLabel
+                : '$hijriLabel\n${occasions.join('\n')}';
             return ListTile(
               dense: true,
               leading: SizedBox(width: 30, child: Text('$day', textAlign: TextAlign.center, style: TextStyle(color: _gold, fontWeight: FontWeight.bold))),
               title: Text('$day ${_gregorianMonthName(month)} $year م'),
-              subtitle: Text(occasion == null ? hijriLabel : '$hijriLabel\n$occasion', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.5)),
-              isThreeLine: occasion != null,
-              trailing: occasion == null ? null : Icon(Icons.event_available_rounded, color: _gold, size: 18),
+              subtitle: Text(subtitle, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.5)),
+              isThreeLine: occasions.isNotEmpty,
+              trailing: occasions.isEmpty ? null : Icon(Icons.event_available_rounded, color: _gold, size: 18),
               onTap: () => setState(() { date = gregorian; tab = 0; }),
             );
           }),
@@ -621,9 +684,15 @@ String hijriDateLabel(DateTime date, {int correction = 0}) {
 
 /// Returns the devotional occasion recorded for the estimated Hijri date, if any.
 /// The result follows this app's approximate civil Hijri calendar.
-String? hijriOccasionLabel(DateTime date, {int correction = 0}) {
+List<String> hijriOccasionLabels(DateTime date, {int correction = 0}) {
   final hijri = _Hijri.fromGregorian(date.add(Duration(days: correction)));
-  return _occasion(hijri);
+  return _occasions(hijri);
+}
+
+/// Returns all recorded occasion labels, not just the first event on that day.
+String? hijriOccasionLabel(DateTime date, {int correction = 0}) {
+  final labels = hijriOccasionLabels(date, correction: correction);
+  return labels.isEmpty ? null : labels.join(' • ');
 }
 
 /// Structured tabular Hijri date for features that need month/day matching.
@@ -641,7 +710,10 @@ String? hijriOccasionLabel(DateTime date, {int correction = 0}) {
   );
 }
 
-String _dateLabel(DateTime d) => '${d.day.toString().padLeft(2, '0')}/${d.month.toString().padLeft(2, '0')}/${d.year}';
+String prayerCalendarGregorianDateLabel(DateTime d) =>
+    '${d.day.toString().padLeft(2, '0')}/${d.month.toString().padLeft(2, '0')}/${d.year}';
+
+String _dateLabel(DateTime d) => prayerCalendarGregorianDateLabel(d);
 
 String _gregorianMonthName(int month) => const [
   'كانون الثاني', 'شباط', 'آذار', 'نيسان', 'أيار', 'حزيران',
@@ -785,50 +857,131 @@ List<Widget> _ramadanRows(
   return rows;
 }
 
+Future<void> _showOccasionDetails(
+  BuildContext context,
+  ReligiousOccasion occasion, {
+  required DateTime gregorianDate,
+}) async {
+  await showModalBottomSheet<void>(
+    context: context,
+    showDragHandle: true,
+    isScrollControlled: true,
+    builder: (sheetContext) => SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                occasion.title,
+                style: Theme.of(sheetContext).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                '${occasion.hijriDay} ${_hijriMonthName(occasion.hijriMonth)} هـ • ${occasion.kindLabel}',
+                style: TextStyle(color: Theme.of(sheetContext).colorScheme.secondary),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'التاريخ الميلادي المحسوب: ${_dateLabel(gregorianDate)} م',
+                style: TextStyle(
+                  color: Theme.of(sheetContext).colorScheme.onSurfaceVariant,
+                  height: 1.5,
+                ),
+              ),
+              Text(
+                'التاريخ تقريبي وفق حساب التطبيق وقد يختلف مع ثبوت الهلال أو التصحيح اليدوي.',
+                style: TextStyle(
+                  color: Theme.of(sheetContext).colorScheme.onSurfaceVariant,
+                  fontSize: 11,
+                  height: 1.5,
+                ),
+              ),
+              if (occasion.qualification != null) ...[
+                const SizedBox(height: 10),
+                Text(
+                  occasion.qualification!,
+                  style: TextStyle(color: Theme.of(sheetContext).colorScheme.onSurfaceVariant, height: 1.6),
+                ),
+            ],
+            if (occasion.sourceLabel != null) ...[
+              const SizedBox(height: 14),
+              Text(
+                'المصدر: ${occasion.sourceLabel}',
+                style: TextStyle(color: Theme.of(sheetContext).colorScheme.onSurfaceVariant, height: 1.5),
+              ),
+            ],
+            if (occasion.sourceUrl != null) ...[
+              const SizedBox(height: 12),
+              FilledButton.icon(
+                onPressed: () async {
+                  final uri = Uri.tryParse(occasion.sourceUrl!);
+                  if (uri == null || uri.scheme != 'https' || uri.host.isEmpty) {
+                    ScaffoldMessenger.of(sheetContext).showSnackBar(
+                      const SnackBar(content: Text('رابط المصدر غير صالح')),
+                    );
+                    return;
+                  }
+                  try {
+                    final opened = await launchUrl(
+                      uri,
+                      mode: LaunchMode.externalApplication,
+                    );
+                    if (!opened && sheetContext.mounted) {
+                      ScaffoldMessenger.of(sheetContext).showSnackBar(
+                        const SnackBar(
+                          content: Text('تعذّر فتح المصدر على هذا الجهاز'),
+                        ),
+                      );
+                    }
+                  } catch (_) {
+                    if (sheetContext.mounted) {
+                      ScaffoldMessenger.of(sheetContext).showSnackBar(
+                        const SnackBar(
+                          content: Text('تعذّر فتح المصدر على هذا الجهاز'),
+                        ),
+                      );
+                    }
+                  }
+                },
+                icon: const Icon(Icons.open_in_new_rounded),
+                label: const Text('فتح المصدر'),
+              ),
+            ],
+            if (occasion.sourceUrl == null) ...[
+              const SizedBox(height: 14),
+              Text(
+                'لم يُربط مصدر تفصيلي بهذه المناسبة بعد؛ ينبغي مراجعة تاريخها قبل إضافة أعمال خاصة بها.',
+                style: TextStyle(
+                  color: Theme.of(sheetContext).colorScheme.onSurfaceVariant,
+                  fontSize: 11,
+                  height: 1.6,
+                ),
+              ),
+            ],
+          ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+String _hijriMonthName(int month) => const [
+      'المحرم', 'صفر', 'ربيع الأول', 'ربيع الآخر', 'جمادى الأولى',
+      'جمادى الآخرة', 'رجب', 'شعبان', 'رمضان', 'شوال', 'ذو القعدة', 'ذو الحجة',
+    ][month - 1];
+
+List<String> _occasions(_Hijri h) => religiousOccasionsForHijriDate(
+      h.day,
+      h.month,
+    ).map((occasion) => occasion.displayTitle).toList(growable: false);
+
 String? _occasion(_Hijri h) {
-  // Dates follow common Shia devotional calendars; lunar sighting and narrations can differ.
-  const events = <String, String>{
-    '1-1': 'بداية السنة الهجرية',
-    '2-1': 'ذكرى ورود الإمام الحسين عليه السلام أرض كربلاء (في بعض التقاويم)',
-    '7-1': 'ذكرى منع الماء عن الإمام الحسين عليه السلام وأهل بيته وأصحابه (مشهور في المجالس)',
-    '9-1': 'تاسوعاء — من أيام الحزن على الإمام الحسين عليه السلام',
-    '10-1': 'يوم عاشوراء — ذكرى استشهاد الإمام الحسين عليه السلام وأهل بيته وأصحابه',
-    '20-2': 'زيارة الأربعين للإمام الحسين عليه السلام',
-    '25-1': 'ذكرى استشهاد الإمام زين العابدين عليه السلام (على رواية مشهورة)',
-    '7-2': 'ذكرى استشهاد الإمام الحسن المجتبى عليه السلام (على رواية مشهورة)',
-    '29-2': 'ذكرى استشهاد الإمام علي بن موسى الرضا عليه السلام (على رواية)',
-    '8-3': 'ذكرى استشهاد الإمام الحسن العسكري عليه السلام',
-    '9-3': 'بداية إمامة الإمام المهدي عجل الله فرجه (في التقويم المشهور)',
-    '17-3': 'ذكرى مولد النبي محمد صلى الله عليه وآله والإمام جعفر الصادق عليه السلام (المشهور)',
-    '10-4': 'ذكرى وفاة السيدة فاطمة المعصومة عليها السلام (على رواية)',
-    '5-5': 'ذكرى ولادة السيدة زينب عليها السلام (المشهور)',
-    '13-6': 'ذكرى وفاة أم البنين عليها السلام (مشهورة في بعض التقويمات)',
-    '3-7': 'ذكرى استشهاد الإمام علي الهادي عليه السلام',
-    '13-7': 'ذكرى ولادة أمير المؤمنين الإمام علي عليه السلام',
-    '25-7': 'ذكرى استشهاد الإمام موسى الكاظم عليه السلام (على رواية مشهورة)',
-    '27-7': 'عيد المبعث النبوي الشريف',
-    '3-8': 'ذكرى ولادة الإمام الحسين عليه السلام',
-    '4-8': 'ذكرى ولادة أبي الفضل العباس عليه السلام (المشهور)',
-    '5-8': 'ذكرى ولادة الإمام زين العابدين عليه السلام',
-    '15-8': 'ذكرى ولادة الإمام المهدي عجل الله فرجه',
-    '10-9': 'ذكرى وفاة السيدة خديجة عليها السلام (على رواية)',
-    '15-9': 'ذكرى ولادة الإمام الحسن المجتبى عليه السلام',
-    '19-9': 'ليلة جرح أمير المؤمنين الإمام علي عليه السلام — من ليالي القدر',
-    '21-9': 'ذكرى استشهاد أمير المؤمنين الإمام علي عليه السلام — من ليالي القدر',
-    '23-9': 'ليلة القدر المباركة بحسب رواية مشهورة',
-    '1-10': 'عيد الفطر المبارك',
-    '25-10': 'ذكرى استشهاد الإمام جعفر الصادق عليه السلام (المشهور عند كثير من الشيعة)',
-    '1-11': 'ذكرى ولادة السيدة فاطمة المعصومة عليها السلام',
-    '11-11': 'ذكرى ولادة الإمام علي بن موسى الرضا عليه السلام',
-    '25-11': 'يوم دحو الأرض — من الأعمال المذكورة في كتب الأدعية',
-    '1-12': 'ذكرى زواج أمير المؤمنين الإمام علي والسيدة فاطمة الزهراء عليهما السلام (المشهور)',
-    '7-12': 'ذكرى استشهاد الإمام محمد الباقر عليه السلام (على رواية مشهورة)',
-    '9-12': 'يوم عرفة، وذكرى شهادة مسلم بن عقيل عليه السلام (في التقويم المشهور)',
-    '10-12': 'عيد الأضحى المبارك',
-    '15-12': 'ذكرى ولادة الإمام علي الهادي عليه السلام',
-    '18-12': 'عيد الغدير الأغر',
-    '24-12': 'يوم المباهلة',
-    '25-12': 'نزول سورة هل أتى في شأن أهل البيت عليهم السلام (يُذكر في بعض كتب المناسبات)',
-  };
-  return events['${h.day}-${h.month}'];
+  final occasions = _occasions(h);
+  return occasions.isEmpty ? null : occasions.first;
 }

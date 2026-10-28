@@ -1,9 +1,13 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mithaq_al_mumin/main.dart';
 import 'package:mithaq_al_mumin/quran/quran_pages.dart';
 import 'package:mithaq_al_mumin/features/prayer_calendar_page.dart';
+import 'package:mithaq_al_mumin/data/religious_occasions.dart';
+import 'package:mithaq_al_mumin/features/religious_occasions_page.dart';
 import 'package:mithaq_al_mumin/features/faith_library_pages.dart';
 import 'package:mithaq_al_mumin/features/shia_text_library_page.dart';
 import 'package:mithaq_al_mumin/features/good_deeds_page.dart';
@@ -24,9 +28,222 @@ import 'package:mithaq_al_mumin/services/app_theme.dart';
 import 'package:mithaq_al_mumin/services/prayer_locations.dart';
 
 void main() {
+  test('Fatima al-Zahra martyrdom preserves both calendar narrations', () {
+    final seventyFiveDayNarration = religiousOccasionsForHijriDate(13, 5);
+    final ninetyFiveDayNarration = religiousOccasionsForHijriDate(3, 6);
+
+    expect(seventyFiveDayNarration, hasLength(1));
+    expect(ninetyFiveDayNarration, hasLength(1));
+    expect(
+      seventyFiveDayNarration.single.title,
+      'شهادة السيدة فاطمة الزهراء عليها السلام',
+    );
+    expect(
+      ninetyFiveDayNarration.single.title,
+      'شهادة السيدة فاطمة الزهراء عليها السلام',
+    );
+    expect(
+      seventyFiveDayNarration.single.qualification,
+      contains('خمسة وسبعون يوماً'),
+    );
+    expect(
+      ninetyFiveDayNarration.single.qualification,
+      contains('خمسة وتسعون يوماً'),
+    );
+    expect(
+      seventyFiveDayNarration.single.displayTitle,
+      isNot(ninetyFiveDayNarration.single.displayTitle),
+    );
+  });
+
+  test('Hijri occasion helpers preserve every entry for each date', () {
+    for (var offset = 0; offset < 370; offset++) {
+      final date = DateTime(2026, 1, 1).add(Duration(days: offset));
+      final parts = hijriDateParts(date);
+      final expected = religiousOccasionsForHijriDate(parts.day, parts.month)
+          .map((occasion) => occasion.displayTitle)
+          .toList(growable: false);
+      expect(hijriOccasionLabels(date), expected);
+      expect(
+        hijriOccasionLabel(date),
+        expected.isEmpty ? isNull : expected.join(' • '),
+      );
+    }
+  });
+
+  test('religious occasion data has valid Hijri date fields and Arabic titles', () {
+    expect(shiaReligiousOccasions.length, greaterThanOrEqualTo(40));
+    for (final occasion in shiaReligiousOccasions) {
+      expect(occasion.hijriDay, inInclusiveRange(1, 30));
+      expect(occasion.hijriMonth, inInclusiveRange(1, 12));
+      expect(occasion.title.trim(), isNotEmpty);
+      expect(occasion.kindLabel.trim(), isNotEmpty);
+    }
+  });
+
+  test('religious occasion sources cover key dates without pretending every date is settled', () {
+    final sourced = shiaReligiousOccasions
+        .where((occasion) => occasion.sourceUrl != null)
+        .toList(growable: false);
+    expect(sourced.length, greaterThanOrEqualTo(20));
+    expect(
+      sourced.every((occasion) => occasion.sourceLabel?.trim().isNotEmpty == true),
+      isTrue,
+    );
+    expect(
+      sourced.every((occasion) =>
+          !RegExp(r'[A-Za-z]').hasMatch(occasion.sourceLabel ?? '')),
+      isTrue,
+      reason: 'Source labels should follow the Arabic-first interface language.',
+    );
+
+    final iraqiRidhaDate = religiousOccasionsForHijriDate(17, 2)
+        .where((occasion) => occasion.title.contains('الرضا'))
+        .toList(growable: false);
+    final alternateRidhaDate = religiousOccasionsForHijriDate(29, 2)
+        .where((occasion) => occasion.title.contains('الرضا'))
+        .toList(growable: false);
+
+    expect(iraqiRidhaDate, hasLength(1));
+    expect(iraqiRidhaDate.single.qualification, contains('العراق'));
+    expect(iraqiRidhaDate.single.sourceUrl, startsWith('https://'));
+    expect(alternateRidhaDate, hasLength(1));
+    expect(alternateRidhaDate.single.qualification, contains('آخر صفر'));
+    expect(alternateRidhaDate.single.sourceUrl, startsWith('https://'));
+
+    final prophetDeath = religiousOccasionsForHijriDate(28, 2)
+        .where((occasion) => occasion.title.contains('وفاة النبي محمد'))
+        .toList(growable: false);
+    expect(prophetDeath, hasLength(1));
+    expect(prophetDeath.single.sourceUrl, contains('al-islam.org'));
+
+    final fatimaBirth = religiousOccasionsForHijriDate(20, 6)
+        .where((occasion) =>
+            occasion.kind == ReligiousOccasionKind.birth &&
+            occasion.title.contains('فاطمة الزهراء'))
+        .toList(growable: false);
+    expect(fatimaBirth, hasLength(1));
+    expect(fatimaBirth.single.sourceUrl, contains('al-islam.org'));
+  });
+
+  test('religious occasion display text avoids Persian letters and source links are secure', () {
+    final persianLetters = RegExp(r'[\u067E\u0686\u0698\u06AF]');
+    for (final occasion in shiaReligiousOccasions) {
+      final displayText = [
+        occasion.title,
+        occasion.qualification ?? '',
+        occasion.sourceLabel ?? '',
+      ].join(' ');
+      expect(
+        displayText,
+        isNot(matches(persianLetters)),
+        reason: 'Unexpected Persian letters in: ${occasion.title}',
+      );
+      final sourceUrl = occasion.sourceUrl;
+      if (sourceUrl != null) {
+        final uri = Uri.tryParse(sourceUrl);
+        expect(
+          uri,
+          isNotNull,
+          reason: 'Religious occasion source must be a valid URI: ${occasion.title}',
+        );
+        expect(
+          uri!.scheme,
+          'https',
+          reason: 'Religious occasion sources must use HTTPS: ${occasion.title}',
+        );
+        expect(
+          uri.host,
+          isNotEmpty,
+          reason: 'Religious occasion source needs a host: ${occasion.title}',
+        );
+        expect(
+          occasion.sourceLabel?.trim(),
+          isNotEmpty,
+          reason: 'Religious occasion source needs a visible label: ${occasion.title}',
+        );
+      }
+    }
+  });
+
   setUp(() async {
     SharedPreferences.setMockInitialValues({});
     await AppTheme.load();
+  });
+
+  test('Quran catalog contains all 114 unique surahs and 6236 verses', () async {
+    final source = await rootBundle.loadString('assets/quran/chapters.json');
+    final decoded = jsonDecode(source) as Map<String, dynamic>;
+    final chapters = (decoded['chapters'] as List<dynamic>)
+        .cast<Map<String, dynamic>>();
+
+    expect(chapters, hasLength(114));
+    expect(chapters.map((chapter) => chapter['id']).toSet(), hasLength(114));
+    expect(
+      chapters.map((chapter) => chapter['id']).toList()..sort(),
+      List<int>.generate(114, (index) => index + 1),
+    );
+    expect(
+      chapters.fold<int>(
+        0,
+        (total, chapter) => total + (chapter['total_verses'] as int),
+      ),
+      6236,
+    );
+    expect(
+      chapters.every(
+        (chapter) =>
+            (chapter['name'] as String).trim().isNotEmpty &&
+            (chapter['total_verses'] as int) > 0,
+      ),
+      isTrue,
+    );
+  });
+
+  testWidgets('religious occasions search keeps both Fatima Zahra narrations visible', (tester) async {
+    await tester.pumpWidget(const MaterialApp(
+      home: Directionality(
+        textDirection: TextDirection.rtl,
+        child: ReligiousOccasionsPage(),
+      ),
+    ));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField), 'فاطمة الزهراء');
+    await tester.pumpAndSettle();
+
+    await tester.scrollUntilVisible(
+      find.textContaining('خمسة وسبعون يوماً'),
+      160,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    expect(find.textContaining('خمسة وسبعون يوماً'), findsOneWidget);
+
+    await tester.scrollUntilVisible(
+      find.textContaining('خمسة وتسعون يوماً'),
+      160,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    expect(find.textContaining('خمسة وتسعون يوماً'), findsOneWidget);
+  });
+
+  testWidgets('religious occasions category filters the list', (tester) async {
+    await tester.pumpWidget(const MaterialApp(
+      home: Directionality(
+        textDirection: TextDirection.rtl,
+        child: ReligiousOccasionsPage(),
+      ),
+    ));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('ولادات'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('ذكرى ولادة أمير المؤمنين الإمام علي عليه السلام'), findsOneWidget);
+    expect(find.text('شهادة السيدة فاطمة الزهراء عليها السلام'), findsNothing);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('settings theme switch updates the app and persists the choice', (tester) async {
@@ -52,6 +269,35 @@ void main() {
     expect(prefs.getBool('app_theme_dark'), isFalse);
   });
 
+  testWidgets('settings expose direct routes for notification and location permissions', (tester) async {
+    await tester.pumpWidget(const MithaqApp());
+    await tester.tap(find.byIcon(Icons.menu));
+    await tester.pumpAndSettle();
+    await tester.tap(find.descendant(
+      of: find.byType(Drawer),
+      matching: find.text('الإعدادات'),
+    ));
+    await tester.pumpAndSettle();
+
+    for (final label in [
+      'فتح إعدادات أذونات التطبيق',
+      'فتح إعدادات الموقع في الجهاز',
+      'فتح إعدادات إشعارات أندرويد',
+    ]) {
+      await tester.ensureVisible(find.text(label));
+      await tester.pumpAndSettle();
+      expect(find.text(label), findsOneWidget);
+    }
+
+    await tester.ensureVisible(find.text('خيارات الأذان المتقدمة'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('خيارات الأذان المتقدمة'));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('فتح إذن المنبهات والتذكيرات الدقيقة'));
+    await tester.pumpAndSettle();
+    expect(find.text('فتح إذن المنبهات والتذكيرات الدقيقة'), findsOneWidget);
+  });
+
   testWidgets('home prayer-time action opens the prayer calendar rather than settings', (tester) async {
     await tester.pumpWidget(const MithaqApp());
     final prayerTimesAction = find.text('عرض مواقيت الصلوات الخمس');
@@ -62,8 +308,135 @@ void main() {
     expect(find.text('التاريخ الهجري'), findsNothing);
   });
 
+  testWidgets('home next-prayer card opens details and displays a 12-hour Arabic time', (tester) async {
+    await tester.pumpWidget(const MithaqApp());
+    await tester.pumpAndSettle();
+
+    expect(find.text('الصلاة القادمة'), findsOneWidget);
+    expect(
+      find.byWidgetPredicate((widget) {
+        if (widget is! Text) return false;
+        final value = widget.data ?? '';
+        return value.endsWith(' ص') || value.endsWith(' م');
+      }),
+      findsOneWidget,
+    );
+
+    await tester.tap(find.text('الصلاة القادمة'));
+    await tester.pumpAndSettle();
+    expect(find.text('المواقيت والتقويم'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+
+  testWidgets('prayer reminder notification opens the prayer calendar, not settings',
+      (tester) async {
+    PrayerNotificationService.notificationTap.value = null;
+    addTearDown(() {
+      PrayerNotificationService.notificationTap.value = null;
+    });
+
+    await tester.pumpWidget(const MithaqApp());
+    await tester.pumpAndSettle();
+
+    // Early heads-up IDs must not be handled as the actual adhan notification.
+    PrayerNotificationService.notificationTap.value = 4005;
+    await tester.pumpAndSettle();
+    expect(find.text('المواقيت والتقويم'), findsNothing);
+
+    PrayerNotificationService.notificationTap.value = 4000;
+    await tester.pumpAndSettle();
+    expect(find.text('المواقيت والتقويم'), findsOneWidget);
+    expect(find.text('الإعدادات'), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('sections grid groups Names of Allah and Nahj under religious knowledge', (tester) async {
+    await tester.pumpWidget(const MithaqApp());
+    await tester.tap(find.text('الأقسام').last);
+    await tester.pumpAndSettle();
+
+    expect(find.text('الأدعية والزيارات'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('المعرفة الدينية'),
+      250,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('المعرفة الدينية'), findsOneWidget);
+    expect(find.text('أسماء الله الحسنى'), findsOneWidget);
+    expect(find.text('نهج البلاغة والحِكم'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+
+  testWidgets('home and section grid stay inside a narrow phone in both themes', (tester) async {
+    tester.view.physicalSize = const Size(320, 720);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(const MithaqApp());
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull, reason: 'dark home dashboard');
+
+    await AppTheme.setDark(false);
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull, reason: 'light home dashboard');
+
+    await tester.tap(find.text('الأقسام').last);
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull, reason: 'light sections grid');
+
+    await tester.tap(find.byIcon(Icons.menu));
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull, reason: 'light navigation drawer');
+  });
+
+  test('generic prayer-taqibat labels are derived from their own Arabic text', () {
+    const first = ShiaTextEntry(
+      slug: 'taqib-after-salaat-01',
+      title: 'تعقيبات الصلاة',
+      alternateName: '',
+      type: 'taqibat',
+      sourceUrl: '',
+      lines: <ShiaTextLine>[
+        ShiaTextLine(
+          index: 1,
+          kind: 'arabic',
+          text: 'بسم الله الرحمن الرحيم اللهم إني أسألك من فضلك ورحمتك',
+        ),
+      ],
+    );
+    const second = ShiaTextEntry(
+      slug: 'taqib-after-salaat-02',
+      title: 'تعقيبات الصلاة',
+      alternateName: '',
+      type: 'taqibat',
+      sourceUrl: '',
+      lines: <ShiaTextLine>[
+        ShiaTextLine(
+          index: 1,
+          kind: 'arabic',
+          text: 'بسم الله الرحمن الرحيم اللهم ارزقني التوفيق لما تحب وترضى',
+        ),
+      ],
+    );
+
+    expect(first.displayTitle, startsWith('تعقيب بعد الصلاة — '));
+    expect(second.displayTitle, startsWith('تعقيب بعد الصلاة — '));
+    expect(first.displayTitle, isNot(second.displayTitle));
+  });
+
   testWidgets('home screen shows the agreed dashboard and drawer navigation opens tasbeeh', (tester) async {
     await tester.pumpWidget(const MithaqApp());
+    // Service destinations stay in the drawer/sections instead of crowding the home screen.
+    expect(find.text('اتجاه القبلة'), findsNothing);
+    expect(find.text('التسبيح'), findsNothing);
+    expect(find.text('الأذكار'), findsNothing);
+    expect(find.text('الختمة'), findsNothing);
+    expect(find.text('التقويم الهجري'), findsNothing);
     expect(find.text('ميثاق المؤمن'), findsWidgets);
     expect(find.text(hijriDateLabel(DateTime.now())), findsOneWidget);
     expect(find.text('الصلاة القادمة'), findsOneWidget);
@@ -182,6 +555,21 @@ void main() {
     );
   });
 
+  test('prayer schedule health check accounts for past alarms today', () {
+    expect(
+      PrayerNotificationService.minimumHealthyPrayerReminderCount(5),
+      145,
+    );
+    expect(
+      PrayerNotificationService.minimumHealthyPrayerReminderCount(3),
+      87,
+    );
+    expect(
+      PrayerNotificationService.minimumHealthyPrayerReminderCount(0),
+      0,
+    );
+  });
+
   test('prayer notification IDs keep early alerts separate from adhan reminders', () {
     expect(PrayerNotificationService.isPrayerReminderNotificationIdForTesting(3999), isFalse);
     expect(PrayerNotificationService.isPrayerReminderNotificationIdForTesting(4000), isTrue);
@@ -224,26 +612,28 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(find.text('الخدمات والمتابعة'), findsOneWidget);
-    for (final icon in [
-      Icons.bookmark_added_rounded,
-      Icons.event_available_rounded,
-    ]) {
-      final finder = find.descendant(of: find.byType(Drawer), matching: find.byIcon(icon));
-      await tester.scrollUntilVisible(finder, 130, scrollable: drawerScroll);
-      await tester.pumpAndSettle();
-      expect(finder, findsOneWidget);
-    }
-    await tester.scrollUntilVisible(
-      find.descendant(of: find.byType(Drawer), matching: find.text('المعرفة والمناسبات')),
-      180,
-      scrollable: drawerScroll,
+    final bookmarksIcon = find.descendant(
+      of: find.byType(Drawer),
+      matching: find.byIcon(Icons.bookmark_added_rounded),
     );
+    await tester.scrollUntilVisible(bookmarksIcon, 130, scrollable: drawerScroll);
     await tester.pumpAndSettle();
-    expect(find.text('المعرفة والمناسبات'), findsOneWidget);
-    expect(find.text('نسخة قيد التطوير • راجع المصادر عند الحاجة'), findsOneWidget);
+    expect(bookmarksIcon, findsOneWidget);
+
+    final occasionsEntry = find.descendant(
+      of: find.byType(Drawer),
+      matching: find.text('المناسبات الدينية'),
+    );
+    await tester.scrollUntilVisible(occasionsEntry, 130, scrollable: drawerScroll);
+    await tester.pumpAndSettle();
+    expect(occasionsEntry, findsOneWidget);
+    await tester.tap(occasionsEntry);
+    await tester.pumpAndSettle();
+    expect(find.text('المناسبات الدينية'), findsOneWidget);
+    expect(find.text('ابحث بالاسم أو الشهر، أو صفِّ المناسبات حسب نوعها.'), findsOneWidget);
   });
 
-  testWidgets('quick actions adapt to a narrow phone width without layout errors', (tester) async {
+  testWidgets('quiet home stays uncluttered on a narrow phone and services remain in the drawer', (tester) async {
     tester.view.physicalSize = const Size(360, 800);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
@@ -257,8 +647,29 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('اتجاه القبلة'), findsOneWidget);
-    expect(find.text('حصن الأذكار'), findsOneWidget);
+    // Secondary services were intentionally moved off the home dashboard.
+    expect(find.text('اتجاه القبلة'), findsNothing);
+    expect(find.text('الأذكار'), findsNothing);
+    expect(tester.takeException(), isNull);
+
+    await tester.tap(find.byIcon(Icons.menu));
+    await tester.pumpAndSettle();
+    final drawer = find.byType(Drawer);
+    final drawerScroll = find.descendant(
+      of: drawer,
+      matching: find.byType(Scrollable),
+    ).first;
+    final qiblaItem = find.descendant(
+      of: drawer,
+      matching: find.text('اتجاه القبلة'),
+    );
+    await tester.scrollUntilVisible(
+      qiblaItem,
+      180,
+      scrollable: drawerScroll,
+    );
+    await tester.pumpAndSettle();
+    expect(qiblaItem, findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
@@ -556,6 +967,16 @@ void main() {
     expect(find.text('1 كانون الثاني ${DateTime.now().year} م'), findsOneWidget);
   });
 
+  test('Gregorian date labels are zero-padded for occasion details', () {
+    expect(
+      prayerCalendarGregorianDateLabel(DateTime(2026, 1, 5)),
+      '05/01/2026',
+    );
+    expect(
+      prayerCalendarGregorianDateLabel(DateTime(2026, 10, 27)),
+      '27/10/2026',
+    );
+  });
   testWidgets('surah reader opens its bundled text without internet', (tester) async {
     await tester.pumpWidget(const MaterialApp(
       home: Directionality(
@@ -729,23 +1150,23 @@ void main() {
     expect(find.text('صيام القضاء'), findsOneWidget);
   });
 
-  testWidgets('dhikr fortress switches between morning and evening counters', (tester) async {
+  testWidgets('adhkar section is broad, categorized, and highlights a date-selected dhikr', (tester) async {
     await tester.pumpWidget(const MaterialApp(
       home: Directionality(textDirection: TextDirection.rtl, child: DhikrFortressPage()),
     ));
     await tester.pumpAndSettle();
-    expect(find.text('حصن الأذكار'), findsOneWidget);
+    expect(find.text('الأذكار'), findsOneWidget);
+    expect(find.text('ذِكر اليوم'), findsOneWidget);
     expect(find.text('أقسام الأذكار'), findsOneWidget);
     expect(find.textContaining('التسبيحات'), findsWidgets);
     expect(find.textContaining('المناجاة'), findsWidgets);
     expect(find.textContaining('العوذات'), findsWidgets);
-    expect(find.text('أذكار الصباح'), findsOneWidget);
-    await tester.tap(find.text('أذكار المساء'));
-    await tester.pumpAndSettle();
-    expect(find.text('الصلاة على النبي وآله'), findsOneWidget);
+    expect(find.text('أذكار الصباح'), findsNothing);
+    expect(find.text('أذكار المساء'), findsNothing);
+    expect(tester.takeException(), isNull);
   });
 
-  testWidgets('faith services page shows verified sources and safe guide entry points', (tester) async {
+  testWidgets('faith services page retains official fiqh and educational source links', (tester) async {
     await tester.pumpWidget(const MaterialApp(
       home: Directionality(textDirection: TextDirection.rtl, child: FaithServicesPage()),
     ));
@@ -753,8 +1174,7 @@ void main() {
     expect(find.text('الخدمات الإيمانية'), findsOneWidget);
     expect(find.text('استفتاءات السيد علي الخامنئي'), findsOneWidget);
     expect(find.text('استفتاءات السيد علي السيستاني'), findsOneWidget);
-    // The services list is longer than the test viewport; scroll each target
-    // tile into view instead of assuming every ListView child is mounted immediately.
+
     await tester.scrollUntilVisible(
       find.text('تفسير القرآن الكريم'),
       250,
@@ -762,13 +1182,43 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(find.text('تفسير القرآن الكريم'), findsOneWidget);
+
     await tester.scrollUntilVisible(
-      find.text('الاستخارة القرآنية — إرشاد شرعي'),
+      find.text('دليل مناسك الحج والعمرة'),
       250,
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    expect(find.text('الاستخارة القرآنية — إرشاد شرعي'), findsOneWidget);
+    expect(find.text('دليل مناسك الحج والعمرة'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('occasion guides remain accessible from the dedicated sections group', (tester) async {
+    await tester.pumpWidget(const MithaqApp());
+    await tester.tap(find.text('الأقسام').last);
+    await tester.pumpAndSettle();
+
+    await tester.scrollUntilVisible(
+      find.text('الاستخارة القرآنية'),
+      250,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('الاستخارة القرآنية'));
+    await tester.pumpAndSettle();
+    expect(find.text('الاستخارة القرآنية'), findsOneWidget);
+    expect(find.textContaining('الاستخارة ليست لعبة'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.text('زيارة الأربعين'),
+      250,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('زيارة الأربعين'), findsOneWidget);
   });
 
   testWidgets('dua and ziyarat reader saves favorites locally', (tester) async {
@@ -849,6 +1299,7 @@ void main() {
         child: Scaffold(body: SettingsPage()),
       ),
     ));
+    await tester.pump(const Duration(milliseconds: 150));
     await tester.pumpAndSettle();
     await tester.scrollUntilVisible(
       find.text('خيارات الأذان المتقدمة'),

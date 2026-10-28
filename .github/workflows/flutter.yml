@@ -6,6 +6,12 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      build_validation_apk:
+        description: 'Build an installable validation APK only after the quality checklist is complete'
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -59,8 +65,10 @@ jobs:
       - name: Test
         run: flutter test
       - name: Build Android release APK for validation
+        if: github.event_name == 'workflow_dispatch' && inputs.build_validation_apk == true
         run: flutter build apk --release
       - name: Report release APK size for the completeness budget
+        if: github.event_name == 'workflow_dispatch' && inputs.build_validation_apk == true
         shell: bash
         run: |
           set -euo pipefail
@@ -84,6 +92,7 @@ jobs:
       # This temporary validation certificate makes the APK installable; it is not
       # a production signing key and must never be used for public distribution.
       - name: Sign validation APK for Android installation
+        if: github.event_name == 'workflow_dispatch' && inputs.build_validation_apk == true
         shell: bash
         run: |
           set -euo pipefail
@@ -109,6 +118,7 @@ jobs:
           "$APKSIGNER" verify --verbose --print-certs "$RUNNER_TEMP/app-release-signed.apk"
           mv "$RUNNER_TEMP/app-release-signed.apk" "$APK"
       - name: Upload installable validation APK
+        if: github.event_name == 'workflow_dispatch' && inputs.build_validation_apk == true
         uses: actions/upload-artifact@v4
         with:
           name: mithaq-al-mumin-validation-apk

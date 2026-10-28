@@ -7,6 +7,7 @@ import 'package:share_plus/share_plus.dart';
 import 'data/religious_content.dart';
 import 'quran/quran_pages.dart';
 import 'features/prayer_calendar_page.dart';
+import 'features/religious_occasions_page.dart';
 import 'features/qibla_page.dart';
 import 'features/settings_page.dart';
 import 'features/smart_search_page.dart';
@@ -16,6 +17,7 @@ import 'features/names_of_allah_page.dart';
 import 'features/qada_tracker_page.dart';
 import 'features/dhikr_fortress_page.dart';
 import 'features/faith_services_page.dart';
+import 'features/faith_library_pages.dart';
 import 'features/favorites_page.dart';
 import 'features/rakah_counter_page.dart';
 import 'features/about_support_page.dart';
@@ -495,9 +497,8 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
         items: [
           _sectionGridItem(icon: Icons.menu_book_rounded, title: 'القرآن الكريم', onTap: () => _pushPage(const QuranIndexPage())),
           _sectionGridItem(icon: Icons.auto_awesome_rounded, title: 'الأدعية والزيارات', onTap: () => _pushPage(_duaPage())),
-          _sectionGridItem(icon: Icons.shield_moon_rounded, title: 'حصن الأذكار', onTap: () => _pushPage(const DhikrFortressPage())),
+          _sectionGridItem(icon: Icons.shield_moon_rounded, title: 'الأذكار', onTap: () => _pushPage(const DhikrFortressPage())),
           _sectionGridItem(icon: Icons.fingerprint_rounded, title: 'التسبيح', onTap: () => _pushPage(const TasbeehPage())),
-          _sectionGridItem(icon: Icons.menu_book_rounded, title: 'تعقيبات الصلاة', onTap: () => _pushPage(const ShiaTextLibraryPage(initialCategory: 'التعقيبات بعد الصلاة'))),
           _sectionGridItem(icon: Icons.volunteer_activism_rounded, title: 'الأعمال الصالحة', onTap: () => _pushPage(const GoodDeedsPage())),
           _sectionGridItem(icon: Icons.calculate_rounded, title: 'عداد الركعات', onTap: () => _pushPage(const RakahCounterPage())),
           _sectionGridItem(icon: Icons.history_edu_rounded, title: 'قضاء العبادات', onTap: () => _pushPage(const QadaTrackerPage())),
@@ -505,13 +506,18 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
         ],
       ),
       (
-        title: 'الخدمات',
+        title: 'الصلاة والخدمات',
         items: [
           _sectionGridItem(icon: Icons.access_time_rounded, title: 'أوقات الصلاة', onTap: () => _pushPage(PrayerCalendarPage(onLocationChanged: _handleLocationChanged, onHijriCorrectionChanged: _loadDashboardData))),
           _sectionGridItem(icon: Icons.explore_rounded, title: 'اتجاه القبلة', onTap: () => _pushPage(QiblaPage(onLocationChanged: _handleLocationChanged))),
           _sectionGridItem(icon: Icons.bookmark_added_rounded, title: 'ختمة القرآن', onTap: () => _pushPage(const KhatmaPage())),
-          _sectionGridItem(icon: Icons.manage_search_rounded, title: 'الباحث الذكي', onTap: () => _pushPage(const SmartSearchPage())),
+        ],
+      ),
+      (
+        title: 'المعرفة الدينية',
+        items: [
           _sectionGridItem(icon: Icons.brightness_5_rounded, title: 'أسماء الله الحسنى', onTap: () => _pushPage(const NamesOfAllahPage())),
+          _sectionGridItem(icon: Icons.format_quote_rounded, title: 'نهج البلاغة والحِكم', onTap: () => _pushPage(const NahjAlBalaghaPage())),
           _sectionGridItem(icon: Icons.support_agent_rounded, title: 'الخدمات الإيمانية', onTap: () => _pushPage(const FaithServicesPage())),
           _sectionGridItem(icon: Icons.info_outline_rounded, title: 'عن التطبيق والدعم', onTap: () => _pushPage(const AboutSupportPage())),
         ],
@@ -519,10 +525,9 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
       (
         title: 'المناسبات',
         items: [
-          _sectionGridItem(icon: Icons.calendar_month_rounded, title: 'أعمال المناسبات', onTap: () => _pushPage(const ShiaTextLibraryPage(initialCategory: 'الأعمال والمناسبات'))),
+          _sectionGridItem(icon: Icons.event_available_rounded, title: 'تقويم المناسبات', onTap: () => _pushPage(const ReligiousOccasionsPage())),
           _sectionGridItem(icon: Icons.location_on_rounded, title: 'زيارة الأربعين', onTap: () => _pushPage(const ArbaeenGuidePage())),
           _sectionGridItem(icon: Icons.explore_rounded, title: 'الاستخارة القرآنية', onTap: () => _pushPage(const IstikharaGuidePage())),
-          _sectionGridItem(icon: Icons.mosque_rounded, title: 'الزيارات الشريفة', onTap: () => _pushPage(const ShiaTextLibraryPage(initialCategory: 'الزيارات الشريفة'))),
         ],
       ),
     ];
@@ -731,7 +736,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
                     _drawerGridItem(Icons.volunteer_activism_rounded, 'الأدعية والزيارات', () => _openDrawerPage(_duaPage())),
                     _drawerGridItem(Icons.fingerprint_rounded, 'التسبيح', () => _openDrawerPage(const TasbeehPage())),
                     _drawerGridItem(Icons.handshake_rounded, 'الأعمال الصالحة', () => _openDrawerPage(const GoodDeedsPage())),
-                    _drawerGridItem(Icons.shield_moon_rounded, 'حصن الأذكار', () => _openDrawerPage(const DhikrFortressPage())),
+                    _drawerGridItem(Icons.shield_moon_rounded, 'الأذكار', () => _openDrawerPage(const DhikrFortressPage())),
                     _drawerGridItem(Icons.calculate_rounded, 'عداد الركعات', () => _openDrawerPage(const RakahCounterPage())),
                   ],
                 ),
@@ -748,14 +753,21 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
                   ],
                 ),
                 SizedBox(height: 8),
-                _drawerSectionTitle('المعرفة والمناسبات', Icons.local_library_rounded),
+                _drawerSectionTitle('المعرفة الدينية', Icons.local_library_rounded),
                 _drawerGrid(
                   children: [
-                    _drawerGridItem(Icons.calendar_month_rounded, 'التقويم الهجري', () => _openDrawerPage(PrayerCalendarPage(initialTab: 2, onLocationChanged: _handleLocationChanged, onHijriCorrectionChanged: _loadDashboardData))),
                     _drawerGridItem(Icons.brightness_5_rounded, 'أسماء الله الحسنى', () => _openDrawerPage(const NamesOfAllahPage())),
-                    _drawerGridItem(Icons.manage_search_rounded, 'الباحث الذكي', () => _openDrawerPage(const SmartSearchPage())),
+                    _drawerGridItem(Icons.format_quote_rounded, 'نهج البلاغة والحِكم', () => _openDrawerPage(const NahjAlBalaghaPage())),
                     _drawerGridItem(Icons.support_agent_rounded, 'الخدمات الإيمانية', () => _openDrawerPage(const FaithServicesPage())),
                     _drawerGridItem(Icons.info_outline_rounded, 'عن التطبيق والدعم', () => _openDrawerPage(const AboutSupportPage())),
+                  ],
+                ),
+                SizedBox(height: 8),
+                _drawerSectionTitle('المناسبات والتقويم', Icons.calendar_month_rounded),
+                _drawerGrid(
+                  children: [
+                    _drawerGridItem(Icons.event_available_rounded, 'المناسبات الدينية', () => _openDrawerPage(const ReligiousOccasionsPage())),
+                    _drawerGridItem(Icons.calendar_month_rounded, 'التقويم الهجري', () => _openDrawerPage(PrayerCalendarPage(initialTab: 2, onLocationChanged: _handleLocationChanged, onHijriCorrectionChanged: _loadDashboardData))),
                   ],
                 ),
               ],
@@ -816,7 +828,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
       'الأعمال الصالحة',
       'قضاء العبادات',
       'عداد الركعات',
-      'حصن الأذكار',
+      'الأذكار',
       'أسماء الله الحسنى',
     };
     final scheme = Theme.of(context).colorScheme;
@@ -958,7 +970,6 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
     ));
   }
 
-  // ignore: unused_element
   ({String name, DateTime at}) _nextPrayer(SolarPrayerTimes times, DateTime clock) {
     final prayers = <({String name, String value})>[
       (name: 'الفجر', value: times.fajr),
@@ -993,11 +1004,10 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
     );
   }
 
-  // ignore: unused_element
-  String _clockLabel(DateTime value) =>
-      '${value.hour.toString().padLeft(2, '0')}:${value.minute.toString().padLeft(2, '0')}';
+  String _clockLabel(DateTime value) => formatPrayerTime12Hour(
+        '${value.hour.toString().padLeft(2, '0')}:${value.minute.toString().padLeft(2, '0')}',
+      );
 
-  // ignore: unused_element
   String _countdownLabel(DateTime target, DateTime current) {
     final minutes = target.difference(current).inMinutes.clamp(0, 999999);
     final hours = minutes ~/ 60;
@@ -1226,40 +1236,50 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
                 ],
               ),
               SizedBox(height: 12),
-              Container(
-                padding: const EdgeInsets.all(13),
-                decoration: BoxDecoration(
-                  color: _emerald.withValues(alpha: .15),
+              Material(
+                color: _emerald.withValues(alpha: .15),
+                shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: _emerald.withValues(alpha: .35)),
+                  side: BorderSide(color: _emerald.withValues(alpha: .35)),
                 ),
-                child: Row(
-                  children: [
-                    Icon(Icons.notifications_active_outlined, color: _gold, size: 25),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('الصلاة القادمة', style: TextStyle(color: _themeMuted(context), fontSize: 11)),
-                          SizedBox(height: 3),
-                          Text(
-                            nextPrayer.name,
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
+                clipBehavior: Clip.antiAlias,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(16),
+                  onTap: () => _pushPage(PrayerCalendarPage(
+                    onLocationChanged: _handleLocationChanged,
+                    onHijriCorrectionChanged: _loadDashboardData,
+                  )),
+                  child: Padding(
+                    padding: const EdgeInsets.all(13),
+                    child: Row(
+                      children: [
+                        Icon(Icons.notifications_active_outlined, color: _gold, size: 25),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('الصلاة القادمة', style: TextStyle(color: _themeMuted(context), fontSize: 11)),
+                              SizedBox(height: 3),
+                              Text(
+                                nextPrayer.name,
+                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
+                              ),
+                              SizedBox(height: 3),
+                              Text(
+                                'المتبقي ${_countdownLabel(nextPrayer.at, _now)}',
+                                style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 12),
+                              ),
+                            ],
                           ),
-                          SizedBox(height: 3),
-                          Text(
-                            'المتبقي ${_countdownLabel(nextPrayer.at, _now)}',
-                            style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 12),
-                          ),
-                        ],
-                      ),
+                        ),
+                        Text(
+                          _clockLabel(nextPrayer.at),
+                          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: Theme.of(context).colorScheme.secondary),
+                        ),
+                      ],
                     ),
-                    Text(
-                      _clockLabel(nextPrayer.at),
-                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: Theme.of(context).colorScheme.secondary),
-                    ),
-                  ],
+                  ),
                 ),
               ),
               SizedBox(height: 12),
@@ -1408,50 +1428,6 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
             ),
           ],
         ),
-        SizedBox(height: 10),
-        LayoutBuilder(
-          builder: (context, constraints) {
-            final columns = constraints.maxWidth >= 410 ? 3 : 2;
-            return GridView.count(
-              crossAxisCount: columns,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              childAspectRatio: columns == 2 ? 1.22 : 1.02,
-              children: [
-                _homeMiniShortcut(
-                  Icons.explore_rounded, 'اتجاه القبلة',
-                  () => _pushPage(QiblaPage(onLocationChanged: _handleLocationChanged)),
-                ),
-                _homeMiniShortcut(
-                  Icons.fingerprint_rounded, 'التسبيح',
-                  () => _pushPage(const TasbeehPage()),
-                ),
-                _homeMiniShortcut(
-                  Icons.shield_moon_rounded, 'حصن الأذكار',
-                  () => _pushPage(const DhikrFortressPage()),
-                ),
-                _homeMiniShortcut(
-                  Icons.handshake_rounded, 'الأعمال الصالحة',
-                  () => _pushPage(const GoodDeedsPage()),
-                ),
-                _homeMiniShortcut(
-                  Icons.bookmark_added_rounded, 'الختمة',
-                  () => _pushPage(const KhatmaPage()),
-                ),
-                _homeMiniShortcut(
-                  Icons.event_note_rounded, 'التقويم الهجري',
-                  () => _pushPage(PrayerCalendarPage(
-                    initialTab: 2,
-                    onLocationChanged: _handleLocationChanged,
-                    onHijriCorrectionChanged: _loadDashboardData,
-                  )),
-                ),
-              ],
-            );
-          },
-        ),
         SizedBox(height: 20),
         Container(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
@@ -1481,7 +1457,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
                       children: [
                         Text('وِرد اليوم', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900)),
                         SizedBox(height: 2),
-                        Text('عمل يتجدّد بحسب التاريخ الهجري', style: TextStyle(color: _themeMuted(context), fontSize: 12)),
+                        Text('تذكير بعمل مقترح', style: TextStyle(color: _themeMuted(context), fontSize: 12)),
                       ],
                     ),
                   ),
@@ -1492,10 +1468,6 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
                 ],
               ),
               SizedBox(height: 13),
-              _dailyDhikrRow(Icons.check_circle_outline_rounded, 'الحوقلة', 'لا حول ولا قوة إلا بالله'),
-              _dailyDhikrRow(Icons.favorite_border_rounded, 'الاستغفار', 'أستغفر الله وأتوب إليه'),
-              _dailyDhikrRow(Icons.spa_outlined, 'الصلاة على محمد وآل محمد', 'اللهم صلِّ على محمد وآل محمد'),
-              Divider(height: 20, color: Color(0x224EB58B)),
               Material(
                 type: MaterialType.transparency,
                 child: CheckboxListTile(
@@ -1511,7 +1483,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
               ),
               SizedBox(height: 2),
               Text(
-                'يتغيّر العمل المقترح بحسب اليوم الهجري بعد تطبيق تصحيح التاريخ، وتُحفظ علامة الإنجاز لكل يوم ميلادي حتى لا تضيع متابعة إنجازك.',
+                'يتغيّر الاقتراح بحسب التاريخ الهجري للتذكير فقط؛ ولا يعني تخصيص العمل بهذا اليوم من دون مصدر شرعي. تُحفظ علامة الإنجاز لكل يوم ميلادي.',
                 style: TextStyle(color: _themeMuted(context), fontSize: 11, height: 1.6),
               ),
             ],
@@ -1601,89 +1573,6 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _homeMiniShortcut(IconData icon, String title, VoidCallback onTap) {
-    final scheme = Theme.of(context).colorScheme;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final accent = _drawerAccent(title);
-    return Material(
-      color: Colors.transparent,
-      borderRadius: BorderRadius.circular(18),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(18),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-          decoration: BoxDecoration(
-            color: scheme.surface,
-            borderRadius: BorderRadius.circular(18),
-            border: Border.all(
-              color: accent.withValues(alpha: isDark ? .25 : .24),
-            ),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: 46,
-                height: 46,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: accent.withValues(alpha: isDark ? .20 : .12),
-                  border: Border.all(color: accent.withValues(alpha: .36)),
-                ),
-                child: Icon(icon, color: accent, size: 23),
-              ),
-              const SizedBox(height: 9),
-              Text(
-                title,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: scheme.onSurface,
-                  fontSize: 12,
-                  height: 1.35,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _dailyDhikrRow(IconData icon, String title, String text) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5),
-      child: Row(
-        children: [
-          Container(
-            width: 34,
-            height: 34,
-            decoration: BoxDecoration(
-              color: _emerald.withValues(alpha: .13),
-              borderRadius: BorderRadius.circular(11),
-            ),
-            child: Icon(icon, color: _gold, size: 19),
-          ),
-          SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13)),
-                SizedBox(height: 2),
-                Text(text, style: TextStyle(color: _themeMuted(context), fontSize: 12)),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }

@@ -28,6 +28,15 @@ class PrayerNotificationService {
     return exactPermissionGranted != lastScheduleUsedExactAlarms;
   }
 
+  @visibleForTesting
+  static int minimumHealthyPrayerReminderCount(int selectedPrayerCount) {
+    if (selectedPrayerCount <= 0) return 0;
+    // The current day may already have passed every prayer time. Requiring
+    // 29 full days detects a partly-lost schedule without rebuilding a healthy
+    // one merely because today's past alarms are no longer pending.
+    return selectedPrayerCount * (_daysToSchedule - 1);
+  }
+
   static bool isPrayerNotificationId(int id) => _isPrayerReminderId(id);
 
   @visibleForTesting
@@ -40,7 +49,7 @@ class PrayerNotificationService {
     tz_data.initializeTimeZones();
     tz.setLocalLocation(tz.getLocation('Asia/Baghdad'));
     const settings = InitializationSettings(
-      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+      android: AndroidInitializationSettings('mithaq_notification'),
     );
     await _plugin.initialize(
       settings,
@@ -78,6 +87,7 @@ class PrayerNotificationService {
         const NotificationDetails(
           android: AndroidNotificationDetails(
             _adhanChannelId, 'أذان الصلاة',
+            icon: 'mithaq_notification',
             channelDescription: 'أذان الصلاة من التسجيل المرفق بالتطبيق. إذا لم تسمع الصوت فتحقق من إعدادات قناة أذان الصلاة ومستوى صوت التنبيهات.',
             importance: Importance.high, priority: Priority.high,
             sound: RawResourceAndroidNotificationSound('adhan_shabbar_maalla'),
@@ -128,7 +138,8 @@ class PrayerNotificationService {
       if (selectedCount == 0) {
         return await configure(enabled: true, city: city);
       }
-      final minimumHealthyCount = selectedCount * 20;
+      final minimumHealthyCount =
+          minimumHealthyPrayerReminderCount(selectedCount);
       final pending = await _plugin.pendingNotificationRequests();
       final activeCount = pending
           .where((request) => _isPrayerReminderId(request.id))
@@ -249,7 +260,8 @@ class PrayerNotificationService {
                 android: AndroidNotificationDetails(
                   _adhanChannelId,
                   'أذان الصلاة',
-                  channelDescription: 'أذان الصلاة من التسجيل المرفق بالتطبيق. إذا لم تسمع الصوت فتحقق من إعدادات قناة أذان الصلاة ومستوى صوت التنبيهات.',
+                  icon: 'mithaq_notification',
+            channelDescription: 'أذان الصلاة من التسجيل المرفق بالتطبيق. إذا لم تسمع الصوت فتحقق من إعدادات قناة أذان الصلاة ومستوى صوت التنبيهات.',
                   importance: Importance.high,
                   priority: Priority.high,
                   sound: RawResourceAndroidNotificationSound('adhan_shabbar_maalla'),
@@ -277,6 +289,7 @@ class PrayerNotificationService {
                   android: AndroidNotificationDetails(
                     'mithaq_prayer_early_v1',
                     'التنبيه قبل الصلاة',
+                    icon: 'mithaq_notification',
                     channelDescription: 'تنبيه هادئ قبل موعد الصلاة',
                     importance: Importance.defaultImportance,
                     priority: Priority.defaultPriority,
@@ -350,6 +363,21 @@ class PrayerNotificationService {
   /// Returns the Android app-level notification permission state when available.
   /// Whether Android currently allows precise alarm scheduling.
   /// False means alarms fall back to an inexact schedule and may be delayed.
+  /// Opens Android's per-app exact-alarm access screen when supported.
+  /// Returns the permission state after the user leaves that screen, when available.
+  static Future<bool?> requestExactAlarmsPermission() async {
+    try {
+      await _initialize();
+      if (defaultTargetPlatform != TargetPlatform.android) return null;
+      final android = _plugin.resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>();
+      return await android?.requestExactAlarmsPermission();
+    } catch (error, stackTrace) {
+      debugPrint('Requesting exact-alarm permission failed: $error\\n$stackTrace');
+      return false;
+    }
+  }
+
   static Future<bool?> exactAlarmsAreEnabled() async {
     try {
       await _initialize();

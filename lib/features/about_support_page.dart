@@ -6,6 +6,8 @@ const _aboutGold = Color(0xFFD9B66D);
 const _projectUri = 'https://github.com/loayh523-lab/Mithaq-Al-Mumin-New';
 const _supportUri = 'https://github.com/loayh523-lab/Mithaq-Al-Mumin-New/issues';
 const _quranSourceUri = 'https://tanzil.net/';
+const _administrativeDataSourceUri =
+    'https://github.com/open-admin-data/iraq-administrative-divisions';
 const _adhanSourceUri =
     'https://github.com/loayh523-lab/Mithaq-Al-Mumin-New/blob/main/assets/audio/adhan_shabbar_maalla.mp3';
 
@@ -318,6 +320,22 @@ class _AboutSupportPageState extends State<AboutSupportPage> {
                   onPressed: () => _open(
                     Uri.parse(_adhanSourceUri),
                     label: 'مصدر التسجيل الصوتي',
+                  ),
+                ),
+                SizedBox(height: 8),
+                _sourceButton(
+                  title: 'مصدر المحافظات والأقضية والنواحي — Open Admin Data',
+                  onPressed: () => _open(
+                    Uri.parse(_administrativeDataSourceUri),
+                    label: 'مصدر بيانات التقسيم الإداري',
+                  ),
+                ),
+                Text(
+                  'بيانات التقسيم الإداري مقتبسة ومحوّلة من Open Admin Data بترخيص CC BY 4.0 مع الاحتفاظ بالإسناد. إحداثيات المراكز الإدارية تقريبية، وGPS أو جدول المواقيت المحلي المعتمد أدق عند توفرهما.',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    height: 1.7,
+                    fontSize: 12,
                   ),
                 ),
                 SizedBox(height: 8),

@@ -1424,4 +1424,31 @@ void main() {
     expect(find.textContaining('ابحث في القرآن والأدعية والزيارات'), findsOneWidget);
   });
 
+
+  testWidgets('home Quran and dua shortcuts open their actual destinations', (tester) async {
+    tester.view.physicalSize = const Size(360, 800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(const MithaqApp());
+    await tester.scrollUntilVisible(
+      find.text('ابدأ وردك'),
+      220,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('القرآن الكريم'));
+    await tester.pumpAndSettle();
+    expect(find.text('فهرس السور'), findsOneWidget);
+
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('الأدعية'));
+    await tester.pumpAndSettle();
+    expect(find.text('الأدعية والزيارات'), findsOneWidget);
+  });
+
+
 }

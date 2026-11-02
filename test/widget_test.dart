@@ -1438,8 +1438,20 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('القرآن الكريم'));
-    await tester.pumpAndSettle();
+    await tester.pump();
+
+    // Quran catalog loading reads an asset asynchronously. The loading
+    // indicator intentionally animates, so pumpAndSettle would wait forever
+    // instead of allowing the real asset future to complete.
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 200)),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+
     expect(find.text('فهرس السور'), findsOneWidget);
+    expect(find.text('الفاتحة'), findsOneWidget);
+    expect(find.text('114'), findsOneWidget);
 
     await tester.pageBack();
     await tester.pumpAndSettle();

@@ -1059,7 +1059,7 @@ void main() {
     expect(find.text('الأدعية والزيارات'), findsWidgets);
     expect(find.textContaining('110 نصاً'), findsOneWidget);
     expect(find.textContaining('76 صحيفة ومناجاة'), findsNothing);
-    expect(find.text('بانتظار اعتماد المختارات'), findsOneWidget);
+    expect(find.textContaining('قسم الصحيفة ينتظر اعتماد المختارات'), findsOneWidget);
     expect(find.text('الزيارات الشريفة والمقامات المقدسة (25)'), findsOneWidget);
     expect(find.textContaining('ما قدرنا نحمّل مكتبة الأدعية'), findsNothing);
     await tester.scrollUntilVisible(
@@ -1092,7 +1092,6 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
     expect(find.textContaining('110 نصاً'), findsOneWidget);
-    expect(find.text('بانتظار اعتماد المختارات'), findsOneWidget);
     expect(find.textContaining('قسم الصحيفة ينتظر اعتماد المختارات'), findsOneWidget);
   });
 

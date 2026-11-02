@@ -495,7 +495,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
       (
         title: 'العبادات',
         items: [
-          _sectionGridItem(icon: Icons.menu_book_rounded, title: 'القرآن الكريم', onTap: () => _pushPage(const QuranIndexPage())),
+          _sectionGridItem(icon: Icons.menu_book_rounded, title: 'القرآن الكريم', onTap: () => _pushPage(_quranIndexScreen())),
           _sectionGridItem(icon: Icons.auto_awesome_rounded, title: 'الأدعية والزيارات', onTap: () => _pushPage(_duaPage())),
           _sectionGridItem(icon: Icons.shield_moon_rounded, title: 'الأذكار', onTap: () => _pushPage(const DhikrFortressPage())),
           _sectionGridItem(icon: Icons.fingerprint_rounded, title: 'التسبيح', onTap: () => _pushPage(const TasbeehPage())),
@@ -732,7 +732,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
                 _drawerSectionTitle('العبادات', Icons.spa_rounded),
                 _drawerGrid(
                   children: [
-                    _drawerGridItem(Icons.auto_stories_rounded, 'القرآن الكريم', () => _openDrawerPage(const QuranIndexPage())),
+                    _drawerGridItem(Icons.auto_stories_rounded, 'القرآن الكريم', () => _openDrawerPage(_quranIndexScreen())),
                     _drawerGridItem(Icons.volunteer_activism_rounded, 'الأدعية والزيارات', () => _openDrawerPage(_duaPage())),
                     _drawerGridItem(Icons.fingerprint_rounded, 'التسبيح', () => _openDrawerPage(const TasbeehPage())),
                     _drawerGridItem(Icons.handshake_rounded, 'الأعمال الصالحة', () => _openDrawerPage(const GoodDeedsPage())),
@@ -1414,7 +1414,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
                 icon: Icons.menu_book_rounded,
                 title: 'القرآن الكريم',
                 subtitle: 'تلاوة وتدبّر',
-                onTap: () => _pushPage(const QuranIndexPage()),
+                onTap: () => _pushPage(_quranIndexScreen()),
               ),
             ),
             SizedBox(width: 11),
@@ -1576,6 +1576,11 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
       ),
     );
   }
+
+  Widget _quranIndexScreen() => Scaffold(
+    appBar: AppBar(title: const Text('القرآن الكريم')),
+    body: const SafeArea(child: QuranIndexPage()),
+  );
 
   Widget _duaPage() => const ShiaTextLibraryPage();
 

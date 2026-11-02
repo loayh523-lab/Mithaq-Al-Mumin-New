@@ -827,9 +827,9 @@ void main() {
       sourceUrl: '',
       lines: <ShiaTextLine>[],
     );
-    expect(sahifaMunajat.category, 'الصحيفة السجادية والمناجيات');
-    expect(fridayArafah.category, 'الأعمال والمناسبات');
-    expect(munajat.category, 'الصحيفة السجادية والمناجيات');
+    expect(sahifaMunajat.category, 'الصحيفة السجادية المباركة (نفحات مختارة)');
+    expect(fridayArafah.category, 'أدعية المناسبات والشهور العبادية');
+    expect(munajat.category, 'الصحيفة السجادية المباركة (نفحات مختارة)');
   });
 
   test('estimated prayer times stay ordered and valid for supported Iraq cities', () {
@@ -1049,7 +1049,7 @@ void main() {
       home: Directionality(
         textDirection: TextDirection.rtl,
         child: ShiaTextLibraryPage(
-          initialCategory: 'الزيارات الشريفة',
+          initialCategory: 'الزيارات الشريفة والمقامات المقدسة',
           dataFuture: Future<ShiaTextData>.value(preloaded!),
         ),
       ),
@@ -1057,10 +1057,10 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
     expect(find.text('الأدعية والزيارات'), findsWidgets);
-    expect(find.textContaining('186 نصاً'), findsOneWidget);
-    expect(find.textContaining('76 صحيفة ومناجاة'), findsOneWidget);
-    expect(find.text('الصحيفة السجادية والمناجيات (76)'), findsOneWidget);
-    expect(find.textContaining('25 زيارة'), findsOneWidget);
+    expect(find.textContaining('110 نصاً'), findsOneWidget);
+    expect(find.textContaining('76 صحيفة ومناجاة'), findsNothing);
+    expect(find.text('بانتظار اعتماد المختارات'), findsOneWidget);
+    expect(find.text('الزيارات الشريفة والمقامات المقدسة (25)'), findsOneWidget);
     expect(find.textContaining('ما قدرنا نحمّل مكتبة الأدعية'), findsNothing);
     await tester.scrollUntilVisible(
       find.text('زيارة عاشوراء'),
@@ -1080,7 +1080,7 @@ void main() {
     expect(find.text('زيارة عاشوراء'), findsWidgets);
   });
 
-  testWidgets('combined dua library lets readers filter into Sahifa and Munajat', (tester) async {
+  testWidgets('main dua library does not publish the unapproved Sahifa source list', (tester) async {
     final preloaded = await tester.runAsync(() => ShiaTextData.load());
     expect(preloaded, isNotNull);
     await tester.pumpWidget(MaterialApp(
@@ -1091,10 +1091,9 @@ void main() {
     ));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
-    expect(find.textContaining('186 نصاً'), findsOneWidget);
-    await tester.tap(find.text('الصحيفة السجادية والمناجيات (76)'));
-    await tester.pumpAndSettle();
-    expect(find.textContaining('الدعاء 01: الدعاء في التحميد لله عز وجل'), findsWidgets);
+    expect(find.textContaining('110 نصاً'), findsOneWidget);
+    expect(find.text('بانتظار اعتماد المختارات'), findsOneWidget);
+    expect(find.textContaining('قسم الصحيفة ينتظر اعتماد المختارات'), findsOneWidget);
   });
 
   testWidgets('Sahifa and Munajat remain accessible in their own section', (tester) async {
@@ -1111,8 +1110,8 @@ void main() {
     ));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
-    expect(find.text('الصحيفة السجادية والمناجيات'), findsWidgets);
-    expect(find.textContaining('76 نصاً محفوظاً'), findsOneWidget);
+    expect(find.textContaining('لم تُعتمد قائمة العشرين المختارة بعد'), findsOneWidget);
+    expect(find.textContaining('قائمة العشرين المختارة من الصحيفة السجادية'), findsOneWidget);
     expect(find.textContaining('ما قدرنا نحمّل مكتبة الأدعية'), findsNothing);
   });
 

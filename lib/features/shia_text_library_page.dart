@@ -119,7 +119,13 @@ class ShiaTextEntry {
         : '${String.fromCharCodes(runes.take(42)).trimRight()}…';
     return 'تعقيب بعد الصلاة — $preview';
   }
-  bool get isSahifa => categoryOverride == 'الصحيفة السجادية المباركة (نفحات مختارة)' || slug.startsWith('selected-sahifa-');
+  bool get isSahifa =>
+      categoryOverride == 'الصحيفة السجادية المباركة (نفحات مختارة)' ||
+      categoryOverride == 'الصحيفة السجادية والمناجيات' ||
+      slug.startsWith('selected-sahifa-') ||
+      slug.startsWith('sahifa-sajjadiya-') ||
+      slug.startsWith('munajat-sahifa-') ||
+      slug.startsWith('munajat-');
   bool get isDayDua =>
       RegExp(r'(sunday|monday|tuesday|wednesday|thursday|friday|saturday)', caseSensitive: false).hasMatch(slug) ||
       RegExp(r'دعاء يوم|أدعية يوم|دعاء الأحد|دعاء الاثنين|دعاء الثلاثاء|دعاء الأربعاء|دعاء الخميس|دعاء الجمعة|دعاء السبت').hasMatch('$title $alternateName');
@@ -163,9 +169,24 @@ class ShiaTextEntry {
     final fixed = categoryOverride;
     if (fixed != null && validCategories.contains(fixed)) return fixed;
     if (isSahifa) return 'الصحيفة السجادية المباركة (نفحات مختارة)';
-    if (isZiyara) return 'الزيارات الشريفة والمقامات المقدسة';
-    if (isOccasionDua) return 'أدعية المناسبات والشهور العبادية';
-    if (isTaqibat || isDayDua || isMorningEveningDua) return 'الورد اليومي والتعقيبات';
+    if (fixed == 'الزيارات الشريفة' || isZiyara) {
+      return 'الزيارات الشريفة والمقامات المقدسة';
+    }
+    if (fixed == 'الأعمال والمناسبات' || isOccasionDua) {
+      return 'أدعية المناسبات والشهور العبادية';
+    }
+    if (fixed == 'الأدعية والأذكار اليومية' ||
+        fixed == 'التعقيبات بعد الصلاة' ||
+        isTaqibat ||
+        isDayDua ||
+        isMorningEveningDua) {
+      return 'الورد اليومي والتعقيبات';
+    }
+    if (fixed == 'الأدعية العامة وأدعية الفرج وصاحب الزمان') {
+      return isHajatDua
+          ? 'أدعية الحوائج، التحصينات والرزق'
+          : 'الأدعية الكبرى والمناجاة الشريفة';
+    }
     if (isHajatDua) return 'أدعية الحوائج، التحصينات والرزق';
     return 'الأدعية الكبرى والمناجاة الشريفة';
   }
@@ -197,30 +218,23 @@ class ShiaTextData {
 
   static Future<ShiaTextData> loadCore() => _coreCache ??= _loadAsset(
     'assets/shia_duas/shia_duas.json',
-    expectedCount: 250,
+    expectedCount: 110,
   );
 
   static Future<ShiaTextData> load() => _cache ??= _loadCombined();
 
   static Future<ShiaTextData> _loadCombined() async => await loadCore();
 
-  static Future<ShiaTextData> loadSahifa() =>
-      _sahifaCache ??= load().then((data) {
-        final selected = data.entries
-            .where((entry) => entry.categoryOverride ==
-                'الصحيفة السجادية المباركة (نفحات مختارة)')
-            .toList(growable: false);
-        if (selected.length != 20) {
-          throw FormatException(
-            'Expected 20 selected Sahifa texts; found ${selected.length}.',
-          );
-        }
-        return ShiaTextData(
-          entries: selected,
+  /// The source manifest preserves 76 Sahifa/Munajat records, but the owner's
+  /// approved 20-item selection has not been identified by stable slugs yet.
+  /// Do not guess which texts are approved or publish all 76 as a substitute.
+  static Future<ShiaTextData> loadSahifa() => _sahifaCache ??= loadCore().then(
+        (data) => ShiaTextData(
+          entries: const <ShiaTextEntry>[],
           sourceProject: data.sourceProject,
           license: data.license,
-        );
-      });
+        ),
+      );
 
   static Future<ShiaTextData> _loadAsset(
     String assetPath, {
@@ -249,6 +263,11 @@ class ShiaTextData {
       'الصحيفة السجادية المباركة (نفحات مختارة)',
       'أدعية الحوائج، التحصينات والرزق',
       'الزيارات الشريفة والمقامات المقدسة',
+      'الأدعية والأذكار اليومية',
+      'التعقيبات بعد الصلاة',
+      'الأدعية العامة وأدعية الفرج وصاحب الزمان',
+      'الأعمال والمناسبات',
+      'الزيارات الشريفة',
     };
     if (entries.any((entry) => entry.categoryOverride == null ||
         !validCategories.contains(entry.categoryOverride))) {
@@ -324,7 +343,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
       description = 'أعمال الشهور والمناسبات الدينية';
     } else if (category == 'الصحيفة السجادية المباركة (نفحات مختارة)') {
       icon = Icons.menu_book_rounded;
-      description = 'العشرون نصاً المختارة من الصحيفة السجادية';
+      description = 'تظهر المختارات بعد تثبيت العناوين المعتمدة';
     } else if (category == 'أدعية الحوائج، التحصينات والرزق') {
       icon = Icons.shield_moon_rounded;
       description = 'أدعية قرآنية ومأثورة للحوائج';
@@ -335,7 +354,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
     return Card(
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: () => setState(() => _category = category),
+        onTap: count == 0 ? null : () => setState(() => _category = category),
         child: Padding(
           padding: const EdgeInsets.all(14),
           child: Column(
@@ -381,8 +400,17 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
               ),
               const SizedBox(height: 8),
               Text(
-                '$count نصاً',
-                style: const TextStyle(color: _shiaGold, fontWeight: FontWeight.w800, fontSize: 12),
+                count == 0 &&
+                        category == 'الصحيفة السجادية المباركة (نفحات مختارة)'
+                    ? 'بانتظار اعتماد المختارات'
+                    : count == 0
+                        ? 'لا توجد مواد مختارة حالياً'
+                        : '$count نصاً',
+                style: TextStyle(
+                  color: theme.colorScheme.secondary,
+                  fontWeight: FontWeight.w800,
+                  fontSize: 12,
+                ),
               ),
             ],
           ),
@@ -409,9 +437,22 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
   @override void initState() {
     super.initState();
     _sahifaOnly = widget.sahifaOnly;
+    const categoryAliases = <String, String>{
+      'الصحيفة السجادية والمناجيات': 'الصحيفة السجادية المباركة (نفحات مختارة)',
+      'الأدعية والأذكار اليومية': 'الورد اليومي والتعقيبات',
+      'التعقيبات بعد الصلاة': 'الورد اليومي والتعقيبات',
+      'الأدعية العامة والفرج وصاحب الزمان': 'الأدعية الكبرى والمناجاة الشريفة',
+      'الأدعية العامة وأدعية الفرج وصاحب الزمان': 'الأدعية الكبرى والمناجاة الشريفة',
+      'الأعمال والمناسبات': 'أدعية المناسبات والشهور العبادية',
+      'الزيارات الشريفة': 'الزيارات الشريفة والمقامات المقدسة',
+    };
+    final requestedCategory = widget.initialCategory;
+    final mappedCategory = requestedCategory == null
+        ? null
+        : (categoryAliases[requestedCategory] ?? requestedCategory);
     _category = _sahifaOnly
         ? 'الصحيفة السجادية المباركة (نفحات مختارة)'
-        : (_categories.contains(widget.initialCategory) ? widget.initialCategory! : _categories.first);
+        : (_categories.contains(mappedCategory) ? mappedCategory! : _categories.first);
     _future = widget.dataFuture ??
         (_sahifaOnly ? ShiaTextData.loadSahifa() : ShiaTextData.load());
   }
@@ -467,15 +508,17 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
               const SizedBox(height: 6),
               Text(
                 _sahifaOnly
-                    ? '${data.entries.length} نصاً محفوظاً من الصحيفة السجادية والمناجيات'
-                     : '${data.entries.length} نصاً • 6 أقسام مرتبة بمصادرها',
+                    ? (data.entries.isEmpty
+                        ? 'لم تُعتمد قائمة العشرين المختارة بعد'
+                        : '${data.entries.length} نصاً من الصحيفة السجادية والمناجيات')
+                    : '${data.entries.length} نصاً في الأقسام المنشورة',
                 style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.5),
               ),
               const SizedBox(height: 6),
               Text(
                 _sahifaOnly
-                    ? 'الصحيفة السجادية والمناجيات محفوظة هنا بقسم مستقل ولا تدخل ضمن مجموعة الـ١١٠ المختارة.'
-                    : 'تصفح ستة أقسام واضحة، مع مرجع النص بجانب محتواه.',
+                    ? 'لم تُنشر نصوص الصحيفة قبل تثبيت معرفات العشرين المختارة. بقيت سجلات المصدر محفوظة للمراجعة.'
+                    : 'تصفح الأقسام المنشورة، مع مرجع النص بجانب محتواه. قسم الصحيفة ينتظر اعتماد المختارات.',
                 style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11, height: 1.5),
               ),
             ]),
@@ -536,7 +579,9 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
                           padding: const EdgeInsets.all(24),
                           child: Column(mainAxisSize: MainAxisSize.min, children: [
                             Text(
-                              'ماكو نصوص ضمن هذا القسم في مصدر الأدعية الحالي.',
+                              _sahifaOnly
+                                  ? 'قائمة العشرين المختارة من الصحيفة السجادية بانتظار تثبيت العناوين والمعرفات المعتمدة.'
+                                  : 'ماكو نصوص ضمن هذا القسم في مصدر الأدعية الحالي.',
                               textAlign: TextAlign.center,
                               style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.6),
                             ),

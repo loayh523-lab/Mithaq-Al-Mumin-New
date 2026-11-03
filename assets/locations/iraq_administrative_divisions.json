@@ -6,7 +6,82 @@
     "license": "CC-BY-4.0",
     "sourceCommit": "098a1a49a16d5ab47fe63333ca9fa49970dc6e92",
     "attribution": "Data adapted from Open Admin Data (https://openadmindata.org/iq/), CC BY 4.0. Source: https://github.com/open-admin-data/iraq-administrative-divisions. Changes: flattened administrative hierarchy and retained Arabic names, IDs, parent IDs and coordinates.",
-    "coordinateNote": "Administrative coordinates are approximate and do not replace device GPS or an approved local prayer timetable."
+    "coordinateNote": "Administrative coordinates are approximate and do not replace device GPS or an approved local prayer timetable.",
+    "administrativeSupplement": {
+      "sourceName": "قانون استحداث محافظة حلبجة في جمهورية العراق",
+      "lawNumber": "7/2025",
+      "gazetteIssue": "4824",
+      "publicationDate": "2025-05-05",
+      "officialGovernorateOrder": 19,
+      "planningAdministrativeCode": "16",
+      "officialGazetteUrl": "https://moj.gov.iq/upload/pdf/4824_compressed_282.pdf",
+      "mapUnitCodes": [
+        {
+          "code": "16011",
+          "level": 2,
+          "name": "مركز قضاء حلبجة"
+        },
+        {
+          "code": "16012",
+          "level": 3,
+          "name": "ناحية سيروان"
+        },
+        {
+          "code": "16013",
+          "level": 3,
+          "name": "ناحية خورمال"
+        },
+        {
+          "code": "16014",
+          "level": 3,
+          "name": "ناحية بيارة"
+        },
+        {
+          "code": "16015",
+          "level": 3,
+          "name": "ناحية بامو"
+        }
+      ],
+      "classificationNote": "تتبع البيانات رموز ومسميات جدول الخريطة الملحقة بالوقائع العراقية. يظهر خورمال في خريطة القانون الاتحادي كناحية، رغم وجود أمر إقليمي سابق برفعها إلى قضاء في نظام إقليم كردستان؛ يجب إبقاء هذا التعارض موثقاً وعدم الخلط بين النظامين.",
+      "coordinateNote": "الإحداثيات نقاط تقريبية لمراكز التجمعات السكانية وليست مراكز مضلعات الحدود الإدارية. يُفضّل GPS عند توفره، ولا تعادل جدول مواقيت معتمداً."
+    },
+    "coordinateSources": [
+      {
+        "place": "حلبجة",
+        "source": "Mapcarta / OpenStreetMap node 598253294",
+        "url": "https://mapcarta.com/Halabja",
+        "lat": 35.1792,
+        "lon": 45.9874
+      },
+      {
+        "place": "سيروان",
+        "source": "Mapcarta / OpenStreetMap node 2267760082",
+        "url": "https://mapcarta.com/N2267760082",
+        "lat": 35.25417,
+        "lon": 45.93994
+      },
+      {
+        "place": "خورمال",
+        "source": "GeoNames place 94330 via GeoView",
+        "url": "https://iq.geoview.info/khurmal,94330",
+        "lat": 35.29974,
+        "lon": 46.0351
+      },
+      {
+        "place": "بيارة",
+        "source": "Mapcarta / OpenStreetMap node 7369662108",
+        "url": "https://mapcarta.com/12540638",
+        "lat": 35.23083,
+        "lon": 46.12064
+      },
+      {
+        "place": "بامو",
+        "source": "Böhme et al., Russian Journal of Herpetology 30(6), Table 1, Gov. Halabja Bamo town",
+        "url": "https://doi.org/10.30906/1026-2296-2023-30-6-518-528",
+        "lat": 34.9553,
+        "lon": 45.7877
+      }
+    ]
   },
   "data": [
     {
@@ -512,18 +587,6 @@
       "districtName": "جمجمال",
       "lat": 35.415,
       "lon": 45.001
-    },
-    {
-      "id": "IQG06Q05",
-      "level": 2,
-      "name": "حلبجة",
-      "parentId": "IQG06",
-      "governorateId": "IQG06",
-      "governorateName": "السليمانية",
-      "districtId": "IQG06Q05",
-      "districtName": "حلبجة",
-      "lat": 35.187,
-      "lon": 46.022
     },
     {
       "id": "IQG06Q03",
@@ -2288,54 +2351,6 @@
       "districtName": "جمجمال",
       "lat": 35.495,
       "lon": 44.941
-    },
-    {
-      "id": "IQG06Q05N01",
-      "level": 3,
-      "name": "بيارة",
-      "parentId": "IQG06Q05",
-      "governorateId": "IQG06",
-      "governorateName": "السليمانية",
-      "districtId": "IQG06Q05",
-      "districtName": "حلبجة",
-      "lat": 35.191,
-      "lon": 46.131
-    },
-    {
-      "id": "IQG06Q05N02",
-      "level": 3,
-      "name": "خورمال",
-      "parentId": "IQG06Q05",
-      "governorateId": "IQG06",
-      "governorateName": "السليمانية",
-      "districtId": "IQG06Q05",
-      "districtName": "حلبجة",
-      "lat": 35.36,
-      "lon": 46.024
-    },
-    {
-      "id": "IQG06Q05N04",
-      "level": 3,
-      "name": "شهرزور",
-      "parentId": "IQG06Q05",
-      "governorateId": "IQG06",
-      "governorateName": "السليمانية",
-      "districtId": "IQG06Q05",
-      "districtName": "حلبجة",
-      "lat": 35.355,
-      "lon": 45.831
-    },
-    {
-      "id": "IQG06Q05N03",
-      "level": 3,
-      "name": "مركز حلبجة",
-      "parentId": "IQG06Q05",
-      "governorateId": "IQG06",
-      "governorateName": "السليمانية",
-      "districtId": "IQG06Q05",
-      "districtName": "حلبجة",
-      "lat": 35.106,
-      "lon": 45.95
     },
     {
       "id": "IQG06Q03N01",
@@ -4964,6 +4979,96 @@
       "districtName": "بدرة",
       "lat": 33.191,
       "lon": 45.943
+    },
+    {
+      "id": "IQG19",
+      "level": 1,
+      "name": "حلبجة",
+      "parentId": null,
+      "governorateId": "IQG19",
+      "governorateName": "حلبجة",
+      "districtId": null,
+      "districtName": null,
+      "lat": 35.1792,
+      "lon": 45.9874,
+      "officialCode": "16",
+      "coordinateSource": "Mapcarta / OSM node 598253294",
+      "coordinateAccuracy": "approximate-populated-place-point"
+    },
+    {
+      "id": "IQG19Q01",
+      "level": 2,
+      "name": "حلبجة",
+      "parentId": "IQG19",
+      "governorateId": "IQG19",
+      "governorateName": "حلبجة",
+      "districtId": "IQG19Q01",
+      "districtName": "حلبجة",
+      "lat": 35.1792,
+      "lon": 45.9874,
+      "officialCode": "16011",
+      "coordinateSource": "Mapcarta / OSM node 598253294",
+      "coordinateAccuracy": "approximate-populated-place-point"
+    },
+    {
+      "id": "IQG19Q01N01",
+      "level": 3,
+      "name": "سيروان",
+      "parentId": "IQG19Q01",
+      "governorateId": "IQG19",
+      "governorateName": "حلبجة",
+      "districtId": "IQG19Q01",
+      "districtName": "حلبجة",
+      "lat": 35.25417,
+      "lon": 45.93994,
+      "officialCode": "16012",
+      "coordinateSource": "Mapcarta / OSM node 2267760082",
+      "coordinateAccuracy": "approximate-populated-place-point"
+    },
+    {
+      "id": "IQG19Q01N02",
+      "level": 3,
+      "name": "خورمال",
+      "parentId": "IQG19Q01",
+      "governorateId": "IQG19",
+      "governorateName": "حلبجة",
+      "districtId": "IQG19Q01",
+      "districtName": "حلبجة",
+      "lat": 35.29974,
+      "lon": 46.0351,
+      "officialCode": "16013",
+      "coordinateSource": "GeoNames place 94330",
+      "coordinateAccuracy": "approximate-populated-place-point"
+    },
+    {
+      "id": "IQG19Q01N03",
+      "level": 3,
+      "name": "بيارة",
+      "parentId": "IQG19Q01",
+      "governorateId": "IQG19",
+      "governorateName": "حلبجة",
+      "districtId": "IQG19Q01",
+      "districtName": "حلبجة",
+      "lat": 35.23083,
+      "lon": 46.12064,
+      "officialCode": "16014",
+      "coordinateSource": "Mapcarta / OSM node 7369662108",
+      "coordinateAccuracy": "approximate-populated-place-point"
+    },
+    {
+      "id": "IQG19Q01N04",
+      "level": 3,
+      "name": "بامو",
+      "parentId": "IQG19Q01",
+      "governorateId": "IQG19",
+      "governorateName": "حلبجة",
+      "districtId": "IQG19Q01",
+      "districtName": "حلبجة",
+      "lat": 34.9553,
+      "lon": 45.7877,
+      "officialCode": "16015",
+      "coordinateSource": "Böhme et al. (2023), locality table, Bamo town",
+      "coordinateAccuracy": "approximate-populated-place-point"
     }
   ]
 }

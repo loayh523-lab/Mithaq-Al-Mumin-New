@@ -17,6 +17,8 @@ class PrayerAdministrativeDivision {
     required this.districtName,
     required this.latitude,
     required this.longitude,
+    this.officialCode,
+    this.coordinateSource,
   });
 
   final String id;
@@ -30,6 +32,8 @@ class PrayerAdministrativeDivision {
   final String? districtName;
   final double latitude;
   final double longitude;
+  final String? officialCode;
+  final String? coordinateSource;
 
   factory PrayerAdministrativeDivision.fromJson(Map<String, dynamic> json) {
     return PrayerAdministrativeDivision(
@@ -43,6 +47,8 @@ class PrayerAdministrativeDivision {
       districtName: json['districtName'] as String?,
       latitude: (json['lat'] as num).toDouble(),
       longitude: (json['lon'] as num).toDouble(),
+      officialCode: json['officialCode'] as String?,
+      coordinateSource: json['coordinateSource'] as String?,
     );
   }
 }
@@ -105,6 +111,19 @@ class PrayerLocations {
 
   static const administrativeAsset =
       'assets/locations/iraq_administrative_divisions.json';
+
+  /// Stable IDs used before Halabja became governorate 19. These aliases map
+  /// old saved choices to the new Gazette-based hierarchy during app upgrade.
+  /// The retired "Shahrazor" entry has no matching unit in the Gazette table;
+  /// it is migrated to Sirwan, the nearest listed Halabja subdistrict centre.
+  static const Map<String, String> legacyAdministrativePlaceIdAliases = {
+    'IQG06Q05': 'IQG19Q01',
+    'IQG06Q05N01': 'IQG19Q01N03',
+    'IQG06Q05N02': 'IQG19Q01N02',
+    'IQG06Q05N03': 'IQG19Q01',
+    'IQG06Q05N04': 'IQG19Q01N01',
+  };
+
   static Future<List<PrayerAdministrativeDivision>>? _divisionsFuture;
 
   static Future<List<PrayerAdministrativeDivision>>
@@ -297,7 +316,17 @@ class PrayerLocations {
     if (selectedPlaceId != null) {
       try {
         final divisions = await administrativeDivisions();
-        final division = divisionById(divisions, selectedPlaceId);
+        var division = divisionById(divisions, selectedPlaceId);
+        if (division == null) {
+          final migratedId =
+              legacyAdministrativePlaceIdAliases[selectedPlaceId];
+          if (migratedId != null) {
+            division = divisionById(divisions, migratedId);
+            if (division != null) {
+              await prefs.setString('prayer_place_id', migratedId);
+            }
+          }
+        }
         if (division != null) return cityForDivision(division);
       } catch (_) {
         // A missing asset must not prevent the app from opening.

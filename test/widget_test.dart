@@ -1324,6 +1324,14 @@ void main() {
     );
     expect(find.text('حتى يوصل الأذان والتطبيق مغلق'), findsOneWidget);
     expect(find.textContaining('Phone Master أو Battery Lab'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.textContaining('نسبة هذا الملف إلى قارئ أو جهة محددة لم تُحسم بعد'),
+      220,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    expect(find.textContaining('نسبة هذا الملف إلى قارئ أو جهة محددة لم تُحسم بعد'), findsOneWidget);
+    expect(find.textContaining('بصوت القارئ الشيخ شبّر معلة'), findsNothing);
     await tester.drag(find.byType(Scrollable).first, const Offset(0, 1600));
     await tester.pumpAndSettle();
 
@@ -1414,14 +1422,6 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(find.text('مصدر نص القرآن — Tanzil'), findsOneWidget);
-    await tester.scrollUntilVisible(
-      find.textContaining('نسبة هذا الملف إلى قارئ أو جهة محددة لم تُحسم بعد'),
-      250,
-      scrollable: find.byType(Scrollable).first,
-    );
-    await tester.pumpAndSettle();
-    expect(find.textContaining('نسبة هذا الملف إلى قارئ أو جهة محددة لم تُحسم بعد'), findsOneWidget);
-    expect(find.textContaining('بصوت القارئ الشيخ شبّر معلة'), findsNothing);
   });
 
   testWidgets('smart search screen offers cross-library offline search', (tester) async {

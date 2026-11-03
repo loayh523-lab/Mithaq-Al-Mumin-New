@@ -157,10 +157,20 @@ def main() -> None:
             if not isinstance(rows, list) or not rows:
                 raise SystemExit(f"Missing full rows for {slug}.")
 
+            omitted_source_instruction_count = sum(
+                1
+                for row in rows
+                if isinstance(row, dict)
+                and isinstance(row.get("instruction"), str)
+                and row.get("instruction", "").strip()
+            )
             lines = []
             for row in rows:
                 if not isinstance(row, dict):
                     raise SystemExit(f"Malformed row for {slug}.")
+                display_id = str(row.get("show_id") or "").strip()
+                if display_id and not display_id.isdecimal():
+                    raise SystemExit(f"Invalid non-numeric show_id for {slug}: {display_id!r}.")
                 value = row.get("arabic")
                 if not isinstance(value, str):
                     raise SystemExit(f"Missing Arabic field in {slug}.")
@@ -173,6 +183,7 @@ def main() -> None:
                     raise SystemExit(f"Non-Arabic content found in {slug}.")
                 lines.append({
                     "index": row.get("index") if isinstance(row.get("index"), int) else len(lines) + 1,
+                    "displayId": display_id,
                     "kind": "arabic",
                     "text": value,
                 })
@@ -224,6 +235,7 @@ def main() -> None:
                 "sourceReference": source_reference.strip(),
                 "sourceUrl": source_url,
                 "type": prayer_type,
+                "omittedSourceInstructionCount": omitted_source_instruction_count,
                 "lines": lines,
             }
             if collection_name == "curated":
@@ -244,12 +256,17 @@ def main() -> None:
     if len(texts_seen) != EXPECTED_COUNT + EXPECTED_SAHIFA_COUNT:
         raise SystemExit("Full-text uniqueness validation failed across both collections.")
 
+    omitted_instruction_total = sum(
+        item["omittedSourceInstructionCount"]
+        for item in (*prepared, *prepared_sahifa)
+    )
     common_metadata = {
         "sourceProject": "KazTronics/AhlulBayt_Treasures",
         "sourceVersion": SOURCE_VERSION,
         "sourceCommit": SOURCE_COMMIT,
         "sourceIndex": SOURCE_URL,
         "sourcePage": SOURCE_PAGE,
+        "omittedSourceInstructionCount": omitted_instruction_total,
         "contentSource": "Shia Devotions dataset; source record IDs are retained in each entry's reference",
         "license": "Text data declared Public Domain by the dataset; repository code is MIT",
         "duplicateTextsRemoved": 0,

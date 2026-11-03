@@ -6,10 +6,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 const _shiaGold = Color(0xFFD9B66D);
 
 class ShiaTextLine {
-  const ShiaTextLine({required this.index, required this.kind, required this.text});
+  const ShiaTextLine({
+    required this.index,
+    required this.kind,
+    required this.text,
+    this.displayId = '',
+  });
   final int index;
   final String kind;
   final String text;
+  final String displayId;
   bool get isArabic => kind.toLowerCase() == 'arabic';
   bool get isTranslation => kind.toLowerCase() == 'translation';
   bool get isPersian =>
@@ -20,6 +26,9 @@ class ShiaTextLine {
     index: json['index'] is int ? json['index'] as int : 0,
     kind: json['kind'] is String ? json['kind'] as String : 'other',
     text: json['text'] is String ? json['text'] as String : '',
+    displayId: json['displayId'] is String
+        ? (json['displayId'] as String).trim()
+        : '',
   );
 }
 
@@ -33,6 +42,7 @@ class ShiaTextEntry {
     required this.lines,
     this.sourceReference = '',
     this.categoryOverride,
+    this.omittedSourceInstructionCount = 0,
   });
   final String slug;
   final String title;
@@ -41,6 +51,7 @@ class ShiaTextEntry {
   final String sourceUrl;
   final String sourceReference;
   final String? categoryOverride;
+  final int omittedSourceInstructionCount;
   final List<ShiaTextLine> lines;
   String get displayTitle {
     final candidate = alternateName.trim().isNotEmpty
@@ -202,6 +213,10 @@ class ShiaTextEntry {
         ? json['sourceReference'] as String
         : '',
     categoryOverride: json['category'] is String ? json['category'] as String : null,
+    omittedSourceInstructionCount:
+        json['omittedSourceInstructionCount'] is int
+            ? json['omittedSourceInstructionCount'] as int
+            : 0,
     lines: ((json['lines'] as List<dynamic>?) ?? const <dynamic>[])
       .whereType<Map<String, dynamic>>().map(ShiaTextLine.fromJson).toList(),
   );
@@ -356,15 +371,15 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
       child: InkWell(
         onTap: count == 0 ? null : () => setState(() => _category = category),
         child: Padding(
-          padding: const EdgeInsets.all(14),
+          padding: const EdgeInsets.all(12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
                   Container(
-                    width: 44,
-                    height: 44,
+                    width: 40,
+                    height: 40,
                     decoration: BoxDecoration(
                       color: _shiaGold.withValues(alpha: .15),
                       borderRadius: BorderRadius.circular(14),
@@ -375,30 +390,30 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
                   Icon(Icons.chevron_left_rounded, color: theme.colorScheme.onSurfaceVariant),
                 ],
               ),
-              const Spacer(),
+              const SizedBox(height: 8),
               Text(
                 category,
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontWeight: FontWeight.w800,
-                  fontSize: 14,
-                  height: 1.25,
+                  fontSize: 13,
+                  height: 1.2,
                   color: theme.colorScheme.onSurface,
                 ),
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 4),
               Text(
                 description,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  fontSize: 11,
-                  height: 1.3,
+                  fontSize: 10,
+                  height: 1.2,
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 6),
               Text(
                 count == 0 &&
                         category == 'الصحيفة السجادية المباركة (نفحات مختارة)'
@@ -409,7 +424,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
                 style: TextStyle(
                   color: theme.colorScheme.secondary,
                   fontWeight: FontWeight.w800,
-                  fontSize: 12,
+                  fontSize: 11,
                 ),
               ),
             ],
@@ -563,7 +578,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
                     crossAxisCount: 2,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
-                    childAspectRatio: 1.05,
+                    childAspectRatio: .74,
                     children: [
                       for (final category in _categories.skip(1))
                         _categoryCard(
@@ -777,6 +792,19 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
                   decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface, borderRadius: BorderRadius.circular(18), border: Border.all(color: _shiaGold.withValues(alpha: .28))),
                   child: Text(widget.entry.displayTitle, textAlign: TextAlign.center, style: const TextStyle(color: _shiaGold, fontSize: 22, fontWeight: FontWeight.w800, height: 1.6)),
                 ),
+                if (widget.entry.omittedSourceInstructionCount > 0)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Text(
+                      'ملاحظة تحريرية: تحتوي بيانات المصدر على ${widget.entry.omittedSourceInstructionCount} أسطر إرشادية غير عربية لم تُعرض هنا؛ هذه الصفحة تعرض الأسطر العربية فقط.',
+                      textDirection: TextDirection.rtl,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        fontSize: 11,
+                        height: 1.6,
+                      ),
+                    ),
+                  ),
                 ...lines.map((line) {
                   final arabic = line.isArabic;
                   final persian = line.isPersian;
@@ -784,15 +812,35 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
                   final translation = line.isTranslation;
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 12),
-                    child: SelectableText(
-                      line.text,
-                      textDirection: rtl ? TextDirection.rtl : TextDirection.ltr,
-                      textAlign: rtl ? TextAlign.justify : TextAlign.start,
-                      style: TextStyle(
-                        fontSize: rtl ? _fontSize : _fontSize * .75,
-                        height: rtl ? 2.0 : 1.6,
-                        color: translation ? Theme.of(context).colorScheme.onSurfaceVariant : Theme.of(context).colorScheme.onSurface,
-                      ),
+                    child: Row(
+                      textDirection: TextDirection.rtl,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (line.displayId.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsetsDirectional.only(end: 7, top: 8),
+                            child: Text(
+                              line.displayId,
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.secondary,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                        Expanded(
+                          child: SelectableText(
+                            line.text,
+                            textDirection: rtl ? TextDirection.rtl : TextDirection.ltr,
+                            textAlign: rtl ? TextAlign.justify : TextAlign.start,
+                            style: TextStyle(
+                              fontSize: rtl ? _fontSize : _fontSize * .75,
+                              height: rtl ? 2.0 : 1.6,
+                              color: translation ? Theme.of(context).colorScheme.onSurfaceVariant : Theme.of(context).colorScheme.onSurface,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 }),

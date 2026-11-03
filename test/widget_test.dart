@@ -908,7 +908,14 @@ void main() {
     expect(find.text('المواقيت والتقويم'), findsOneWidget);
     expect(find.text('الفجر'), findsOneWidget);
     expect(find.textContaining('الصلاة القادمة:'), findsOneWidget);
-    expect(find.textContaining('الطريقة الجعفرية الحسابية (ليفا — قم)'), findsOneWidget);
+    final calculationNote = find.textContaining('الطريقة الجعفرية الحسابية (ليفا — قم)');
+    await tester.scrollUntilVisible(
+      calculationNote,
+      180,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    expect(calculationNote, findsOneWidget);
     expect(find.textContaining('زاوية المغرب تقدير فلكي وليست وحدها حكماً بدخول الوقت'), findsOneWidget);
     await tester.tap(find.text('إمساكية رمضان'));
     await tester.pumpAndSettle();

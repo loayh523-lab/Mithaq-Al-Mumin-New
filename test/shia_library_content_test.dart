@@ -5,16 +5,15 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('Curated offline Arabic supplication library', () {
-    test('contains exactly 110 complete texts in the five curated sections', () async {
+    test('contains exactly 110 complete texts mapped into the public taxonomy', () async {
       final data = await ShiaTextData.loadCore();
       expect(data.entries, hasLength(110));
 
       const expectedCounts = <String, int>{
-        'الأدعية والأذكار اليومية': 25,
-        'التعقيبات بعد الصلاة': 5,
-        'الأدعية العامة وأدعية الفرج وصاحب الزمان': 35,
-        'الأعمال والمناسبات': 20,
-        'الزيارات الشريفة': 25,
+        'الورد اليومي والتعقيبات': 30,
+        'الأدعية الكبرى والمناجاة الشريفة': 35,
+        'أدعية المناسبات والشهور العبادية': 20,
+        'الزيارات الشريفة والمقامات المقدسة': 25,
       };
       final counts = <String, int>{};
       final slugs = <String>{};
@@ -58,34 +57,23 @@ void main() {
       final data = await ShiaTextData.loadCore();
       final taqibat = data.entries.where((entry) => entry.slug.startsWith('taqib-after-salaat-')).toList();
       expect(taqibat, hasLength(5));
-      expect(taqibat.every((entry) => entry.category == 'التعقيبات بعد الصلاة'), isTrue);
+      expect(taqibat.every((entry) => entry.category == 'الورد اليومي والتعقيبات'), isTrue);
       expect(taqibat.map((entry) => entry.displayTitle).toSet(), hasLength(5));
       expect(taqibat.every((entry) => !['(1)', '(2)', '(3)', '(4)', '(5)'].any((number) => entry.displayTitle.contains(number))), isTrue);
       expect(taqibat.every((entry) => entry.displayTitle != entry.title), isTrue);
     });
 
-    test('combined library contains the curated collection and Sahifa without duplicate identifiers', () async {
+    test('the public library exposes only the 110 curated texts', () async {
       final data = await ShiaTextData.load();
-      expect(data.entries, hasLength(186));
-      expect(
-        data.entries.where((entry) => entry.category == 'الصحيفة السجادية والمناجيات'),
-        hasLength(76),
-      );
-      expect(
-        data.entries.where((entry) => entry.category != 'الصحيفة السجادية والمناجيات'),
-        hasLength(110),
-      );
-      expect(data.entries.map((entry) => entry.slug).toSet(), hasLength(186));
+      expect(data.entries, hasLength(110));
+      expect(data.entries.map((entry) => entry.slug).toSet(), hasLength(110));
+      expect(data.entries.every((entry) => !entry.isSahifa), isTrue);
     });
 
-    test('preserves Sahifa and Munajat separately without counting them among the 110', () async {
+    test('does not publish the 76 source records as the approved 20-item selection', () async {
       final data = await ShiaTextData.loadSahifa();
-      expect(data.entries, hasLength(76));
-      expect(
-        data.entries.every((entry) => entry.category == 'الصحيفة السجادية والمناجيات'),
-        isTrue,
-      );
-      expect(data.entries.map((entry) => entry.slug).toSet(), hasLength(76));
+      expect(data.entries, isEmpty);
+      expect(data.sourceProject, isNotEmpty);
     });
 
   });

@@ -6,10 +6,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 const _shiaGold = Color(0xFFD9B66D);
 
 class ShiaTextLine {
-  const ShiaTextLine({required this.index, required this.kind, required this.text});
+  const ShiaTextLine({
+    required this.index,
+    required this.kind,
+    required this.text,
+    this.displayId = '',
+  });
   final int index;
   final String kind;
   final String text;
+  final String displayId;
   bool get isArabic => kind.toLowerCase() == 'arabic';
   bool get isTranslation => kind.toLowerCase() == 'translation';
   bool get isPersian =>
@@ -20,6 +26,9 @@ class ShiaTextLine {
     index: json['index'] is int ? json['index'] as int : 0,
     kind: json['kind'] is String ? json['kind'] as String : 'other',
     text: json['text'] is String ? json['text'] as String : '',
+    displayId: json['displayId'] is String
+        ? (json['displayId'] as String).trim()
+        : '',
   );
 }
 
@@ -33,6 +42,8 @@ class ShiaTextEntry {
     required this.lines,
     this.sourceReference = '',
     this.categoryOverride,
+    this.omittedSourceInstructionCount = 0,
+    this.omittedSourceBlankRowIds = const <String>[],
   });
   final String slug;
   final String title;
@@ -41,6 +52,8 @@ class ShiaTextEntry {
   final String sourceUrl;
   final String sourceReference;
   final String? categoryOverride;
+  final int omittedSourceInstructionCount;
+  final List<String> omittedSourceBlankRowIds;
   final List<ShiaTextLine> lines;
   String get displayTitle {
     final candidate = alternateName.trim().isNotEmpty
@@ -119,7 +132,13 @@ class ShiaTextEntry {
         : '${String.fromCharCodes(runes.take(42)).trimRight()}…';
     return 'تعقيب بعد الصلاة — $preview';
   }
-  bool get isSahifa => slug.startsWith('sahifa-sajjadiya-') || slug.startsWith('munajat-sahifa-');
+  bool get isSahifa =>
+      categoryOverride == 'الصحيفة السجادية المباركة (نفحات مختارة)' ||
+      categoryOverride == 'الصحيفة السجادية والمناجيات' ||
+      slug.startsWith('selected-sahifa-') ||
+      slug.startsWith('sahifa-sajjadiya-') ||
+      slug.startsWith('munajat-sahifa-') ||
+      slug.startsWith('munajat-');
   bool get isDayDua =>
       RegExp(r'(sunday|monday|tuesday|wednesday|thursday|friday|saturday)', caseSensitive: false).hasMatch(slug) ||
       RegExp(r'دعاء يوم|أدعية يوم|دعاء الأحد|دعاء الاثنين|دعاء الثلاثاء|دعاء الأربعاء|دعاء الخميس|دعاء الجمعة|دعاء السبت').hasMatch('$title $alternateName');
@@ -152,27 +171,37 @@ class ShiaTextEntry {
     return RegExp(r'eid|ramadan|arafah|mubahala|mubahilah|laylat|rajab|shaaban|dhul.hijja|dhul.qadah|مناسبة|العيد|رمضان|عرفة|مباهلة|رجب|شعبان|ذي الحجة|ذي القعدة|ليلة القدر').hasMatch(value);
   }
   String get category {
-    // Entries in the curated offline manifest specify their category directly.
-    final fixedCategory = categoryOverride;
-    // Keep taqibat separate even if an older bundled content asset is installed.
-    if (slug.startsWith('taqib-after-salaat-')) return 'التعقيبات بعد الصلاة';
-    if (fixedCategory == 'الصحيفة السجادية والمناجيات' ||
-        fixedCategory == 'التعقيبات بعد الصلاة' ||
-        fixedCategory == 'الأدعية والأذكار اليومية' ||
-        fixedCategory == 'الأدعية العامة وأدعية الفرج وصاحب الزمان' ||
-        fixedCategory == 'الأعمال والمناسبات' ||
-        fixedCategory == 'الزيارات الشريفة') {
-      return fixedCategory!;
+    const validCategories = <String>{
+      'الورد اليومي والتعقيبات',
+      'الأدعية الكبرى والمناجاة الشريفة',
+      'أدعية المناسبات والشهور العبادية',
+      'الصحيفة السجادية المباركة (نفحات مختارة)',
+      'أدعية الحوائج، التحصينات والرزق',
+      'الزيارات الشريفة والمقامات المقدسة',
+    };
+    final fixed = categoryOverride;
+    if (fixed != null && validCategories.contains(fixed)) return fixed;
+    if (isSahifa) return 'الصحيفة السجادية المباركة (نفحات مختارة)';
+    if (fixed == 'الزيارات الشريفة' || isZiyara) {
+      return 'الزيارات الشريفة والمقامات المقدسة';
     }
-    // Legacy/sample entries still use these fallbacks.
-    if (isSahifa || isMunajat) return 'الصحيفة السجادية والمناجيات';
-    if (isZiyara) return 'الزيارات الشريفة';
-    if (isOccasionDua) return 'الأعمال والمناسبات';
-    if (isTaqibat) return 'التعقيبات بعد الصلاة';
-    if (isDayDua || isMorningEveningDua) {
-      return 'الأدعية والأذكار اليومية';
+    if (fixed == 'الأعمال والمناسبات' || isOccasionDua) {
+      return 'أدعية المناسبات والشهور العبادية';
     }
-    return 'الأدعية العامة وأدعية الفرج وصاحب الزمان';
+    if (fixed == 'الأدعية والأذكار اليومية' ||
+        fixed == 'التعقيبات بعد الصلاة' ||
+        isTaqibat ||
+        isDayDua ||
+        isMorningEveningDua) {
+      return 'الورد اليومي والتعقيبات';
+    }
+    if (fixed == 'الأدعية العامة وأدعية الفرج وصاحب الزمان') {
+      return isHajatDua
+          ? 'أدعية الحوائج، التحصينات والرزق'
+          : 'الأدعية الكبرى والمناجاة الشريفة';
+    }
+    if (isHajatDua) return 'أدعية الحوائج، التحصينات والرزق';
+    return 'الأدعية الكبرى والمناجاة الشريفة';
   }
   String get arabicText => lines.where((line) => line.isArabic).map((line) => line.text).join('\n');
 
@@ -186,6 +215,15 @@ class ShiaTextEntry {
         ? json['sourceReference'] as String
         : '',
     categoryOverride: json['category'] is String ? json['category'] as String : null,
+    omittedSourceInstructionCount:
+        json['omittedSourceInstructionCount'] is int
+            ? json['omittedSourceInstructionCount'] as int
+            : 0,
+    omittedSourceBlankRowIds:
+        (json['omittedSourceBlankRowIds'] as List<dynamic>?)
+            ?.whereType<String>()
+            .toList() ??
+        const <String>[],
     lines: ((json['lines'] as List<dynamic>?) ?? const <dynamic>[])
       .whereType<Map<String, dynamic>>().map(ShiaTextLine.fromJson).toList(),
   );
@@ -200,72 +238,95 @@ class ShiaTextData {
   static Future<ShiaTextData>? _coreCache;
   static Future<ShiaTextData>? _sahifaCache;
 
-  /// Loads the original curated 110-text collection without Sahifa entries.
-  /// The unified on-screen library uses [load] to combine this with Sahifa.
   static Future<ShiaTextData> loadCore() => _coreCache ??= _loadAsset(
     'assets/shia_duas/shia_duas.json',
     expectedCount: 110,
-    sahifaOnly: false,
   );
 
   static Future<ShiaTextData> load() => _cache ??= _loadCombined();
 
-  static Future<ShiaTextData> _loadCombined() async {
-    final core = await loadCore();
-    final sahifa = await loadSahifa();
-    final entries = <ShiaTextEntry>[...sahifa.entries, ...core.entries];
-    final slugs = entries.map((entry) => entry.slug).toSet();
-    if (slugs.length != entries.length) {
-      throw const FormatException('The combined religious library contains duplicate identifiers.');
-    }
-    return ShiaTextData(
-      entries: List<ShiaTextEntry>.unmodifiable(entries),
-      sourceProject: core.sourceProject,
-      license: core.license,
-    );
-  }
+  static Future<ShiaTextData> _loadCombined() async => await loadCore();
 
-  static Future<ShiaTextData> loadSahifa() =>
-      _sahifaCache ??= _loadAsset('assets/shia_duas/sahifa_sajjadiya.json', expectedCount: 76, sahifaOnly: true);
+  /// The source manifest preserves 76 Sahifa/Munajat records, but the owner's
+  /// approved 20-item selection has not been identified by stable slugs yet.
+  /// Do not guess which texts are approved or publish all 76 as a substitute.
+  static Future<ShiaTextData> loadSahifa() => _sahifaCache ??= loadCore().then(
+        (data) => ShiaTextData(
+          entries: const <ShiaTextEntry>[],
+          sourceProject: data.sourceProject,
+          license: data.license,
+        ),
+      );
 
   static Future<ShiaTextData> _loadAsset(
     String assetPath, {
     required int expectedCount,
-    required bool sahifaOnly,
   }) async {
     final raw = await rootBundle.loadString(assetPath);
     final decoded = jsonDecode(raw) as Map<String, dynamic>;
     final rawEntries = decoded['entries'] as List<dynamic>;
     final entries = rawEntries.whereType<Map<String, dynamic>>()
         .map(ShiaTextEntry.fromJson).toList();
-
     if (entries.length != expectedCount) {
-      throw FormatException('Expected exactly $expectedCount texts in $assetPath; found ${entries.length}.');
+      throw FormatException(
+        'Expected exactly $expectedCount texts in $assetPath; found ${entries.length}.',
+      );
     }
     final slugs = entries.map((entry) => entry.slug).toSet();
     if (slugs.length != expectedCount || entries.any((entry) => entry.slug.isEmpty)) {
-      throw const FormatException('The religious text collection contains duplicate or empty identifiers.');
+      throw const FormatException(
+        'The religious text collection contains duplicate or empty identifiers.',
+      );
     }
-    if (entries.any((entry) => entry.lines.isEmpty || entry.arabicText.trim().isEmpty)) {
-      throw const FormatException('The religious text collection contains an empty text.');
+    const validCategories = <String>{
+      'الورد اليومي والتعقيبات',
+      'الأدعية الكبرى والمناجاة الشريفة',
+      'أدعية المناسبات والشهور العبادية',
+      'الصحيفة السجادية المباركة (نفحات مختارة)',
+      'أدعية الحوائج، التحصينات والرزق',
+      'الزيارات الشريفة والمقامات المقدسة',
+      'الأدعية والأذكار اليومية',
+      'التعقيبات بعد الصلاة',
+      'الأدعية العامة وأدعية الفرج وصاحب الزمان',
+      'الأعمال والمناسبات',
+      'الزيارات الشريفة',
+    };
+    if (entries.any((entry) => entry.categoryOverride == null ||
+        !validCategories.contains(entry.categoryOverride))) {
+      throw const FormatException(
+        'A religious text is missing a valid fixed category.',
+      );
     }
-    if (entries.any((entry) => entry.categoryOverride == null)) {
-      throw const FormatException('A religious text is missing its fixed category.');
+    if (entries.any((entry) => entry.title.trim().isEmpty ||
+        entry.sourceUrl.trim().isEmpty ||
+        entry.sourceReference.trim().isEmpty ||
+        entry.lines.isEmpty || entry.arabicText.trim().isEmpty)) {
+      throw const FormatException(
+        'The religious text collection contains an entry without a title, source, or Arabic text.',
+      );
     }
-    if (sahifaOnly && entries.any((entry) => entry.categoryOverride != 'الصحيفة السجادية والمناجيات')) {
-      throw const FormatException('The separate Sahifa collection contains a text from another section.');
+    final signatures = <String>{};
+    for (final entry in entries) {
+      final signature = entry.arabicText
+          .replaceAll(RegExp(r'[\u064B-\u065F\u0670\u0640\s،؛,.!?؟:…()\-]'), '')
+          .replaceAll(RegExp(r'[أإآٱ]'), 'ا')
+          .replaceAll('ى', 'ي');
+      if (!signatures.add(signature)) {
+        throw const FormatException(
+          'The religious text collection contains duplicate Arabic texts.',
+        );
+      }
     }
-    if (!sahifaOnly && entries.any((entry) => entry.categoryOverride == 'الصحيفة السجادية والمناجيات')) {
-      throw const FormatException('The 110-text collection must not duplicate the separate Sahifa archive.');
-    }
-
-    final metadata = decoded['metadata'] as Map<String, dynamic>? ?? const <String, dynamic>{};
+    final metadata = decoded['metadata'] as Map<String, dynamic>? ??
+        const <String, dynamic>{};
     return ShiaTextData(
-      entries: entries,
+      entries: List<ShiaTextEntry>.unmodifiable(entries),
       sourceProject: metadata['sourceProject'] is String
           ? metadata['sourceProject'] as String
           : 'مكتبة الأدعية الشيعية',
-      license: metadata['license'] is String ? metadata['license'] as String : 'CC0 1.0 Universal',
+      license: metadata['license'] is String
+          ? metadata['license'] as String
+          : 'المصادر موضحة لكل نص',
     );
   }
 }
@@ -293,39 +354,39 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
     final theme = Theme.of(context);
     IconData icon;
     String description;
-    if (category == 'الصحيفة السجادية والمناجيات') {
-      icon = Icons.menu_book_rounded;
-      description = 'أدعية الصحيفة ومناجاة التوبة والرجاء';
-    } else if (category == 'التعقيبات بعد الصلاة') {
-      icon = Icons.self_improvement_rounded;
-      description = 'أذكار وأعمال بعد الفرائض';
-    } else if (category == 'الأدعية والأذكار اليومية') {
+    if (category == 'الورد اليومي والتعقيبات') {
       icon = Icons.wb_sunny_rounded;
-      description = 'أوراد يومية وأذكار متجددة';
-    } else if (category == 'الأدعية العامة وأدعية الفرج وصاحب الزمان') {
+      description = 'أوراد اليوم وأذكار الصلاة';
+    } else if (category == 'الأدعية الكبرى والمناجاة الشريفة') {
       icon = Icons.volunteer_activism_rounded;
-      description = 'أدعية عامة ودعاء الفرج وصاحب الزمان';
-    } else if (category == 'الأعمال والمناسبات') {
+      description = 'الأدعية الجامعة والمناجاة المأثورة';
+    } else if (category == 'أدعية المناسبات والشهور العبادية') {
       icon = Icons.calendar_month_rounded;
       description = 'أعمال الشهور والمناسبات الدينية';
+    } else if (category == 'الصحيفة السجادية المباركة (نفحات مختارة)') {
+      icon = Icons.menu_book_rounded;
+      description = 'تظهر المختارات بعد تثبيت العناوين المعتمدة';
+    } else if (category == 'أدعية الحوائج، التحصينات والرزق') {
+      icon = Icons.shield_moon_rounded;
+      description = 'أدعية قرآنية ومأثورة للحوائج';
     } else {
       icon = Icons.mosque_rounded;
-      description = 'زيارات شريفة مع مصادرها المتاحة';
+      description = 'الزيارات والمقامات مع مرجع كل نص';
     }
     return Card(
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: () => setState(() => _category = category),
+        onTap: count == 0 ? null : () => setState(() => _category = category),
         child: Padding(
-          padding: const EdgeInsets.all(14),
+          padding: const EdgeInsets.all(12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
                   Container(
-                    width: 44,
-                    height: 44,
+                    width: 40,
+                    height: 40,
                     decoration: BoxDecoration(
                       color: _shiaGold.withValues(alpha: .15),
                       borderRadius: BorderRadius.circular(14),
@@ -336,33 +397,42 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
                   Icon(Icons.chevron_left_rounded, color: theme.colorScheme.onSurfaceVariant),
                 ],
               ),
-              const Spacer(),
+              const SizedBox(height: 8),
               Text(
                 category,
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontWeight: FontWeight.w800,
-                  fontSize: 14,
-                  height: 1.25,
+                  fontSize: 13,
+                  height: 1.2,
                   color: theme.colorScheme.onSurface,
                 ),
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 4),
               Text(
                 description,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  fontSize: 11,
-                  height: 1.3,
+                  fontSize: 10,
+                  height: 1.2,
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 6),
               Text(
-                '$count نصاً',
-                style: const TextStyle(color: _shiaGold, fontWeight: FontWeight.w800, fontSize: 12),
+                count == 0 &&
+                        category == 'الصحيفة السجادية المباركة (نفحات مختارة)'
+                    ? 'بانتظار اعتماد المختارات'
+                    : count == 0
+                        ? 'لا توجد مواد مختارة حالياً'
+                        : '$count نصاً',
+                style: TextStyle(
+                  color: theme.colorScheme.secondary,
+                  fontWeight: FontWeight.w800,
+                  fontSize: 11,
+                ),
               ),
             ],
           ),
@@ -379,20 +449,32 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
   String _category = 'كل النصوص';
   static const _categories = [
     'كل النصوص',
-    'الصحيفة السجادية والمناجيات',
-    'التعقيبات بعد الصلاة',
-    'الأدعية والأذكار اليومية',
-    'الأدعية العامة وأدعية الفرج وصاحب الزمان',
-    'الأعمال والمناسبات',
-    'الزيارات الشريفة',
+    'الورد اليومي والتعقيبات',
+    'الأدعية الكبرى والمناجاة الشريفة',
+    'أدعية المناسبات والشهور العبادية',
+    'الصحيفة السجادية المباركة (نفحات مختارة)',
+    'أدعية الحوائج، التحصينات والرزق',
+    'الزيارات الشريفة والمقامات المقدسة',
   ];
-
   @override void initState() {
     super.initState();
     _sahifaOnly = widget.sahifaOnly;
+    const categoryAliases = <String, String>{
+      'الصحيفة السجادية والمناجيات': 'الصحيفة السجادية المباركة (نفحات مختارة)',
+      'الأدعية والأذكار اليومية': 'الورد اليومي والتعقيبات',
+      'التعقيبات بعد الصلاة': 'الورد اليومي والتعقيبات',
+      'الأدعية العامة والفرج وصاحب الزمان': 'الأدعية الكبرى والمناجاة الشريفة',
+      'الأدعية العامة وأدعية الفرج وصاحب الزمان': 'الأدعية الكبرى والمناجاة الشريفة',
+      'الأعمال والمناسبات': 'أدعية المناسبات والشهور العبادية',
+      'الزيارات الشريفة': 'الزيارات الشريفة والمقامات المقدسة',
+    };
+    final requestedCategory = widget.initialCategory;
+    final mappedCategory = requestedCategory == null
+        ? null
+        : (categoryAliases[requestedCategory] ?? requestedCategory);
     _category = _sahifaOnly
-        ? 'الصحيفة السجادية والمناجيات'
-        : (_categories.contains(widget.initialCategory) ? widget.initialCategory! : _categories.first);
+        ? 'الصحيفة السجادية المباركة (نفحات مختارة)'
+        : (_categories.contains(mappedCategory) ? mappedCategory! : _categories.first);
     _future = widget.dataFuture ??
         (_sahifaOnly ? ShiaTextData.loadSahifa() : ShiaTextData.load());
   }
@@ -401,7 +483,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
   void _submitSearch() => setState(() => _query = _normalize(_controller.text.trim()));
 
   @override Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: Text(_sahifaOnly ? 'الصحيفة السجادية والمناجيات' : 'الأدعية والزيارات')),
+    appBar: AppBar(title: Text(_sahifaOnly ? 'الصحيفة السجادية المباركة (نفحات مختارة)' : 'الأدعية والزيارات')),
     body: FutureBuilder<ShiaTextData>(
       future: _future,
       builder: (context, snapshot) {
@@ -410,9 +492,13 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
             setState(() {
               if (_sahifaOnly) {
                 ShiaTextData._sahifaCache = null;
+                ShiaTextData._cache = null;
+                ShiaTextData._coreCache = null;
                 _future = ShiaTextData.loadSahifa();
               } else {
                 ShiaTextData._cache = null;
+                ShiaTextData._coreCache = null;
+                ShiaTextData._sahifaCache = null;
                 _future = ShiaTextData.load();
               }
             });
@@ -430,10 +516,6 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
               entry.lines.where((line) => line.isArabic).any((line) => _normalize(line.text).contains(_query));
         }).toList();
         final showCategoryOverview = !_sahifaOnly && _category == 'كل النصوص' && _query.isEmpty;
-        final sahifaCount = data.entries.where((entry) => entry.category == 'الصحيفة السجادية والمناجيات').length;
-        final dailyCount = data.entries.where((entry) => entry.category == 'الأدعية والأذكار اليومية').length;
-        final taqibatCount = data.entries.where((entry) => entry.category == 'التعقيبات بعد الصلاة').length;
-        final ziyaratCount = data.entries.where((entry) => entry.category == 'الزيارات الشريفة').length;
         return Column(children: [
           Container(
             margin: const EdgeInsets.fromLTRB(16, 12, 16, 4),
@@ -448,15 +530,17 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
               const SizedBox(height: 6),
               Text(
                 _sahifaOnly
-                    ? '${data.entries.length} نصاً محفوظاً من الصحيفة السجادية والمناجيات'
-                    : '${data.entries.length} نصاً • $sahifaCount صحيفة ومناجاة • $ziyaratCount زيارة • $dailyCount يومي • $taqibatCount تعقيبات',
+                    ? (data.entries.isEmpty
+                        ? 'لم تُعتمد قائمة العشرين المختارة بعد'
+                        : '${data.entries.length} نصاً من الصحيفة السجادية والمناجيات')
+                    : '${data.entries.length} نصاً في الأقسام المنشورة',
                 style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.5),
               ),
               const SizedBox(height: 6),
               Text(
                 _sahifaOnly
-                    ? 'الصحيفة السجادية والمناجيات محفوظة هنا بقسم مستقل ولا تدخل ضمن مجموعة الـ١١٠ المختارة.'
-                    : 'تصفح الصحيفة والمناجيات والأدعية اليومية والعامة والزيارات وأعمال المناسبات من مكتبة واحدة.',
+                    ? 'لم تُنشر نصوص الصحيفة قبل تثبيت معرفات العشرين المختارة. بقيت سجلات المصدر محفوظة للمراجعة.'
+                    : 'تصفح الأقسام المنشورة، مع مرجع النص بجانب محتواه. قسم الصحيفة ينتظر اعتماد المختارات.',
                 style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11, height: 1.5),
               ),
             ]),
@@ -480,7 +564,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 3),
             child: Row(children: [
-              ...(_sahifaOnly ? const <String>['الصحيفة السجادية والمناجيات'] : _categories)
+              ...(_sahifaOnly ? const <String>['الصحيفة السجادية المباركة (نفحات مختارة)'] : _categories)
             ].map((choice) => Padding(
               padding: const EdgeInsets.only(left: 8),
               child: ChoiceChip(
@@ -501,7 +585,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
                     crossAxisCount: 2,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
-                    childAspectRatio: 1.05,
+                    childAspectRatio: .74,
                     children: [
                       for (final category in _categories.skip(1))
                         _categoryCard(
@@ -517,7 +601,9 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
                           padding: const EdgeInsets.all(24),
                           child: Column(mainAxisSize: MainAxisSize.min, children: [
                             Text(
-                              'ماكو نصوص ضمن هذا القسم في مصدر الأدعية الحالي.',
+                              _sahifaOnly
+                                  ? 'قائمة العشرين المختارة من الصحيفة السجادية بانتظار تثبيت العناوين والمعرفات المعتمدة.'
+                                  : 'ماكو نصوص ضمن هذا القسم في مصدر الأدعية الحالي.',
                               textAlign: TextAlign.center,
                               style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.6),
                             ),
@@ -713,6 +799,20 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
                   decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface, borderRadius: BorderRadius.circular(18), border: Border.all(color: _shiaGold.withValues(alpha: .28))),
                   child: Text(widget.entry.displayTitle, textAlign: TextAlign.center, style: const TextStyle(color: _shiaGold, fontSize: 22, fontWeight: FontWeight.w800, height: 1.6)),
                 ),
+                if (widget.entry.omittedSourceInstructionCount > 0 ||
+                    widget.entry.omittedSourceBlankRowIds.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Text(
+                      'ملاحظة تحريرية: لم تُعرض ${widget.entry.omittedSourceInstructionCount} إرشادات غير عربية. مواضع المصدر الفارغة التي لم يتوفر نصها: ${widget.entry.omittedSourceBlankRowIds.isEmpty ? 'لا توجد' : widget.entry.omittedSourceBlankRowIds.join('، ')}. القراءة هنا تعرض الأسطر العربية المتاحة فقط.',
+                      textDirection: TextDirection.rtl,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        fontSize: 11,
+                        height: 1.6,
+                      ),
+                    ),
+                  ),
                 ...lines.map((line) {
                   final arabic = line.isArabic;
                   final persian = line.isPersian;
@@ -720,15 +820,35 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
                   final translation = line.isTranslation;
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 12),
-                    child: SelectableText(
-                      line.text,
-                      textDirection: rtl ? TextDirection.rtl : TextDirection.ltr,
-                      textAlign: rtl ? TextAlign.justify : TextAlign.start,
-                      style: TextStyle(
-                        fontSize: rtl ? _fontSize : _fontSize * .75,
-                        height: rtl ? 2.0 : 1.6,
-                        color: translation ? Theme.of(context).colorScheme.onSurfaceVariant : Theme.of(context).colorScheme.onSurface,
-                      ),
+                    child: Row(
+                      textDirection: TextDirection.rtl,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (line.displayId.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsetsDirectional.only(end: 7, top: 8),
+                            child: Text(
+                              line.displayId,
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.secondary,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                        Expanded(
+                          child: SelectableText(
+                            line.text,
+                            textDirection: rtl ? TextDirection.rtl : TextDirection.ltr,
+                            textAlign: rtl ? TextAlign.justify : TextAlign.start,
+                            style: TextStyle(
+                              fontSize: rtl ? _fontSize : _fontSize * .75,
+                              height: rtl ? 2.0 : 1.6,
+                              color: translation ? Theme.of(context).colorScheme.onSurfaceVariant : Theme.of(context).colorScheme.onSurface,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 }),
@@ -746,8 +866,8 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
                     children: [
                       Text(
                         widget.entry.sourceReference.trim().isNotEmpty
-                            ? 'المرجع المنقول عنه: ${widget.entry.sourceReference}'
-                            : 'المرجع الأصلي: غير موثّق في بيانات هذا النص',
+                            ? 'الإحالة المسجلة في بيانات النص: ${widget.entry.sourceReference}'
+                            : 'لا توجد إحالة نصية مسجلة في بيانات هذا النص',
                         textDirection: TextDirection.rtl,
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.onSurface,
@@ -758,7 +878,7 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'يُعرض موضع المرجع كما ورد في بيانات النص، ولا يُعدّ توثيقاً مستقلاً للرواية ما لم يتضمن كتاباً وموضعاً يمكن مراجعتهما.',
+                        'هذه إحالة واردة في مجموعة البيانات، وليست بحد ذاتها مقابلة مستقلة على طبعة أصلية أو حكماً على صحة نسبة النص.',
                         textDirection: TextDirection.rtl,
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.onSurfaceVariant,

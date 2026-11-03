@@ -1,7 +1,7 @@
 {
   "sourceProject": "KazTronics/AhlulBayt_Treasures",
-  "downloadUrl": "https://raw.githubusercontent.com/KazTronics/AhlulBayt_Treasures/main/duas_data.json",
-  "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+  "downloadUrl": "https://raw.githubusercontent.com/KazTronics/AhlulBayt_Treasures/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
+  "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
   "datasetLicense": "Public Domain (as declared in the source dataset metadata)",
   "repositoryLicense": "MIT",
   "expectedCount": 110,
@@ -21,7 +21,7 @@
       "alternateName": "",
       "category": "الأدعية والأذكار اليومية",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 11",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 282,
@@ -31,7 +31,7 @@
       "alternateName": "",
       "category": "التعقيبات بعد الصلاة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 282",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 283,
@@ -41,7 +41,7 @@
       "alternateName": "",
       "category": "التعقيبات بعد الصلاة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 283",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 284,
@@ -51,7 +51,7 @@
       "alternateName": "",
       "category": "التعقيبات بعد الصلاة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 284",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 285,
@@ -61,7 +61,7 @@
       "alternateName": "",
       "category": "التعقيبات بعد الصلاة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 285",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 286,
@@ -71,7 +71,7 @@
       "alternateName": "",
       "category": "التعقيبات بعد الصلاة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 286",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 296,
@@ -81,7 +81,7 @@
       "alternateName": "",
       "category": "الأدعية والأذكار اليومية",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 296",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 298,
@@ -91,7 +91,7 @@
       "alternateName": "",
       "category": "الأدعية والأذكار اليومية",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 298",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 300,
@@ -101,7 +101,7 @@
       "alternateName": "",
       "category": "الأدعية والأذكار اليومية",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 300",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 301,
@@ -111,7 +111,7 @@
       "alternateName": "",
       "category": "الأدعية والأذكار اليومية",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 301",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 302,
@@ -121,7 +121,7 @@
       "alternateName": "",
       "category": "الأدعية والأذكار اليومية",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 302",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 8,
@@ -131,7 +131,7 @@
       "alternateName": "",
       "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 8",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 9,
@@ -141,7 +141,7 @@
       "alternateName": "",
       "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 9",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 10,
@@ -151,7 +151,7 @@
       "alternateName": "",
       "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 10",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 13,
@@ -161,7 +161,7 @@
       "alternateName": "",
       "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 13",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 14,
@@ -171,7 +171,7 @@
       "alternateName": "",
       "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 14",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 17,
@@ -181,7 +181,7 @@
       "alternateName": "",
       "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 17",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 53,
@@ -191,7 +191,7 @@
       "alternateName": "",
       "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 53",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 111,
@@ -201,7 +201,7 @@
       "alternateName": "",
       "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 111",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 112,
@@ -211,7 +211,7 @@
       "alternateName": "",
       "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 112",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 360,
@@ -221,7 +221,7 @@
       "alternateName": "",
       "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 360",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 4,
@@ -231,7 +231,7 @@
       "alternateName": "",
       "category": "الأعمال والمناسبات",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 4",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 97,
@@ -241,7 +241,7 @@
       "alternateName": "",
       "category": "الأعمال والمناسبات",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 97",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 149,
@@ -251,7 +251,7 @@
       "alternateName": "",
       "category": "الأعمال والمناسبات",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 149",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 161,
@@ -261,7 +261,7 @@
       "alternateName": "",
       "category": "الأعمال والمناسبات",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 161",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 181,
@@ -271,7 +271,7 @@
       "alternateName": "",
       "category": "الأعمال والمناسبات",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 181",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 195,
@@ -281,7 +281,7 @@
       "alternateName": "",
       "category": "الأعمال والمناسبات",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 195",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 416,
@@ -291,7 +291,7 @@
       "alternateName": "",
       "category": "الأعمال والمناسبات",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 416",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 12,
@@ -301,7 +301,7 @@
       "alternateName": "",
       "category": "الزيارات الشريفة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 12",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 21,
@@ -311,7 +311,7 @@
       "alternateName": "",
       "category": "الزيارات الشريفة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 21",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 22,
@@ -321,7 +321,7 @@
       "alternateName": "",
       "category": "الزيارات الشريفة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 22",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 23,
@@ -331,7 +331,7 @@
       "alternateName": "",
       "category": "الزيارات الشريفة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 23",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 108,
@@ -341,7 +341,7 @@
       "alternateName": "",
       "category": "الزيارات الشريفة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 108",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 113,
@@ -351,7 +351,7 @@
       "alternateName": "",
       "category": "الزيارات الشريفة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل البيانات رقم 113",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 15,
@@ -361,7 +361,7 @@
       "alternateName": "",
       "category": "الزيارات الشريفة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 15",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 24,
@@ -371,7 +371,7 @@
       "alternateName": "",
       "category": "الزيارات الشريفة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 24",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 42,
@@ -381,7 +381,7 @@
       "alternateName": "",
       "category": "الزيارات الشريفة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 42",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 98,
@@ -391,7 +391,7 @@
       "alternateName": "",
       "category": "الزيارات الشريفة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 98",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 114,
@@ -401,7 +401,7 @@
       "alternateName": "",
       "category": "الزيارات الشريفة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 114",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 119,
@@ -411,7 +411,7 @@
       "alternateName": "",
       "category": "الزيارات الشريفة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 119",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 120,
@@ -421,7 +421,7 @@
       "alternateName": "",
       "category": "الزيارات الشريفة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 120",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 121,
@@ -431,7 +431,7 @@
       "alternateName": "",
       "category": "الزيارات الشريفة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 121",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 127,
@@ -441,7 +441,7 @@
       "alternateName": "",
       "category": "الزيارات الشريفة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 127",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 152,
@@ -451,7 +451,7 @@
       "alternateName": "",
       "category": "الزيارات الشريفة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 152",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 192,
@@ -461,7 +461,7 @@
       "alternateName": "",
       "category": "الزيارات الشريفة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 192",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 193,
@@ -471,7 +471,7 @@
       "alternateName": "",
       "category": "الزيارات الشريفة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 193",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 304,
@@ -481,7 +481,7 @@
       "alternateName": "",
       "category": "الزيارات الشريفة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 304",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 316,
@@ -491,7 +491,7 @@
       "alternateName": "",
       "category": "الزيارات الشريفة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 316",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 363,
@@ -501,7 +501,7 @@
       "alternateName": "",
       "category": "الزيارات الشريفة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 363",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 421,
@@ -511,7 +511,7 @@
       "alternateName": "",
       "category": "الزيارات الشريفة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 421",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 425,
@@ -521,7 +521,7 @@
       "alternateName": "",
       "category": "الزيارات الشريفة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 425",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 432,
@@ -531,7 +531,7 @@
       "alternateName": "",
       "category": "الزيارات الشريفة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 432",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 436,
@@ -541,7 +541,7 @@
       "alternateName": "",
       "category": "الزيارات الشريفة",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 436",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 297,
@@ -551,7 +551,7 @@
       "alternateName": "",
       "category": "الأدعية والأذكار اليومية",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 297",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 299,
@@ -561,7 +561,7 @@
       "alternateName": "",
       "category": "الأدعية والأذكار اليومية",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 299",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 303,
@@ -571,7 +571,7 @@
       "alternateName": "",
       "category": "الأدعية والأذكار اليومية",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 303",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 305,
@@ -581,7 +581,7 @@
       "alternateName": "",
       "category": "الأدعية والأذكار اليومية",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 305",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 307,
@@ -591,7 +591,7 @@
       "alternateName": "",
       "category": "الأدعية والأذكار اليومية",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 307",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 309,
@@ -601,7 +601,7 @@
       "alternateName": "",
       "category": "الأدعية والأذكار اليومية",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 309",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 311,
@@ -611,7 +611,7 @@
       "alternateName": "",
       "category": "الأدعية والأذكار اليومية",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 311",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 313,
@@ -621,7 +621,7 @@
       "alternateName": "",
       "category": "الأدعية والأذكار اليومية",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 313",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 315,
@@ -631,7 +631,7 @@
       "alternateName": "",
       "category": "الأدعية والأذكار اليومية",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 315",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 317,
@@ -641,7 +641,7 @@
       "alternateName": "",
       "category": "الأدعية والأذكار اليومية",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 317",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 318,
@@ -651,7 +651,7 @@
       "alternateName": "",
       "category": "الأدعية والأذكار اليومية",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 318",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 319,
@@ -661,7 +661,7 @@
       "alternateName": "",
       "category": "الأدعية والأذكار اليومية",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 319",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 365,
@@ -671,7 +671,7 @@
       "alternateName": "",
       "category": "الأدعية والأذكار اليومية",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 365",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 366,
@@ -681,7 +681,7 @@
       "alternateName": "",
       "category": "الأدعية والأذكار اليومية",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 366",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 368,
@@ -691,7 +691,7 @@
       "alternateName": "",
       "category": "الأدعية والأذكار اليومية",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 368",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 369,
@@ -701,7 +701,7 @@
       "alternateName": "",
       "category": "الأدعية والأذكار اليومية",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 369",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 375,
@@ -711,7 +711,7 @@
       "alternateName": "",
       "category": "الأدعية والأذكار اليومية",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 375",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 376,
@@ -721,7 +721,7 @@
       "alternateName": "",
       "category": "الأدعية والأذكار اليومية",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 376",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 378,
@@ -731,7 +731,7 @@
       "alternateName": "",
       "category": "الأدعية والأذكار اليومية",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 378",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 16,
@@ -741,7 +741,7 @@
       "alternateName": "",
       "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 16",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 18,
@@ -751,7 +751,7 @@
       "alternateName": "",
       "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 18",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 19,
@@ -761,7 +761,7 @@
       "alternateName": "",
       "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 19",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 20,
@@ -771,7 +771,7 @@
       "alternateName": "",
       "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 20",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 25,
@@ -781,7 +781,7 @@
       "alternateName": "",
       "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 25",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 107,
@@ -791,7 +791,7 @@
       "alternateName": "",
       "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 107",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 131,
@@ -801,7 +801,7 @@
       "alternateName": "",
       "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 131",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 159,
@@ -811,7 +811,7 @@
       "alternateName": "",
       "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 159",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 355,
@@ -821,7 +821,7 @@
       "alternateName": "",
       "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 355",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 356,
@@ -831,7 +831,7 @@
       "alternateName": "",
       "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 356",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 357,
@@ -841,7 +841,7 @@
       "alternateName": "",
       "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 357",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 358,
@@ -851,7 +851,7 @@
       "alternateName": "",
       "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 358",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 362,
@@ -861,7 +861,7 @@
       "alternateName": "",
       "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 362",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 329,
@@ -871,7 +871,7 @@
       "alternateName": "",
       "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 329",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 330,
@@ -881,7 +881,7 @@
       "alternateName": "",
       "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 330",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 332,
@@ -891,7 +891,7 @@
       "alternateName": "",
       "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 332",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 352,
@@ -901,7 +901,7 @@
       "alternateName": "",
       "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 352",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 353,
@@ -911,7 +911,7 @@
       "alternateName": "",
       "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 353",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 354,
@@ -921,7 +921,7 @@
       "alternateName": "",
       "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 354",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 395,
@@ -931,7 +931,7 @@
       "alternateName": "",
       "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 395",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 398,
@@ -941,7 +941,7 @@
       "alternateName": "",
       "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 398",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 405,
@@ -951,7 +951,7 @@
       "alternateName": "",
       "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 405",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 410,
@@ -961,7 +961,7 @@
       "alternateName": "",
       "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 410",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 411,
@@ -971,7 +971,7 @@
       "alternateName": "",
       "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 411",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 415,
@@ -981,7 +981,7 @@
       "alternateName": "",
       "category": "الأدعية العامة وأدعية الفرج وصاحب الزمان",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 415",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 26,
@@ -991,7 +991,7 @@
       "alternateName": "",
       "category": "الأعمال والمناسبات",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 26",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 27,
@@ -1001,7 +1001,7 @@
       "alternateName": "",
       "category": "الأعمال والمناسبات",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 27",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 35,
@@ -1011,7 +1011,7 @@
       "alternateName": "",
       "category": "الأعمال والمناسبات",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 35",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 45,
@@ -1021,7 +1021,7 @@
       "alternateName": "",
       "category": "الأعمال والمناسبات",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 45",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 48,
@@ -1031,7 +1031,7 @@
       "alternateName": "",
       "category": "الأعمال والمناسبات",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 48",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 101,
@@ -1041,7 +1041,7 @@
       "alternateName": "",
       "category": "الأعمال والمناسبات",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 101",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 102,
@@ -1051,7 +1051,7 @@
       "alternateName": "",
       "category": "الأعمال والمناسبات",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 102",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 103,
@@ -1061,7 +1061,7 @@
       "alternateName": "",
       "category": "الأعمال والمناسبات",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 103",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 134,
@@ -1071,7 +1071,7 @@
       "alternateName": "",
       "category": "الأعمال والمناسبات",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 134",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 140,
@@ -1081,7 +1081,7 @@
       "alternateName": "",
       "category": "الأعمال والمناسبات",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 140",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 162,
@@ -1091,7 +1091,7 @@
       "alternateName": "",
       "category": "الأعمال والمناسبات",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 162",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 172,
@@ -1101,7 +1101,7 @@
       "alternateName": "",
       "category": "الأعمال والمناسبات",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 172",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 183,
@@ -1111,7 +1111,7 @@
       "alternateName": "",
       "category": "الأعمال والمناسبات",
       "sourceReference": "مجموعة أدعية أهل البيت، سجل المصدر رقم 183",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     }
   ],
   "sahifaCount": 76,
@@ -1124,7 +1124,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 1",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 204,
@@ -1134,7 +1134,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 2",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 205,
@@ -1144,7 +1144,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 3",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 206,
@@ -1154,7 +1154,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 4",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 207,
@@ -1164,7 +1164,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 5",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 208,
@@ -1174,7 +1174,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 6",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 209,
@@ -1184,7 +1184,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 7",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 210,
@@ -1194,7 +1194,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 8",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 211,
@@ -1204,7 +1204,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 9",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 212,
@@ -1214,7 +1214,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 10",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 213,
@@ -1224,7 +1224,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 11",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 214,
@@ -1234,7 +1234,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 12",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 215,
@@ -1244,7 +1244,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 13",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 216,
@@ -1254,7 +1254,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 14",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 217,
@@ -1264,7 +1264,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 15",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 218,
@@ -1274,7 +1274,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 16",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 219,
@@ -1284,7 +1284,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 17",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 220,
@@ -1294,7 +1294,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 18",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 221,
@@ -1304,7 +1304,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 19",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 125,
@@ -1314,7 +1314,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 20",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 222,
@@ -1324,7 +1324,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 21",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 223,
@@ -1334,7 +1334,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 22",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 224,
@@ -1344,7 +1344,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 23",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 225,
@@ -1354,7 +1354,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 24",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 226,
@@ -1364,7 +1364,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 25",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 227,
@@ -1374,7 +1374,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 26",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 228,
@@ -1384,7 +1384,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 27",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 229,
@@ -1394,7 +1394,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 28",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 230,
@@ -1404,7 +1404,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 29",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 231,
@@ -1414,7 +1414,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 30",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 232,
@@ -1424,7 +1424,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 31",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 233,
@@ -1434,7 +1434,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 32",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 234,
@@ -1444,7 +1444,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 33",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 235,
@@ -1454,7 +1454,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 34",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 236,
@@ -1464,7 +1464,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 35",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 237,
@@ -1474,7 +1474,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 36",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 238,
@@ -1484,7 +1484,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 37",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 239,
@@ -1494,7 +1494,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 38",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 240,
@@ -1504,7 +1504,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 39",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 241,
@@ -1514,7 +1514,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 40",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 242,
@@ -1524,7 +1524,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 41",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 243,
@@ -1534,7 +1534,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 42",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 244,
@@ -1544,7 +1544,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 43",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 245,
@@ -1554,7 +1554,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 44",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 246,
@@ -1564,7 +1564,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 45",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 247,
@@ -1574,7 +1574,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 46",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 130,
@@ -1584,7 +1584,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 47",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 190,
@@ -1594,7 +1594,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 48",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 248,
@@ -1604,7 +1604,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 49",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 249,
@@ -1614,7 +1614,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 50",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 250,
@@ -1624,7 +1624,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 51",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 251,
@@ -1634,7 +1634,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 52",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 252,
@@ -1644,7 +1644,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 53",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 253,
@@ -1654,7 +1654,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 54",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 254,
@@ -1664,7 +1664,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 55",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 255,
@@ -1674,7 +1674,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 56",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 256,
@@ -1684,7 +1684,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 57",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 257,
@@ -1694,7 +1694,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 58",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 258,
@@ -1704,7 +1704,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 59",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 259,
@@ -1714,7 +1714,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 60",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 260,
@@ -1724,7 +1724,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، الدعاء رقم 61",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 264,
@@ -1734,7 +1734,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، المناجاة رقم 1",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 265,
@@ -1744,7 +1744,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، المناجاة رقم 2",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 266,
@@ -1754,7 +1754,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، المناجاة رقم 3",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 267,
@@ -1764,7 +1764,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، المناجاة رقم 4",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 268,
@@ -1774,7 +1774,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، المناجاة رقم 5",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 269,
@@ -1784,7 +1784,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، المناجاة رقم 6",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 270,
@@ -1794,7 +1794,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، المناجاة رقم 7",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 271,
@@ -1804,7 +1804,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، المناجاة رقم 8",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 272,
@@ -1814,7 +1814,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، المناجاة رقم 9",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 273,
@@ -1824,7 +1824,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، المناجاة رقم 10",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 274,
@@ -1834,7 +1834,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، المناجاة رقم 11",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 275,
@@ -1844,7 +1844,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، المناجاة رقم 12",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 276,
@@ -1854,7 +1854,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، المناجاة رقم 13",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 277,
@@ -1864,7 +1864,7 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، المناجاة رقم 14",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     },
     {
       "sourceId": 278,
@@ -1874,7 +1874,9 @@
       "alternateName": "",
       "category": "الصحيفة السجادية والمناجيات",
       "sourceReference": "الصحيفة السجادية، المناجاة رقم 15",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
     }
-  ]
+  ],
+  "sourceCommit": "a59bd5f8fe078532622a08ea60c19d164fb425cb",
+  "sourceVersion": "1.0.1"
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'faith_library_pages.dart';
 
 const _faithGold = Color(0xFFD9B66D);
 
@@ -86,47 +85,11 @@ class FaithServicesPage extends StatelessWidget {
           onTap: () => openFaithSource(context, _tafsirUrl),
         ),
         _ServiceTile(
-          icon: Icons.explore_rounded,
-          title: 'الاستخارة القرآنية — إرشاد شرعي',
-          description: 'إرشادات قبل الاستخارة، من دون توليد نتيجة عشوائية أو الادعاء بمعرفة الغيب.',
-          actionLabel: 'قراءة الإرشادات',
-          onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (_) => const Directionality(
-              textDirection: TextDirection.rtl,
-              child: IstikharaGuidePage(),
-            ),
-          )),
-        ),
-        _ServiceTile(
           icon: Icons.mosque_rounded,
           title: 'دليل مناسك الحج والعمرة',
           description: 'مرجع المناسك المنشور على موقع مكتب السيد القائد. الأحكام التفصيلية تُراجع وفق مرجع التقليد.',
           actionLabel: 'فتح كتاب المناسك',
           onTap: () => openFaithSource(context, _hajjUrl),
-        ),
-        _ServiceTile(
-          icon: Icons.directions_walk_rounded,
-          title: 'دليل المشاية وزوار الأربعين',
-          description: 'قائمة تحضير وتذكير محلية. الخريطة الحية ومسارات الخدمات الدقيقة غير مضمّنة حالياً.',
-          actionLabel: 'فتح دليل الاستعداد',
-          onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (_) => const Directionality(
-              textDirection: TextDirection.rtl,
-              child: ArbaeenGuidePage(),
-            ),
-          )),
-        ),
-        _ServiceTile(
-          icon: Icons.format_quote_rounded,
-          title: 'نهج البلاغة والحِكم',
-          description: 'مختارات من حكم أمير المؤمنين علي عليه السلام باللغة العربية، مع معانٍ مبسطة وروابط للمصادر. هذه مختارات وليست النسخة الكاملة من الكتاب.',
-          actionLabel: 'قراءة الحكم',
-          onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (_) => const Directionality(
-              textDirection: TextDirection.rtl,
-              child: NahjAlBalaghaPage(),
-            ),
-          )),
         ),
         SizedBox(height: 12),
         Container(

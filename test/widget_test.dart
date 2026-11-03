@@ -1454,9 +1454,10 @@ void main() {
     expect(find.text('114'), findsOneWidget);
 
     await tester.pageBack();
-    // The home dashboard contains live animated elements, so settling every
-    // frame is not a valid navigation wait. Advance only the route transition.
-    await tester.pump(const Duration(milliseconds: 350));
+    // pageBack schedules the reverse route animation; pump once to start it,
+    // then advance time explicitly because the home dashboard has live tickers.
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 450));
     await tester.pump();
     await tester.tap(find.text('الأدعية'));
     await tester.pump();

@@ -43,6 +43,7 @@ class ShiaTextEntry {
     this.sourceReference = '',
     this.categoryOverride,
     this.omittedSourceInstructionCount = 0,
+    this.omittedSourceBlankRowIds = const <String>[],
   });
   final String slug;
   final String title;
@@ -52,6 +53,7 @@ class ShiaTextEntry {
   final String sourceReference;
   final String? categoryOverride;
   final int omittedSourceInstructionCount;
+  final List<String> omittedSourceBlankRowIds;
   final List<ShiaTextLine> lines;
   String get displayTitle {
     final candidate = alternateName.trim().isNotEmpty
@@ -217,6 +219,11 @@ class ShiaTextEntry {
         json['omittedSourceInstructionCount'] is int
             ? json['omittedSourceInstructionCount'] as int
             : 0,
+    omittedSourceBlankRowIds:
+        (json['omittedSourceBlankRowIds'] as List<dynamic>?)
+            ?.whereType<String>()
+            .toList() ??
+        const <String>[],
     lines: ((json['lines'] as List<dynamic>?) ?? const <dynamic>[])
       .whereType<Map<String, dynamic>>().map(ShiaTextLine.fromJson).toList(),
   );
@@ -792,11 +799,12 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
                   decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface, borderRadius: BorderRadius.circular(18), border: Border.all(color: _shiaGold.withValues(alpha: .28))),
                   child: Text(widget.entry.displayTitle, textAlign: TextAlign.center, style: const TextStyle(color: _shiaGold, fontSize: 22, fontWeight: FontWeight.w800, height: 1.6)),
                 ),
-                if (widget.entry.omittedSourceInstructionCount > 0)
+                if (widget.entry.omittedSourceInstructionCount > 0 ||
+                    widget.entry.omittedSourceBlankRowIds.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 12),
                     child: Text(
-                      'ملاحظة تحريرية: تحتوي بيانات المصدر على ${widget.entry.omittedSourceInstructionCount} أسطر إرشادية غير عربية لم تُعرض هنا؛ هذه الصفحة تعرض الأسطر العربية فقط.',
+                      'ملاحظة تحريرية: لم تُعرض ${widget.entry.omittedSourceInstructionCount} إرشادات غير عربية. مواضع المصدر الفارغة التي لم يتوفر نصها: ${widget.entry.omittedSourceBlankRowIds.isEmpty ? 'لا توجد' : widget.entry.omittedSourceBlankRowIds.join('، ')}. القراءة هنا تعرض الأسطر العربية المتاحة فقط.',
                       textDirection: TextDirection.rtl,
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onSurfaceVariant,

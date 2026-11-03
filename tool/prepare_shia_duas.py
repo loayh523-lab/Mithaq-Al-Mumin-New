@@ -164,6 +164,21 @@ def main() -> None:
                 and isinstance(row.get("instruction"), str)
                 and row.get("instruction", "").strip()
             )
+            omitted_source_blank_row_ids = [
+                str(row.get("show_id") or "").strip()
+                for row in rows
+                if isinstance(row, dict)
+                and not str(row.get("arabic") or "").strip()
+                and not str(row.get("instruction") or "").strip()
+                and not str(row.get("title") or "").strip()
+            ]
+            if collection_name == "curated" and omitted_source_blank_row_ids:
+                raise SystemExit(
+                    f"Core published text {slug} contains blank source rows: "
+                    f"{omitted_source_blank_row_ids!r}."
+                )
+            if any(value and not value.isdecimal() for value in omitted_source_blank_row_ids):
+                raise SystemExit(f"Blank source rows have invalid display IDs for {slug}.")
             lines = []
             for row in rows:
                 if not isinstance(row, dict):
@@ -236,6 +251,7 @@ def main() -> None:
                 "sourceUrl": source_url,
                 "type": prayer_type,
                 "omittedSourceInstructionCount": omitted_source_instruction_count,
+                "omittedSourceBlankRowIds": omitted_source_blank_row_ids,
                 "lines": lines,
             }
             if collection_name == "curated":
@@ -260,6 +276,10 @@ def main() -> None:
         item["omittedSourceInstructionCount"]
         for item in (*prepared, *prepared_sahifa)
     )
+    omitted_blank_row_total = sum(
+        len(item["omittedSourceBlankRowIds"])
+        for item in (*prepared, *prepared_sahifa)
+    )
     common_metadata = {
         "sourceProject": "KazTronics/AhlulBayt_Treasures",
         "sourceVersion": SOURCE_VERSION,
@@ -267,6 +287,7 @@ def main() -> None:
         "sourceIndex": SOURCE_URL,
         "sourcePage": SOURCE_PAGE,
         "omittedSourceInstructionCount": omitted_instruction_total,
+        "omittedSourceBlankRowCount": omitted_blank_row_total,
         "contentSource": "Shia Devotions dataset; source record IDs are retained in each entry's reference",
         "license": "Text data declared Public Domain by the dataset; repository code is MIT",
         "duplicateTextsRemoved": 0,

@@ -1228,6 +1228,7 @@ void main() {
       sourceUrl: 'https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json',
       sourceReference: 'مجموعة أدعية أهل البيت، سجل البيانات رقم 11',
       omittedSourceInstructionCount: 2,
+      omittedSourceBlankRowIds: const <String>['28', '29'],
       lines: <ShiaTextLine>[
         ShiaTextLine(index: 1, displayId: '7', kind: 'arabic', text: 'السلام عليكم'),
       ],
@@ -1243,7 +1244,8 @@ void main() {
     expect(find.textContaining('ليست بحد ذاتها مقابلة مستقلة'), findsOneWidget);
     expect(find.textContaining('المرجع المنقول عنه:'), findsNothing);
     expect(find.text('7'), findsOneWidget);
-    expect(find.textContaining('2 أسطر إرشادية غير عربية لم تُعرض هنا'), findsOneWidget);
+    expect(find.textContaining('لم تُعرض 2 إرشادات غير عربية'), findsOneWidget);
+    expect(find.textContaining('28، 29'), findsOneWidget);
     expect(find.byTooltip('إضافة إلى المفضلة'), findsOneWidget);
     await tester.tap(find.byTooltip('إضافة إلى المفضلة'));
     await tester.pumpAndSettle();

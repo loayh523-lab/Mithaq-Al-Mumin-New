@@ -1454,9 +1454,17 @@ void main() {
     expect(find.text('114'), findsOneWidget);
 
     await tester.pageBack();
-    await tester.pumpAndSettle();
+    // The home dashboard contains live animated elements, so settling every
+    // frame is not a valid navigation wait. Advance only the route transition.
+    await tester.pump(const Duration(milliseconds: 350));
+    await tester.pump();
     await tester.tap(find.text('الأدعية'));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 150)),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
     expect(find.text('الأدعية والزيارات'), findsOneWidget);
   });
 

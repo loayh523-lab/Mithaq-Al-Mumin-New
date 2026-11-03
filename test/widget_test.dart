@@ -917,6 +917,9 @@ void main() {
     await tester.pumpAndSettle();
     expect(calculationNote, findsOneWidget);
     expect(find.textContaining('زاوية المغرب تقدير فلكي وليست وحدها حكماً بدخول الوقت'), findsOneWidget);
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, 1600));
+    await tester.pumpAndSettle();
+    expect(find.text('إمساكية رمضان'), findsOneWidget);
     await tester.tap(find.text('إمساكية رمضان'));
     await tester.pumpAndSettle();
     expect(find.text('إمساكية تقديرية — قلعة سكر / العراق'), findsOneWidget);

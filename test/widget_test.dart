@@ -1415,12 +1415,13 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('مصدر نص القرآن — Tanzil'), findsOneWidget);
     await tester.scrollUntilVisible(
-      find.textContaining('الأذان من العتبة العلوية المقدسة بصوت الشيخ شبّر معلة'),
+      find.textContaining('نسبة هذا الملف إلى قارئ أو جهة محددة لم تُحسم بعد'),
       250,
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    expect(find.textContaining('الأذان من العتبة العلوية المقدسة بصوت الشيخ شبّر معلة'), findsOneWidget);
+    expect(find.textContaining('نسبة هذا الملف إلى قارئ أو جهة محددة لم تُحسم بعد'), findsOneWidget);
+    expect(find.textContaining('بصوت القارئ الشيخ شبّر معلة'), findsNothing);
   });
 
   testWidgets('smart search screen offers cross-library offline search', (tester) async {

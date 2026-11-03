@@ -843,7 +843,7 @@ class _SettingsPageState extends State<SettingsPage> with WidgetsBindingObserver
               label: const Text('فتح إذن المنبهات والتذكيرات الدقيقة'),
             ),
           ),
-          Text('التسجيل المضمّن هو الأذان الذي اختاره صاحب التطبيق: الأذان من العتبة العلوية المقدسة بصوت القارئ الشيخ شبّر معلة.', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11, height: 1.5)),
+          Text('التسجيل الصوتي المرفق متاح للمعاينة والتنبيه، لكن نسبة هذا الملف إلى قارئ أو جهة محددة لم تُحسم بعد بسبب تعارض بيانات الملف والترخيص. لا يُعرض هنا على أنه تسجيل موثّق للشيخ شبّر معلة حتى تتم مطابقة المصدر.', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11, height: 1.5)),
           const SizedBox(height: 4),
           Text('يلزم السماح بإشعارات التطبيق من أندرويد. إذا وصل الإشعار بلا صوت، ارفع صوت التنبيهات وافحص إعداد قناة «أذان الصلاة».', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11, height: 1.5)),
           const SizedBox(height: 12),

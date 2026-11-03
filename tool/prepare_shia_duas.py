@@ -10,8 +10,10 @@ import urllib.request
 from collections import Counter
 from pathlib import Path
 
-SOURCE_URL = "https://raw.githubusercontent.com/KazTronics/AhlulBayt_Treasures/main/duas_data.json"
-SOURCE_PAGE = "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json"
+SOURCE_COMMIT = "a59bd5f8fe078532622a08ea60c19d164fb425cb"
+SOURCE_VERSION = "1.0.1"
+SOURCE_URL = "https://raw.githubusercontent.com/KazTronics/AhlulBayt_Treasures/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
+SOURCE_PAGE = "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json"
 MANIFEST_PATH = Path("tool/shia_dua_manifest.json")
 DEST = Path("assets/shia_duas/shia_duas.json")
 SAHIFA_DEST = Path("assets/shia_duas/sahifa_sajjadiya.json")
@@ -75,8 +77,13 @@ def main() -> None:
         raise SystemExit("Manifest expectedCount differs from the agreed 110-item collection.")
     if manifest.get("sahifaCount") != EXPECTED_SAHIFA_COUNT:
         raise SystemExit("Manifest Sahifa count differs from the separately preserved book section.")
-    if manifest.get("downloadUrl") != SOURCE_URL or manifest.get("sourceUrl") != SOURCE_PAGE:
-        raise SystemExit("Manifest source URL does not match the pinned dataset.")
+    if (
+        manifest.get("downloadUrl") != SOURCE_URL
+        or manifest.get("sourceUrl") != SOURCE_PAGE
+        or manifest.get("sourceCommit") != SOURCE_COMMIT
+        or manifest.get("sourceVersion") != SOURCE_VERSION
+    ):
+        raise SystemExit("Manifest source commit/version/URLs do not match the pinned dataset.")
     if manifest.get("expectedCategoryCounts") != EXPECTED_CATEGORY_COUNTS:
         raise SystemExit("Manifest category counts differ from the agreed five curated sections.")
 
@@ -87,6 +94,11 @@ def main() -> None:
         raise SystemExit("Source dataset metadata or 'duas' list is missing.")
     if str(source_meta.get("license", "")).strip().lower() != "public domain":
         raise SystemExit("Source data no longer declares Public Domain; review its license.")
+    if str(source_meta.get("version", "")).strip() != SOURCE_VERSION:
+        raise SystemExit("Downloaded source version differs from the pinned manifest version.")
+    declared_total = source_meta.get("total_duas")
+    if not isinstance(declared_total, int) or declared_total != len(records):
+        raise SystemExit("Source metadata total_duas does not match the actual record count.")
 
     records_by_id = {}
     for record in records:
@@ -234,9 +246,12 @@ def main() -> None:
 
     common_metadata = {
         "sourceProject": "KazTronics/AhlulBayt_Treasures",
+        "sourceVersion": SOURCE_VERSION,
+        "sourceCommit": SOURCE_COMMIT,
         "sourceIndex": SOURCE_URL,
+        "sourcePage": SOURCE_PAGE,
         "contentSource": "Shia Devotions dataset; source record IDs are retained in each entry's reference",
-        "license": "Text data declared Public Domain in source metadata; source repository code is MIT",
+        "license": "Text data declared Public Domain by the dataset; repository code is MIT",
         "duplicateTextsRemoved": 0,
     }
     curated_result = {

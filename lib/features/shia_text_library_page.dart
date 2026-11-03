@@ -810,8 +810,8 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
                     children: [
                       Text(
                         widget.entry.sourceReference.trim().isNotEmpty
-                            ? 'المرجع المنقول عنه: ${widget.entry.sourceReference}'
-                            : 'المرجع الأصلي: غير موثّق في بيانات هذا النص',
+                            ? 'الإحالة المسجلة في بيانات النص: ${widget.entry.sourceReference}'
+                            : 'لا توجد إحالة نصية مسجلة في بيانات هذا النص',
                         textDirection: TextDirection.rtl,
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.onSurface,
@@ -822,7 +822,7 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'يُعرض موضع المرجع كما ورد في بيانات النص، ولا يُعدّ توثيقاً مستقلاً للرواية ما لم يتضمن كتاباً وموضعاً يمكن مراجعتهما.',
+                        'هذه إحالة واردة في مجموعة البيانات، وليست بحد ذاتها مقابلة مستقلة على طبعة أصلية أو حكماً على صحة نسبة النص.',
                         textDirection: TextDirection.rtl,
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.onSurfaceVariant,

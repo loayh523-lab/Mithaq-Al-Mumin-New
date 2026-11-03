@@ -1225,7 +1225,8 @@ void main() {
       title: 'زيارة للاختبار',
       alternateName: '',
       type: 'ziyara',
-      sourceUrl: '',
+      sourceUrl: 'https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json',
+      sourceReference: 'مجموعة أدعية أهل البيت، سجل البيانات رقم 11',
       lines: <ShiaTextLine>[
         ShiaTextLine(index: 1, kind: 'arabic', text: 'السلام عليكم'),
       ],
@@ -1237,6 +1238,9 @@ void main() {
       ),
     ));
     await tester.pumpAndSettle();
+    expect(find.textContaining('الإحالة المسجلة في بيانات النص'), findsOneWidget);
+    expect(find.textContaining('ليست بحد ذاتها مقابلة مستقلة'), findsOneWidget);
+    expect(find.textContaining('المرجع المنقول عنه:'), findsNothing);
     expect(find.byTooltip('إضافة إلى المفضلة'), findsOneWidget);
     await tester.tap(find.byTooltip('إضافة إلى المفضلة'));
     await tester.pumpAndSettle();

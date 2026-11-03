@@ -316,10 +316,10 @@ class _AboutSupportPageState extends State<AboutSupportPage> {
                   ),
                 ),
                 _sourceButton(
-                  title: 'ملف الأذان المختار داخل المشروع',
+                  title: 'ملف الصوت المرفق بالمستودع — الهوية قيد التحقق',
                   onPressed: () => _open(
                     Uri.parse(_adhanSourceUri),
-                    label: 'مصدر التسجيل الصوتي',
+                    label: 'ملف الصوت داخل المستودع',
                   ),
                 ),
                 SizedBox(height: 8),

@@ -832,6 +832,13 @@ void main() {
     expect(munajat.category, 'الصحيفة السجادية المباركة (نفحات مختارة)');
   });
 
+  test('prayer calculation exposes the documented Jafari astronomical preset', () {
+    expect(SolarPrayerTimes.fajrSunDepressionDegrees, 16);
+    expect(SolarPrayerTimes.maghribSunDepressionDegrees, 4);
+    expect(SolarPrayerTimes.ishaSunDepressionDegrees, 14);
+    expect(SolarPrayerTimes.asrShadowFactor, 1);
+  });
+
   test('estimated prayer times stay ordered and valid for supported Iraq cities', () {
     int minutes(String label) {
       final parts = label.split(':');
@@ -901,6 +908,8 @@ void main() {
     expect(find.text('المواقيت والتقويم'), findsOneWidget);
     expect(find.text('الفجر'), findsOneWidget);
     expect(find.textContaining('الصلاة القادمة:'), findsOneWidget);
+    expect(find.textContaining('الطريقة الجعفرية الحسابية (ليفا — قم)'), findsOneWidget);
+    expect(find.textContaining('زاوية المغرب تقدير فلكي وليست وحدها حكماً بدخول الوقت'), findsOneWidget);
     await tester.tap(find.text('إمساكية رمضان'));
     await tester.pumpAndSettle();
     expect(find.text('إمساكية تقديرية — قلعة سكر / العراق'), findsOneWidget);

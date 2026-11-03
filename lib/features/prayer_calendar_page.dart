@@ -185,7 +185,17 @@ class _PrayerCalendarPageState extends State<PrayerCalendarPage> {
             Expanded(child: _prayerTimeTile(Icons.wb_twilight, 'الغروب', times.sunset)),
           ],
         ),
-        Padding(padding: EdgeInsets.all(8), child: Text('الحساب المحلي احتياطي تقريبي، وليس بديلاً عن جدول شرعي معتمد من مكتب مرجعك. استخدم زر GPS لتحديث الإحداثيات وفعّل تنبيهات الصلاة من الإعدادات.', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11, height: 1.6))),
+        Padding(
+          padding: const EdgeInsets.all(8),
+          child: Text(
+            'الحساب الفلكي التقريبي يستخدم معاملات الطريقة الجعفرية الحسابية (ليفا — قم): الفجر ${SolarPrayerTimes.fajrSunDepressionDegrees.toStringAsFixed(0)}°، المغرب ${SolarPrayerTimes.maghribSunDepressionDegrees.toStringAsFixed(0)}°، العشاء ${SolarPrayerTimes.ishaSunDepressionDegrees.toStringAsFixed(0)}°، والعصر على ظل المثل. زاوية المغرب تقدير فلكي وليست وحدها حكماً بدخول الوقت؛ فقد يرتبط الحكم بزوال الحمرة المشرقية بحسب فتوى مرجعك. اعتمد جدول مكتب مرجعك عند توفره، واستخدم GPS لتحسين الإحداثيات.',
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              fontSize: 11,
+              height: 1.6,
+            ),
+          ),
+        ),
       ] else if (tab == 1) ...[
         Text('إمساكية تقديرية — ${city.name} / العراق', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17)), const SizedBox(height: 5),
         Text('يعرض الشهر كاملاً من اليوم الأول إلى آخر يوم من رمضان المحسوب تقويمياً. الأوقات فلكية تقديرية وليست بديلاً عن إمساكية مكتب مرجعك أو الجهة المحلية المعتمدة.', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11, height: 1.5)),
@@ -736,6 +746,14 @@ class SolarPrayerTimes {
   const SolarPrayerTimes(this.fajr, this.sunrise, this.noon, this.asr, this.sunset, this.maghrib, this.isha);
   final String fajr, sunrise, noon, asr, sunset, maghrib, isha;
 
+  /// Published Jafari (Leva Institute, Qom) calculation preset angles.
+  /// These are astronomical inputs, not a ruling that an angle alone settles
+  /// the juristic start of Maghrib for every marja.
+  static const double fajrSunDepressionDegrees = 16;
+  static const double maghribSunDepressionDegrees = 4;
+  static const double ishaSunDepressionDegrees = 14;
+  static const double asrShadowFactor = 1;
+
   static SolarPrayerTimes forDate(DateTime date, double lat, double lon, double zone) {
     final n = date.difference(DateTime(date.year, 1, 1)).inDays + 1;
     final g = 2 * math.pi / 365 * (n - 1);
@@ -749,15 +767,19 @@ class SolarPrayerTimes {
     }
     final rise = noon - 4 * hourAngle(-0.833);
     final set = noon + 4 * hourAngle(-0.833);
-    final asrAltitude = math.atan(1 / (1 + math.tan((lat * math.pi / 180 - dec).abs()))) * 180 / math.pi;
+    final asrAltitude = math.atan(
+          1 / (asrShadowFactor + math.tan((lat * math.pi / 180 - dec).abs())),
+        ) *
+        180 /
+        math.pi;
     return SolarPrayerTimes(
-      _fmt(noon - 4 * hourAngle(-16)),
+      _fmt(noon - 4 * hourAngle(-fajrSunDepressionDegrees)),
       _fmt(rise),
       _fmt(noon),
       _fmt(noon + 4 * hourAngle(asrAltitude)),
       _fmt(set),
-      _fmt(noon + 4 * hourAngle(-4)),
-      _fmt(noon + 4 * hourAngle(-14)),
+      _fmt(noon + 4 * hourAngle(-maghribSunDepressionDegrees)),
+      _fmt(noon + 4 * hourAngle(-ishaSunDepressionDegrees)),
     );
   }
 

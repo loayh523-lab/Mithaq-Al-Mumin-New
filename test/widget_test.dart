@@ -1228,7 +1228,7 @@ void main() {
       sourceUrl: 'https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json',
       sourceReference: 'مجموعة أدعية أهل البيت، سجل البيانات رقم 11',
       omittedSourceInstructionCount: 2,
-      omittedSourceBlankRowIds: const <String>['28', '29'],
+      omittedSourceBlankRowIds: <String>['28', '29'],
       lines: <ShiaTextLine>[
         ShiaTextLine(index: 1, displayId: '7', kind: 'arabic', text: 'السلام عليكم'),
       ],

@@ -32,7 +32,9 @@ void main() {
         expect(slugs.add(entry.slug), isTrue, reason: 'Duplicate slug: ${entry.slug}');
         expect(entry.title, isNotEmpty);
         expect(entry.sourceReference, isNotEmpty, reason: 'Missing source reference: ${entry.slug}');
-        expect(entry.sourceUrl, startsWith('https://github.com/KazTronics/'));
+        final sourceUri = Uri.parse(entry.sourceUrl);
+        expect(sourceUri.scheme, 'https');
+        expect(sourceUri.host, isNotEmpty);
         expect(entry.lines, isNotEmpty, reason: 'Missing full text: ${entry.slug}');
         expect(entry.categoryOverride, isNotNull);
         counts.update(entry.category, (count) => count + 1, ifAbsent: () => 1);
@@ -67,21 +69,23 @@ void main() {
       expect(taqibat.every((entry) => entry.displayTitle == entry.title), isTrue);
     });
 
-    test('the public library exposes all 250 texts once', () async {
+    test('the public library exposes 230 approved texts once', () async {
       final data = await ShiaTextData.load();
-      expect(data.entries, hasLength(250));
-      expect(data.entries.map((entry) => entry.slug).toSet(), hasLength(250));
-      expect(data.entries.where((entry) => entry.isSahifa), hasLength(35));
+      expect(data.entries, hasLength(230));
+      expect(data.entries.map((entry) => entry.slug).toSet(), hasLength(230));
+      expect(data.entries.where((entry) => entry.slug.startsWith('selected-sahifa-')), isEmpty);
+      expect(data.entries.where((entry) => entry.type == 'munajat'), hasLength(15));
+      expect(data.entries.where((entry) => entry.isSahifa), hasLength(15));
     });
 
-    test('the Sahifa view exposes the 20 selected duas and 15 Munajat only', () async {
+    test('the Sahifa view publishes only the 15 Munajat while selected duas await approval', () async {
       final data = await ShiaTextData.loadSahifa();
-      expect(data.entries, hasLength(35));
-      expect(data.entries.where((entry) => entry.type == 'sahifa'), hasLength(20));
+      expect(data.entries, hasLength(15));
+      expect(data.entries.where((entry) => entry.type == 'sahifa'), isEmpty);
       expect(data.entries.where((entry) => entry.type == 'munajat'), hasLength(15));
       expect(data.entries.every((entry) =>
           entry.category == 'الصحيفة السجادية المباركة (نفحات مختارة)'), isTrue);
-      expect(data.entries.map((entry) => entry.slug).toSet(), hasLength(35));
+      expect(data.entries.map((entry) => entry.slug).toSet(), hasLength(15));
     });
   });
 }

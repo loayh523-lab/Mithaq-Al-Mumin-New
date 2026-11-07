@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Prepare the selected Sheikh Shabbar Maalla adhan for preview and Android alarms.
+"""Prepare the bundled adhan audio for preview and Android notifications.
 
-The original user-selected recording is retained at SOURCE and is never replaced.
-Build outputs are encoded once at a notification-friendly bitrate, then reused for
-Flutter preview and Android's notification channel to avoid bundling the 10 MB
-source recording twice in the release APK.
+The source file is preserved and is never substituted. Its performer and recording
+provenance must be verified separately; the filename alone is not proof. Build
+outputs are encoded once at a notification-friendly bitrate and reused for preview
+and Android notifications to avoid bundling the source recording twice.
 """
 import os
 import shutil
@@ -48,12 +48,12 @@ def atomic_copy(source: Path, destination: Path) -> None:
 def main() -> None:
     if not SOURCE.is_file():
         raise SystemExit(
-            "Required Sheikh Shabbar Maalla adhan is missing: "
-            f"{SOURCE}. Add the supplied recording before building; "
+            "Required bundled adhan audio is missing: "
+            f"{SOURCE}. Add the approved recording before building; "
             "the build will not silently substitute another adhan."
         )
     if not valid_mp3(SOURCE):
-        raise SystemExit("The supplied Sheikh Shabbar Maalla recording does not appear to be a valid MP3.")
+        raise SystemExit("The bundled adhan audio does not appear to be a valid MP3.")
 
     encoder = shutil.which("ffmpeg")
     PREVIEW.parent.mkdir(parents=True, exist_ok=True)

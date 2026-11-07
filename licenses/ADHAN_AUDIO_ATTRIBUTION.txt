@@ -1,8 +1,12 @@
-Adhan recording attribution
-Title: AzaanMaahur.ogg
-Creator: Saeed Hatamzadeh-Varmazyar
-Source: https://commons.wikimedia.org/wiki/File:AzaanMaahur.ogg
-License: Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
-License URL: https://creativecommons.org/licenses/by-sa/4.0/
-Changes: The audio file is redistributed unchanged for offline playback and Android notification sound.
-Verification note: Commons describes this as an adhan in the Mahur musical mode; this project has not independently verified that the spoken text matches the Ja'fari adhan wording. The app must not label it as a verified Ja'fari recording.
+تدقيق إسناد التسجيل الصوتي — الحالة الحالية
+
+ملف التطبيق: assets/audio/adhan_shabbar_maalla.mp3
+
+ظهر في سجل GitHub commit بتاريخ 2026-10-22 بعنوان "Add Sheikh Shabbar Maalla adhan to app audio assets"، لكن عنوان commit واسم الملف لا يثبتان هوية الأداء ولا جهة التسجيل.
+
+توجد في المستودع إحالة ترخيص منفصلة إلى الملف AzaanMaahur.ogg للفنان Saeed Hatamzadeh-Varmazyar على Wikimedia Commons، بترخيص CC BY-SA 4.0. لم يُثبت بعد أن ملف التطبيق الحالي هو الملف نفسه أو نسخة منه؛ لذلك لا يجوز اعتبار هذه الإحالة دليلاً على هوية أو ترخيص الملف الحالي قبل مطابقة البصمة الصوتية أو توثيق مصدر الملف مباشرة.
+
+القرار المؤقت: يحتفظ التطبيق بالملف الحالي دون استبداله، لكن واجهة الإعدادات لا تنسبه إلى الشيخ شبّر معلة أو العتبة العلوية، ولا تصفه بأنه أذان جعفري متحقق. يلزم قبل التوزيع تثبيت مصدر الملف الفعلي وحقوق استخدامه، ثم تحديث الإحالة باسم القارئ والجهة والترخيص الصحيحين.
+
+الإحالة التي تحتاج مطابقة مستقلة: https://commons.wikimedia.org/wiki/File:AzaanMaahur.ogg
+الترخيص الذي تصفه صفحة ذلك الملف: https://creativecommons.org/licenses/by-sa/4.0/

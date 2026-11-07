@@ -66,6 +66,16 @@ def atomic_json(path: Path, value) -> None:
 
 
 def main() -> None:
+    if DEST.exists():
+        current = json.loads(DEST.read_text(encoding="utf-8"))
+        current_count = len(current.get("entries", [])) if isinstance(current, dict) else 0
+        if current_count != EXPECTED_COUNT:
+            raise SystemExit(
+                f"Refusing to overwrite the existing {current_count}-entry app asset "
+                f"with this legacy {EXPECTED_COUNT}-entry generator. Reconcile the "
+                "manifest and source dataset with the current library before regenerating."
+            )
+
     manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
     items = manifest.get("entries")
     sahifa_items = manifest.get("sahifaEntries")

@@ -1174,7 +1174,14 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('الأذكار'), findsOneWidget);
     expect(find.text('ذِكر اليوم'), findsOneWidget);
-    await tester.scrollUntilVisible(find.text('أقسام الأذكار'), 250);
+    await tester.scrollUntilVisible(
+      find.text('أقسام الأذكار'),
+      250,
+      scrollable: find.descendant(
+        of: find.byType(ListView),
+        matching: find.byType(Scrollable),
+      ).first,
+    );
     expect(find.text('أقسام الأذكار'), findsOneWidget);
     expect(find.textContaining('التسبيحات'), findsWidgets);
     expect(find.textContaining('المناجاة'), findsWidgets);

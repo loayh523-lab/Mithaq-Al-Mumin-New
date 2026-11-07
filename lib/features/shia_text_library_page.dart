@@ -240,22 +240,33 @@ class ShiaTextData {
 
   static Future<ShiaTextData> loadCore() => _coreCache ??= _loadAsset(
     'assets/shia_duas/shia_duas.json',
-    expectedCount: 110,
+    expectedCount: 250,
   );
 
   static Future<ShiaTextData> load() => _cache ??= _loadCombined();
 
   static Future<ShiaTextData> _loadCombined() async => await loadCore();
 
-  /// The source manifest preserves 76 Sahifa/Munajat records, but the owner's
-  /// approved 20-item selection has not been identified by stable slugs yet.
-  /// Do not guess which texts are approved or publish all 76 as a substitute.
+  /// The published selection contains 20 selected Sahifa supplications
+  /// and the 15 Sahifa Munajat. Keep this view derived from the single source
+  /// asset so entries are not duplicated in storage.
   static Future<ShiaTextData> loadSahifa() => _sahifaCache ??= loadCore().then(
-        (data) => ShiaTextData(
-          entries: const <ShiaTextEntry>[],
-          sourceProject: data.sourceProject,
-          license: data.license,
-        ),
+        (data) {
+          final entries = data.entries
+              .where((entry) =>
+                  entry.category == 'الصحيفة السجادية المباركة (نفحات مختارة)')
+              .toList(growable: false);
+          if (entries.length != 35) {
+            throw FormatException(
+              'Expected 35 selected Sahifa/Munajat texts; found ${entries.length}.',
+            );
+          }
+          return ShiaTextData(
+            entries: entries,
+            sourceProject: data.sourceProject,
+            license: data.license,
+          );
+        },
       );
 
   static Future<ShiaTextData> _loadAsset(

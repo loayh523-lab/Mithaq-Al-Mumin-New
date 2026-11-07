@@ -2,7 +2,7 @@ name: Flutter CI — Analyze, Test, Android Release Build
 
 on:
   push:
-    branches: [main]
+    branches: [main, work/dua-library-250-foundation]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -52,8 +52,8 @@ jobs:
         run: python3 tool/prepare_quran.py
       - name: Prepare offline Quran juz and hizb metadata
         run: python3 tool/prepare_quran_metadata.py
-      - name: Prepare offline Shia duas and ziyarat
-        run: python3 tool/prepare_shia_duas.py
+      - name: Validate committed offline Shia duas and ziyarat
+        run: python3 tool/validate_shia_duas.py
       - name: Prepare licensed Arabic fonts
         run: python3 tool/prepare_fonts.py
       - name: Validate bundled Arabic text and reject Persian characters

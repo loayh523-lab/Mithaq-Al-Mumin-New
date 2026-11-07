@@ -1076,17 +1076,11 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
     expect(find.text('الأدعية والزيارات'), findsWidgets);
-    expect(find.textContaining('110 نصاً'), findsOneWidget);
+    expect(find.textContaining('230 نصاً'), findsOneWidget);
     expect(find.textContaining('76 صحيفة ومناجاة'), findsNothing);
     expect(find.textContaining('قسم الصحيفة ينتظر اعتماد المختارات'), findsOneWidget);
-    expect(find.text('الزيارات الشريفة والمقامات المقدسة (25)'), findsOneWidget);
+    expect(find.text('الزيارات الشريفة والمقامات المقدسة (58)'), findsOneWidget);
     expect(find.textContaining('ما قدرنا نحمّل مكتبة الأدعية'), findsNothing);
-    await tester.scrollUntilVisible(
-      find.text('زيارة عاشوراء'),
-      250,
-      scrollable: find.byType(Scrollable).last,
-    );
-    await tester.pumpAndSettle();
     await tester.scrollUntilVisible(
       find.text('زيارة عاشوراء'),
       250,
@@ -1110,8 +1104,9 @@ void main() {
     ));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
-    expect(find.textContaining('110 نصاً'), findsOneWidget);
+    expect(find.textContaining('230 نصاً'), findsOneWidget);
     expect(find.textContaining('قسم الصحيفة ينتظر اعتماد المختارات'), findsOneWidget);
+    expect(preloaded!.entries.where((entry) => entry.slug.startsWith('selected-sahifa-')), isEmpty);
   });
 
   testWidgets('Sahifa and Munajat remain accessible in their own section', (tester) async {
@@ -1128,8 +1123,8 @@ void main() {
     ));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
-    expect(find.textContaining('لم تُعتمد قائمة العشرين المختارة بعد'), findsOneWidget);
-    expect(find.textContaining('قائمة العشرين المختارة من الصحيفة السجادية'), findsOneWidget);
+    expect(find.textContaining('15 مناجاة سجادية متاحة'), findsOneWidget);
+    expect(find.textContaining('الأدعية العشرون المختارة فتبقى محفوظة للمراجعة'), findsOneWidget);
     expect(find.textContaining('ما قدرنا نحمّل مكتبة الأدعية'), findsNothing);
   });
 
@@ -1174,7 +1169,14 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('الأذكار'), findsOneWidget);
     expect(find.text('ذِكر اليوم'), findsOneWidget);
-    await tester.scrollUntilVisible(find.text('أقسام الأذكار'), 250);
+    await tester.scrollUntilVisible(
+      find.text('أقسام الأذكار'),
+      250,
+      scrollable: find.descendant(
+        of: find.byType(ListView).first,
+        matching: find.byType(Scrollable),
+      ).first,
+    );
     expect(find.text('أقسام الأذكار'), findsOneWidget);
     expect(find.textContaining('التسبيحات'), findsWidgets);
     expect(find.textContaining('المناجاة'), findsWidgets);

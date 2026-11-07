@@ -29,11 +29,11 @@ void main() {
 
       for (final entry in data.entries) {
         expect(entry.slug, isNotEmpty);
-        expect(slugs.add(entry.slug), isTrue, reason: 'Duplicate slug: ' + entry.slug);
+        expect(slugs.add(entry.slug), isTrue, reason: 'Duplicate slug: ${entry.slug}');
         expect(entry.title, isNotEmpty);
-        expect(entry.sourceReference, isNotEmpty, reason: 'Missing source reference: ' + entry.slug);
+        expect(entry.sourceReference, isNotEmpty, reason: 'Missing source reference: ${entry.slug}');
         expect(entry.sourceUrl, startsWith('https://github.com/KazTronics/'));
-        expect(entry.lines, isNotEmpty, reason: 'Missing full text: ' + entry.slug);
+        expect(entry.lines, isNotEmpty, reason: 'Missing full text: ${entry.slug}');
         expect(entry.categoryOverride, isNotNull);
         counts.update(entry.category, (count) => count + 1, ifAbsent: () => 1);
 
@@ -43,12 +43,12 @@ void main() {
           expect(
             RegExp(r'[\u067E\u0686\u0698\u06AF\u06A9\u06CCA-Za-z]').hasMatch(line.text),
             isFalse,
-            reason: 'Persian or Latin letters in ' + entry.slug,
+            reason: 'Persian or Latin letters in ${entry.slug}',
           );
         }
         final key = normalize(entry.arabicText);
         expect(key, isNotEmpty);
-        expect(completeTexts.add(key), isTrue, reason: 'Duplicate text: ' + entry.slug);
+        expect(completeTexts.add(key), isTrue, reason: 'Duplicate text: ${entry.slug}');
       }
 
       expect(counts, expectedCounts);

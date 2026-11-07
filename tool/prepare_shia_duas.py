@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
-"""LEGACY 110+76 GENERATOR — DO NOT USE FOR THE CURRENT 250+ LIBRARY.\n\nThe current CI validates the committed app asset with tool/validate_shia_duas.py.\nThis historical generator is retained only until a replacement 320+ builder is\nimplemented and verified. Its manifest and expected counts are obsolete. The\nmain() guard must remain: it refuses to overwrite the current 250-entry asset.\n"""
+"""LEGACY 110+76 GENERATOR — DO NOT USE FOR THE CURRENT 250+ LIBRARY.
+
+The current CI validates the committed app asset with
+tool/validate_shia_duas.py. This historical generator is retained only until a
+replacement 320+ builder is implemented and verified. Its manifest and expected
+counts are obsolete. Keep the main() guard: it refuses to overwrite the current
+250-entry asset.
+"""
 import json
 import os
 import re

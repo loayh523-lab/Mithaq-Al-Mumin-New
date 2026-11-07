@@ -7,14 +7,14 @@
     "count": 250,
     "categoryCounts": {
       "الورد اليومي والتعقيبات": 32,
-      "الأدعية الكبرى والمناجاة الشريفة": 40,
+      "الأدعية الكبرى والمناجاة الشريفة": 25,
       "أدعية المناسبات والشهور العبادية": 50,
-      "الصحيفة السجادية المباركة (نفحات مختارة)": 20,
+      "الصحيفة السجادية المباركة (نفحات مختارة)": 35,
       "أدعية الحوائج، التحصينات والرزق": 50,
       "الزيارات الشريفة والمقامات المقدسة": 58
     },
     "duplicateTextsRemoved": 1,
-    "editorialNote": "ستة أقسام بالترتيب المعتمد؛ 250 نصاً؛ لا يوجد تكرار حرفي للنص العربي بعد تطبيع التشكيل وعلامات الترقيم؛ الصحيفة مقتصرة على عشرين نصاً محدداً."
+    "editorialNote": "ستة أقسام بالترتيب المعتمد؛ 250 مادة؛ الصحيفة تضم 20 دعاءً مختاراً و15 مناجاة سجادية. لا يوجد تكرار كامل بعد التطبيع النصي الأولي، ويظل التحقق المصدري والتحريري مطلوباً."
   },
   "entries": [
     {
@@ -25839,7 +25839,7 @@
       "title": "مناجاة التائبين",
       "alternateName": "",
       "type": "munajat",
-      "category": "الأدعية الكبرى والمناجاة الشريفة",
+      "category": "الصحيفة السجادية المباركة (نفحات مختارة)",
       "sourceUrl": "https://al-islam.org/sahifa-al-kamilah-al-sajjadiyya-imam-ali-zayn-al-abidin",
       "sourceReference": "الصحيفة السجادية، المناجاة رقم 1.",
       "lines": [
@@ -26115,7 +26115,7 @@
       "title": "مناجاة الشاكين",
       "alternateName": "",
       "type": "munajat",
-      "category": "الأدعية الكبرى والمناجاة الشريفة",
+      "category": "الصحيفة السجادية المباركة (نفحات مختارة)",
       "sourceUrl": "https://al-islam.org/sahifa-al-kamilah-al-sajjadiyya-imam-ali-zayn-al-abidin",
       "sourceReference": "الصحيفة السجادية، المناجاة رقم 2.",
       "lines": [
@@ -26341,7 +26341,7 @@
       "title": "مناجاة الخائفين",
       "alternateName": "",
       "type": "munajat",
-      "category": "الأدعية الكبرى والمناجاة الشريفة",
+      "category": "الصحيفة السجادية المباركة (نفحات مختارة)",
       "sourceUrl": "https://al-islam.org/sahifa-al-kamilah-al-sajjadiyya-imam-ali-zayn-al-abidin",
       "sourceReference": "الصحيفة السجادية، المناجاة رقم 3.",
       "lines": [
@@ -26567,7 +26567,7 @@
       "title": "مناجاة الراجين",
       "alternateName": "",
       "type": "munajat",
-      "category": "الأدعية الكبرى والمناجاة الشريفة",
+      "category": "الصحيفة السجادية المباركة (نفحات مختارة)",
       "sourceUrl": "https://al-islam.org/sahifa-al-kamilah-al-sajjadiyya-imam-ali-zayn-al-abidin",
       "sourceReference": "الصحيفة السجادية، المناجاة رقم 4.",
       "lines": [
@@ -26773,7 +26773,7 @@
       "title": "مناجاة الراغبين",
       "alternateName": "",
       "type": "munajat",
-      "category": "الأدعية الكبرى والمناجاة الشريفة",
+      "category": "الصحيفة السجادية المباركة (نفحات مختارة)",
       "sourceUrl": "https://al-islam.org/sahifa-al-kamilah-al-sajjadiyya-imam-ali-zayn-al-abidin",
       "sourceReference": "الصحيفة السجادية، المناجاة رقم 5.",
       "lines": [
@@ -27019,7 +27019,7 @@
       "title": "مناجاة الشاكرين",
       "alternateName": "",
       "type": "munajat",
-      "category": "الأدعية الكبرى والمناجاة الشريفة",
+      "category": "الصحيفة السجادية المباركة (نفحات مختارة)",
       "sourceUrl": "https://al-islam.org/sahifa-al-kamilah-al-sajjadiyya-imam-ali-zayn-al-abidin",
       "sourceReference": "الصحيفة السجادية، المناجاة رقم 6.",
       "lines": [
@@ -27250,7 +27250,7 @@
       "title": "مناجاة المطيعين",
       "alternateName": "",
       "type": "munajat",
-      "category": "الأدعية الكبرى والمناجاة الشريفة",
+      "category": "الصحيفة السجادية المباركة (نفحات مختارة)",
       "sourceUrl": "https://al-islam.org/sahifa-al-kamilah-al-sajjadiyya-imam-ali-zayn-al-abidin",
       "sourceReference": "الصحيفة السجادية، المناجاة رقم 7.",
       "lines": [
@@ -27416,7 +27416,7 @@
       "title": "مناجاة المريدين",
       "alternateName": "",
       "type": "munajat",
-      "category": "الأدعية الكبرى والمناجاة الشريفة",
+      "category": "الصحيفة السجادية المباركة (نفحات مختارة)",
       "sourceUrl": "https://al-islam.org/sahifa-al-kamilah-al-sajjadiyya-imam-ali-zayn-al-abidin",
       "sourceReference": "الصحيفة السجادية، المناجاة رقم 8.",
       "lines": [
@@ -27722,7 +27722,7 @@
       "title": "مناجاة المحبين",
       "alternateName": "",
       "type": "munajat",
-      "category": "الأدعية الكبرى والمناجاة الشريفة",
+      "category": "الصحيفة السجادية المباركة (نفحات مختارة)",
       "sourceUrl": "https://al-islam.org/sahifa-al-kamilah-al-sajjadiyya-imam-ali-zayn-al-abidin",
       "sourceReference": "الصحيفة السجادية، المناجاة رقم 9.",
       "lines": [
@@ -27963,7 +27963,7 @@
       "title": "مناجاة المتوسلين",
       "alternateName": "",
       "type": "munajat",
-      "category": "الأدعية الكبرى والمناجاة الشريفة",
+      "category": "الصحيفة السجادية المباركة (نفحات مختارة)",
       "sourceUrl": "https://al-islam.org/sahifa-al-kamilah-al-sajjadiyya-imam-ali-zayn-al-abidin",
       "sourceReference": "الصحيفة السجادية، المناجاة رقم 10.",
       "lines": [
@@ -28104,7 +28104,7 @@
       "title": "مناجاة المفتقرين",
       "alternateName": "",
       "type": "munajat",
-      "category": "الأدعية الكبرى والمناجاة الشريفة",
+      "category": "الصحيفة السجادية المباركة (نفحات مختارة)",
       "sourceUrl": "https://al-islam.org/sahifa-al-kamilah-al-sajjadiyya-imam-ali-zayn-al-abidin",
       "sourceReference": "الصحيفة السجادية، المناجاة رقم 11.",
       "lines": [
@@ -28360,7 +28360,7 @@
       "title": "مناجاة العارفين",
       "alternateName": "",
       "type": "munajat",
-      "category": "الأدعية الكبرى والمناجاة الشريفة",
+      "category": "الصحيفة السجادية المباركة (نفحات مختارة)",
       "sourceUrl": "https://al-islam.org/sahifa-al-kamilah-al-sajjadiyya-imam-ali-zayn-al-abidin",
       "sourceReference": "الصحيفة السجادية، المناجاة رقم 12.",
       "lines": [
@@ -28576,7 +28576,7 @@
       "title": "مناجاة الذاكرين",
       "alternateName": "",
       "type": "munajat",
-      "category": "الأدعية الكبرى والمناجاة الشريفة",
+      "category": "الصحيفة السجادية المباركة (نفحات مختارة)",
       "sourceUrl": "https://al-islam.org/sahifa-al-kamilah-al-sajjadiyya-imam-ali-zayn-al-abidin",
       "sourceReference": "الصحيفة السجادية، المناجاة رقم 13.",
       "lines": [
@@ -28792,7 +28792,7 @@
       "title": "مناجاة المعتصمين",
       "alternateName": "",
       "type": "munajat",
-      "category": "الأدعية الكبرى والمناجاة الشريفة",
+      "category": "الصحيفة السجادية المباركة (نفحات مختارة)",
       "sourceUrl": "https://al-islam.org/sahifa-al-kamilah-al-sajjadiyya-imam-ali-zayn-al-abidin",
       "sourceReference": "الصحيفة السجادية، المناجاة رقم 14.",
       "lines": [
@@ -28998,7 +28998,7 @@
       "title": "مناجاة الزاهدين",
       "alternateName": "",
       "type": "munajat",
-      "category": "الأدعية الكبرى والمناجاة الشريفة",
+      "category": "الصحيفة السجادية المباركة (نفحات مختارة)",
       "sourceUrl": "https://al-islam.org/sahifa-al-kamilah-al-sajjadiyya-imam-ali-zayn-al-abidin",
       "sourceReference": "الصحيفة السجادية، المناجاة رقم 15.",
       "lines": [

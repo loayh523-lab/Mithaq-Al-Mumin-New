@@ -245,20 +245,32 @@ class ShiaTextData {
 
   static Future<ShiaTextData> load() => _cache ??= _loadCombined();
 
-  static Future<ShiaTextData> _loadCombined() async => await loadCore();
+  static Future<ShiaTextData> _loadCombined() async {
+    final data = await loadCore();
+    // The twenty selected Sahifa entries remain in the internal source asset
+    // until the owner confirms the exact selection. Do not publish them yet.
+    final publishedEntries = data.entries
+        .where((entry) => !entry.slug.startsWith('selected-sahifa-'))
+        .toList(growable: false);
+    return ShiaTextData(
+      entries: List<ShiaTextEntry>.unmodifiable(publishedEntries),
+      sourceProject: data.sourceProject,
+      license: data.license,
+    );
+  }
 
-  /// The published selection contains 20 selected Sahifa supplications
-  /// and the 15 Sahifa Munajat. Keep this view derived from the single source
-  /// asset so entries are not duplicated in storage.
+  /// Publish the fifteen Sahifa Munajat only. The twenty selected supplications
+  /// remain in the internal source asset until their identifiers are approved.
   static Future<ShiaTextData> loadSahifa() => _sahifaCache ??= loadCore().then(
         (data) {
           final entries = data.entries
               .where((entry) =>
-                  entry.category == 'الصحيفة السجادية المباركة (نفحات مختارة)')
+                  entry.category == 'الصحيفة السجادية المباركة (نفحات مختارة)' &&
+                  entry.type == 'munajat')
               .toList(growable: false);
-          if (entries.length != 35) {
+          if (entries.length != 15) {
             throw FormatException(
-              'Expected 35 selected Sahifa/Munajat texts; found ${entries.length}.',
+              'Expected 15 published Sahifa Munajat; found ${entries.length}.',
             );
           }
           return ShiaTextData(
@@ -542,15 +554,15 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
               Text(
                 _sahifaOnly
                     ? (data.entries.isEmpty
-                        ? 'لم تُعتمد قائمة العشرين المختارة بعد'
-                        : '${data.entries.length} نصاً من الصحيفة السجادية والمناجيات')
+                        ? 'لا توجد مناجيات منشورة حالياً'
+                        : '${data.entries.length} مناجاة سجادية متاحة')
                     : '${data.entries.length} نصاً في الأقسام المنشورة',
                 style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, height: 1.5),
               ),
               const SizedBox(height: 6),
               Text(
                 _sahifaOnly
-                    ? 'لم تُنشر نصوص الصحيفة قبل تثبيت معرفات العشرين المختارة. بقيت سجلات المصدر محفوظة للمراجعة.'
+                    ? 'المناجيات الخمس عشرة متاحة؛ أما الأدعية العشرون المختارة فتبقى محفوظة للمراجعة ولا تظهر قبل اعتمادها.'
                     : 'تصفح الأقسام المنشورة، مع مرجع النص بجانب محتواه. قسم الصحيفة ينتظر اعتماد المختارات.',
                 style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 11, height: 1.5),
               ),

@@ -1106,7 +1106,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 100));
     expect(find.textContaining('230 نصاً'), findsOneWidget);
     expect(find.textContaining('قسم الصحيفة ينتظر اعتماد المختارات'), findsOneWidget);
-    expect(preloaded!.entries.where((entry) => entry.slug.startsWith('selected-sahifa-')), isEmpty);
+    expect(preloaded.entries.where((entry) => entry.slug.startsWith('selected-sahifa-')), isEmpty);
   });
 
   testWidgets('Sahifa and Munajat remain accessible in their own section', (tester) async {

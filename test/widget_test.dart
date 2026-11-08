@@ -1178,12 +1178,10 @@ void main() {
       ).first,
     );
     expect(find.text('أقسام الأذكار'), findsOneWidget);
-    await tester.drag(
-      find.descendant(
-        of: find.byType(ListView).first,
-        matching: find.byType(Scrollable),
-      ).first,
-      const Offset(0, -500),
+    await tester.fling(
+      find.byType(ListView).first,
+      const Offset(0, -1200),
+      1200,
     );
     await tester.pumpAndSettle();
     final categoryLabels = tester

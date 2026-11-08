@@ -1,7 +1,7 @@
 {
   "metadata": {
     "sourceProject": "ميثاق المؤمن — مكتبة الأدعية والزيارات",
-    "sourceIndex": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+    "sourceIndex": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
     "contentSource": "نصوص عربية من قاعدة Shia Devotions مع إظهار حدود الإحالات التي لا تسمي المصدر التراثي الأولي؛ الصحيفة السجادية موثقة بأرقام أدعيتها؛ الأدعية القرآنية موثقة بالسورة والآية.",
     "license": "ترخيص كل نص بحسب مصدره؛ قاعدة البيانات المصدر تعلن أن بياناتها متاحة للعموم.",
     "count": 250,
@@ -23,7 +23,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "الورد اليومي والتعقيبات",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "مصباح المتهجد: دعاء الصباح المنسوب إلى أمير المؤمنين عليه السلام.",
       "lines": [
         {
@@ -564,7 +564,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "الورد اليومي والتعقيبات",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "مصباح الكفعمي ومفاتيح الجنان: دعاء العهد.",
       "lines": [
         {
@@ -1127,7 +1127,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "الورد اليومي والتعقيبات",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 380؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -1224,7 +1224,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "الورد اليومي والتعقيبات",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "مصباح الكفعمي: دعاء يستشير.",
       "lines": [
         {
@@ -1925,8 +1925,8 @@
       "alternateName": "",
       "type": "dua",
       "category": "الورد اليومي والتعقيبات",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
-      "sourceReference": "المصدر التراثي: مفاتيح الجنان، الباب الأول، تعقيب الصلاة العام، ص16 في النسخة الرقمية. متن «رضيت بالله رباً...» وطلب العفو والعافية موجودان في الموضع نفسه. يضيف سجل التطبيق افتتاحية البسملة والصلاة على محمد وآل محمد، كما أن المصدر يذكر تكرار الفقرة اللاحقة ثلاثاً بينما لا يثبت العدد في السجل. هذه مقابلة موضع النص لا تصحيح للسند.",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
+      "sourceReference": "المصدر التراثي: مفاتيح الجنان، الباب الأول، تعقيب الصلاة العام، ص16 في النسخة الرقمية. متن «رضيت بالله رباً...» وطلب العفو والعافية موجودان في الموضع نفسه. يضيف سجل التطبيق افتتاحية البسملة والصلاة على محمد وآل محمد، كما أن المصدر يذكر تكرار الفقرة اللاحقة ثلاثاً بينما لا يثبت العدد في السجل. هذه مقابلة موضع النص لا تصحيح للسند.\nرابط المطالعة المباشر: https://usul.ai/ar/t/mafatih-jinan/6",
       "lines": [
         {
           "index": 1,
@@ -2016,7 +2016,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "الورد اليومي والتعقيبات",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 283؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -2177,7 +2177,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "الورد اليومي والتعقيبات",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 284؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -2238,7 +2238,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "الورد اليومي والتعقيبات",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 285؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -2359,7 +2359,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "الورد اليومي والتعقيبات",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 286؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -2425,7 +2425,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "الورد اليومي والتعقيبات",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 296؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -2576,8 +2576,8 @@
       "alternateName": "",
       "type": "dua",
       "category": "الورد اليومي والتعقيبات",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
-      "sourceReference": "المصدر التراثي: مفاتيح الجنان، الباب الأول، الفصل الثاني «في التعقيبات الخاصة»، تعقيب الظهر كما في مصباح المتهجد، ص17 في النسخة الرقمية. متن الدعاء من «لا إله إلا الله العظيم الحليم» إلى «آمين رب العالمين» مطابق. المطابقة موضعية ولا تعني حكماً سندياً.",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
+      "sourceReference": "المصدر التراثي: مفاتيح الجنان، الباب الأول، الفصل الثاني «في التعقيبات الخاصة»، تعقيب الظهر كما في مصباح المتهجد، ص17 في النسخة الرقمية. متن الدعاء من «لا إله إلا الله العظيم الحليم» إلى «آمين رب العالمين» مطابق. المطابقة موضعية ولا تعني حكماً سندياً.\nرابط المطالعة المباشر: https://usul.ai/ar/t/mafatih-jinan/6",
       "lines": [
         {
           "index": 1,
@@ -2682,8 +2682,8 @@
       "alternateName": "",
       "type": "dua",
       "category": "الورد اليومي والتعقيبات",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
-      "sourceReference": "المصدر التراثي: مفاتيح الجنان، الباب الأول، الفصل الثاني «في التعقيبات الخاصة»، تعقيب الظهر كما في مصباح المتهجد، ص17 في النسخة الرقمية. متن «اللهم إن عظمت ذنوبي فأنت أعظم...» مطابق للفقرة التالية لصيغة الاعتصام عشر مرات؛ سجل التطبيق يعرض هذه الفقرة وحدها. المطابقة موضعية لا سندية.",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
+      "sourceReference": "المصدر التراثي: مفاتيح الجنان، الباب الأول، الفصل الثاني «في التعقيبات الخاصة»، تعقيب الظهر كما في مصباح المتهجد، ص17 في النسخة الرقمية. متن «اللهم إن عظمت ذنوبي فأنت أعظم...» مطابق للفقرة التالية لصيغة الاعتصام عشر مرات؛ سجل التطبيق يعرض هذه الفقرة وحدها. المطابقة موضعية لا سندية.\nرابط المطالعة المباشر: https://usul.ai/ar/t/mafatih-jinan/6",
       "lines": [
         {
           "index": 1,
@@ -2748,8 +2748,8 @@
       "alternateName": "",
       "type": "dua",
       "category": "الورد اليومي والتعقيبات",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
-      "sourceReference": "المصدر التراثي: مصباح المتهجد للشيخ الطوسي، ص75 في النسخة الرقمية، الفقرتان 122/95 و123/96 من أعمال ما بعد العصر. سجل التطبيق يجمع الفقرتين المتتاليتين في مادة واحدة، والمتن محفوظ كما في الموضعين. لا يتضمن ذلك حكماً على السند.",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
+      "sourceReference": "المصدر التراثي: مصباح المتهجد للشيخ الطوسي، ص75 في النسخة الرقمية، الفقرتان 122/95 و123/96 من أعمال ما بعد العصر. سجل التطبيق يجمع الفقرتين المتتاليتين في مادة واحدة، والمتن محفوظ كما في الموضعين. لا يتضمن ذلك حكماً على السند.\nرابط المطالعة المباشر: https://usul.ai/ar/t/misbah-mutahajjad/73",
       "lines": [
         {
           "index": 1,
@@ -2874,8 +2874,8 @@
       "alternateName": "",
       "type": "dua",
       "category": "الورد اليومي والتعقيبات",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
-      "sourceReference": "المصدر التراثي: مفاتيح الجنان، تعقيب صلاة المغرب عن مصباح المتهجد، ص65 في النسخة الرقمية. متن «اللهم إني أسألك موجبات رحمتك...» إلى «أستغفرك وأتوب إليك» مطابق للموضع. المطابقة موضعية لا سندية.",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
+      "sourceReference": "المصدر التراثي: مفاتيح الجنان، تعقيب صلاة المغرب عن مصباح المتهجد، ص65 في النسخة الرقمية. متن «اللهم إني أسألك موجبات رحمتك...» إلى «أستغفرك وأتوب إليك» مطابق للموضع. المطابقة موضعية لا سندية.\nرابط المطالعة المباشر: https://najafdesertlibrary.com/book/%D9%85%D9%81%D8%A7%D8%AA%D9%8A%D8%AD-%D8%A7%D9%84%D8%AC%D9%86%D8%A7%D9%86/v/1/p/65",
       "lines": [
         {
           "index": 1,
@@ -2945,8 +2945,8 @@
       "alternateName": "",
       "type": "dua",
       "category": "الورد اليومي والتعقيبات",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
-      "sourceReference": "المصدر التراثي: مستدرك الوسائل، ج5، ص102، ح5438/8، عن عبيد بن زرارة عن أبي عبد الله عليه السلام في الدعاء بعد صلاة العشاء لطلب الرزق؛ ويذكر الهامش فلاح السائل، ص256. متن السجل مطابق في موضعه. المطابقة لا تعني حكماً على صحة السند.",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
+      "sourceReference": "المصدر التراثي: مستدرك الوسائل، ج5، ص102، ح5438/8، عن عبيد بن زرارة عن أبي عبد الله عليه السلام في الدعاء بعد صلاة العشاء لطلب الرزق؛ ويذكر الهامش فلاح السائل، ص256. متن السجل مطابق في موضعه. المطابقة لا تعني حكماً على صحة السند.\nرابط المطالعة المباشر: https://ablibrary.net/book_content/b/4411/102",
       "lines": [
         {
           "index": 1,
@@ -3107,8 +3107,8 @@
       "alternateName": "",
       "type": "dua",
       "category": "الورد اليومي والتعقيبات",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
-      "sourceReference": "المصدر التراثي: الكافي، ج3، كتاب الصلاة، باب التعقيب بعد الصلاة والدعاء، ح16، عن زرارة عن أبي جعفر عليه السلام. متن «اللهم إني أسألك من كل خير أحاط به علمك...» مطابق لحديث أقل ما يجزئ من الدعاء بعد الفريضة. المطابقة موضعية ولا تتضمن حكماً مستقلاً على السند.",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
+      "sourceReference": "المصدر التراثي: الكافي، ج3، كتاب الصلاة، باب التعقيب بعد الصلاة والدعاء، ح16، عن زرارة عن أبي جعفر عليه السلام. متن «اللهم إني أسألك من كل خير أحاط به علمك...» مطابق لحديث أقل ما يجزئ من الدعاء بعد الفريضة. المطابقة موضعية ولا تتضمن حكماً مستقلاً على السند.\nرابط المطالعة المباشر: https://thaqalayn.com/ar/hadith/3/4/32/16",
       "lines": [
         {
           "index": 1,
@@ -3148,7 +3148,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "الورد اليومي والتعقيبات",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 414؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -3269,8 +3269,8 @@
       "alternateName": "",
       "type": "dua",
       "category": "الورد اليومي والتعقيبات",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
-      "sourceReference": "المصدر التراثي: الكافي، ج3، كتاب الصلاة، باب السجود والتسبيح والدعاء فيه، ح9؛ ونقله الوافي، ج9، ص1567، ح8945-2. متن دعاء السجدة مطابق. المطابقة تثبت موضع النص ولا تحكم بصحة السند.",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
+      "sourceReference": "المصدر التراثي: الكافي، ج3، كتاب الصلاة، باب السجود والتسبيح والدعاء فيه، ح9؛ ونقله الوافي، ج9، ص1567، ح8945-2. متن دعاء السجدة مطابق. المطابقة تثبت موضع النص ولا تحكم بصحة السند.\nرابط المطالعة المباشر: https://www.masaha.org/book/view/1334/page/1567",
       "lines": [
         {
           "index": 1,
@@ -3310,8 +3310,8 @@
       "alternateName": "",
       "type": "dua",
       "category": "الورد اليومي والتعقيبات",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
-      "sourceReference": "المصدر التراثي: الكافي، ج3، كتاب الصلاة، باب السجود والتسبيح والدعاء فيه، ح7. السجل مقتطف من الرواية، لكنه يحذف عبارة «وافعل بي كذا وكذا» الواردة في المصدر بين الصلاة على محمد وآل محمد وجملة «فإني عبدك ناصيتي في قبضتك»؛ لذلك يبقى تنبيه الاختصار مطلوباً ولا يُعرض كسياق كامل مطابق.",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
+      "sourceReference": "المصدر التراثي: الكافي، ج3، كتاب الصلاة، باب السجود والتسبيح والدعاء فيه، ح7. السجل مقتطف من الرواية، لكنه يحذف عبارة «وافعل بي كذا وكذا» الواردة في المصدر بين الصلاة على محمد وآل محمد وجملة «فإني عبدك ناصيتي في قبضتك»؛ لذلك يبقى تنبيه الاختصار مطلوباً ولا يُعرض كسياق كامل مطابق.\nرابط المطالعة المباشر: https://thaqalayn.com/ar/hadith/3/4/25/7",
       "lines": [
         {
           "index": 1,
@@ -4803,7 +4803,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "الورد اليومي والتعقيبات",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 396؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -4854,7 +4854,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "الورد اليومي والتعقيبات",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 397؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -4895,7 +4895,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "الأدعية الكبرى والمناجاة الشريفة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "مصباح المتهجد، أعمال ليلة الجمعة: دعاء كميل بن زياد.",
       "lines": [
         {
@@ -6156,7 +6156,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "الأدعية الكبرى والمناجاة الشريفة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "مفاتيح الجنان، باب الأدعية: دعاء التوسل؛ لم يُجرَ هنا تحقيق مستقل للإسناد.",
       "lines": [
         {
@@ -7037,7 +7037,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "الأدعية الكبرى والمناجاة الشريفة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "مزار ابن المشهدي ومصباح الزائر: دعاء الندبة.",
       "lines": [
         {
@@ -8873,7 +8873,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "الأدعية الكبرى والمناجاة الشريفة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "بلد الأمين للكفعمي: دعاء الجوشن الكبير.",
       "lines": [
         {
@@ -14939,7 +14939,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "الأدعية الكبرى والمناجاة الشريفة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "بلد الأمين للكفعمي: دعاء الجوشن الصغير.",
       "lines": [
         {
@@ -17145,7 +17145,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "الأدعية الكبرى والمناجاة الشريفة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "مصباح المتهجد: دعاء العشرات.",
       "lines": [
         {
@@ -18026,7 +18026,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "الأدعية الكبرى والمناجاة الشريفة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "مصباح المتهجد: دعاء السمات.",
       "lines": [
         {
@@ -18887,7 +18887,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "الأدعية الكبرى والمناجاة الشريفة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "مهج الدعوات لابن طاووس: دعاء المشلول.",
       "lines": [
         {
@@ -20198,7 +20198,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "الأدعية الكبرى والمناجاة الشريفة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "مفاتيح الجنان: دعاء العديلة.",
       "lines": [
         {
@@ -20839,7 +20839,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "الأدعية الكبرى والمناجاة الشريفة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "مفاتيح الجنان: دعاء عالي المضامين.",
       "lines": [
         {
@@ -21920,7 +21920,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "الأدعية الكبرى والمناجاة الشريفة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "مفاتيح الجنان: دعاء علقمة بعد زيارة عاشوراء.",
       "lines": [
         {
@@ -22896,7 +22896,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "الأدعية الكبرى والمناجاة الشريفة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 362؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -22947,7 +22947,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "الأدعية الكبرى والمناجاة الشريفة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 410؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -22998,7 +22998,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "الأدعية الكبرى والمناجاة الشريفة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 107؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -23494,7 +23494,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "الأدعية الكبرى والمناجاة الشريفة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 415؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -24255,7 +24255,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "الأدعية الكبرى والمناجاة الشريفة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 17؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -24361,7 +24361,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "الأدعية الكبرى والمناجاة الشريفة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "الصحيفة السجادية، الدعاء 20: مكارم الأخلاق.",
       "lines": [
         {
@@ -25492,7 +25492,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "الأدعية الكبرى والمناجاة الشريفة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 359؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -25553,7 +25553,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "الأدعية الكبرى والمناجاة الشريفة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 358؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -25614,7 +25614,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "الأدعية الكبرى والمناجاة الشريفة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 405؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -25660,7 +25660,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "الأدعية الكبرى والمناجاة الشريفة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 292؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -25681,7 +25681,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "الأدعية الكبرى والمناجاة الشريفة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 293؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -25702,7 +25702,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "الأدعية الكبرى والمناجاة الشريفة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 408؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -25773,7 +25773,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "الأدعية الكبرى والمناجاة الشريفة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 409؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -29140,7 +29140,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 4؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -30341,7 +30341,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "إقبال الأعمال لابن طاووس: دعاء أبي حمزة الثمالي.",
       "lines": [
         {
@@ -33712,7 +33712,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "إقبال الأعمال لابن طاووس: دعاء البهاء في أسحار شهر رمضان.",
       "lines": [
         {
@@ -34063,7 +34063,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "إقبال الأعمال لابن طاووس: عمل أم داود.",
       "lines": [
         {
@@ -35514,7 +35514,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "مفاتيح الجنان: دعاء المجير، من أعمال أيام البيض.",
       "lines": [
         {
@@ -36900,7 +36900,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 55؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -36956,7 +36956,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 97؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -37462,7 +37462,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 54؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -37713,7 +37713,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 87؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -37854,7 +37854,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 89؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -38015,7 +38015,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 57؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -38061,7 +38061,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 58؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -38102,7 +38102,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 59؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -38143,7 +38143,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 60؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -38189,7 +38189,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 61؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -38230,7 +38230,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجلات 62، 63، 64، 65، 66؛ جُمعت نصوص الأيام تحت عنوان جامع، ولا تذكر السجلات الكتاب التراثي الأصلي.",
       "lines": [
         {
@@ -38421,7 +38421,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجلات 67، 68، 69، 70، 71؛ جُمعت نصوص الأيام تحت عنوان جامع، ولا تذكر السجلات الكتاب التراثي الأصلي.",
       "lines": [
         {
@@ -38607,7 +38607,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجلات 72، 73، 74، 75، 76؛ جُمعت نصوص الأيام تحت عنوان جامع، ولا تذكر السجلات الكتاب التراثي الأصلي.",
       "lines": [
         {
@@ -38798,7 +38798,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجلات 77، 78، 79، 80، 81؛ جُمعت نصوص الأيام تحت عنوان جامع، ولا تذكر السجلات الكتاب التراثي الأصلي.",
       "lines": [
         {
@@ -38989,7 +38989,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجلات 82، 83، 84، 85، 86؛ جُمعت نصوص الأيام تحت عنوان جامع، ولا تذكر السجلات الكتاب التراثي الأصلي.",
       "lines": [
         {
@@ -39185,7 +39185,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 105؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -39456,7 +39456,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 29؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -39512,7 +39512,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 32؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -40248,7 +40248,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 31؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -40289,7 +40289,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 28؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -40335,7 +40335,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 35؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -40406,7 +40406,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 140؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -40477,7 +40477,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 141؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -40578,7 +40578,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 142؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -40679,7 +40679,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 144؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -40715,7 +40715,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 151؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -40836,7 +40836,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 153؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -40917,7 +40917,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 155؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -41068,7 +41068,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 157؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -41329,7 +41329,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 158؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -41355,7 +41355,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "إقبال الأعمال ومفاتيح الجنان: المناجاة الشعبانية.",
       "lines": [
         {
@@ -42041,7 +42041,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 162؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -42127,7 +42127,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 164؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -42183,7 +42183,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 172؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -42589,7 +42589,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 177؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -42840,7 +42840,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 178؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -42986,7 +42986,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 179؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -43047,7 +43047,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 181؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -44388,7 +44388,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "إقبال الأعمال لابن طاووس: دعاء يوم عرفة للإمام الحسين عليه السلام.",
       "lines": [
         {
@@ -48579,7 +48579,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 101؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -48700,7 +48700,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 191؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -48816,7 +48816,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 195؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -49452,7 +49452,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 201؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -50393,7 +50393,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 202؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -50449,7 +50449,7 @@
       "alternateName": "",
       "type": "occasion",
       "category": "أدعية المناسبات والشهور العبادية",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 26 (Dua on sighting new Muharram Moon)؛ لا يذكر السجل كتاباً تراثياً أولياً.",
       "lines": [
         {
@@ -57195,7 +57195,7 @@
       "alternateName": "",
       "type": "quran",
       "category": "أدعية الحوائج، التحصينات والرزق",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 137؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -57221,7 +57221,7 @@
       "alternateName": "",
       "type": "quran",
       "category": "أدعية الحوائج، التحصينات والرزق",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 287؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -57247,7 +57247,7 @@
       "alternateName": "",
       "type": "quran",
       "category": "أدعية الحوائج، التحصينات والرزق",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 288؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -57273,7 +57273,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية الحوائج، التحصينات والرزق",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 294؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -57294,7 +57294,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية الحوائج، التحصينات والرزق",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 295؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -57315,7 +57315,7 @@
       "alternateName": "",
       "type": "quran",
       "category": "أدعية الحوائج، التحصينات والرزق",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 317؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -57336,7 +57336,7 @@
       "alternateName": "",
       "type": "quran",
       "category": "أدعية الحوائج، التحصينات والرزق",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 318؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -57352,7 +57352,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية الحوائج، التحصينات والرزق",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 319؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -57408,7 +57408,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية الحوائج، التحصينات والرزق",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 404؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -57444,7 +57444,7 @@
       "alternateName": "",
       "type": "dua",
       "category": "أدعية الحوائج، التحصينات والرزق",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 411؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -58235,7 +58235,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 12؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -58416,7 +58416,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 15؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -58882,7 +58882,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "من لا يحضره الفقيه، كتاب الحج: الزيارة الجامعة الكبيرة.",
       "lines": [
         {
@@ -60953,7 +60953,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "الاحتجاج للطبرسي: زيارة آل ياسين ضمن توقيع الإمام المهدي عليه السلام.",
       "lines": [
         {
@@ -61719,7 +61719,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "كامل الزيارات: زيارة الإمام الحسين عليه السلام يوم عاشوراء.",
       "lines": [
         {
@@ -62405,7 +62405,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "مفاتيح الجنان: الزيارة الجامعة الصغيرة.",
       "lines": [
         {
@@ -62536,7 +62536,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 33؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -62957,7 +62957,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 34؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -63213,7 +63213,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 41؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -63594,7 +63594,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "المزار الكبير: زيارة الناحية المقدسة.",
       "lines": [
         {
@@ -65860,7 +65860,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 43؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -65926,7 +65926,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 44؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -66122,7 +66122,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 46؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -66243,7 +66243,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 47؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -66299,7 +66299,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 49؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -66410,7 +66410,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 50؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -66591,7 +66591,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 98؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -66682,7 +66682,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "مفاتيح الجنان: زيارة أمين الله.",
       "lines": [
         {
@@ -67008,7 +67008,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "تهذيب الأحكام، كتاب المزار: زيارة الأربعين.",
       "lines": [
         {
@@ -67409,7 +67409,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 114؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -67675,7 +67675,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 115؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -69241,7 +69241,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 116؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -69387,7 +69387,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 117؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -69558,7 +69558,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 118؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -69949,7 +69949,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 119؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -70210,7 +70210,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 120؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -70986,7 +70986,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 121؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -71302,7 +71302,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 123؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -71488,7 +71488,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 124؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -71594,7 +71594,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 127؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -71935,7 +71935,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 128؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -72761,7 +72761,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 146؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -73062,7 +73062,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 152؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -73408,7 +73408,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 154؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -74769,7 +74769,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 192؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -77625,7 +77625,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 193؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -77861,7 +77861,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 304؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -78212,7 +78212,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 306؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -78393,7 +78393,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 308؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -78669,7 +78669,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 310؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -78810,7 +78810,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 312؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -78961,7 +78961,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 314؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -79042,7 +79042,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 316؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -79243,7 +79243,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 320؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -79344,7 +79344,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 352؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -79415,7 +79415,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 353؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -79451,7 +79451,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 354؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -79477,7 +79477,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 363؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -79583,7 +79583,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 364؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -79689,7 +79689,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 51؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -79805,7 +79805,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 418؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -79851,7 +79851,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 419؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -79927,7 +79927,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "مصباح المتهجد وأعمال الزيارة: زيارة الإمام الحسين عليه السلام في كربلاء.",
       "lines": [
         {
@@ -80233,7 +80233,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 423؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -80309,7 +80309,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 424؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -80400,7 +80400,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "مفاتيح الجنان: زيارة أبي الفضل العباس عليه السلام.",
       "lines": [
         {
@@ -80766,7 +80766,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 428؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
       "lines": [
         {
@@ -80872,7 +80872,7 @@
       "alternateName": "",
       "type": "ziyarat",
       "category": "الزيارات الشريفة والمقامات المقدسة",
-      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/main/duas_data.json",
+      "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
       "sourceReference": "قاعدة Shia Devotions، السجل رقم 427 (Ziarat Wida of Hazrat Abbas in Karbala)؛ لا يذكر السجل كتاباً تراثياً أولياً.",
       "lines": [
         {

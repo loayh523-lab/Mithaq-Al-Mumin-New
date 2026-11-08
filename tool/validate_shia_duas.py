@@ -10,6 +10,8 @@ from pathlib import Path
 
 ASSET = Path("assets/shia_duas/shia_duas.json")
 EXPECTED_TOTAL = 250
+SOURCE_DATASET_COMMIT = "a59bd5f8fe078532622a08ea60c19d164fb425cb"
+SOURCE_DATASET_URL = f"https://github.com/KazTronics/AhlulBayt_Treasures/blob/{SOURCE_DATASET_COMMIT}/duas_data.json"
 EXPECTED_CATEGORIES = {
     "الورد اليومي والتعقيبات": 32,
     "الأدعية الكبرى والمناجاة الشريفة": 25,
@@ -57,6 +59,9 @@ def main() -> None:
     if metadata.get("categoryCounts") != EXPECTED_CATEGORIES:
         errors.append("Metadata categoryCounts do not match the approved six-section distribution.")
 
+    if metadata.get("sourceIndex") != SOURCE_DATASET_URL:
+        errors.append("metadata.sourceIndex must point to the pinned Shia Devotions dataset commit.")
+
     categories: Counter[str] = Counter()
     types: Counter[str] = Counter()
     slugs: set[str] = set()
@@ -94,6 +99,12 @@ def main() -> None:
             database_only += 1
         if not isinstance(entry.get("sourceUrl"), str) or not entry["sourceUrl"].startswith("https://"):
             errors.append(f"{slug}: missing HTTPS source URL.")
+
+        source_url = entry.get("sourceUrl", "")
+        if "github.com/KazTronics/AhlulBayt_Treasures/blob/main/" in source_url:
+            errors.append(f"{slug}: mutable main-branch database URL; pin it to {SOURCE_DATASET_COMMIT}.")
+        if "github.com/KazTronics/AhlulBayt_Treasures/blob/" in source_url and SOURCE_DATASET_COMMIT not in source_url:
+            errors.append(f"{slug}: database URL does not use the pinned source commit.")
 
         lines = entry.get("lines")
         if not isinstance(lines, list) or not lines:

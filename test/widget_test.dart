@@ -1178,9 +1178,13 @@ void main() {
       ).first,
     );
     expect(find.text('أقسام الأذكار'), findsOneWidget);
-    expect(find.textContaining('التسبيحات'), findsWidgets);
-    expect(find.textContaining('المناجاة'), findsWidgets);
-    expect(find.textContaining('العوذات'), findsWidgets);
+    final categoryLabels = tester
+        .widgetList<ChoiceChip>(find.byType(ChoiceChip))
+        .map((chip) => (chip.label as Text).data ?? '')
+        .toList();
+    expect(categoryLabels.any((label) => label.startsWith('التسبيحات')), isTrue);
+    expect(categoryLabels.any((label) => label.startsWith('المناجاة')), isTrue);
+    expect(categoryLabels.any((label) => label.startsWith('العوذات')), isTrue);
     expect(find.text('أذكار الصباح'), findsNothing);
     expect(find.text('أذكار المساء'), findsNothing);
     expect(tester.takeException(), isNull);

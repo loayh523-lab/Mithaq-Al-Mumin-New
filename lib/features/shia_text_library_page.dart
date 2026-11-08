@@ -889,7 +889,9 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
                     children: [
                       Text(
                         widget.entry.sourceReference.trim().isNotEmpty
-                            ? 'الإحالة المسجلة في بيانات النص: ${widget.entry.sourceReference}'
+                            ? (widget.entry.type == 'quran'
+                                ? 'الموضع القرآني: ${widget.entry.sourceReference}'
+                                : 'الإحالة المسجلة في بيانات النص: ${widget.entry.sourceReference}')
                             : 'لا توجد إحالة نصية مسجلة في بيانات هذا النص',
                         textDirection: TextDirection.rtl,
                         style: TextStyle(
@@ -901,7 +903,9 @@ class _ShiaTextReaderPageState extends State<ShiaTextReaderPage> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'هذه إحالة واردة في مجموعة البيانات، وليست بحد ذاتها مقابلة مستقلة على طبعة أصلية أو حكماً على صحة نسبة النص.',
+                        widget.entry.type == 'quran'
+                            ? 'تم تحديد موضع هذا النص في القرآن الكريم بالسورة والآية. هذا التوثيق خاص بالنص القرآني، ولا يُعد حكماً على أسانيد الأدعية والروايات الأخرى.'
+                            : 'هذه إحالة واردة في مجموعة البيانات، وليست بحد ذاتها مقابلة مستقلة على طبعة أصلية أو حكماً على صحة نسبة النص.',
                         textDirection: TextDirection.rtl,
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.onSurfaceVariant,

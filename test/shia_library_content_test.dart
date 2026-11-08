@@ -58,6 +58,39 @@ void main() {
       expect(completeTexts, hasLength(250));
     });
 
+    test('Quranic texts have direct verse references and accurate classification', () async {
+      final data = await ShiaTextData.loadCore();
+      final bySlug = {for (final entry in data.entries) entry.slug: entry};
+
+      const expectedReferences = <String, String>{
+        'hajat-137': 'سورة البقرة، الآيات 255–257 (2:255–257)',
+        'hajat-287': 'سورة آل عمران، الآيتان 18–19 (3:18–19)',
+        'hajat-288': 'سورة آل عمران، الآيتان 26–27 (3:26–27)',
+        'hajat-317': 'سورة الأنبياء، الآيتان 87–88 (21:87–88)',
+        'hajat-318': 'سورة الأنعام، الآية 59 (6:59)',
+        'major-292': 'سورة آل عمران، الآية 147 (3:147)',
+        'major-293': 'سورة آل عمران، الآية 8 (3:8)',
+      };
+
+      for (final item in expectedReferences.entries) {
+        final entry = bySlug[item.key];
+        expect(entry, isNotNull, reason: 'Missing Quran item: ${item.key}');
+        expect(entry!.type, 'quran', reason: 'Incorrect type: ${item.key}');
+        expect(entry.sourceReference, contains(item.value),
+            reason: 'Missing direct Quran reference: ${item.key}');
+        expect(entry.sourceReference, isNot(contains('لا يذكر السجل اسم الكتاب التراثي الأصلي')));
+      }
+
+      expect(bySlug['hajat-137']!.title, 'آية الكرسي والآيتان بعدها');
+      final quranEntries = data.entries.where((entry) => entry.type == 'quran');
+      expect(quranEntries, hasLength(47));
+      expect(
+        quranEntries.every((entry) =>
+            !entry.sourceReference.contains('لا يذكر السجل اسم الكتاب التراثي الأصلي')),
+        isTrue,
+      );
+    });
+
     test('five prayer taqibat have distinct meaningful titles', () async {
       final data = await ShiaTextData.loadCore();
       final taqibat = data.entries

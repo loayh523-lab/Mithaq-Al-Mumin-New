@@ -1178,7 +1178,11 @@ void main() {
       ).first,
     );
     expect(find.text('أقسام الأذكار'), findsOneWidget);
-    await tester.drag(find.byType(ListView).first, const Offset(0, -260));
+    await tester.dragUntilVisible(
+      find.textContaining('التسبيحات'),
+      find.byType(ListView).first,
+      const Offset(0, -200),
+    );
     await tester.pumpAndSettle();
     final categoryLabels = tester
         .widgetList<ChoiceChip>(find.byType(ChoiceChip))

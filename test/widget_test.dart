@@ -1184,7 +1184,7 @@ void main() {
         .widgetList<ChoiceChip>(find.byType(ChoiceChip))
         .map((chip) => (chip.label as Text).data ?? '')
         .toList();
-    expect(categoryLabels.any((label) => label.startsWith('التسبيحات')), isTrue);
+    expect(categoryLabels.any((label) => label.startsWith('التسبيحات')), isTrue, reason: 'Actual category chip labels: $categoryLabels');
     expect(categoryLabels.any((label) => label.startsWith('المناجاة')), isTrue);
     expect(categoryLabels.any((label) => label.startsWith('العوذات')), isTrue);
     expect(find.text('أذكار الصباح'), findsNothing);

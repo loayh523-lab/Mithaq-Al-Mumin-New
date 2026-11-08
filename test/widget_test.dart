@@ -1163,27 +1163,17 @@ void main() {
   });
 
   testWidgets('adhkar section is broad, categorized, and highlights a date-selected dhikr', (tester) async {
+    tester.view.physicalSize = const Size(900, 1800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
     await tester.pumpWidget(const MaterialApp(
       home: Directionality(textDirection: TextDirection.rtl, child: DhikrFortressPage()),
     ));
     await tester.pumpAndSettle();
     expect(find.text('الأذكار'), findsOneWidget);
     expect(find.text('ذِكر اليوم'), findsOneWidget);
-    await tester.scrollUntilVisible(
-      find.text('أقسام الأذكار'),
-      250,
-      scrollable: find.descendant(
-        of: find.byType(ListView).first,
-        matching: find.byType(Scrollable),
-      ).first,
-    );
     expect(find.text('أقسام الأذكار'), findsOneWidget);
-    await tester.fling(
-      find.byType(ListView).first,
-      const Offset(0, -1200),
-      1200,
-    );
-    await tester.pumpAndSettle();
     final categoryLabels = tester
         .widgetList<ChoiceChip>(find.byType(ChoiceChip))
         .map((chip) => (chip.label as Text).data ?? '')

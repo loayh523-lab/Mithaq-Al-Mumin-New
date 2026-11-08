@@ -10,7 +10,7 @@ from pathlib import Path
 
 ASSET = Path("assets/shia_duas/shia_duas.json")
 EXPECTED_TOTAL = 250
-MAX_DATABASE_ONLY_ENTRIES = 93
+MAX_DATABASE_ONLY_ENTRIES = 92
 SOURCE_DATASET_COMMIT = "a59bd5f8fe078532622a08ea60c19d164fb425cb"
 SOURCE_DATASET_URL = f"https://github.com/KazTronics/AhlulBayt_Treasures/blob/{SOURCE_DATASET_COMMIT}/duas_data.json"
 EXPECTED_CATEGORIES = {
@@ -49,6 +49,7 @@ EXPECTED_DUA_SOURCE_REFERENCES = {
     "major-408": "مكارم الأخلاق",
     "major-409": "مستدرك الوسائل",
     "major-410": "البلد الأمين",
+    "major-415": "مفاتيح الجنان",
 }
 
 PERSIAN = re.compile(r"[\u067e\u0686\u0698\u06af\u06a9\u06cc]")
@@ -204,6 +205,9 @@ def main() -> None:
             f"Source audit regression: {database_only} database-only records; "
             f"expected no more than {MAX_DATABASE_ONLY_ENTRIES}."
         )
+
+    if entry_by_slug.get("major-415", {}).get("type") != "occasion":
+        errors.append("major-415 must be classified as an act, not a standalone dua.")
 
     if types["sahifa"] != 20 or types["munajat"] != 15:
         errors.append("Sahifa section must contain 20 selected supplications and 15 Munajat.")

@@ -133,6 +133,7 @@ void main() {
         'major-408': 'مكارم الأخلاق',
         'major-409': 'مستدرك الوسائل',
         'major-410': 'البلد الأمين',
+        'major-415': 'مفاتيح الجنان',
       };
 
       for (final item in expectedSources.entries) {
@@ -146,6 +147,7 @@ void main() {
           reason: 'Unresolved-source marker remains: ${item.key}',
         );
       }
+      expect(bySlug['major-415']!.type, 'occasion');
     });
 
     test('five prayer taqibat have distinct meaningful titles', () async {

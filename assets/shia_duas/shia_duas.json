@@ -25658,10 +25658,10 @@
       "slug": "major-292",
       "title": "دعاء القنوت: ربنا اغفر لنا ذنوبنا",
       "alternateName": "",
-      "type": "dua",
+      "type": "quran",
       "category": "الأدعية الكبرى والمناجاة الشريفة",
       "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
-      "sourceReference": "قاعدة Shia Devotions، السجل رقم 292؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
+      "sourceReference": "القرآن الكريم، سورة آل عمران، الآية 147 (3:147)، مقتطف دعائي من الآية يبدأ بعبارة «ربنا اغفر لنا». البسملة في أول السجل افتتاحية عرض وليست من ألفاظ الآية. مصدر الفهرسة الرقمي: Shia Devotions، السجل 292.",
       "lines": [
         {
           "index": 1,
@@ -25679,10 +25679,10 @@
       "slug": "major-293",
       "title": "دعاء القنوت: ربنا لا تزغ قلوبنا",
       "alternateName": "",
-      "type": "dua",
+      "type": "quran",
       "category": "الأدعية الكبرى والمناجاة الشريفة",
       "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
-      "sourceReference": "قاعدة Shia Devotions، السجل رقم 293؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
+      "sourceReference": "القرآن الكريم، سورة آل عمران، الآية 8 (3:8). البسملة في أول السجل افتتاحية عرض وليست من ألفاظ الآية. مصدر الفهرسة الرقمي: Shia Devotions، السجل 293.",
       "lines": [
         {
           "index": 1,
@@ -57191,12 +57191,12 @@
     },
     {
       "slug": "hajat-137",
-      "title": "آية الكرسي",
+      "title": "آية الكرسي والآيتان بعدها",
       "alternateName": "",
       "type": "quran",
       "category": "أدعية الحوائج، التحصينات والرزق",
       "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
-      "sourceReference": "قاعدة Shia Devotions، السجل رقم 137؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
+      "sourceReference": "القرآن الكريم، سورة البقرة، الآيات 255–257 (2:255–257). آية الكرسي هي الآية 255، ويضم هذا السجل الآيتين 256 و257 بعدها. مصدر الفهرسة الرقمي: Shia Devotions، السجل 137.",
       "lines": [
         {
           "index": 1,
@@ -57222,7 +57222,7 @@
       "type": "quran",
       "category": "أدعية الحوائج، التحصينات والرزق",
       "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
-      "sourceReference": "قاعدة Shia Devotions، السجل رقم 287؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
+      "sourceReference": "القرآن الكريم، سورة آل عمران، الآيتان 18–19 (3:18–19). النص آيات قرآنية، وليس رواية دعاء. مصدر الفهرسة الرقمي: Shia Devotions، السجل 287.",
       "lines": [
         {
           "index": 1,
@@ -57248,7 +57248,7 @@
       "type": "quran",
       "category": "أدعية الحوائج، التحصينات والرزق",
       "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
-      "sourceReference": "قاعدة Shia Devotions، السجل رقم 288؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
+      "sourceReference": "القرآن الكريم، سورة آل عمران، الآيتان 26–27 (3:26–27). النص آيات قرآنية، وليس رواية دعاء. مصدر الفهرسة الرقمي: Shia Devotions، السجل 288.",
       "lines": [
         {
           "index": 1,
@@ -57316,7 +57316,7 @@
       "type": "quran",
       "category": "أدعية الحوائج، التحصينات والرزق",
       "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
-      "sourceReference": "قاعدة Shia Devotions، السجل رقم 317؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
+      "sourceReference": "القرآن الكريم، سورة الأنبياء، الآيتان 87–88 (21:87–88). المقطع هو دعاء ذي النون وما يتلوه من الآية التالية. مصدر الفهرسة الرقمي: Shia Devotions، السجل 317.",
       "lines": [
         {
           "index": 1,
@@ -57337,7 +57337,7 @@
       "type": "quran",
       "category": "أدعية الحوائج، التحصينات والرزق",
       "sourceUrl": "https://github.com/KazTronics/AhlulBayt_Treasures/blob/a59bd5f8fe078532622a08ea60c19d164fb425cb/duas_data.json",
-      "sourceReference": "قاعدة Shia Devotions، السجل رقم 318؛ لا يذكر السجل اسم الكتاب التراثي الأصلي، لذا لا تُعد هذه إحالةً إلى سند أو مصدر أولي.",
+      "sourceReference": "القرآن الكريم، سورة الأنعام، الآية 59 (6:59). مصدر الفهرسة الرقمي: Shia Devotions، السجل 318.",
       "lines": [
         {
           "index": 1,

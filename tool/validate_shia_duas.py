@@ -21,6 +21,16 @@ EXPECTED_CATEGORIES = {
     "الزيارات الشريفة والمقامات المقدسة": 58,
 }
 ALLOWED_TYPES = {"dua", "dhikr", "daily", "munajat", "occasion", "sahifa", "quran", "ziyarat"}
+EXPECTED_QURAN_REFERENCES = {
+    "hajat-137": "سورة البقرة، الآيات 255–257 (2:255–257)",
+    "hajat-287": "سورة آل عمران، الآيتان 18–19 (3:18–19)",
+    "hajat-288": "سورة آل عمران، الآيتان 26–27 (3:26–27)",
+    "hajat-317": "سورة الأنبياء، الآيتان 87–88 (21:87–88)",
+    "hajat-318": "سورة الأنعام، الآية 59 (6:59)",
+    "major-292": "سورة آل عمران، الآية 147 (3:147)",
+    "major-293": "سورة آل عمران، الآية 8 (3:8)",
+}
+
 PERSIAN = re.compile(r"[\u067e\u0686\u0698\u06af\u06a9\u06cc]")
 LATIN = re.compile(r"[A-Za-z]")
 ARABIC = re.compile(r"[\u0600-\u06ff]")
@@ -139,6 +149,25 @@ def main() -> None:
         errors.append(f"Expected {EXPECTED_TOTAL} unique slugs, found {len(slugs)}.")
     if len(signatures) != EXPECTED_TOTAL:
         errors.append(f"Expected {EXPECTED_TOTAL} unique complete texts, found {len(signatures)}.")
+
+    entry_by_slug = {
+        entry.get("slug"): entry
+        for entry in entries
+        if isinstance(entry, dict) and isinstance(entry.get("slug"), str)
+    }
+    for slug, expected_reference in EXPECTED_QURAN_REFERENCES.items():
+        entry = entry_by_slug.get(slug)
+        if entry is None:
+            errors.append(f"{slug}: required Quranic source-verification entry is missing.")
+            continue
+        if entry.get("type") != "quran":
+            errors.append(f"{slug}: Quranic source-verification entry must have type='quran'.")
+        source_reference = entry.get("sourceReference", "")
+        if expected_reference not in source_reference:
+            errors.append(f"{slug}: expected direct Quran reference {expected_reference!r}.")
+        if "لا يذكر السجل اسم الكتاب التراثي الأصلي" in source_reference:
+            errors.append(f"{slug}: verified Quranic entry still carries an unresolved-source marker.")
+
     if types["sahifa"] != 20 or types["munajat"] != 15:
         errors.append("Sahifa section must contain 20 selected supplications and 15 Munajat.")
     if any(

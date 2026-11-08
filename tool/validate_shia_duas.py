@@ -10,7 +10,7 @@ from pathlib import Path
 
 ASSET = Path("assets/shia_duas/shia_duas.json")
 EXPECTED_TOTAL = 250
-MAX_DATABASE_ONLY_ENTRIES = 102
+MAX_DATABASE_ONLY_ENTRIES = 93
 SOURCE_DATASET_COMMIT = "a59bd5f8fe078532622a08ea60c19d164fb425cb"
 SOURCE_DATASET_URL = f"https://github.com/KazTronics/AhlulBayt_Treasures/blob/{SOURCE_DATASET_COMMIT}/duas_data.json"
 EXPECTED_CATEGORIES = {
@@ -34,12 +34,21 @@ EXPECTED_QURAN_REFERENCES = {
 EXPECTED_DUA_SOURCE_REFERENCES = {
     "daily-283": "جنة الأمان الواقية وجنة الإيمان الباقية",
     "daily-284": "مفاتيح الجنان",
-    "daily-285": "مصباح الكفعمي",
+    "daily-285": "الكفعمي",
     "daily-286": "مدارك العروة",
     "daily-296": "من لا يحضره الفقيه",
     "daily-380": "من لا يحضره الفقيه",
     "daily-396": "الأمالي",
     "daily-397": "وسائل الشيعة",
+    "major-17": "مفاتيح الجنان",
+    "major-107": "مصباح الزائر",
+    "major-358": "الكافي",
+    "major-359": "مهج الدعوات",
+    "major-362": "مصباح المتهجد",
+    "major-405": "مصباح المتهجد",
+    "major-408": "مكارم الأخلاق",
+    "major-409": "مستدرك الوسائل",
+    "major-410": "البلد الأمين",
 }
 
 PERSIAN = re.compile(r"[\u067e\u0686\u0698\u06af\u06a9\u06cc]")

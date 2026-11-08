@@ -119,6 +119,35 @@ void main() {
       }
     });
 
+    test('major supplications retain their located historical sources', () async {
+      final data = await ShiaTextData.loadCore();
+      final bySlug = {for (final entry in data.entries) entry.slug: entry};
+
+      const expectedSources = <String, String>{
+        'major-17': 'مفاتيح الجنان',
+        'major-107': 'مصباح الزائر',
+        'major-358': 'الكافي',
+        'major-359': 'مهج الدعوات',
+        'major-362': 'مصباح المتهجد',
+        'major-405': 'مصباح المتهجد',
+        'major-408': 'مكارم الأخلاق',
+        'major-409': 'مستدرك الوسائل',
+        'major-410': 'البلد الأمين',
+      };
+
+      for (final item in expectedSources.entries) {
+        final entry = bySlug[item.key];
+        expect(entry, isNotNull, reason: 'Missing major entry: ${item.key}');
+        expect(entry!.sourceReference, contains(item.value),
+            reason: 'Missing historical source: ${item.key}');
+        expect(
+          entry.sourceReference,
+          isNot(contains('لا يذكر السجل اسم الكتاب التراثي الأصلي')),
+          reason: 'Unresolved-source marker remains: ${item.key}',
+        );
+      }
+    });
+
     test('five prayer taqibat have distinct meaningful titles', () async {
       final data = await ShiaTextData.loadCore();
       final taqibat = data.entries

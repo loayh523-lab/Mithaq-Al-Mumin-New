@@ -91,6 +91,34 @@ void main() {
       );
     });
 
+    test('daily supplications keep their verified historical source references', () async {
+      final data = await ShiaTextData.loadCore();
+      final bySlug = {for (final entry in data.entries) entry.slug: entry};
+
+      const expectedSources = <String, String>{
+        'daily-283': 'جنة الأمان الواقية وجنة الإيمان الباقية',
+        'daily-284': 'مفاتيح الجنان',
+        'daily-285': 'مصباح الكفعمي',
+        'daily-286': 'مدارك العروة',
+        'daily-296': 'من لا يحضره الفقيه',
+        'daily-380': 'من لا يحضره الفقيه',
+        'daily-396': 'الأمالي',
+        'daily-397': 'وسائل الشيعة',
+      };
+
+      for (final item in expectedSources.entries) {
+        final entry = bySlug[item.key];
+        expect(entry, isNotNull, reason: 'Missing daily entry: ${item.key}');
+        expect(entry!.sourceReference, contains(item.value),
+            reason: 'Missing historical source: ${item.key}');
+        expect(
+          entry.sourceReference,
+          isNot(contains('لا يذكر السجل اسم الكتاب التراثي الأصلي')),
+          reason: 'Unresolved-source marker remains: ${item.key}',
+        );
+      }
+    });
+
     test('five prayer taqibat have distinct meaningful titles', () async {
       final data = await ShiaTextData.loadCore();
       final taqibat = data.entries

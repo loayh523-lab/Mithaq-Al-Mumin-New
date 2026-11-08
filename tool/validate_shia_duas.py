@@ -10,6 +10,7 @@ from pathlib import Path
 
 ASSET = Path("assets/shia_duas/shia_duas.json")
 EXPECTED_TOTAL = 250
+MAX_DATABASE_ONLY_ENTRIES = 102
 SOURCE_DATASET_COMMIT = "a59bd5f8fe078532622a08ea60c19d164fb425cb"
 SOURCE_DATASET_URL = f"https://github.com/KazTronics/AhlulBayt_Treasures/blob/{SOURCE_DATASET_COMMIT}/duas_data.json"
 EXPECTED_CATEGORIES = {
@@ -29,6 +30,16 @@ EXPECTED_QURAN_REFERENCES = {
     "hajat-318": "سورة الأنعام، الآية 59 (6:59)",
     "major-292": "سورة آل عمران، الآية 147 (3:147)",
     "major-293": "سورة آل عمران، الآية 8 (3:8)",
+}
+EXPECTED_DUA_SOURCE_REFERENCES = {
+    "daily-283": "جنة الأمان الواقية وجنة الإيمان الباقية",
+    "daily-284": "مفاتيح الجنان",
+    "daily-285": "مصباح الكفعمي",
+    "daily-286": "مدارك العروة",
+    "daily-296": "من لا يحضره الفقيه",
+    "daily-380": "من لا يحضره الفقيه",
+    "daily-396": "الأمالي",
+    "daily-397": "وسائل الشيعة",
 }
 
 PERSIAN = re.compile(r"[\u067e\u0686\u0698\u06af\u06a9\u06cc]")
@@ -167,6 +178,23 @@ def main() -> None:
             errors.append(f"{slug}: expected direct Quran reference {expected_reference!r}.")
         if "لا يذكر السجل اسم الكتاب التراثي الأصلي" in source_reference:
             errors.append(f"{slug}: verified Quranic entry still carries an unresolved-source marker.")
+
+    for slug, expected_reference in EXPECTED_DUA_SOURCE_REFERENCES.items():
+        entry = entry_by_slug.get(slug)
+        if entry is None:
+            errors.append(f"{slug}: required source-verification entry is missing.")
+            continue
+        source_reference = entry.get("sourceReference", "")
+        if expected_reference not in source_reference:
+            errors.append(f"{slug}: expected historical source reference {expected_reference!r}.")
+        if "لا يذكر السجل اسم الكتاب التراثي الأصلي" in source_reference:
+            errors.append(f"{slug}: verified daily entry still carries an unresolved-source marker.")
+
+    if database_only > MAX_DATABASE_ONLY_ENTRIES:
+        errors.append(
+            f"Source audit regression: {database_only} database-only records; "
+            f"expected no more than {MAX_DATABASE_ONLY_ENTRIES}."
+        )
 
     if types["sahifa"] != 20 or types["munajat"] != 15:
         errors.append("Sahifa section must contain 20 selected supplications and 15 Munajat.")

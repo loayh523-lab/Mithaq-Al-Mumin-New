@@ -490,6 +490,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
     super.initState();
     _sahifaOnly = widget.sahifaOnly;
     const categoryAliases = <String, String>{
+      'الصحيفة السجادية المباركة (نفحات مختارة)': 'الصحيفة السجادية المباركة',
       'الصحيفة السجادية والمناجيات': 'الصحيفة السجادية المباركة',
       'الأدعية والأذكار اليومية': 'الورد اليومي والتعقيبات',
       'التعقيبات بعد الصلاة': 'الورد اليومي والتعقيبات',

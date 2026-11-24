@@ -20,7 +20,7 @@ ShiaTextEntry entry({
 void main() {
   group('Six public Arabic library sections', () {
     test('Sahifa and Munajat slugs map to the selection section', () {
-      const category = 'الصحيفة السجادية المباركة (نفحات مختارة)';
+      const category = 'الصحيفة السجادية المباركة';
       expect(entry(slug: 'sahifa-sajjadiya-01', title: 'دعاء التحميد').category, category);
       expect(entry(slug: 'munajat-sahifa-01', title: 'مناجاة التائبين').category, category);
       expect(entry(slug: 'munajat-15', title: 'مناجاة').category, category);

@@ -13,7 +13,7 @@ void main() {
         'الورد اليومي والتعقيبات': 32,
         'الأدعية الكبرى والمناجاة الشريفة': 25,
         'أدعية المناسبات والشهور العبادية': 50,
-        'الصحيفة السجادية المباركة (نفحات مختارة)': 35,
+        'الصحيفة السجادية المباركة': 35,
         'أدعية الحوائج، التحصينات والرزق': 50,
         'الزيارات الشريفة والمقامات المقدسة': 58,
       };
@@ -161,23 +161,27 @@ void main() {
       expect(taqibat.every((entry) => entry.displayTitle == entry.title), isTrue);
     });
 
-    test('the public library exposes 230 approved texts once', () async {
+    test('the public library exposes 291 unique texts including the complete Sahifa', () async {
       final data = await ShiaTextData.load();
-      expect(data.entries, hasLength(230));
-      expect(data.entries.map((entry) => entry.slug).toSet(), hasLength(230));
+      expect(data.entries, hasLength(291));
+      expect(data.entries.map((entry) => entry.slug).toSet(), hasLength(291));
       expect(data.entries.where((entry) => entry.slug.startsWith('selected-sahifa-')), isEmpty);
       expect(data.entries.where((entry) => entry.type == 'munajat'), hasLength(15));
-      expect(data.entries.where((entry) => entry.isSahifa), hasLength(15));
+      expect(data.entries.where((entry) => entry.isSahifa), hasLength(76));
+      expect(data.entries.where((entry) => entry.type == 'sahifa'), hasLength(54));
+      expect(data.entries.where((entry) => entry.type == 'sahifaSupplement'), hasLength(7));
     });
 
-    test('the Sahifa view publishes only the 15 Munajat while selected duas await approval', () async {
+    test('the Sahifa view publishes all numbered supplications and 15 Munajat', () async {
       final data = await ShiaTextData.loadSahifa();
-      expect(data.entries, hasLength(15));
-      expect(data.entries.where((entry) => entry.type == 'sahifa'), isEmpty);
+      expect(data.entries, hasLength(76));
+      expect(data.entries.where((entry) => entry.type == 'sahifa'), hasLength(54));
+      expect(data.entries.where((entry) => entry.type == 'sahifaSupplement'), hasLength(7));
       expect(data.entries.where((entry) => entry.type == 'munajat'), hasLength(15));
       expect(data.entries.every((entry) =>
-          entry.category == 'الصحيفة السجادية المباركة (نفحات مختارة)'), isTrue);
-      expect(data.entries.map((entry) => entry.slug).toSet(), hasLength(15));
+          entry.category == 'الصحيفة السجادية المباركة'), isTrue);
+      expect(data.entries.map((entry) => entry.slug).toSet(), hasLength(76));
+      expect(data.entries.where((entry) => entry.slug.startsWith('sahifa-sajjadiya-')).map((entry) => entry.slug).toSet(), hasLength(61));
     });
   });
 }

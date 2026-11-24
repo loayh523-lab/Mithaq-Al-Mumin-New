@@ -170,6 +170,17 @@ void main() {
       expect(data.entries.where((entry) => entry.isSahifa), hasLength(76));
       expect(data.entries.where((entry) => entry.type == 'sahifa'), hasLength(54));
       expect(data.entries.where((entry) => entry.type == 'sahifaSupplement'), hasLength(7));
+      final fullTextSignatures = <String>{};
+      for (final entry in data.entries) {
+        final signature = entry.arabicText
+            .replaceAll(RegExp(r'[\\u064B-\\u065F\\u0670\\u0640\\s،؛,.!?؟:…()\\-]'), '')
+            .replaceAll(RegExp('[أإآٱ]'), 'ا')
+            .replaceAll('ى', 'ي');
+        expect(signature, isNotEmpty);
+        expect(fullTextSignatures.add(signature), isTrue,
+            reason: 'Duplicate full text in public library: ${entry.slug}');
+      }
+      expect(fullTextSignatures, hasLength(291));
     });
 
     test('the Sahifa view publishes all numbered supplications and 15 Munajat', () async {

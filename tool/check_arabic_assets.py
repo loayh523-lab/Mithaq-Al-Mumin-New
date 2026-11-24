@@ -4,14 +4,15 @@ import json
 import re
 from pathlib import Path
 
-# The selected Sahifa supplications and 15 Munajat now live in the unified
-# shia_duas.json asset. Do not require the retired standalone Sahifa asset.
+# The 250-entry core library and the complete generated Sahifa/Munajat
+# collection are separate bundled assets. The latter is prepared before this check.
 ASSETS = (
     Path("assets/quran/chapters.json"),
     Path("assets/locations/iraq_administrative_divisions.json"),
     Path("assets/quran/uthmani_surahs.json"),
     Path("assets/quran/verse_metadata.json"),
     Path("assets/shia_duas/shia_duas.json"),
+    Path("assets/shia_duas/sahifa_sajjadiya.json"),
 )
 DUA_MANIFEST = Path("tool/shia_dua_manifest.json")
 # Includes Persian Yeh/Keheh as well as letters not used in standard Arabic.

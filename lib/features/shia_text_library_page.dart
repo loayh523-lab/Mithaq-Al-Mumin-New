@@ -133,6 +133,7 @@ class ShiaTextEntry {
     return 'تعقيب بعد الصلاة — $preview';
   }
   bool get isSahifa =>
+      categoryOverride == 'الصحيفة السجادية المباركة' ||
       categoryOverride == 'الصحيفة السجادية المباركة (نفحات مختارة)' ||
       categoryOverride == 'الصحيفة السجادية والمناجيات' ||
       slug.startsWith('selected-sahifa-') ||
@@ -175,13 +176,19 @@ class ShiaTextEntry {
       'الورد اليومي والتعقيبات',
       'الأدعية الكبرى والمناجاة الشريفة',
       'أدعية المناسبات والشهور العبادية',
+      'الصحيفة السجادية المباركة',
       'الصحيفة السجادية المباركة (نفحات مختارة)',
+      'الصحيفة السجادية والمناجيات',
       'أدعية الحوائج، التحصينات والرزق',
       'الزيارات الشريفة والمقامات المقدسة',
     };
     final fixed = categoryOverride;
+    if (fixed == 'الصحيفة السجادية المباركة (نفحات مختارة)' ||
+        fixed == 'الصحيفة السجادية والمناجيات') {
+      return 'الصحيفة السجادية المباركة';
+    }
     if (fixed != null && validCategories.contains(fixed)) return fixed;
-    if (isSahifa) return 'الصحيفة السجادية المباركة (نفحات مختارة)';
+    if (isSahifa) return 'الصحيفة السجادية المباركة';
     if (fixed == 'الزيارات الشريفة' || isZiyara) {
       return 'الزيارات الشريفة والمقامات المقدسة';
     }
@@ -246,39 +253,41 @@ class ShiaTextData {
   static Future<ShiaTextData> load() => _cache ??= _loadCombined();
 
   static Future<ShiaTextData> _loadCombined() async {
-    final data = await loadCore();
-    // The twenty selected Sahifa entries remain in the internal source asset
-    // until the owner confirms the exact selection. Do not publish them yet.
-    final publishedEntries = data.entries
+    final core = await loadCore();
+    final sahifa = await loadSahifa();
+    // Legacy selected-sahifa rows stay hidden; the complete numbered collection
+    // replaces them so no supplication is published twice.
+    final publishedCore = core.entries
         .where((entry) => !entry.slug.startsWith('selected-sahifa-'))
         .toList(growable: false);
+    // The 15 Munajat already exist in the core bundle. Add only the 61 numbered
+    // supplications from the separately generated complete Sahifa collection.
+    final completeSupplications = sahifa.entries
+        .where((entry) =>
+            entry.type == 'sahifa' || entry.type == 'sahifaSupplement')
+        .toList(growable: false);
+    final publishedEntries = <ShiaTextEntry>[
+      ...publishedCore,
+      ...completeSupplications,
+    ];
+    if (publishedEntries.length != 291 ||
+        publishedEntries.map((entry) => entry.slug).toSet().length != 291) {
+      throw const FormatException(
+        'The published library must contain 291 unique entries, including the full Sahifa.',
+      );
+    }
     return ShiaTextData(
       entries: List<ShiaTextEntry>.unmodifiable(publishedEntries),
-      sourceProject: data.sourceProject,
-      license: data.license,
+      sourceProject: core.sourceProject,
+      license: core.license,
     );
   }
 
-  /// Publish the fifteen Sahifa Munajat only. The twenty selected supplications
-  /// remain in the internal source asset until their identifiers are approved.
-  static Future<ShiaTextData> loadSahifa() => _sahifaCache ??= loadCore().then(
-        (data) {
-          final entries = data.entries
-              .where((entry) =>
-                  entry.category == 'الصحيفة السجادية المباركة (نفحات مختارة)' &&
-                  entry.type == 'munajat')
-              .toList(growable: false);
-          if (entries.length != 15) {
-            throw FormatException(
-              'Expected 15 published Sahifa Munajat; found ${entries.length}.',
-            );
-          }
-          return ShiaTextData(
-            entries: entries,
-            sourceProject: data.sourceProject,
-            license: data.license,
-          );
-        },
+  /// Full Sahifa collection: 54 core supplications, seven weekday appendices,
+  /// and all fifteen Munajat, loaded from the separately generated offline asset.
+  static Future<ShiaTextData> loadSahifa() => _sahifaCache ??= _loadAsset(
+        'assets/shia_duas/sahifa_sajjadiya.json',
+        expectedCount: 76,
       );
 
   static Future<ShiaTextData> _loadAsset(
@@ -305,7 +314,7 @@ class ShiaTextData {
       'الورد اليومي والتعقيبات',
       'الأدعية الكبرى والمناجاة الشريفة',
       'أدعية المناسبات والشهور العبادية',
-      'الصحيفة السجادية المباركة (نفحات مختارة)',
+      'الصحيفة السجادية المباركة',
       'أدعية الحوائج، التحصينات والرزق',
       'الزيارات الشريفة والمقامات المقدسة',
       'الأدعية والأذكار اليومية',
@@ -386,9 +395,9 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
     } else if (category == 'أدعية المناسبات والشهور العبادية') {
       icon = Icons.calendar_month_rounded;
       description = 'أعمال الشهور والمناسبات الدينية';
-    } else if (category == 'الصحيفة السجادية المباركة (نفحات مختارة)') {
+    } else if (category == 'الصحيفة السجادية المباركة') {
       icon = Icons.menu_book_rounded;
-      description = 'تظهر المختارات بعد تثبيت العناوين المعتمدة';
+      description = '54 دعاءً أصلياً و7 أدعية ملحقة و15 مناجاة';
     } else if (category == 'أدعية الحوائج، التحصينات والرزق') {
       icon = Icons.shield_moon_rounded;
       description = 'أدعية قرآنية ومأثورة للحوائج';
@@ -446,7 +455,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
               const SizedBox(height: 6),
               Text(
                 count == 0 &&
-                        category == 'الصحيفة السجادية المباركة (نفحات مختارة)'
+                        category == 'الصحيفة السجادية المباركة'
                     ? 'بانتظار اعتماد المختارات'
                     : count == 0
                         ? 'لا توجد مواد مختارة حالياً'
@@ -475,7 +484,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
     'الورد اليومي والتعقيبات',
     'الأدعية الكبرى والمناجاة الشريفة',
     'أدعية المناسبات والشهور العبادية',
-    'الصحيفة السجادية المباركة (نفحات مختارة)',
+    'الصحيفة السجادية المباركة',
     'أدعية الحوائج، التحصينات والرزق',
     'الزيارات الشريفة والمقامات المقدسة',
   ];
@@ -483,7 +492,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
     super.initState();
     _sahifaOnly = widget.sahifaOnly;
     const categoryAliases = <String, String>{
-      'الصحيفة السجادية والمناجيات': 'الصحيفة السجادية المباركة (نفحات مختارة)',
+      'الصحيفة السجادية والمناجيات': 'الصحيفة السجادية المباركة',
       'الأدعية والأذكار اليومية': 'الورد اليومي والتعقيبات',
       'التعقيبات بعد الصلاة': 'الورد اليومي والتعقيبات',
       'الأدعية العامة والفرج وصاحب الزمان': 'الأدعية الكبرى والمناجاة الشريفة',
@@ -496,7 +505,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
         ? null
         : (categoryAliases[requestedCategory] ?? requestedCategory);
     _category = _sahifaOnly
-        ? 'الصحيفة السجادية المباركة (نفحات مختارة)'
+        ? 'الصحيفة السجادية المباركة'
         : (_categories.contains(mappedCategory) ? mappedCategory! : _categories.first);
     _future = widget.dataFuture ??
         (_sahifaOnly ? ShiaTextData.loadSahifa() : ShiaTextData.load());
@@ -506,7 +515,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
   void _submitSearch() => setState(() => _query = _normalize(_controller.text.trim()));
 
   @override Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: Text(_sahifaOnly ? 'الصحيفة السجادية المباركة (نفحات مختارة)' : 'الأدعية والزيارات')),
+    appBar: AppBar(title: Text(_sahifaOnly ? 'الصحيفة السجادية المباركة' : 'الأدعية والزيارات')),
     body: FutureBuilder<ShiaTextData>(
       future: _future,
       builder: (context, snapshot) {
@@ -587,7 +596,7 @@ class _ShiaTextLibraryPageState extends State<ShiaTextLibraryPage> {
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 3),
             child: Row(children: [
-              ...(_sahifaOnly ? const <String>['الصحيفة السجادية المباركة (نفحات مختارة)'] : _categories)
+              ...(_sahifaOnly ? const <String>['الصحيفة السجادية المباركة'] : _categories)
             ].map((choice) => Padding(
               padding: const EdgeInsets.only(left: 8),
               child: ChoiceChip(

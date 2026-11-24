@@ -258,17 +258,13 @@ class ShiaTextData {
     // Legacy selected-sahifa rows stay hidden; the complete numbered collection
     // replaces them so no supplication is published twice.
     final publishedCore = core.entries
-        .where((entry) => !entry.slug.startsWith('selected-sahifa-'))
+        .where((entry) => !entry.isSahifa)
         .toList(growable: false);
-    // The 15 Munajat already exist in the core bundle. Add only the 61 numbered
-    // supplications from the separately generated complete Sahifa collection.
-    final completeSupplications = sahifa.entries
-        .where((entry) =>
-            entry.type == 'sahifa' || entry.type == 'sahifaSupplement')
-        .toList(growable: false);
+    // Replace every legacy Sahifa/Munajat row with the single pinned complete
+    // collection. This prevents old and new versions of the same text coexisting.
     final publishedEntries = <ShiaTextEntry>[
       ...publishedCore,
-      ...completeSupplications,
+      ...sahifa.entries,
     ];
     if (publishedEntries.length != 291 ||
         publishedEntries.map((entry) => entry.slug).toSet().length != 291) {

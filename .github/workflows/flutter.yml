@@ -54,6 +54,8 @@ jobs:
         run: python3 tool/prepare_quran_metadata.py
       - name: Validate committed offline Shia duas and ziyarat
         run: python3 tool/validate_shia_duas.py
+      - name: Prepare the complete offline Sahifa and 15 Munajat
+        run: python3 tool/prepare_sahifa_collection.py
       - name: Prepare licensed Arabic fonts
         run: python3 tool/prepare_fonts.py
       - name: Validate bundled Arabic text and reject Persian characters
